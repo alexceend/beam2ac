@@ -1,0 +1,14744 @@
+{
+"schema": "beam2ac.g1_facts_reference/1",
+"source": "output/g1_ir_2026-10-30/hechos_antes.json (antes de G1)",
+"vehicles": {
+"seat_ibiza_acfr": {
+"bng.aero.cda": {
+"value": 0.582,
+"unit": "m²",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"vehicleArea",
+""
+]
+]
+},
+"bng.aero.cla_front": {
+"value": 0.09055495836734692,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.cla_rear": {
+"value": 0.4689620963265306,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.target_front": {
+"value": 171.188,
+"unit": "N",
+"kind": "extracted",
+"note": "a 200 km/h; positivo = carga, negativo = sustentación (cefaero.lua:135-142)",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.aero.target_rear": {
+"value": 886.541,
+"unit": "N",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.brakes.front.max_torque_per_wheel": {
+"value": 2173.55,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.front.parking_torque_per_wheel": {
+"value": 0.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.brakes.front_share_below_knee": {
+"value": 0.8180088832751169,
+"unit": "1",
+"kind": "computed",
+"note": "por debajo del codo de brakeInputSplit",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"front_share(…, 0.5)",
+""
+]
+]
+},
+"bng.brakes.front_share_pedal_full": {
+"value": 0.8570005029149358,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"front_share(…, 1.0)",
+""
+]
+]
+},
+"bng.brakes.rear.max_torque_per_wheel": {
+"value": 362.68,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.rear.parking_torque_per_wheel": {
+"value": 1208.929443,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.clutch.lock_torque_default": {
+"value": 494.2638281800513,
+"unit": "N·m",
+"kind": "computed",
+"note": "1,25·par neto máx. + techo de rpm · inercia · π/30 (frictionClutch.lua:174)",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"174",
+""
+],
+[
+"code",
+"read_devices: clutch",
+""
+]
+]
+},
+"bng.code.camsoEngineThermals_sha256": {
+"value": "d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b"
+]
+]
+},
+"bng.code.camsoEngine_sha256": {
+"value": "47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed"
+]
+]
+},
+"bng.code.camsoSupercharger_sha256": {
+"value": "e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196"
+]
+]
+},
+"bng.code.camsoTurbocharger_sha256": {
+"value": "1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76"
+]
+]
+},
+"bng.code.camso_activeSwaybars_sha256": {
+"value": "a7b6fd3ad2730aa89926ffc828c92aa89bb6e27cff8a106060072e7a80c509e9",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"a7b6fd3ad2730aa89926ffc828c92aa89bb6e27cff8a106060072e7a80c509e9"
+]
+]
+},
+"bng.code.cefaero_sha256": {
+"value": "ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb"
+]
+]
+},
+"bng.diff.final_ratio": {
+"value": 5.98,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"build_drivetrain: gearRatio",
+""
+]
+]
+},
+"bng.diff.lsd_lock_coef": {
+"value": 0.25,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.diff.lsd_preload": {
+"value": 100.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "par: differential.lua:57 lo suma a un par (lsdTorque = lsdPreload + coef·|T|). Las declaraciones de variable de BeamNG lo rotulan «N/m» (error de rótulo; el valor literal activo no declara unidad). Corregido el 2026-10-26 (investigacion_powerlut_preload_2026-10-26.md §B)",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"read_devices: lsdPreload",
+""
+]
+]
+},
+"bng.diff.lsd_rev_lock_coef": {
+"value": 0.025,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.diff.type": {
+"value": "lsd",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.drivetrain.traction": {
+"value": "FWD",
+"unit": "enum",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"analyse/traction_type",
+""
+]
+]
+},
+"bng.engine.clutch_additional_inertia": {
+"value": 0.0,
+"unit": "kg·m²",
+"kind": "computed",
+"note": "Σ additionalEngineInertia de los hijos frictionClutch del motor (el Lua la suma a device.inertia); ausente = 0",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"camsoEngine.lua:995-1001 (validate)",
+""
+],
+[
+"code",
+"l. 242: additionalEngineInertia = jbeamData.… or 0",
+""
+]
+]
+},
+"bng.engine.coast_ref_nonlinearity": {
+"value": 0.0,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_rpm": {
+"value": 10000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_torque": {
+"value": 66.1,
+"unit": "N·m",
+"kind": "computed",
+"note": "error máx. 21.5 N·m; derivado (gas cerrado − fricción, ×1.35; fila 1: camsoEngine.lua:728 max(1, …) (Ibiza 35b84, Porsche GT3 RS))",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.device_type": {
+"value": "camsoEngine",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"find_engine_device",
+""
+]
+]
+},
+"bng.engine.has_turbo": {
+"value": true,
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"read_raw_engine: turbo",
+""
+]
+]
+},
+"bng.engine.idle_rpm": {
+"value": 1400.0,
+"unit": "rpm",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"read_raw_engine: idleRPM",
+""
+]
+]
+},
+"bng.engine.inertia": {
+"value": 0.10457800255063,
+"unit": "kg·m²",
+"kind": "extracted",
+"note": "solo el motor; falta additionalEngineInertia del embrague (camsoEngine.lua:1001)",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"read_raw_engine: inertia",
+""
+]
+]
+},
+"bng.engine.net_wot_curve": {
+"value": [
+[
+0.0,
+0.0
+],
+[
+100.0,
+-3.1
+],
+[
+200.0,
+21.23
+],
+[
+300.0,
+31.83
+],
+[
+400.0,
+42.45
+],
+[
+500.0,
+53.06
+],
+[
+600.0,
+57.08
+],
+[
+700.0,
+60.19
+],
+[
+800.0,
+63.22
+],
+[
+900.0,
+66.2
+],
+[
+1000.0,
+69.07
+],
+[
+1100.0,
+71.93
+],
+[
+1200.0,
+74.68
+],
+[
+1300.0,
+77.37
+],
+[
+1400.0,
+79.93
+],
+[
+1500.0,
+82.51
+],
+[
+1600.0,
+85.07
+],
+[
+1700.0,
+87.6
+],
+[
+1800.0,
+90.16
+],
+[
+1900.0,
+92.52
+],
+[
+2000.0,
+94.96
+],
+[
+2100.0,
+97.41
+],
+[
+2200.0,
+99.87
+],
+[
+2300.0,
+102.15
+],
+[
+2400.0,
+104.61
+],
+[
+2500.0,
+107.21
+],
+[
+2600.0,
+109.93
+],
+[
+2700.0,
+112.4
+],
+[
+2800.0,
+115.06
+],
+[
+2900.0,
+117.85
+],
+[
+3000.0,
+120.46
+],
+[
+3100.0,
+123.26
+],
+[
+3200.0,
+126.42
+],
+[
+3300.0,
+129.79
+],
+[
+3400.0,
+133.52
+],
+[
+3500.0,
+137.91
+],
+[
+3600.0,
+140.75
+],
+[
+3700.0,
+142.77
+],
+[
+3800.0,
+142.82
+],
+[
+3900.0,
+141.97
+],
+[
+4000.0,
+139.41
+],
+[
+4100.0,
+136.61
+],
+[
+4200.0,
+135.55
+],
+[
+4300.0,
+148.01
+],
+[
+4400.0,
+151.18
+],
+[
+4500.0,
+154.81
+],
+[
+4600.0,
+158.15
+],
+[
+4700.0,
+161.53
+],
+[
+4800.0,
+165.13
+],
+[
+4900.0,
+169.23
+],
+[
+5000.0,
+174.01
+],
+[
+5100.0,
+178.68
+],
+[
+5200.0,
+183.49
+],
+[
+5300.0,
+187.83
+],
+[
+5400.0,
+191.67
+],
+[
+5500.0,
+194.13
+],
+[
+5600.0,
+196.83
+],
+[
+5700.0,
+199.95
+],
+[
+5800.0,
+204.94
+],
+[
+5900.0,
+210.29
+],
+[
+6000.0,
+217.48
+],
+[
+6100.0,
+226.43
+],
+[
+6200.0,
+238.32
+],
+[
+6300.0,
+254.68
+],
+[
+6400.0,
+280.76
+],
+[
+6500.0,
+301.63
+],
+[
+6600.0,
+305.81
+],
+[
+6700.0,
+306.69
+],
+[
+6800.0,
+307.41
+],
+[
+6900.0,
+307.7
+],
+[
+7000.0,
+307.8
+],
+[
+7100.0,
+307.54
+],
+[
+7200.0,
+306.96
+],
+[
+7300.0,
+305.7
+],
+[
+7400.0,
+304.16
+],
+[
+7500.0,
+302.41
+],
+[
+7600.0,
+300.43
+],
+[
+7700.0,
+298.2
+],
+[
+7800.0,
+295.75
+],
+[
+7900.0,
+293.23
+],
+[
+8000.0,
+290.75
+],
+[
+8100.0,
+288.4
+],
+[
+8200.0,
+286.13
+],
+[
+8300.0,
+283.78
+],
+[
+8400.0,
+281.4
+],
+[
+8500.0,
+278.92
+],
+[
+8600.0,
+276.52
+],
+[
+8700.0,
+274.01
+],
+[
+8800.0,
+271.49
+],
+[
+8900.0,
+269.05
+],
+[
+9000.0,
+266.77
+],
+[
+9100.0,
+264.53
+],
+[
+9200.0,
+262.22
+],
+[
+9300.0,
+259.77
+],
+[
+9400.0,
+256.89
+],
+[
+9500.0,
+253.79
+],
+[
+9600.0,
+250.42
+],
+[
+9700.0,
+246.88
+],
+[
+9800.0,
+243.32
+],
+[
+9900.0,
+239.85
+],
+[
+10000.0,
+236.39
+]
+],
+"unit": "table:rpm->N·m",
+"kind": "computed",
+"note": "par neto WOT con boost incluido; 2 decimales como render_power_lut",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"build_engine_model: fila 99 − fricción",
+""
+]
+]
+},
+"bng.engine.peak_power": {
+"value": 252988.37232313637,
+"unit": "W",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_power_rpm": {
+"value": 9300.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_torque": {
+"value": 307.8,
+"unit": "N·m",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.peak_torque_rpm": {
+"value": 7000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.rev_limiter": {
+"value": "independiente_del_conflicto",
+"unit": "enum",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_83f4c', False), ('Camso_EngineManagement_83f4c', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_limiter (Lua 47437d5c l. 2003-2007; 91392d70 l. 2000-2004)",
+""
+]
+]
+},
+"bng.engine.rpm_ceiling": {
+"value": 10000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_83f4c', False), ('Camso_EngineManagement_83f4c', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_limiter",
+""
+]
+]
+},
+"bng.fuel.capacity": {
+"value": 55,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.fuel.start": {
+"value": 55,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.gearbox.forward_count": {
+"value": 6,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_1": {
+"value": 3.14,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_2": {
+"value": 1.87,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_3": {
+"value": 1.3,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_4": {
+"value": 0.99,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_5": {
+"value": 0.8,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_6": {
+"value": 0.66,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.reverse_ratio": {
+"value": -3.3,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.type": {
+"value": "manualGearbox",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"build_drivetrain: GEARBOX_TYPES",
+""
+]
+]
+},
+"bng.geometry.cog_height": {
+"value": 0.4355158641351133,
+"unit": "m",
+"kind": "measured",
+"note": "hipótesis: suelo = neumático sin carga",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"cog_height",
+""
+]
+]
+},
+"bng.geometry.front_axle_fraction": {
+"value": 0.5729983042045727,
+"unit": "1",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"front_axle_fraction",
+""
+]
+]
+},
+"bng.geometry.track_front": {
+"value": 1.474996,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.track_rear": {
+"value": 1.430004,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.wheelbase": {
+"value": 2.50033,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.info.author": {
+"value": "Camshaft Software LTD",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.drivetrain": {
+"value": "FWD",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_35b84.json",
+""
+]
+]
+},
+"bng.info.exporter_version": {
+"value": "38022",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.implied_power": {
+"value": 339.40816738968545,
+"unit": "hp",
+"kind": "computed",
+"note": "Weight / (Weight/Power): potencia declarada sin el truncado del entero 'Power'",
+"refs": [
+[
+"file",
+"info_35b84.json",
+""
+]
+]
+},
+"bng.info.name": {
+"value": "Seat Ibiza ACFR",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.power": {
+"value": 339,
+"unit": "hp",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_35b84.json",
+""
+]
+]
+},
+"bng.info.power_peak_rpm": {
+"value": 9300,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_35b84.json",
+""
+]
+]
+},
+"bng.info.torque": {
+"value": 308,
+"unit": "N·m",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_35b84.json",
+""
+]
+]
+},
+"bng.info.torque_peak_rpm": {
+"value": 7000,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_35b84.json",
+""
+]
+]
+},
+"bng.info.transmission": {
+"value": "Manual",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_35b84.json",
+""
+]
+]
+},
+"bng.info.type": {
+"value": "Automation",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.weight": {
+"value": 1226,
+"unit": "kg",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_35b84.json",
+""
+]
+]
+},
+"bng.mass.total": {
+"value": 1226.27029,
+"unit": "kg",
+"kind": "measured",
+"note": "Σ nodeWeight + masa generada de las ruedas (pressureWheels)",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"compute_mass_geometry",
+""
+]
+]
+},
+"bng.mass.wheel_assembly": {
+"value": 115.569368,
+"unit": "kg",
+"kind": "measured",
+"note": "cota inferior de la masa no suspendida",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"wheel_assembly_mass",
+""
+]
+]
+},
+"bng.shift.transmission_shift_delay": {
+"value": 0.185,
+"unit": "s",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"analyse: vehicleController",
+""
+]
+]
+},
+"bng.suspension.front.ac_type": {
+"value": "STRUT",
+"unit": "enum",
+"kind": "computed",
+"note": "tipo AC por la etiqueta declarada de la pieza (MacPherson/strut -> STRUT)",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"TYPE_BY_LABEL",
+""
+]
+]
+},
+"bng.suspension.front.label": {
+"value": "ACFR MacPherson Strut Front Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.front.motion_ratio_hyp": {
+"value": 0.996473,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.front.spring_rate_beam": {
+"value": 60000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.front.torsionbar_rate": {
+"value": 1520.990601,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.suspension.rear.label": {
+"value": "ACFR Torsion Beam Rear Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.rear.motion_ratio_hyp": {
+"value": 0.99892,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.rear.spring_rate_beam": {
+"value": 50000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.rear.torsionbar_rate": {
+"value": 1230.68396,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.tyre.front.hub_radius": {
+"value": 0.2413,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.front.pressure": {
+"value": 37.0,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.front.radius": {
+"value": 0.3125,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.front.width": {
+"value": 0.216,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"bng.tyre.rear.hub_radius": {
+"value": 0.2413,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.rear.pressure": {
+"value": 34.9,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.rear.radius": {
+"value": 0.3125,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.rear.width": {
+"value": 0.2,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 35b84.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"project.driver_mass": {
+"value": 70.0,
+"unit": "kg",
+"kind": "manual",
+"note": "decisión del proyecto: 70 kg configurables; Kunos usa 75 kg",
+"refs": [
+[
+"doc",
+"Decisiones del proyecto, 2 (piloto)",
+""
+]
+]
+}
+},
+"porsche_gt3_rs": {
+"bng.aero.cda": {
+"value": 0.586,
+"unit": "m²",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"vehicleArea",
+""
+]
+]
+},
+"bng.aero.cla_front": {
+"value": -0.4130034612244897,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.cla_rear": {
+"value": 0.5990535183673469,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.target_front": {
+"value": -780.755,
+"unit": "N",
+"kind": "extracted",
+"note": "a 200 km/h; positivo = carga, negativo = sustentación (cefaero.lua:135-142)",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.aero.target_rear": {
+"value": 1132.47,
+"unit": "N",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.brakes.front.max_torque_per_wheel": {
+"value": 1848.24,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.front.parking_torque_per_wheel": {
+"value": 0.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.brakes.front_share_below_knee": {
+"value": 0.6380150672344954,
+"unit": "1",
+"kind": "computed",
+"note": "por debajo del codo de brakeInputSplit",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"front_share(…, 0.5)",
+""
+]
+]
+},
+"bng.brakes.front_share_pedal_full": {
+"value": 0.7014979932114404,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"front_share(…, 1.0)",
+""
+]
+]
+},
+"bng.brakes.rear.max_torque_per_wheel": {
+"value": 786.47,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.rear.parking_torque_per_wheel": {
+"value": 2621.55542,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.clutch.lock_torque_default": {
+"value": 798.1728797631099,
+"unit": "N·m",
+"kind": "computed",
+"note": "1,25·par neto máx. + techo de rpm · inercia · π/30 (frictionClutch.lua:174)",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"174",
+""
+],
+[
+"code",
+"read_devices: clutch",
+""
+]
+]
+},
+"bng.code.camsoEngineThermals_sha256": {
+"value": "d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b"
+]
+]
+},
+"bng.code.camsoEngine_sha256": {
+"value": "47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed"
+]
+]
+},
+"bng.code.camsoSupercharger_sha256": {
+"value": "e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196"
+]
+]
+},
+"bng.code.camsoTurbocharger_sha256": {
+"value": "1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76"
+]
+]
+},
+"bng.code.camso_activeSwaybars_sha256": {
+"value": "a7b6fd3ad2730aa89926ffc828c92aa89bb6e27cff8a106060072e7a80c509e9",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"a7b6fd3ad2730aa89926ffc828c92aa89bb6e27cff8a106060072e7a80c509e9"
+]
+]
+},
+"bng.code.cefaero_sha256": {
+"value": "ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb"
+]
+]
+},
+"bng.diff.final_ratio": {
+"value": 5.21,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"build_drivetrain: gearRatio",
+""
+]
+]
+},
+"bng.diff.lsd_lock_coef": {
+"value": 0.15,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.diff.lsd_preload": {
+"value": 70.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "par: differential.lua:57 lo suma a un par (lsdTorque = lsdPreload + coef·|T|). Las declaraciones de variable de BeamNG lo rotulan «N/m» (error de rótulo; el valor literal activo no declara unidad). Corregido el 2026-10-26 (investigacion_powerlut_preload_2026-10-26.md §B)",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"read_devices: lsdPreload",
+""
+]
+]
+},
+"bng.diff.lsd_rev_lock_coef": {
+"value": 0.05,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.diff.type": {
+"value": "lsd",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.drivetrain.traction": {
+"value": "RWD",
+"unit": "enum",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"analyse/traction_type",
+""
+]
+]
+},
+"bng.engine.clutch_additional_inertia": {
+"value": 0.0,
+"unit": "kg·m²",
+"kind": "computed",
+"note": "Σ additionalEngineInertia de los hijos frictionClutch del motor (el Lua la suma a device.inertia); ausente = 0",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"camsoEngine.lua:995-1001 (validate)",
+""
+],
+[
+"code",
+"l. 242: additionalEngineInertia = jbeamData.… or 0",
+""
+]
+]
+},
+"bng.engine.coast_ref_nonlinearity": {
+"value": 0.0,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_rpm": {
+"value": 8500.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_torque": {
+"value": 139.1,
+"unit": "N·m",
+"kind": "computed",
+"note": "error máx. 51.9 N·m; derivado (gas cerrado − fricción, ×1.35; fila 1: camsoEngine.lua:728 max(1, …) (Ibiza 35b84, Porsche GT3 RS))",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.device_type": {
+"value": "camsoEngine",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"find_engine_device",
+""
+]
+]
+},
+"bng.engine.has_turbo": {
+"value": false,
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"read_raw_engine: turbo",
+""
+]
+]
+},
+"bng.engine.idle_rpm": {
+"value": 1100.0,
+"unit": "rpm",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"read_raw_engine: idleRPM",
+""
+]
+]
+},
+"bng.engine.inertia": {
+"value": 0.24563922960608,
+"unit": "kg·m²",
+"kind": "extracted",
+"note": "solo el motor; falta additionalEngineInertia del embrague (camsoEngine.lua:1001)",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"read_raw_engine: inertia",
+""
+]
+]
+},
+"bng.engine.net_wot_curve": {
+"value": [
+[
+0.0,
+0.0
+],
+[
+100.0,
+-6.67
+],
+[
+200.0,
+78.08
+],
+[
+300.0,
+117.13
+],
+[
+400.0,
+156.17
+],
+[
+500.0,
+195.21
+],
+[
+600.0,
+206.08
+],
+[
+700.0,
+217.04
+],
+[
+800.0,
+227.54
+],
+[
+900.0,
+237.59
+],
+[
+1000.0,
+247.25
+],
+[
+1100.0,
+256.55
+],
+[
+1200.0,
+265.49
+],
+[
+1300.0,
+273.93
+],
+[
+1400.0,
+281.95
+],
+[
+1500.0,
+289.62
+],
+[
+1600.0,
+296.95
+],
+[
+1700.0,
+303.92
+],
+[
+1800.0,
+310.6
+],
+[
+1900.0,
+316.89
+],
+[
+2000.0,
+322.85
+],
+[
+2100.0,
+328.47
+],
+[
+2200.0,
+333.83
+],
+[
+2300.0,
+338.94
+],
+[
+2400.0,
+343.79
+],
+[
+2500.0,
+348.39
+],
+[
+2600.0,
+352.73
+],
+[
+2700.0,
+356.82
+],
+[
+2800.0,
+360.65
+],
+[
+2900.0,
+364.25
+],
+[
+3000.0,
+367.72
+],
+[
+3100.0,
+371.27
+],
+[
+3200.0,
+374.83
+],
+[
+3300.0,
+378.33
+],
+[
+3400.0,
+381.7
+],
+[
+3500.0,
+385.15
+],
+[
+3600.0,
+388.74
+],
+[
+3700.0,
+392.44
+],
+[
+3800.0,
+396.2
+],
+[
+3900.0,
+399.97
+],
+[
+4000.0,
+404.02
+],
+[
+4100.0,
+408.71
+],
+[
+4200.0,
+413.81
+],
+[
+4300.0,
+418.91
+],
+[
+4400.0,
+423.54
+],
+[
+4500.0,
+427.21
+],
+[
+4600.0,
+429.75
+],
+[
+4700.0,
+431.28
+],
+[
+4800.0,
+432.47
+],
+[
+4900.0,
+433.79
+],
+[
+5000.0,
+435.62
+],
+[
+5100.0,
+438.22
+],
+[
+5200.0,
+441.53
+],
+[
+5300.0,
+444.77
+],
+[
+5400.0,
+447.56
+],
+[
+5500.0,
+449.92
+],
+[
+5600.0,
+451.67
+],
+[
+5700.0,
+452.76
+],
+[
+5800.0,
+453.22
+],
+[
+5900.0,
+453.12
+],
+[
+6000.0,
+452.6
+],
+[
+6100.0,
+451.82
+],
+[
+6200.0,
+451.57
+],
+[
+6300.0,
+452.33
+],
+[
+6400.0,
+454.01
+],
+[
+6500.0,
+456.36
+],
+[
+6600.0,
+459.06
+],
+[
+6700.0,
+461.32
+],
+[
+6800.0,
+462.75
+],
+[
+6900.0,
+463.49
+],
+[
+7000.0,
+463.62
+],
+[
+7100.0,
+463.11
+],
+[
+7200.0,
+462.05
+],
+[
+7300.0,
+460.69
+],
+[
+7400.0,
+458.82
+],
+[
+7500.0,
+456.96
+],
+[
+7600.0,
+455.19
+],
+[
+7700.0,
+453.49
+],
+[
+7800.0,
+451.07
+],
+[
+7900.0,
+447.73
+],
+[
+8000.0,
+443.43
+],
+[
+8100.0,
+438.04
+],
+[
+8200.0,
+431.41
+],
+[
+8300.0,
+423.62
+],
+[
+8400.0,
+415.32
+],
+[
+8500.0,
+405.77
+]
+],
+"unit": "table:rpm->N·m",
+"kind": "computed",
+"note": "par neto WOT con boost incluido; 2 decimales como render_power_lut",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"build_engine_model: fila 99 − fricción",
+""
+]
+]
+},
+"bng.engine.peak_power": {
+"value": 371558.67641418765,
+"unit": "W",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_power_rpm": {
+"value": 8100.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_torque": {
+"value": 463.62,
+"unit": "N·m",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.peak_torque_rpm": {
+"value": 7000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.rev_limiter": {
+"value": "independiente_del_conflicto",
+"unit": "enum",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_33f94', False), ('Camso_EngineManagement_33f94', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_limiter (Lua 47437d5c l. 2003-2007; 91392d70 l. 2000-2004)",
+""
+]
+]
+},
+"bng.engine.rpm_ceiling": {
+"value": 8500.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_33f94', False), ('Camso_EngineManagement_33f94', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_limiter",
+""
+]
+]
+},
+"bng.fuel.capacity": {
+"value": 65,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.fuel.start": {
+"value": 65,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.gearbox.forward_count": {
+"value": 7,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_1": {
+"value": 2.77,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_2": {
+"value": 1.72,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_3": {
+"value": 1.25,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_4": {
+"value": 0.98,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_5": {
+"value": 0.81,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_6": {
+"value": 0.69,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_7": {
+"value": 0.6,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.reverse_ratio": {
+"value": -2.91,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.type": {
+"value": "manualGearbox",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"build_drivetrain: GEARBOX_TYPES",
+""
+]
+]
+},
+"bng.geometry.cog_height": {
+"value": 0.44277391962173224,
+"unit": "m",
+"kind": "measured",
+"note": "hipótesis: suelo = neumático sin carga",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"cog_height",
+""
+]
+]
+},
+"bng.geometry.front_axle_fraction": {
+"value": 0.42509155692947714,
+"unit": "1",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"front_axle_fraction",
+""
+]
+]
+},
+"bng.geometry.track_front": {
+"value": 1.62045,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.track_rear": {
+"value": 1.62915,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.wheelbase": {
+"value": 2.59,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.info.author": {
+"value": "Camshaft Software LTD",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.drivetrain": {
+"value": "RWD",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_18547.json",
+""
+]
+]
+},
+"bng.info.exporter_version": {
+"value": "38022",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.implied_power": {
+"value": 498.89112015729745,
+"unit": "hp",
+"kind": "computed",
+"note": "Weight / (Weight/Power): potencia declarada sin el truncado del entero 'Power'",
+"refs": [
+[
+"file",
+"info_18547.json",
+""
+]
+]
+},
+"bng.info.name": {
+"value": "Porsche GT3 RS",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.power": {
+"value": 499,
+"unit": "hp",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_18547.json",
+""
+]
+]
+},
+"bng.info.power_peak_rpm": {
+"value": 8100,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_18547.json",
+""
+]
+]
+},
+"bng.info.torque": {
+"value": 464,
+"unit": "N·m",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_18547.json",
+""
+]
+]
+},
+"bng.info.torque_peak_rpm": {
+"value": 7000,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_18547.json",
+""
+]
+]
+},
+"bng.info.transmission": {
+"value": "Manual",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_18547.json",
+""
+]
+]
+},
+"bng.info.type": {
+"value": "Automation",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.weight": {
+"value": 1190,
+"unit": "kg",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_18547.json",
+""
+]
+]
+},
+"bng.mass.total": {
+"value": 1197.571044,
+"unit": "kg",
+"kind": "measured",
+"note": "Σ nodeWeight + masa generada de las ruedas (pressureWheels)",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"compute_mass_geometry",
+""
+]
+]
+},
+"bng.mass.wheel_assembly": {
+"value": 133.556296,
+"unit": "kg",
+"kind": "measured",
+"note": "cota inferior de la masa no suspendida",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"wheel_assembly_mass",
+""
+]
+]
+},
+"bng.shift.transmission_shift_delay": {
+"value": 0.165,
+"unit": "s",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"analyse: vehicleController",
+""
+]
+]
+},
+"bng.suspension.front.label": {
+"value": "GT3 RS Double Wishbone Front Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.front.motion_ratio_hyp": {
+"value": 0.999122,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.front.spring_rate_beam": {
+"value": 12000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.front.torsionbar_rate": {
+"value": 2475.482666,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.suspension.rear.label": {
+"value": "GT3 RS Double Wishbone Rear Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.rear.motion_ratio_hyp": {
+"value": 0.998318,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.rear.spring_rate_beam": {
+"value": 18000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.rear.torsionbar_rate": {
+"value": 1707.380859,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.tyre.front.hub_radius": {
+"value": 0.254,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.front.pressure": {
+"value": 29.2,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.front.radius": {
+"value": 0.3325,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.front.width": {
+"value": 0.255,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"bng.tyre.rear.hub_radius": {
+"value": 0.254,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.rear.pressure": {
+"value": 30.2,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.rear.radius": {
+"value": 0.3325,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.rear.width": {
+"value": 0.285,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 18547.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"project.driver_mass": {
+"value": 70.0,
+"unit": "kg",
+"kind": "manual",
+"note": "decisión del proyecto: 70 kg configurables; Kunos usa 75 kg",
+"refs": [
+[
+"doc",
+"Decisiones del proyecto, 2 (piloto)",
+""
+]
+]
+}
+},
+"spicy_mandala": {
+"bng.aero.cda": {
+"value": 0.5,
+"unit": "m²",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"vehicleArea",
+""
+]
+]
+},
+"bng.aero.cla_front": {
+"value": -0.24123267918367344,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.cla_rear": {
+"value": -0.283567973877551,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.target_front": {
+"value": -456.034,
+"unit": "N",
+"kind": "extracted",
+"note": "a 200 km/h; positivo = carga, negativo = sustentación (cefaero.lua:135-142)",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.aero.target_rear": {
+"value": -536.066,
+"unit": "N",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.brakes.front.max_torque_per_wheel": {
+"value": 898.23,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.front.parking_torque_per_wheel": {
+"value": 0.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.brakes.front_share_below_knee": {
+"value": 0.6868131728615704,
+"unit": "1",
+"kind": "computed",
+"note": "por debajo del codo de brakeInputSplit",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"front_share(…, 0.5)",
+""
+]
+]
+},
+"bng.brakes.front_share_pedal_full": {
+"value": 0.7451564705444415,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"front_share(…, 1.0)",
+""
+]
+]
+},
+"bng.brakes.rear.max_torque_per_wheel": {
+"value": 307.19,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.rear.parking_torque_per_wheel": {
+"value": 1023.977234,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.clutch.lock_torque_default": {
+"value": 218.3294517334312,
+"unit": "N·m",
+"kind": "computed",
+"note": "1,25·par neto máx. + techo de rpm · inercia · π/30 (frictionClutch.lua:174)",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"174",
+""
+],
+[
+"code",
+"read_devices: clutch",
+""
+]
+]
+},
+"bng.code.camsoEngineThermals_sha256": {
+"value": "d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b"
+]
+]
+},
+"bng.code.camsoEngine_sha256": {
+"value": "47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed"
+]
+]
+},
+"bng.code.camsoSupercharger_sha256": {
+"value": "e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196"
+]
+]
+},
+"bng.code.camsoTurbocharger_sha256": {
+"value": "1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76"
+]
+]
+},
+"bng.code.cefaero_sha256": {
+"value": "ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb"
+]
+]
+},
+"bng.diff.final_ratio": {
+"value": 5.83,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"build_drivetrain: gearRatio",
+""
+]
+]
+},
+"bng.diff.lsd_lock_coef": {
+"value": 0.15,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.diff.lsd_preload": {
+"value": 70.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "par: differential.lua:57 lo suma a un par (lsdTorque = lsdPreload + coef·|T|). Las declaraciones de variable de BeamNG lo rotulan «N/m» (error de rótulo; el valor literal activo no declara unidad). Corregido el 2026-10-26 (investigacion_powerlut_preload_2026-10-26.md §B)",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"read_devices: lsdPreload",
+""
+]
+]
+},
+"bng.diff.lsd_rev_lock_coef": {
+"value": 0.05,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.diff.type": {
+"value": "lsd",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.drivetrain.traction": {
+"value": "RWD",
+"unit": "enum",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"analyse/traction_type",
+""
+]
+]
+},
+"bng.engine.clutch_additional_inertia": {
+"value": 0.0,
+"unit": "kg·m²",
+"kind": "computed",
+"note": "Σ additionalEngineInertia de los hijos frictionClutch del motor (el Lua la suma a device.inertia); ausente = 0",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"camsoEngine.lua:995-1001 (validate)",
+""
+],
+[
+"code",
+"l. 242: additionalEngineInertia = jbeamData.… or 0",
+""
+]
+]
+},
+"bng.engine.coast_ref_nonlinearity": {
+"value": 0.0,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_rpm": {
+"value": 7500.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_torque": {
+"value": 53.1,
+"unit": "N·m",
+"kind": "computed",
+"note": "error máx. 24.5 N·m; derivado (gas cerrado − fricción, ×1.35; fila 1: camsoEngine.lua:728 max(1, …) (Ibiza 35b84, Porsche GT3 RS))",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.device_type": {
+"value": "camsoEngine",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"find_engine_device",
+""
+]
+]
+},
+"bng.engine.has_turbo": {
+"value": false,
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"read_raw_engine: turbo",
+""
+]
+]
+},
+"bng.engine.idle_rpm": {
+"value": 1400.0,
+"unit": "rpm",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"read_raw_engine: idleRPM",
+""
+]
+]
+},
+"bng.engine.inertia": {
+"value": 0.097981451090418,
+"unit": "kg·m²",
+"kind": "extracted",
+"note": "solo el motor; falta additionalEngineInertia del embrague (camsoEngine.lua:1001)",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"read_raw_engine: inertia",
+""
+]
+]
+},
+"bng.engine.net_wot_curve": {
+"value": [
+[
+0.0,
+0.0
+],
+[
+100.0,
+-3.24
+],
+[
+200.0,
+18.4
+],
+[
+300.0,
+27.6
+],
+[
+400.0,
+36.8
+],
+[
+500.0,
+46.0
+],
+[
+600.0,
+50.25
+],
+[
+700.0,
+54.13
+],
+[
+800.0,
+57.89
+],
+[
+900.0,
+61.51
+],
+[
+1000.0,
+65.01
+],
+[
+1100.0,
+68.38
+],
+[
+1200.0,
+71.67
+],
+[
+1300.0,
+74.86
+],
+[
+1400.0,
+77.95
+],
+[
+1500.0,
+80.91
+],
+[
+1600.0,
+83.77
+],
+[
+1700.0,
+86.53
+],
+[
+1800.0,
+89.17
+],
+[
+1900.0,
+91.83
+],
+[
+2000.0,
+94.41
+],
+[
+2100.0,
+96.69
+],
+[
+2200.0,
+98.51
+],
+[
+2300.0,
+99.94
+],
+[
+2400.0,
+101.19
+],
+[
+2500.0,
+102.44
+],
+[
+2600.0,
+103.63
+],
+[
+2700.0,
+104.76
+],
+[
+2800.0,
+105.83
+],
+[
+2900.0,
+106.86
+],
+[
+3000.0,
+107.73
+],
+[
+3100.0,
+108.57
+],
+[
+3200.0,
+109.27
+],
+[
+3300.0,
+109.81
+],
+[
+3400.0,
+110.33
+],
+[
+3500.0,
+110.84
+],
+[
+3600.0,
+111.38
+],
+[
+3700.0,
+111.94
+],
+[
+3800.0,
+112.49
+],
+[
+3900.0,
+112.88
+],
+[
+4000.0,
+113.09
+],
+[
+4100.0,
+113.1
+],
+[
+4200.0,
+112.99
+],
+[
+4300.0,
+112.71
+],
+[
+4400.0,
+112.5
+],
+[
+4500.0,
+112.34
+],
+[
+4600.0,
+112.1
+],
+[
+4700.0,
+111.73
+],
+[
+4800.0,
+111.22
+],
+[
+4900.0,
+110.76
+],
+[
+5000.0,
+110.38
+],
+[
+5100.0,
+110.08
+],
+[
+5200.0,
+109.82
+],
+[
+5300.0,
+109.45
+],
+[
+5400.0,
+108.9
+],
+[
+5500.0,
+108.2
+],
+[
+5600.0,
+107.35
+],
+[
+5700.0,
+106.43
+],
+[
+5800.0,
+105.48
+],
+[
+5900.0,
+104.62
+],
+[
+6000.0,
+103.83
+],
+[
+6100.0,
+103.04
+],
+[
+6200.0,
+102.14
+],
+[
+6300.0,
+101.08
+],
+[
+6400.0,
+99.91
+],
+[
+6500.0,
+98.67
+],
+[
+6600.0,
+97.43
+],
+[
+6700.0,
+96.21
+],
+[
+6800.0,
+95.02
+],
+[
+6900.0,
+93.76
+],
+[
+7000.0,
+92.42
+],
+[
+7100.0,
+90.97
+],
+[
+7200.0,
+89.36
+],
+[
+7300.0,
+87.56
+],
+[
+7400.0,
+85.49
+],
+[
+7500.0,
+83.12
+]
+],
+"unit": "table:rpm->N·m",
+"kind": "computed",
+"note": "par neto WOT con boost incluido; 2 decimales como render_power_lut",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"build_engine_model: fila 99 − fricción",
+""
+]
+]
+},
+"bng.engine.peak_power": {
+"value": 67747.81725613316,
+"unit": "W",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_power_rpm": {
+"value": 6900.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_torque": {
+"value": 113.10000000000001,
+"unit": "N·m",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.peak_torque_rpm": {
+"value": 4100.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.rev_limiter": {
+"value": "independiente_del_conflicto",
+"unit": "enum",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_cfe00', False), ('Camso_EngineManagement_cfe00', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_limiter (Lua 47437d5c l. 2003-2007; 91392d70 l. 2000-2004)",
+""
+]
+]
+},
+"bng.engine.rpm_ceiling": {
+"value": 7500.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_cfe00', False), ('Camso_EngineManagement_cfe00', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_limiter",
+""
+]
+]
+},
+"bng.fuel.capacity": {
+"value": 45,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.fuel.start": {
+"value": 45,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.gearbox.forward_count": {
+"value": 4,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_1": {
+"value": 2.54,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_2": {
+"value": 1.64,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_3": {
+"value": 1.09,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_4": {
+"value": 0.78,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.reverse_ratio": {
+"value": -2.66,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.type": {
+"value": "manualGearbox",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"build_drivetrain: GEARBOX_TYPES",
+""
+]
+]
+},
+"bng.geometry.cog_height": {
+"value": 0.5087829999546674,
+"unit": "m",
+"kind": "measured",
+"note": "hipótesis: suelo = neumático sin carga",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"cog_height",
+""
+]
+]
+},
+"bng.geometry.front_axle_fraction": {
+"value": 0.5234021602692306,
+"unit": "1",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"front_axle_fraction",
+""
+]
+]
+},
+"bng.geometry.track_front": {
+"value": 1.305,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.track_rear": {
+"value": 1.295004,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.wheelbase": {
+"value": 2.49018,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.info.author": {
+"value": "Camshaft Software LTD",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.drivetrain": {
+"value": "RWD",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_56a86.json",
+""
+]
+]
+},
+"bng.info.exporter_version": {
+"value": "38022",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.implied_power": {
+"value": 90.89699818206003,
+"unit": "hp",
+"kind": "computed",
+"note": "Weight / (Weight/Power): potencia declarada sin el truncado del entero 'Power'",
+"refs": [
+[
+"file",
+"info_56a86.json",
+""
+]
+]
+},
+"bng.info.name": {
+"value": "Spicy Mandala",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.power": {
+"value": 90,
+"unit": "hp",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_56a86.json",
+""
+]
+]
+},
+"bng.info.power_peak_rpm": {
+"value": 7000,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_56a86.json",
+""
+]
+]
+},
+"bng.info.torque": {
+"value": 113,
+"unit": "N·m",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_56a86.json",
+""
+]
+]
+},
+"bng.info.torque_peak_rpm": {
+"value": 4000,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_56a86.json",
+""
+]
+]
+},
+"bng.info.transmission": {
+"value": "Manual",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_56a86.json",
+""
+]
+]
+},
+"bng.info.type": {
+"value": "Automation",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.weight": {
+"value": 1025,
+"unit": "kg",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_56a86.json",
+""
+]
+]
+},
+"bng.mass.total": {
+"value": 1028.189766,
+"unit": "kg",
+"kind": "measured",
+"note": "Σ nodeWeight + masa generada de las ruedas (pressureWheels)",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"compute_mass_geometry",
+""
+]
+]
+},
+"bng.mass.wheel_assembly": {
+"value": 94.130056,
+"unit": "kg",
+"kind": "measured",
+"note": "cota inferior de la masa no suspendida",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"wheel_assembly_mass",
+""
+]
+]
+},
+"bng.shift.transmission_shift_delay": {
+"value": 0.19,
+"unit": "s",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"analyse: vehicleController",
+""
+]
+]
+},
+"bng.suspension.front.label": {
+"value": "Mandala Double Wishbone Front Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.front.motion_ratio_hyp": {
+"value": 0.999122,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.front.spring_rate_beam": {
+"value": 18000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.front.torsionbar_rate": {
+"value": 866.25,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.suspension.rear.label": {
+"value": "Mandala Double Wishbone Rear Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.rear.motion_ratio_hyp": {
+"value": 0.998318,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.rear.spring_rate_beam": {
+"value": 18000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.rear.torsionbar_rate": {
+"value": 309.924988,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.tyre.front.hub_radius": {
+"value": 0.1905,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.front.pressure": {
+"value": 32.5,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.front.radius": {
+"value": 0.29,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.front.width": {
+"value": 0.165,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"bng.tyre.rear.hub_radius": {
+"value": 0.1905,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.rear.pressure": {
+"value": 29.8,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.rear.radius": {
+"value": 0.29,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.rear.width": {
+"value": 0.165,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 56a86.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"project.driver_mass": {
+"value": 70.0,
+"unit": "kg",
+"kind": "manual",
+"note": "decisión del proyecto: 70 kg configurables; Kunos usa 75 kg",
+"refs": [
+[
+"doc",
+"Decisiones del proyecto, 2 (piloto)",
+""
+]
+]
+}
+},
+"autist_cuanto": {
+"bng.aero.cda": {
+"value": 0.714,
+"unit": "m²",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"vehicleArea",
+""
+]
+]
+},
+"bng.aero.cla_front": {
+"value": -0.4095264783673469,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.cla_rear": {
+"value": 0.020083027591836732,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.target_front": {
+"value": -774.182,
+"unit": "N",
+"kind": "extracted",
+"note": "a 200 km/h; positivo = carga, negativo = sustentación (cefaero.lua:135-142)",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.aero.target_rear": {
+"value": 37.9656,
+"unit": "N",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.awd.center_diff_type": {
+"value": "lsd",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.awd.center_lsd_lock_coef": {
+"value": 0.4,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.awd.center_lsd_preload": {
+"value": 10.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices: lsdPreload (differential.lua:57)",
+""
+]
+]
+},
+"bng.awd.center_lsd_rev_lock_coef": {
+"value": 0.4,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.awd.front_diff_type": {
+"value": "lsd",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.awd.front_lsd_lock_coef": {
+"value": 0.2,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.awd.front_lsd_preload": {
+"value": 50.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices: lsdPreload (differential.lua:57)",
+""
+]
+]
+},
+"bng.awd.front_lsd_rev_lock_coef": {
+"value": 0.025,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.awd.front_share": {
+"value": 0.5500000119209301,
+"unit": "1",
+"kind": "computed",
+"note": "diferencial central 'transferCase', diffTorqueSplit",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"awd_axles (differential.lua l. 315-317, 64-65)",
+""
+]
+]
+},
+"bng.awd.rear_diff_type": {
+"value": "lsd",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.awd.rear_lsd_lock_coef": {
+"value": 0.15,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.awd.rear_lsd_preload": {
+"value": 70.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices: lsdPreload (differential.lua:57)",
+""
+]
+]
+},
+"bng.awd.rear_lsd_rev_lock_coef": {
+"value": 0.05,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.brakes.front.max_torque_per_wheel": {
+"value": 1525.5,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.front.parking_torque_per_wheel": {
+"value": 0.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.brakes.front_share_below_knee": {
+"value": 0.7820757923104624,
+"unit": "1",
+"kind": "computed",
+"note": "por debajo del codo de brakeInputSplit",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"front_share(…, 0.5)",
+""
+]
+]
+},
+"bng.brakes.front_share_pedal_full": {
+"value": 0.8271392063591554,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"front_share(…, 1.0)",
+""
+]
+]
+},
+"bng.brakes.rear.max_torque_per_wheel": {
+"value": 318.81,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.rear.parking_torque_per_wheel": {
+"value": 1062.695801,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.clutch.lock_torque_default": {
+"value": 516.2756269993417,
+"unit": "N·m",
+"kind": "computed",
+"note": "1,25·par neto máx. + techo de rpm · inercia · π/30 (frictionClutch.lua:174)",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"174",
+""
+],
+[
+"code",
+"read_devices: clutch",
+""
+]
+]
+},
+"bng.code.camsoEngineThermals_sha256": {
+"value": "d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b"
+]
+]
+},
+"bng.code.camsoEngine_sha256": {
+"value": "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb"
+]
+]
+},
+"bng.code.camsoSupercharger_sha256": {
+"value": "e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196"
+]
+]
+},
+"bng.code.camsoTurbocharger_sha256": {
+"value": "1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76"
+]
+]
+},
+"bng.code.cefaero_sha256": {
+"value": "ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb"
+]
+]
+},
+"bng.diff.final_ratio": {
+"value": 4.72,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"build_drivetrain: gearRatio",
+""
+]
+]
+},
+"bng.drivetrain.traction": {
+"value": "AWD",
+"unit": "enum",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"analyse/traction_type",
+""
+]
+]
+},
+"bng.engine.clutch_additional_inertia": {
+"value": 0.0,
+"unit": "kg·m²",
+"kind": "computed",
+"note": "Σ additionalEngineInertia de los hijos frictionClutch del motor (el Lua la suma a device.inertia); ausente = 0",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"camsoEngine.lua:995-1001 (validate)",
+""
+],
+[
+"code",
+"l. 242: additionalEngineInertia = jbeamData.… or 0",
+""
+]
+]
+},
+"bng.engine.coast_ref_nonlinearity": {
+"value": 0.0,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_rpm": {
+"value": 7600.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_torque": {
+"value": 70.5,
+"unit": "N·m",
+"kind": "computed",
+"note": "error máx. 28.9 N·m; derivado (gas cerrado − fricción, ×1.35; fila 0: camsoEngine.lua:725 max(0, …) (samples_beamng, exportador 40340))",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.device_type": {
+"value": "camsoEngine",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"find_engine_device",
+""
+]
+]
+},
+"bng.engine.has_turbo": {
+"value": true,
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_raw_engine: turbo",
+""
+]
+]
+},
+"bng.engine.idle_rpm": {
+"value": 800.0,
+"unit": "rpm",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_raw_engine: idleRPM",
+""
+]
+]
+},
+"bng.engine.inertia": {
+"value": 0.12170720104171,
+"unit": "kg·m²",
+"kind": "extracted",
+"note": "solo el motor; falta additionalEngineInertia del embrague (camsoEngine.lua:1001)",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"read_raw_engine: inertia",
+""
+]
+]
+},
+"bng.engine.net_wot_curve": {
+"value": [
+[
+0.0,
+0.0
+],
+[
+100.0,
+-3.0
+],
+[
+200.0,
+49.93
+],
+[
+300.0,
+74.9
+],
+[
+400.0,
+99.86
+],
+[
+500.0,
+124.83
+],
+[
+600.0,
+130.85
+],
+[
+700.0,
+135.38
+],
+[
+800.0,
+139.63
+],
+[
+900.0,
+143.6
+],
+[
+1000.0,
+147.37
+],
+[
+1100.0,
+150.86
+],
+[
+1200.0,
+154.24
+],
+[
+1300.0,
+157.53
+],
+[
+1400.0,
+160.44
+],
+[
+1500.0,
+163.26
+],
+[
+1600.0,
+165.95
+],
+[
+1700.0,
+168.53
+],
+[
+1800.0,
+171.19
+],
+[
+1900.0,
+173.74
+],
+[
+2000.0,
+175.92
+],
+[
+2100.0,
+178.12
+],
+[
+2200.0,
+180.03
+],
+[
+2300.0,
+182.43
+],
+[
+2400.0,
+184.61
+],
+[
+2500.0,
+186.72
+],
+[
+2600.0,
+189.16
+],
+[
+2700.0,
+191.83
+],
+[
+2800.0,
+194.36
+],
+[
+2900.0,
+196.85
+],
+[
+3000.0,
+199.77
+],
+[
+3100.0,
+203.0
+],
+[
+3200.0,
+206.01
+],
+[
+3300.0,
+208.93
+],
+[
+3400.0,
+211.77
+],
+[
+3500.0,
+215.67
+],
+[
+3600.0,
+218.91
+],
+[
+3700.0,
+222.02
+],
+[
+3800.0,
+225.16
+],
+[
+3900.0,
+228.39
+],
+[
+4000.0,
+233.62
+],
+[
+4100.0,
+239.19
+],
+[
+4200.0,
+246.48
+],
+[
+4300.0,
+254.15
+],
+[
+4400.0,
+263.92
+],
+[
+4500.0,
+277.67
+],
+[
+4600.0,
+294.11
+],
+[
+4700.0,
+311.4
+],
+[
+4800.0,
+327.47
+],
+[
+4900.0,
+335.53
+],
+[
+5000.0,
+335.45
+],
+[
+5100.0,
+333.87
+],
+[
+5200.0,
+331.89
+],
+[
+5300.0,
+329.65
+],
+[
+5400.0,
+327.09
+],
+[
+5500.0,
+324.13
+],
+[
+5600.0,
+320.73
+],
+[
+5700.0,
+316.74
+],
+[
+5800.0,
+312.07
+],
+[
+5900.0,
+306.68
+],
+[
+6000.0,
+300.54
+],
+[
+6100.0,
+293.41
+],
+[
+6200.0,
+284.99
+],
+[
+6300.0,
+275.22
+],
+[
+6400.0,
+263.78
+],
+[
+6500.0,
+250.66
+],
+[
+6600.0,
+235.77
+],
+[
+6700.0,
+218.79
+],
+[
+6800.0,
+199.42
+],
+[
+6900.0,
+177.45
+],
+[
+7000.0,
+152.69
+],
+[
+7100.0,
+124.94
+],
+[
+7200.0,
+94.16
+],
+[
+7300.0,
+60.22
+],
+[
+7400.0,
+23.06
+],
+[
+7500.0,
+-17.43
+],
+[
+7600.0,
+-30.6
+]
+],
+"unit": "table:rpm->N·m",
+"kind": "computed",
+"note": "par neto WOT con boost incluido; 2 decimales como render_power_lut",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"build_engine_model: fila 99 − fricción",
+""
+]
+]
+},
+"bng.engine.peak_power": {
+"value": 189543.3850851149,
+"unit": "W",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_power_rpm": {
+"value": 5800.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_torque": {
+"value": 335.53,
+"unit": "N·m",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.peak_torque_rpm": {
+"value": 4900.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.rev_limiter": {
+"value": "independiente_del_conflicto",
+"unit": "enum",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_6f302', False), ('Camso_EngineManagement_6f302', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_limiter (Lua 47437d5c l. 2003-2007; 91392d70 l. 2000-2004)",
+""
+]
+]
+},
+"bng.engine.rpm_ceiling": {
+"value": 7600.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_6f302', False), ('Camso_EngineManagement_6f302', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_limiter",
+""
+]
+]
+},
+"bng.fuel.capacity": {
+"value": 55,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.fuel.start": {
+"value": 55,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.gearbox.forward_count": {
+"value": 5,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_1": {
+"value": 3.15,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_2": {
+"value": 1.92,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_3": {
+"value": 1.22,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_4": {
+"value": 0.86,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_5": {
+"value": 0.65,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.reverse_ratio": {
+"value": -3.31,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.type": {
+"value": "manualGearbox",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"build_drivetrain: GEARBOX_TYPES",
+""
+]
+]
+},
+"bng.geometry.cog_height": {
+"value": 0.4703257506553775,
+"unit": "m",
+"kind": "measured",
+"note": "hipótesis: suelo = neumático sin carga",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"cog_height",
+""
+]
+]
+},
+"bng.geometry.front_axle_fraction": {
+"value": 0.58060993890021,
+"unit": "1",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"front_axle_fraction",
+""
+]
+]
+},
+"bng.geometry.track_front": {
+"value": 1.492402,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.track_rear": {
+"value": 1.46338,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.wheelbase": {
+"value": 2.4699999999999998,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.info.author": {
+"value": "Camshaft Software LTD",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.drivetrain": {
+"value": "AWD",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_b78dc.json",
+""
+]
+]
+},
+"bng.info.exporter_version": {
+"value": "40340",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.implied_power": {
+"value": 254.34945091771016,
+"unit": "hp",
+"kind": "computed",
+"note": "Weight / (Weight/Power): potencia declarada sin el truncado del entero 'Power'",
+"refs": [
+[
+"file",
+"info_b78dc.json",
+""
+]
+]
+},
+"bng.info.name": {
+"value": "autist CUANTO",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.power": {
+"value": 254,
+"unit": "hp",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_b78dc.json",
+""
+]
+]
+},
+"bng.info.power_peak_rpm": {
+"value": 5800,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_b78dc.json",
+""
+]
+]
+},
+"bng.info.torque": {
+"value": 335,
+"unit": "N·m",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_b78dc.json",
+""
+]
+]
+},
+"bng.info.torque_peak_rpm": {
+"value": 4900,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_b78dc.json",
+""
+]
+]
+},
+"bng.info.transmission": {
+"value": "Manual",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_b78dc.json",
+""
+]
+]
+},
+"bng.info.type": {
+"value": "Automation",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.weight": {
+"value": 1351,
+"unit": "kg",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_b78dc.json",
+""
+]
+]
+},
+"bng.mass.total": {
+"value": 1353.97197,
+"unit": "kg",
+"kind": "measured",
+"note": "Σ nodeWeight + masa generada de las ruedas (pressureWheels)",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"compute_mass_geometry",
+""
+]
+]
+},
+"bng.mass.wheel_assembly": {
+"value": 151.24237599999998,
+"unit": "kg",
+"kind": "measured",
+"note": "cota inferior de la masa no suspendida",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"wheel_assembly_mass",
+""
+]
+]
+},
+"bng.shift.transmission_shift_delay": {
+"value": 0.15,
+"unit": "s",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"analyse: vehicleController",
+""
+]
+]
+},
+"bng.suspension.front.label": {
+"value": "CUANTO Double Wishbone Front Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.front.motion_ratio_hyp": {
+"value": 0.999122,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.front.spring_rate_beam": {
+"value": 42000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.front.torsionbar_rate": {
+"value": 1897.787476,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.suspension.rear.label": {
+"value": "CUANTO Double Wishbone Rear Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.rear.motion_ratio_hyp": {
+"value": 0.998318,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.rear.spring_rate_beam": {
+"value": 30000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.rear.torsionbar_rate": {
+"value": 491.681,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.tyre.front.hub_radius": {
+"value": 0.2286,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.front.pressure": {
+"value": 33.4,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.front.radius": {
+"value": 0.29,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.front.width": {
+"value": 0.205,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"bng.tyre.rear.hub_radius": {
+"value": 0.2286,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.rear.pressure": {
+"value": 27.5,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.rear.radius": {
+"value": 0.29,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.rear.width": {
+"value": 0.205,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config b78dc.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"project.driver_mass": {
+"value": 70.0,
+"unit": "kg",
+"kind": "manual",
+"note": "decisión del proyecto: 70 kg configurables; Kunos usa 75 kg",
+"refs": [
+[
+"doc",
+"Decisiones del proyecto, 2 (piloto)",
+""
+]
+]
+}
+},
+"hyacinth_sage": {
+"bng.aero.cda": {
+"value": 0.822,
+"unit": "m²",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"vehicleArea",
+""
+]
+]
+},
+"bng.aero.cla_front": {
+"value": 0.32958126367346935,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.cla_rear": {
+"value": 0.5609987265306121,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.target_front": {
+"value": 623.051,
+"unit": "N",
+"kind": "extracted",
+"note": "a 200 km/h; positivo = carga, negativo = sustentación (cefaero.lua:135-142)",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.aero.target_rear": {
+"value": 1060.53,
+"unit": "N",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.brakes.front.max_torque_per_wheel": {
+"value": 3138.04,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.front.parking_torque_per_wheel": {
+"value": 0.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.brakes.front_share_below_knee": {
+"value": 0.7607282183510437,
+"unit": "1",
+"kind": "computed",
+"note": "por debajo del codo de brakeInputSplit",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"front_share(…, 0.5)",
+""
+]
+]
+},
+"bng.brakes.front_share_pedal_full": {
+"value": 0.8091286306082477,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"front_share(…, 1.0)",
+""
+]
+]
+},
+"bng.brakes.rear.max_torque_per_wheel": {
+"value": 740.26,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.rear.parking_torque_per_wheel": {
+"value": 2467.520508,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.clutch.lock_torque_default": {
+"value": 517.6770549998126,
+"unit": "N·m",
+"kind": "computed",
+"note": "1,25·par neto máx. + techo de rpm · inercia · π/30 (frictionClutch.lua:174)",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"174",
+""
+],
+[
+"code",
+"read_devices: clutch",
+""
+]
+]
+},
+"bng.code.camsoEngineThermals_sha256": {
+"value": "d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b"
+]
+]
+},
+"bng.code.camsoEngine_sha256": {
+"value": "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb"
+]
+]
+},
+"bng.code.camsoSupercharger_sha256": {
+"value": "e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196"
+]
+]
+},
+"bng.code.camsoTurbocharger_sha256": {
+"value": "1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76"
+]
+]
+},
+"bng.code.camso_activeDampers_sha256": {
+"value": "20434a1912c026a600fa08dfabb22f00f4c0d4cf8fd814ad8fdbb688f327687a",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"20434a1912c026a600fa08dfabb22f00f4c0d4cf8fd814ad8fdbb688f327687a"
+]
+]
+},
+"bng.code.camso_activeSwaybars_sha256": {
+"value": "a7b6fd3ad2730aa89926ffc828c92aa89bb6e27cff8a106060072e7a80c509e9",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"a7b6fd3ad2730aa89926ffc828c92aa89bb6e27cff8a106060072e7a80c509e9"
+]
+]
+},
+"bng.code.cefaero_sha256": {
+"value": "ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb"
+]
+]
+},
+"bng.diff.final_ratio": {
+"value": 6.42,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"build_drivetrain: gearRatio",
+""
+]
+]
+},
+"bng.diff.lsd_lock_coef": {
+"value": 0.25,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.diff.lsd_preload": {
+"value": 100.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "par: differential.lua:57 lo suma a un par (lsdTorque = lsdPreload + coef·|T|). Las declaraciones de variable de BeamNG lo rotulan «N/m» (error de rótulo; el valor literal activo no declara unidad). Corregido el 2026-10-26 (investigacion_powerlut_preload_2026-10-26.md §B)",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"read_devices: lsdPreload",
+""
+]
+]
+},
+"bng.diff.lsd_rev_lock_coef": {
+"value": 0.025,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.diff.type": {
+"value": "lsd",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.drivetrain.traction": {
+"value": "FWD",
+"unit": "enum",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"analyse/traction_type",
+""
+]
+]
+},
+"bng.engine.clutch_additional_inertia": {
+"value": 0.0,
+"unit": "kg·m²",
+"kind": "computed",
+"note": "Σ additionalEngineInertia de los hijos frictionClutch del motor (el Lua la suma a device.inertia); ausente = 0",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"camsoEngine.lua:995-1001 (validate)",
+""
+],
+[
+"code",
+"l. 242: additionalEngineInertia = jbeamData.… or 0",
+""
+]
+]
+},
+"bng.engine.coast_ref_nonlinearity": {
+"value": 0.0,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_rpm": {
+"value": 11000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_torque": {
+"value": 53.6,
+"unit": "N·m",
+"kind": "computed",
+"note": "error máx. 14.7 N·m; derivado (gas cerrado − fricción, ×1.35; fila 0: camsoEngine.lua:725 max(0, …) (samples_beamng, exportador 40340))",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.device_type": {
+"value": "camsoEngine",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"find_engine_device",
+""
+]
+]
+},
+"bng.engine.has_turbo": {
+"value": true,
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"read_raw_engine: turbo",
+""
+]
+]
+},
+"bng.engine.idle_rpm": {
+"value": 1200.0,
+"unit": "rpm",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"read_raw_engine: idleRPM",
+""
+]
+]
+},
+"bng.engine.inertia": {
+"value": 0.076070612464394,
+"unit": "kg·m²",
+"kind": "extracted",
+"note": "solo el motor; falta additionalEngineInertia del embrague (camsoEngine.lua:1001)",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"read_raw_engine: inertia",
+""
+]
+]
+},
+"bng.engine.net_wot_curve": {
+"value": [
+[
+0.0,
+0.0
+],
+[
+100.0,
+-2.66
+],
+[
+200.0,
+30.13
+],
+[
+300.0,
+45.19
+],
+[
+400.0,
+60.26
+],
+[
+500.0,
+75.32
+],
+[
+600.0,
+78.99
+],
+[
+700.0,
+81.56
+],
+[
+800.0,
+83.86
+],
+[
+900.0,
+86.03
+],
+[
+1000.0,
+87.99
+],
+[
+1100.0,
+89.98
+],
+[
+1200.0,
+91.8
+],
+[
+1300.0,
+93.54
+],
+[
+1400.0,
+95.18
+],
+[
+1500.0,
+96.77
+],
+[
+1600.0,
+98.33
+],
+[
+1700.0,
+99.84
+],
+[
+1800.0,
+101.73
+],
+[
+1900.0,
+103.61
+],
+[
+2000.0,
+105.48
+],
+[
+2100.0,
+107.35
+],
+[
+2200.0,
+109.51
+],
+[
+2300.0,
+111.41
+],
+[
+2400.0,
+113.33
+],
+[
+2500.0,
+115.6
+],
+[
+2600.0,
+117.53
+],
+[
+2700.0,
+119.93
+],
+[
+2800.0,
+121.96
+],
+[
+2900.0,
+124.51
+],
+[
+3000.0,
+126.69
+],
+[
+3100.0,
+129.53
+],
+[
+3200.0,
+132.51
+],
+[
+3300.0,
+135.73
+],
+[
+3400.0,
+139.14
+],
+[
+3500.0,
+141.5
+],
+[
+3600.0,
+143.82
+],
+[
+3700.0,
+146.01
+],
+[
+3800.0,
+148.21
+],
+[
+3900.0,
+150.44
+],
+[
+4000.0,
+152.74
+],
+[
+4100.0,
+155.17
+],
+[
+4200.0,
+157.82
+],
+[
+4300.0,
+160.53
+],
+[
+4400.0,
+163.27
+],
+[
+4500.0,
+166.05
+],
+[
+4600.0,
+168.93
+],
+[
+4700.0,
+171.82
+],
+[
+4800.0,
+174.73
+],
+[
+4900.0,
+180.84
+],
+[
+5000.0,
+186.55
+],
+[
+5100.0,
+193.59
+],
+[
+5200.0,
+200.5
+],
+[
+5300.0,
+207.39
+],
+[
+5400.0,
+214.12
+],
+[
+5500.0,
+222.23
+],
+[
+5600.0,
+230.46
+],
+[
+5700.0,
+240.21
+],
+[
+5800.0,
+256.61
+],
+[
+5900.0,
+275.14
+],
+[
+6000.0,
+297.21
+],
+[
+6100.0,
+318.77
+],
+[
+6200.0,
+337.02
+],
+[
+6300.0,
+343.08
+],
+[
+6400.0,
+344.04
+],
+[
+6500.0,
+344.02
+],
+[
+6600.0,
+343.59
+],
+[
+6700.0,
+342.97
+],
+[
+6800.0,
+342.29
+],
+[
+6900.0,
+341.48
+],
+[
+7000.0,
+340.8
+],
+[
+7100.0,
+340.34
+],
+[
+7200.0,
+340.12
+],
+[
+7300.0,
+340.2
+],
+[
+7400.0,
+340.43
+],
+[
+7500.0,
+340.56
+],
+[
+7600.0,
+340.64
+],
+[
+7700.0,
+340.56
+],
+[
+7800.0,
+339.8
+],
+[
+7900.0,
+339.29
+],
+[
+8000.0,
+338.88
+],
+[
+8100.0,
+338.48
+],
+[
+8200.0,
+338.06
+],
+[
+8300.0,
+337.57
+],
+[
+8400.0,
+336.94
+],
+[
+8500.0,
+336.09
+],
+[
+8600.0,
+334.97
+],
+[
+8700.0,
+333.53
+],
+[
+8800.0,
+331.82
+],
+[
+8900.0,
+329.93
+],
+[
+9000.0,
+327.91
+],
+[
+9100.0,
+325.82
+],
+[
+9200.0,
+323.51
+],
+[
+9300.0,
+321.19
+],
+[
+9400.0,
+318.92
+],
+[
+9500.0,
+316.76
+],
+[
+9600.0,
+314.77
+],
+[
+9700.0,
+312.94
+],
+[
+9800.0,
+311.37
+],
+[
+9900.0,
+309.92
+],
+[
+10000.0,
+308.33
+],
+[
+10100.0,
+306.56
+],
+[
+10200.0,
+304.53
+],
+[
+10300.0,
+302.18
+],
+[
+10400.0,
+299.39
+],
+[
+10500.0,
+296.06
+],
+[
+10600.0,
+292.04
+],
+[
+10700.0,
+287.29
+],
+[
+10800.0,
+282.14
+],
+[
+10900.0,
+276.27
+],
+[
+11000.0,
+269.3
+]
+],
+"unit": "table:rpm->N·m",
+"kind": "computed",
+"note": "par neto WOT con boost incluido; 2 decimales como render_power_lut",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"build_engine_model: fila 99 − fricción",
+""
+]
+]
+},
+"bng.engine.peak_power": {
+"value": 326061.29384685936,
+"unit": "W",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_power_rpm": {
+"value": 10400.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_torque": {
+"value": 344.04,
+"unit": "N·m",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.peak_torque_rpm": {
+"value": 6400.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.rev_limiter": {
+"value": "independiente_del_conflicto",
+"unit": "enum",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_d609f', False), ('Camso_EngineManagement_d609f', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_limiter (Lua 47437d5c l. 2003-2007; 91392d70 l. 2000-2004)",
+""
+]
+]
+},
+"bng.engine.rpm_ceiling": {
+"value": 11000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_d609f', False), ('Camso_EngineManagement_d609f', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_limiter",
+""
+]
+]
+},
+"bng.fuel.capacity": {
+"value": 65,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.fuel.start": {
+"value": 65,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.gearbox.forward_count": {
+"value": 6,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_1": {
+"value": 2.85,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_2": {
+"value": 1.91,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_3": {
+"value": 1.35,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_4": {
+"value": 1.02,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_5": {
+"value": 0.81,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_6": {
+"value": 0.66,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.reverse_ratio": {
+"value": -2.99,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.type": {
+"value": "manualGearbox",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"build_drivetrain: GEARBOX_TYPES",
+""
+]
+]
+},
+"bng.geometry.cog_height": {
+"value": 0.4814097547577344,
+"unit": "m",
+"kind": "measured",
+"note": "hipótesis: suelo = neumático sin carga",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"cog_height",
+""
+]
+]
+},
+"bng.geometry.front_axle_fraction": {
+"value": 0.5649041425950325,
+"unit": "1",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"front_axle_fraction",
+""
+]
+]
+},
+"bng.geometry.track_front": {
+"value": 1.5501239999999998,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.track_rear": {
+"value": 1.56045,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.wheelbase": {
+"value": 2.74999,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.info.author": {
+"value": "Camshaft Software LTD",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.drivetrain": {
+"value": "FWD",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_70548.json",
+""
+]
+]
+},
+"bng.info.exporter_version": {
+"value": "40340",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.implied_power": {
+"value": 437.7883716295967,
+"unit": "hp",
+"kind": "computed",
+"note": "Weight / (Weight/Power): potencia declarada sin el truncado del entero 'Power'",
+"refs": [
+[
+"file",
+"info_70548.json",
+""
+]
+]
+},
+"bng.info.name": {
+"value": "Hyacinth Sage",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.power": {
+"value": 437,
+"unit": "hp",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_70548.json",
+""
+]
+]
+},
+"bng.info.power_peak_rpm": {
+"value": 10400,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_70548.json",
+""
+]
+]
+},
+"bng.info.torque": {
+"value": 344,
+"unit": "N·m",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_70548.json",
+""
+]
+]
+},
+"bng.info.torque_peak_rpm": {
+"value": 6400,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_70548.json",
+""
+]
+]
+},
+"bng.info.transmission": {
+"value": "Manual",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_70548.json",
+""
+]
+]
+},
+"bng.info.type": {
+"value": "Automation",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.weight": {
+"value": 1428,
+"unit": "kg",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_70548.json",
+""
+]
+]
+},
+"bng.mass.total": {
+"value": 1437.449522,
+"unit": "kg",
+"kind": "measured",
+"note": "Σ nodeWeight + masa generada de las ruedas (pressureWheels)",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"compute_mass_geometry",
+""
+]
+]
+},
+"bng.mass.wheel_assembly": {
+"value": 150.440816,
+"unit": "kg",
+"kind": "measured",
+"note": "cota inferior de la masa no suspendida",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"wheel_assembly_mass",
+""
+]
+]
+},
+"bng.shift.transmission_shift_delay": {
+"value": 0.18,
+"unit": "s",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"analyse: vehicleController",
+""
+]
+]
+},
+"bng.suspension.front.label": {
+"value": "Sage Double Wishbone Front Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.front.motion_ratio_hyp": {
+"value": 0.999122,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.front.spring_rate_beam": {
+"value": 58000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.front.torsionbar_rate": {
+"value": 1226.618774,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.suspension.rear.label": {
+"value": "Sage Double Wishbone Rear Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.rear.motion_ratio_hyp": {
+"value": 0.998318,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.rear.spring_rate_beam": {
+"value": 22000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.rear.torsionbar_rate": {
+"value": 1861.935425,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.tyre.front.hub_radius": {
+"value": 0.254,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.front.pressure": {
+"value": 34.7,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.front.radius": {
+"value": 0.32,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.front.width": {
+"value": 0.265,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"bng.tyre.rear.hub_radius": {
+"value": 0.254,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.rear.pressure": {
+"value": 31.8,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.rear.radius": {
+"value": 0.32,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.rear.width": {
+"value": 0.245,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 70548.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"project.driver_mass": {
+"value": 70.0,
+"unit": "kg",
+"kind": "manual",
+"note": "decisión del proyecto: 70 kg configurables; Kunos usa 75 kg",
+"refs": [
+[
+"doc",
+"Decisiones del proyecto, 2 (piloto)",
+""
+]
+]
+}
+},
+"quail_mirabilis": {
+"bng.aero.cda": {
+"value": 0.665,
+"unit": "m²",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"vehicleArea",
+""
+]
+]
+},
+"bng.aero.cla_front": {
+"value": 0.21255510857142856,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.cla_rear": {
+"value": 0.3435934040816326,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.target_front": {
+"value": 401.821,
+"unit": "N",
+"kind": "extracted",
+"note": "a 200 km/h; positivo = carga, negativo = sustentación (cefaero.lua:135-142)",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.aero.target_rear": {
+"value": 649.54,
+"unit": "N",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.brakes.front.max_torque_per_wheel": {
+"value": 1542.26,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.front.parking_torque_per_wheel": {
+"value": 0.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.brakes.front_share_below_knee": {
+"value": 0.5555555477107169,
+"unit": "1",
+"kind": "computed",
+"note": "por debajo del codo de brakeInputSplit",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"front_share(…, 0.5)",
+""
+]
+]
+},
+"bng.brakes.front_share_pedal_full": {
+"value": 0.624999992553532,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"front_share(…, 1.0)",
+""
+]
+]
+},
+"bng.brakes.rear.max_torque_per_wheel": {
+"value": 925.35,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.rear.parking_torque_per_wheel": {
+"value": 3084.516113,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.clutch.lock_torque_default": {
+"value": 945.3568732686372,
+"unit": "N·m",
+"kind": "computed",
+"note": "1,25·par neto máx. + techo de rpm · inercia · π/30 (frictionClutch.lua:174)",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"174",
+""
+],
+[
+"code",
+"read_devices: clutch",
+""
+]
+]
+},
+"bng.code.camsoEngineThermals_sha256": {
+"value": "d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b"
+]
+]
+},
+"bng.code.camsoEngine_sha256": {
+"value": "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb"
+]
+]
+},
+"bng.code.camsoSupercharger_sha256": {
+"value": "e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196"
+]
+]
+},
+"bng.code.camsoTurbocharger_sha256": {
+"value": "1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76"
+]
+]
+},
+"bng.code.camso_activeDampers_sha256": {
+"value": "20434a1912c026a600fa08dfabb22f00f4c0d4cf8fd814ad8fdbb688f327687a",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"20434a1912c026a600fa08dfabb22f00f4c0d4cf8fd814ad8fdbb688f327687a"
+]
+]
+},
+"bng.code.camso_activeSwaybars_sha256": {
+"value": "a7b6fd3ad2730aa89926ffc828c92aa89bb6e27cff8a106060072e7a80c509e9",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"a7b6fd3ad2730aa89926ffc828c92aa89bb6e27cff8a106060072e7a80c509e9"
+]
+]
+},
+"bng.code.cefaero_sha256": {
+"value": "ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb"
+]
+]
+},
+"bng.diff.final_ratio": {
+"value": 5.3,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"build_drivetrain: gearRatio",
+""
+]
+]
+},
+"bng.diff.type": {
+"value": "torqueVectoring",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.drivetrain.traction": {
+"value": "RWD",
+"unit": "enum",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"analyse/traction_type",
+""
+]
+]
+},
+"bng.engine.clutch_additional_inertia": {
+"value": 0.0,
+"unit": "kg·m²",
+"kind": "computed",
+"note": "Σ additionalEngineInertia de los hijos frictionClutch del motor (el Lua la suma a device.inertia); ausente = 0",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"camsoEngine.lua:995-1001 (validate)",
+""
+],
+[
+"code",
+"l. 242: additionalEngineInertia = jbeamData.… or 0",
+""
+]
+]
+},
+"bng.engine.coast_ref_nonlinearity": {
+"value": 0.0,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_rpm": {
+"value": 12000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_torque": {
+"value": 77.4,
+"unit": "N·m",
+"kind": "computed",
+"note": "error máx. 34.3 N·m; derivado (gas cerrado − fricción, ×1.35; fila 0: camsoEngine.lua:725 max(0, …) (samples_beamng, exportador 40340))",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.device_type": {
+"value": "camsoEngine",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"find_engine_device",
+""
+]
+]
+},
+"bng.engine.has_turbo": {
+"value": true,
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"read_raw_engine: turbo",
+""
+]
+]
+},
+"bng.engine.idle_rpm": {
+"value": 1200.0,
+"unit": "rpm",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"read_raw_engine: idleRPM",
+""
+]
+]
+},
+"bng.engine.inertia": {
+"value": 0.1513419260859,
+"unit": "kg·m²",
+"kind": "extracted",
+"note": "solo el motor; falta additionalEngineInertia del embrague (camsoEngine.lua:1001)",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"read_raw_engine: inertia",
+""
+]
+]
+},
+"bng.engine.net_wot_curve": {
+"value": [
+[
+0.0,
+0.0
+],
+[
+100.0,
+-4.37
+],
+[
+200.0,
+16.12
+],
+[
+300.0,
+24.17
+],
+[
+400.0,
+32.24
+],
+[
+500.0,
+40.29
+],
+[
+600.0,
+45.44
+],
+[
+700.0,
+50.01
+],
+[
+800.0,
+54.52
+],
+[
+900.0,
+59.04
+],
+[
+1000.0,
+63.45
+],
+[
+1100.0,
+67.81
+],
+[
+1200.0,
+72.13
+],
+[
+1300.0,
+76.39
+],
+[
+1400.0,
+80.63
+],
+[
+1500.0,
+84.83
+],
+[
+1600.0,
+88.94
+],
+[
+1700.0,
+93.09
+],
+[
+1800.0,
+97.31
+],
+[
+1900.0,
+101.29
+],
+[
+2000.0,
+105.17
+],
+[
+2100.0,
+109.1
+],
+[
+2200.0,
+112.85
+],
+[
+2300.0,
+116.58
+],
+[
+2400.0,
+120.91
+],
+[
+2500.0,
+125.52
+],
+[
+2600.0,
+130.27
+],
+[
+2700.0,
+135.19
+],
+[
+2800.0,
+140.56
+],
+[
+2900.0,
+145.75
+],
+[
+3000.0,
+151.76
+],
+[
+3100.0,
+156.78
+],
+[
+3200.0,
+161.99
+],
+[
+3300.0,
+167.63
+],
+[
+3400.0,
+173.47
+],
+[
+3500.0,
+178.91
+],
+[
+3600.0,
+184.99
+],
+[
+3700.0,
+191.8
+],
+[
+3800.0,
+199.12
+],
+[
+3900.0,
+206.08
+],
+[
+4000.0,
+212.15
+],
+[
+4100.0,
+216.98
+],
+[
+4200.0,
+221.16
+],
+[
+4300.0,
+225.43
+],
+[
+4400.0,
+230.85
+],
+[
+4500.0,
+237.1
+],
+[
+4600.0,
+243.75
+],
+[
+4700.0,
+250.81
+],
+[
+4800.0,
+258.21
+],
+[
+4900.0,
+302.31
+],
+[
+5000.0,
+279.77
+],
+[
+5100.0,
+328.52
+],
+[
+5200.0,
+302.25
+],
+[
+5300.0,
+353.62
+],
+[
+5400.0,
+404.62
+],
+[
+5500.0,
+461.18
+],
+[
+5600.0,
+518.56
+],
+[
+5700.0,
+570.36
+],
+[
+5800.0,
+597.98
+],
+[
+5900.0,
+599.85
+],
+[
+6000.0,
+601.51
+],
+[
+6100.0,
+601.29
+],
+[
+6200.0,
+600.8
+],
+[
+6300.0,
+600.65
+],
+[
+6400.0,
+600.88
+],
+[
+6500.0,
+601.8
+],
+[
+6600.0,
+602.92
+],
+[
+6700.0,
+603.76
+],
+[
+6800.0,
+604.14
+],
+[
+6900.0,
+603.89
+],
+[
+7000.0,
+603.1
+],
+[
+7100.0,
+601.83
+],
+[
+7200.0,
+600.17
+],
+[
+7300.0,
+598.25
+],
+[
+7400.0,
+596.21
+],
+[
+7500.0,
+594.12
+],
+[
+7600.0,
+592.21
+],
+[
+7700.0,
+590.66
+],
+[
+7800.0,
+589.36
+],
+[
+7900.0,
+588.3
+],
+[
+8000.0,
+587.18
+],
+[
+8100.0,
+585.82
+],
+[
+8200.0,
+584.07
+],
+[
+8300.0,
+582.16
+],
+[
+8400.0,
+580.08
+],
+[
+8500.0,
+577.27
+],
+[
+8600.0,
+575.21
+],
+[
+8700.0,
+573.15
+],
+[
+8800.0,
+570.95
+],
+[
+8900.0,
+568.59
+],
+[
+9000.0,
+566.21
+],
+[
+9100.0,
+563.69
+],
+[
+9200.0,
+560.92
+],
+[
+9300.0,
+558.0
+],
+[
+9400.0,
+555.09
+],
+[
+9500.0,
+552.45
+],
+[
+9600.0,
+550.19
+],
+[
+9700.0,
+548.47
+],
+[
+9800.0,
+547.23
+],
+[
+9900.0,
+546.37
+],
+[
+10000.0,
+545.62
+],
+[
+10100.0,
+544.87
+],
+[
+10200.0,
+544.66
+],
+[
+10300.0,
+543.49
+],
+[
+10400.0,
+542.15
+],
+[
+10500.0,
+540.61
+],
+[
+10600.0,
+538.92
+],
+[
+10700.0,
+537.09
+],
+[
+10800.0,
+535.18
+],
+[
+10900.0,
+533.34
+],
+[
+11000.0,
+531.54
+],
+[
+11100.0,
+529.8
+],
+[
+11200.0,
+528.09
+],
+[
+11300.0,
+526.41
+],
+[
+11400.0,
+524.77
+],
+[
+11500.0,
+523.14
+],
+[
+11600.0,
+521.54
+],
+[
+11700.0,
+519.93
+],
+[
+11800.0,
+518.3
+],
+[
+11900.0,
+516.63
+],
+[
+12000.0,
+514.91
+]
+],
+"unit": "table:rpm->N·m",
+"kind": "computed",
+"note": "par neto WOT con boost incluido; 2 decimales como render_power_lut",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"build_engine_model: fila 99 − fricción",
+""
+]
+]
+},
+"bng.engine.peak_power": {
+"value": 647054.9893039681,
+"unit": "W",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_power_rpm": {
+"value": 12000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_torque": {
+"value": 604.14,
+"unit": "N·m",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.peak_torque_rpm": {
+"value": 6800.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.rev_limiter": {
+"value": "independiente_del_conflicto",
+"unit": "enum",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_45cf4', False), ('Camso_EngineManagement_45cf4', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_limiter (Lua 47437d5c l. 2003-2007; 91392d70 l. 2000-2004)",
+""
+]
+]
+},
+"bng.engine.rpm_ceiling": {
+"value": 12000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_45cf4', False), ('Camso_EngineManagement_45cf4', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_limiter",
+""
+]
+]
+},
+"bng.fuel.capacity": {
+"value": 80,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.fuel.start": {
+"value": 80,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.gearbox.forward_count": {
+"value": 7,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_1": {
+"value": 1.83,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_2": {
+"value": 1.52,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_3": {
+"value": 1.22,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_4": {
+"value": 0.99,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_5": {
+"value": 0.82,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_6": {
+"value": 0.69,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_7": {
+"value": 0.6,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.reverse_ratio": {
+"value": -1.92,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.type": {
+"value": "sequentialGearbox",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"build_drivetrain: GEARBOX_TYPES",
+""
+]
+]
+},
+"bng.geometry.cog_height": {
+"value": 0.4615633316110219,
+"unit": "m",
+"kind": "measured",
+"note": "hipótesis: suelo = neumático sin carga",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"cog_height",
+""
+]
+]
+},
+"bng.geometry.front_axle_fraction": {
+"value": 0.3385168468212705,
+"unit": "1",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"front_axle_fraction",
+""
+]
+]
+},
+"bng.geometry.track_front": {
+"value": 1.618836,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.track_rear": {
+"value": 1.6185019999999999,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.wheelbase": {
+"value": 3.12,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.info.author": {
+"value": "Camshaft Software LTD",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.drivetrain": {
+"value": "RWD",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_fbd0e.json",
+""
+]
+]
+},
+"bng.info.exporter_version": {
+"value": "40340",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.implied_power": {
+"value": 867.2162825373264,
+"unit": "hp",
+"kind": "computed",
+"note": "Weight / (Weight/Power): potencia declarada sin el truncado del entero 'Power'",
+"refs": [
+[
+"file",
+"info_fbd0e.json",
+""
+]
+]
+},
+"bng.info.name": {
+"value": "Quail Mirabilis",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.power": {
+"value": 867,
+"unit": "hp",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_fbd0e.json",
+""
+]
+]
+},
+"bng.info.power_peak_rpm": {
+"value": 12000,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_fbd0e.json",
+""
+]
+]
+},
+"bng.info.torque": {
+"value": 604,
+"unit": "N·m",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_fbd0e.json",
+""
+]
+]
+},
+"bng.info.torque_peak_rpm": {
+"value": 6800,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_fbd0e.json",
+""
+]
+]
+},
+"bng.info.transmission": {
+"value": "Sequential",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_fbd0e.json",
+""
+]
+]
+},
+"bng.info.type": {
+"value": "Automation",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.weight": {
+"value": 1297,
+"unit": "kg",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_fbd0e.json",
+""
+]
+]
+},
+"bng.mass.total": {
+"value": 1323.1162199999999,
+"unit": "kg",
+"kind": "measured",
+"note": "Σ nodeWeight + masa generada de las ruedas (pressureWheels)",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"compute_mass_geometry",
+""
+]
+]
+},
+"bng.mass.wheel_assembly": {
+"value": 97.919328,
+"unit": "kg",
+"kind": "measured",
+"note": "cota inferior de la masa no suspendida",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"wheel_assembly_mass",
+""
+]
+]
+},
+"bng.shift.transmission_shift_delay": {
+"value": 0.15,
+"unit": "s",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"analyse: vehicleController",
+""
+]
+]
+},
+"bng.suspension.front.label": {
+"value": "Mirabilis Double Wishbone Front Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.front.motion_ratio_hyp": {
+"value": 0.999122,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.front.spring_rate_beam": {
+"value": 38000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.front.torsionbar_rate": {
+"value": 1945.967651,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.suspension.rear.label": {
+"value": "Mirabilis Double Wishbone Rear Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.rear.motion_ratio_hyp": {
+"value": 0.998318,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.rear.spring_rate_beam": {
+"value": 62000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.rear.torsionbar_rate": {
+"value": 1319.374878,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.tyre.front.hub_radius": {
+"value": 0.1905,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.front.pressure": {
+"value": 26.4,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.front.radius": {
+"value": 0.285,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.front.width": {
+"value": 0.315,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"bng.tyre.rear.hub_radius": {
+"value": 0.1905,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.rear.pressure": {
+"value": 29.5,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.rear.radius": {
+"value": 0.285,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.rear.width": {
+"value": 0.325,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config fbd0e.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"project.driver_mass": {
+"value": 70.0,
+"unit": "kg",
+"kind": "manual",
+"note": "decisión del proyecto: 70 kg configurables; Kunos usa 75 kg",
+"refs": [
+[
+"doc",
+"Decisiones del proyecto, 2 (piloto)",
+""
+]
+]
+}
+},
+"sucette_poubelle": {
+"bng.aero.cda": {
+"value": 0.784,
+"unit": "m²",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"vehicleArea",
+""
+]
+]
+},
+"bng.aero.cla_front": {
+"value": -0.3307212146938775,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.cla_rear": {
+"value": -0.38974634448979584,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.target_front": {
+"value": -625.206,
+"unit": "N",
+"kind": "extracted",
+"note": "a 200 km/h; positivo = carga, negativo = sustentación (cefaero.lua:135-142)",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.aero.target_rear": {
+"value": -736.789,
+"unit": "N",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.brakes.front.max_torque_per_wheel": {
+"value": 823.74,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.front.parking_torque_per_wheel": {
+"value": 0.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.brakes.front_share_below_knee": {
+"value": 0.6603702041913213,
+"unit": "1",
+"kind": "computed",
+"note": "por debajo del codo de brakeInputSplit",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"front_share(…, 0.5)",
+""
+]
+]
+},
+"bng.brakes.front_share_pedal_full": {
+"value": 0.7216430769053488,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"front_share(…, 1.0)",
+""
+]
+]
+},
+"bng.brakes.rear.max_torque_per_wheel": {
+"value": 317.74,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.rear.parking_torque_per_wheel": {
+"value": 1059.130005,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.clutch.lock_torque_default": {
+"value": 167.70724455845755,
+"unit": "N·m",
+"kind": "computed",
+"note": "1,25·par neto máx. + techo de rpm · inercia · π/30 (frictionClutch.lua:174)",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"174",
+""
+],
+[
+"code",
+"read_devices: clutch",
+""
+]
+]
+},
+"bng.code.camsoEngineThermals_sha256": {
+"value": "d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b"
+]
+]
+},
+"bng.code.camsoEngine_sha256": {
+"value": "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb"
+]
+]
+},
+"bng.code.camsoSupercharger_sha256": {
+"value": "e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196"
+]
+]
+},
+"bng.code.camsoTurbocharger_sha256": {
+"value": "1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76"
+]
+]
+},
+"bng.code.cefaero_sha256": {
+"value": "ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb"
+]
+]
+},
+"bng.diff.final_ratio": {
+"value": 5.71,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"build_drivetrain: gearRatio",
+""
+]
+]
+},
+"bng.diff.type": {
+"value": "open",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.drivetrain.traction": {
+"value": "FWD",
+"unit": "enum",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"analyse/traction_type",
+""
+]
+]
+},
+"bng.engine.clutch_additional_inertia": {
+"value": 0.0,
+"unit": "kg·m²",
+"kind": "computed",
+"note": "Σ additionalEngineInertia de los hijos frictionClutch del motor (el Lua la suma a device.inertia); ausente = 0",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"camsoEngine.lua:995-1001 (validate)",
+""
+],
+[
+"code",
+"l. 242: additionalEngineInertia = jbeamData.… or 0",
+""
+]
+]
+},
+"bng.engine.coast_ref_nonlinearity": {
+"value": 0.0,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_rpm": {
+"value": 7000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_torque": {
+"value": 54.5,
+"unit": "N·m",
+"kind": "computed",
+"note": "error máx. 21.7 N·m; derivado (gas cerrado − fricción, ×1.35; fila 0: camsoEngine.lua:725 max(0, …) (samples_beamng, exportador 40340))",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.device_type": {
+"value": "camsoEngine",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"find_engine_device",
+""
+]
+]
+},
+"bng.engine.has_turbo": {
+"value": false,
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"read_raw_engine: turbo",
+""
+]
+]
+},
+"bng.engine.idle_rpm": {
+"value": 1600.0,
+"unit": "rpm",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"read_raw_engine: idleRPM",
+""
+]
+]
+},
+"bng.engine.inertia": {
+"value": 0.076029104666442,
+"unit": "kg·m²",
+"kind": "extracted",
+"note": "solo el motor; falta additionalEngineInertia del embrague (camsoEngine.lua:1001)",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"read_raw_engine: inertia",
+""
+]
+]
+},
+"bng.engine.net_wot_curve": {
+"value": [
+[
+0.0,
+0.0
+],
+[
+100.0,
+-2.73
+],
+[
+200.0,
+12.16
+],
+[
+300.0,
+18.24
+],
+[
+400.0,
+24.32
+],
+[
+500.0,
+30.4
+],
+[
+600.0,
+34.93
+],
+[
+700.0,
+38.7
+],
+[
+800.0,
+42.27
+],
+[
+900.0,
+45.69
+],
+[
+1000.0,
+48.99
+],
+[
+1100.0,
+52.16
+],
+[
+1200.0,
+55.19
+],
+[
+1300.0,
+58.06
+],
+[
+1400.0,
+60.82
+],
+[
+1500.0,
+63.46
+],
+[
+1600.0,
+65.99
+],
+[
+1700.0,
+68.41
+],
+[
+1800.0,
+70.71
+],
+[
+1900.0,
+72.89
+],
+[
+2000.0,
+74.96
+],
+[
+2100.0,
+76.91
+],
+[
+2200.0,
+78.72
+],
+[
+2300.0,
+80.39
+],
+[
+2400.0,
+81.92
+],
+[
+2500.0,
+83.3
+],
+[
+2600.0,
+84.56
+],
+[
+2700.0,
+85.66
+],
+[
+2800.0,
+86.58
+],
+[
+2900.0,
+87.36
+],
+[
+3000.0,
+88.05
+],
+[
+3100.0,
+88.76
+],
+[
+3200.0,
+89.13
+],
+[
+3300.0,
+89.41
+],
+[
+3400.0,
+89.56
+],
+[
+3500.0,
+89.58
+],
+[
+3600.0,
+89.45
+],
+[
+3700.0,
+89.24
+],
+[
+3800.0,
+89.03
+],
+[
+3900.0,
+88.76
+],
+[
+4000.0,
+88.41
+],
+[
+4100.0,
+87.93
+],
+[
+4200.0,
+87.31
+],
+[
+4300.0,
+86.58
+],
+[
+4400.0,
+85.86
+],
+[
+4500.0,
+85.3
+],
+[
+4600.0,
+84.85
+],
+[
+4700.0,
+84.43
+],
+[
+4800.0,
+83.95
+],
+[
+4900.0,
+83.3
+],
+[
+5000.0,
+82.35
+],
+[
+5100.0,
+81.19
+],
+[
+5200.0,
+79.87
+],
+[
+5300.0,
+78.33
+],
+[
+5400.0,
+76.65
+],
+[
+5500.0,
+74.73
+],
+[
+5600.0,
+72.51
+],
+[
+5700.0,
+70.03
+],
+[
+5800.0,
+67.17
+],
+[
+5900.0,
+63.81
+],
+[
+6000.0,
+60.02
+],
+[
+6100.0,
+55.62
+],
+[
+6200.0,
+50.49
+],
+[
+6300.0,
+44.54
+],
+[
+6400.0,
+37.71
+],
+[
+6500.0,
+29.95
+],
+[
+6600.0,
+21.23
+],
+[
+6700.0,
+11.53
+],
+[
+6800.0,
+0.55
+],
+[
+6900.0,
+-11.18
+],
+[
+7000.0,
+-24.17
+]
+],
+"unit": "table:rpm->N·m",
+"kind": "computed",
+"note": "par neto WOT con boost incluido; 2 decimales como render_power_lut",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"build_engine_model: fila 99 − fricción",
+""
+]
+]
+},
+"bng.engine.peak_power": {
+"value": 43492.627575317565,
+"unit": "W",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_power_rpm": {
+"value": 5200.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_torque": {
+"value": 89.58000000000001,
+"unit": "N·m",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.peak_torque_rpm": {
+"value": 3500.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.rev_limiter": {
+"value": "independiente_del_conflicto",
+"unit": "enum",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_886e9', False), ('Camso_EngineManagement_886e9', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_limiter (Lua 47437d5c l. 2003-2007; 91392d70 l. 2000-2004)",
+""
+]
+]
+},
+"bng.engine.rpm_ceiling": {
+"value": 7000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_886e9', False), ('Camso_EngineManagement_886e9', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_limiter",
+""
+]
+]
+},
+"bng.fuel.capacity": {
+"value": 60,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.fuel.start": {
+"value": 60,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.gearbox.forward_count": {
+"value": 4,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_1": {
+"value": 3.14,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_2": {
+"value": 1.73,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_3": {
+"value": 1.11,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_4": {
+"value": 0.79,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.reverse_ratio": {
+"value": -3.3,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.type": {
+"value": "manualGearbox",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"build_drivetrain: GEARBOX_TYPES",
+""
+]
+]
+},
+"bng.geometry.cog_height": {
+"value": 0.46370408184583645,
+"unit": "m",
+"kind": "measured",
+"note": "hipótesis: suelo = neumático sin carga",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"cog_height",
+""
+]
+]
+},
+"bng.geometry.front_axle_fraction": {
+"value": 0.5557462362620373,
+"unit": "1",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"front_axle_fraction",
+""
+]
+]
+},
+"bng.geometry.track_front": {
+"value": 1.5137,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.track_rear": {
+"value": 1.4846759999999999,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.wheelbase": {
+"value": 2.6399999999999997,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.info.author": {
+"value": "Camshaft Software LTD",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.drivetrain": {
+"value": "FWD",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_f5893.json",
+""
+]
+]
+},
+"bng.info.exporter_version": {
+"value": "40340",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.implied_power": {
+"value": 58.38139118583387,
+"unit": "hp",
+"kind": "computed",
+"note": "Weight / (Weight/Power): potencia declarada sin el truncado del entero 'Power'",
+"refs": [
+[
+"file",
+"info_f5893.json",
+""
+]
+]
+},
+"bng.info.name": {
+"value": "sucette poubelle",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.power": {
+"value": 58,
+"unit": "hp",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_f5893.json",
+""
+]
+]
+},
+"bng.info.power_peak_rpm": {
+"value": 5200,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_f5893.json",
+""
+]
+]
+},
+"bng.info.torque": {
+"value": 89,
+"unit": "N·m",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_f5893.json",
+""
+]
+]
+},
+"bng.info.torque_peak_rpm": {
+"value": 3500,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_f5893.json",
+""
+]
+]
+},
+"bng.info.transmission": {
+"value": "Manual",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_f5893.json",
+""
+]
+]
+},
+"bng.info.type": {
+"value": "Automation",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.weight": {
+"value": 1148,
+"unit": "kg",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_f5893.json",
+""
+]
+]
+},
+"bng.mass.total": {
+"value": 1149.651772,
+"unit": "kg",
+"kind": "measured",
+"note": "Σ nodeWeight + masa generada de las ruedas (pressureWheels)",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"compute_mass_geometry",
+""
+]
+]
+},
+"bng.mass.wheel_assembly": {
+"value": 113.825808,
+"unit": "kg",
+"kind": "measured",
+"note": "cota inferior de la masa no suspendida",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"wheel_assembly_mass",
+""
+]
+]
+},
+"bng.shift.transmission_shift_delay": {
+"value": 0.22,
+"unit": "s",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"analyse: vehicleController",
+""
+]
+]
+},
+"bng.suspension.front.ac_type": {
+"value": "STRUT",
+"unit": "enum",
+"kind": "computed",
+"note": "tipo AC por la etiqueta declarada de la pieza (MacPherson/strut -> STRUT)",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"TYPE_BY_LABEL",
+""
+]
+]
+},
+"bng.suspension.front.label": {
+"value": "poubelle MacPherson Strut Front Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.front.motion_ratio_hyp": {
+"value": 0.996473,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.front.spring_rate_beam": {
+"value": 20000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.front.torsionbar_rate": {
+"value": 1018.325012,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.suspension.rear.label": {
+"value": "poubelle Semi Trailing Arm Rear Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.rear.motion_ratio_hyp": {
+"value": 0.99892,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.rear.spring_rate_beam": {
+"value": 24000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.rear.torsionbar_rate": {
+"value": 2535.173096,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.tyre.front.hub_radius": {
+"value": 0.1905,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.front.pressure": {
+"value": 33.1,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.front.radius": {
+"value": 0.285,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.front.width": {
+"value": 0.165,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"bng.tyre.rear.hub_radius": {
+"value": 0.1905,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.rear.pressure": {
+"value": 29.3,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.rear.radius": {
+"value": 0.285,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.rear.width": {
+"value": 0.165,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config f5893.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"project.driver_mass": {
+"value": 70.0,
+"unit": "kg",
+"kind": "manual",
+"note": "decisión del proyecto: 70 kg configurables; Kunos usa 75 kg",
+"refs": [
+[
+"doc",
+"Decisiones del proyecto, 2 (piloto)",
+""
+]
+]
+}
+},
+"sucette_poubelle_turbo": {
+"bng.aero.cda": {
+"value": 0.821,
+"unit": "m²",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"vehicleArea",
+""
+]
+]
+},
+"bng.aero.cla_front": {
+"value": -0.28622556734693877,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.cla_rear": {
+"value": -0.3368372767346938,
+"unit": "m²",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"cla (ρ₀ = 1,225, hipótesis)",
+""
+]
+]
+},
+"bng.aero.target_front": {
+"value": -541.09,
+"unit": "N",
+"kind": "extracted",
+"note": "a 200 km/h; positivo = carga, negativo = sustentación (cefaero.lua:135-142)",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.aero.target_rear": {
+"value": -636.768,
+"unit": "N",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"downforceModel",
+""
+]
+]
+},
+"bng.brakes.front.max_torque_per_wheel": {
+"value": 1152.34,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.front.parking_torque_per_wheel": {
+"value": 0.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.brakes.front_share_below_knee": {
+"value": 0.6783643609132176,
+"unit": "1",
+"kind": "computed",
+"note": "por debajo del codo de brakeInputSplit",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"front_share(…, 0.5)",
+""
+]
+]
+},
+"bng.brakes.front_share_pedal_full": {
+"value": 0.7376804409281541,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"front_share(…, 1.0)",
+""
+]
+]
+},
+"bng.brakes.rear.max_torque_per_wheel": {
+"value": 409.77,
+"unit": "N·m",
+"kind": "computed",
+"note": "por rueda, entrada de freno 1",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"brake_torque",
+""
+]
+]
+},
+"bng.brakes.rear.parking_torque_per_wheel": {
+"value": 1365.912354,
+"unit": "N·m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"parkingTorque",
+""
+]
+]
+},
+"bng.clutch.lock_torque_default": {
+"value": 250.23236164641781,
+"unit": "N·m",
+"kind": "computed",
+"note": "1,25·par neto máx. + techo de rpm · inercia · π/30 (frictionClutch.lua:174)",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"174",
+""
+],
+[
+"code",
+"read_devices: clutch",
+""
+]
+]
+},
+"bng.code.camsoEngineThermals_sha256": {
+"value": "d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b"
+]
+]
+},
+"bng.code.camsoEngine_sha256": {
+"value": "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb"
+]
+]
+},
+"bng.code.camsoSupercharger_sha256": {
+"value": "e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196"
+]
+]
+},
+"bng.code.camsoTurbocharger_sha256": {
+"value": "1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76"
+]
+]
+},
+"bng.code.cefaero_sha256": {
+"value": "ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"code",
+"",
+"ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb"
+]
+]
+},
+"bng.diff.final_ratio": {
+"value": 5.04,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"build_drivetrain: gearRatio",
+""
+]
+]
+},
+"bng.diff.lsd_lock_coef": {
+"value": 0.2,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.diff.lsd_preload": {
+"value": 50.0,
+"unit": "N·m",
+"kind": "extracted",
+"note": "par: differential.lua:57 lo suma a un par (lsdTorque = lsdPreload + coef·|T|). Las declaraciones de variable de BeamNG lo rotulan «N/m» (error de rótulo; el valor literal activo no declara unidad). Corregido el 2026-10-26 (investigacion_powerlut_preload_2026-10-26.md §B)",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"read_devices: lsdPreload",
+""
+]
+]
+},
+"bng.diff.lsd_rev_lock_coef": {
+"value": 0.025,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.diff.type": {
+"value": "lsd",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"read_devices",
+""
+]
+]
+},
+"bng.drivetrain.traction": {
+"value": "FWD",
+"unit": "enum",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"analyse/traction_type",
+""
+]
+]
+},
+"bng.engine.clutch_additional_inertia": {
+"value": 0.0,
+"unit": "kg·m²",
+"kind": "computed",
+"note": "Σ additionalEngineInertia de los hijos frictionClutch del motor (el Lua la suma a device.inertia); ausente = 0",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"camsoEngine.lua:995-1001 (validate)",
+""
+],
+[
+"code",
+"l. 242: additionalEngineInertia = jbeamData.… or 0",
+""
+]
+]
+},
+"bng.engine.coast_ref_nonlinearity": {
+"value": 0.0,
+"unit": "1",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_rpm": {
+"value": 7000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.coast_ref_torque": {
+"value": 57.8,
+"unit": "N·m",
+"kind": "computed",
+"note": "error máx. 29.1 N·m; derivado (gas cerrado − fricción, ×1.35; fila 0: camsoEngine.lua:725 max(0, …) (samples_beamng, exportador 40340))",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"fit_coast_ref",
+""
+]
+]
+},
+"bng.engine.device_type": {
+"value": "camsoEngine",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"find_engine_device",
+""
+]
+]
+},
+"bng.engine.has_turbo": {
+"value": true,
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"read_raw_engine: turbo",
+""
+]
+]
+},
+"bng.engine.idle_rpm": {
+"value": 1400.0,
+"unit": "rpm",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"read_raw_engine: idleRPM",
+""
+]
+]
+},
+"bng.engine.inertia": {
+"value": 0.11071367377992,
+"unit": "kg·m²",
+"kind": "extracted",
+"note": "solo el motor; falta additionalEngineInertia del embrague (camsoEngine.lua:1001)",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"read_raw_engine: inertia",
+""
+]
+]
+},
+"bng.engine.net_wot_curve": {
+"value": [
+[
+0.0,
+0.0
+],
+[
+100.0,
+-3.94
+],
+[
+200.0,
+8.81
+],
+[
+300.0,
+13.2
+],
+[
+400.0,
+17.61
+],
+[
+500.0,
+22.01
+],
+[
+600.0,
+26.41
+],
+[
+700.0,
+30.03
+],
+[
+800.0,
+33.5
+],
+[
+900.0,
+36.78
+],
+[
+1000.0,
+39.95
+],
+[
+1100.0,
+43.0
+],
+[
+1200.0,
+45.98
+],
+[
+1300.0,
+48.81
+],
+[
+1400.0,
+51.56
+],
+[
+1500.0,
+54.06
+],
+[
+1600.0,
+56.59
+],
+[
+1700.0,
+58.95
+],
+[
+1800.0,
+61.26
+],
+[
+1900.0,
+63.49
+],
+[
+2000.0,
+65.63
+],
+[
+2100.0,
+67.56
+],
+[
+2200.0,
+69.49
+],
+[
+2300.0,
+71.35
+],
+[
+2400.0,
+73.15
+],
+[
+2500.0,
+74.75
+],
+[
+2600.0,
+76.44
+],
+[
+2700.0,
+78.14
+],
+[
+2800.0,
+79.66
+],
+[
+2900.0,
+81.28
+],
+[
+3000.0,
+82.77
+],
+[
+3100.0,
+84.7
+],
+[
+3200.0,
+86.49
+],
+[
+3300.0,
+88.27
+],
+[
+3400.0,
+90.58
+],
+[
+3500.0,
+92.72
+],
+[
+3600.0,
+94.8
+],
+[
+3700.0,
+97.44
+],
+[
+3800.0,
+100.52
+],
+[
+3900.0,
+103.2
+],
+[
+4000.0,
+105.62
+],
+[
+4100.0,
+108.72
+],
+[
+4200.0,
+112.82
+],
+[
+4300.0,
+117.5
+],
+[
+4400.0,
+122.77
+],
+[
+4500.0,
+130.25
+],
+[
+4600.0,
+134.98
+],
+[
+4700.0,
+135.26
+],
+[
+4800.0,
+134.95
+],
+[
+4900.0,
+134.43
+],
+[
+5000.0,
+133.72
+],
+[
+5100.0,
+132.78
+],
+[
+5200.0,
+131.47
+],
+[
+5300.0,
+129.91
+],
+[
+5400.0,
+127.96
+],
+[
+5500.0,
+125.51
+],
+[
+5600.0,
+122.4
+],
+[
+5700.0,
+118.55
+],
+[
+5800.0,
+113.8
+],
+[
+5900.0,
+108.04
+],
+[
+6000.0,
+101.22
+],
+[
+6100.0,
+93.12
+],
+[
+6200.0,
+83.75
+],
+[
+6300.0,
+73.07
+],
+[
+6400.0,
+60.94
+],
+[
+6500.0,
+47.19
+],
+[
+6600.0,
+31.92
+],
+[
+6700.0,
+14.35
+],
+[
+6800.0,
+-5.31
+],
+[
+6900.0,
+-27.16
+],
+[
+7000.0,
+-29.24
+]
+],
+"unit": "table:rpm->N·m",
+"kind": "computed",
+"note": "par neto WOT con boost incluido; 2 decimales como render_power_lut",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"build_engine_model: fila 99 − fricción",
+""
+]
+]
+},
+"bng.engine.peak_power": {
+"value": 72359.67527160299,
+"unit": "W",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_power_rpm": {
+"value": 5400.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"peak_power",
+""
+]
+]
+},
+"bng.engine.peak_torque": {
+"value": 135.26,
+"unit": "N·m",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.peak_torque_rpm": {
+"value": 4700.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"peak_torque",
+""
+]
+]
+},
+"bng.engine.rev_limiter": {
+"value": "independiente_del_conflicto",
+"unit": "enum",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_8fadb', False), ('Camso_EngineManagement_8fadb', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_limiter (Lua 47437d5c l. 2003-2007; 91392d70 l. 2000-2004)",
+""
+]
+]
+},
+"bng.engine.rpm_ceiling": {
+"value": 7000.0,
+"unit": "rpm",
+"kind": "computed",
+"note": "independiente del conflicto hasRevLimiter [('Camso_Engine_8fadb', False), ('Camso_EngineManagement_8fadb', True)]: con limitador, revLimiterRPM; sin él, fin de la tabla de par (par = 0 por encima)",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_limiter",
+""
+]
+]
+},
+"bng.fuel.capacity": {
+"value": 60,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.fuel.start": {
+"value": 60,
+"unit": "L",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"fuel_values",
+""
+]
+]
+},
+"bng.gearbox.forward_count": {
+"value": 5,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_1": {
+"value": 3.3,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_2": {
+"value": 1.89,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_3": {
+"value": 1.26,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_4": {
+"value": 0.93,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.forward_ratio_5": {
+"value": 0.73,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.reverse_ratio": {
+"value": -3.46,
+"unit": "1",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_split_gears",
+""
+]
+]
+},
+"bng.gearbox.type": {
+"value": "manualGearbox",
+"unit": "enum",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"build_drivetrain: GEARBOX_TYPES",
+""
+]
+]
+},
+"bng.geometry.cog_height": {
+"value": 0.43552183831731495,
+"unit": "m",
+"kind": "measured",
+"note": "hipótesis: suelo = neumático sin carga",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"cog_height",
+""
+]
+]
+},
+"bng.geometry.front_axle_fraction": {
+"value": 0.5730172706622048,
+"unit": "1",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"front_axle_fraction",
+""
+]
+]
+},
+"bng.geometry.track_front": {
+"value": 1.522398,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.track_rear": {
+"value": 1.512726,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.geometry.wheelbase": {
+"value": 2.6399999999999997,
+"unit": "m",
+"kind": "measured",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"_group_axles",
+""
+]
+]
+},
+"bng.info.author": {
+"value": "Camshaft Software LTD",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.drivetrain": {
+"value": "FWD",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_88925.json",
+""
+]
+]
+},
+"bng.info.exporter_version": {
+"value": "40340",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.implied_power": {
+"value": 97.12349482843672,
+"unit": "hp",
+"kind": "computed",
+"note": "Weight / (Weight/Power): potencia declarada sin el truncado del entero 'Power'",
+"refs": [
+[
+"file",
+"info_88925.json",
+""
+]
+]
+},
+"bng.info.name": {
+"value": "sucette poubelle turbo",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.power": {
+"value": 97,
+"unit": "hp",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_88925.json",
+""
+]
+]
+},
+"bng.info.power_peak_rpm": {
+"value": 5400,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_88925.json",
+""
+]
+]
+},
+"bng.info.torque": {
+"value": 135,
+"unit": "N·m",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_88925.json",
+""
+]
+]
+},
+"bng.info.torque_peak_rpm": {
+"value": 4700,
+"unit": "rpm",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_88925.json",
+""
+]
+]
+},
+"bng.info.transmission": {
+"value": "Manual",
+"unit": "enum",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_88925.json",
+""
+]
+]
+},
+"bng.info.type": {
+"value": "Automation",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"info.json",
+""
+]
+]
+},
+"bng.info.weight": {
+"value": 1201,
+"unit": "kg",
+"kind": "extracted",
+"note": "valor declarado por el exportador (UI), no medido",
+"refs": [
+[
+"file",
+"info_88925.json",
+""
+]
+]
+},
+"bng.mass.total": {
+"value": 1202.8502740000001,
+"unit": "kg",
+"kind": "measured",
+"note": "Σ nodeWeight + masa generada de las ruedas (pressureWheels)",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"compute_mass_geometry",
+""
+]
+]
+},
+"bng.mass.wheel_assembly": {
+"value": 128.21133600000002,
+"unit": "kg",
+"kind": "measured",
+"note": "cota inferior de la masa no suspendida",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"wheel_assembly_mass",
+""
+]
+]
+},
+"bng.shift.transmission_shift_delay": {
+"value": 0.19,
+"unit": "s",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"analyse: vehicleController",
+""
+]
+]
+},
+"bng.suspension.front.ac_type": {
+"value": "STRUT",
+"unit": "enum",
+"kind": "computed",
+"note": "tipo AC por la etiqueta declarada de la pieza (MacPherson/strut -> STRUT)",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"TYPE_BY_LABEL",
+""
+]
+]
+},
+"bng.suspension.front.label": {
+"value": "poubelle turbo MacPherson Strut Front Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.front.motion_ratio_hyp": {
+"value": 0.996473,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.front.spring_rate_beam": {
+"value": 36000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.front.torsionbar_rate": {
+"value": 1597.721069,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.suspension.rear.label": {
+"value": "poubelle turbo Semi Trailing Arm Rear Suspension",
+"unit": "text",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"AxleSuspension.label",
+""
+]
+]
+},
+"bng.suspension.rear.motion_ratio_hyp": {
+"value": 0.99892,
+"unit": "1",
+"kind": "estimated",
+"note": "hipótesis del extractor",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"motion_ratio_hyp",
+""
+]
+]
+},
+"bng.suspension.rear.spring_rate_beam": {
+"value": 30000.0,
+"unit": "N/m",
+"kind": "extracted",
+"note": "a lo largo de la viga, no en rueda",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"CornerSuspension.spring_rate",
+""
+]
+]
+},
+"bng.suspension.rear.torsionbar_rate": {
+"value": 699.09314,
+"unit": "N·m/rad",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"torsionbars",
+""
+]
+]
+},
+"bng.tyre.front.hub_radius": {
+"value": 0.2159,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.front.pressure": {
+"value": 32.6,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.front.radius": {
+"value": 0.285,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.front.width": {
+"value": 0.195,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"bng.tyre.rear.hub_radius": {
+"value": 0.2159,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"WheelTyre.hub_radius",
+""
+]
+]
+},
+"bng.tyre.rear.pressure": {
+"value": 28.0,
+"unit": "psi",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"pressurePSI",
+""
+]
+]
+},
+"bng.tyre.rear.radius": {
+"value": 0.285,
+"unit": "m",
+"kind": "measured",
+"note": "radio de los nodos del neumático sin carga",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"WheelTyre.radius",
+""
+]
+]
+},
+"bng.tyre.rear.width": {
+"value": 0.195,
+"unit": "m",
+"kind": "extracted",
+"note": "",
+"refs": [
+[
+"file",
+"config 88925.pc",
+""
+],
+[
+"code",
+"tireWidth",
+""
+]
+]
+},
+"project.driver_mass": {
+"value": 70.0,
+"unit": "kg",
+"kind": "manual",
+"note": "decisión del proyecto: 70 kg configurables; Kunos usa 75 kg",
+"refs": [
+[
+"doc",
+"Decisiones del proyecto, 2 (piloto)",
+""
+]
+]
+}
+}
+}
+}
