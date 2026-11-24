@@ -1,0 +1,331 @@
+-- beam2ac G2.22: app del banco LSD autónomo (registrador de G2.21 + puente con el controlador).
+-- GENERADO por tools/acbench/install.py a partir de esta plantilla: las estructuras vienen de
+-- tools/acbench/bridge.py (no editar a mano en la instalación).
+--
+-- * Registra en cada fotograma las MISMAS columnas que beam2ac_lsd_logger (G2.21) y además
+--   phys_ms (ac.StateCar.timestamp, ms del último paso de física), seg_uid/seg_meas/cmd_seq/
+--   ctl_state del controlador, guiñada, posición y colisiones.
+-- * Publica la telemetría en Beam2acBench.Tel.v1 y lee las órdenes de Beam2acBench.Cmd.v1.
+-- * Modo 1 (lua): aplica los mandos con ac.overrideCarControls(0). Modo 2 (cai): los mandos
+--   los aplica CSP Custom AI desde Python; aquí solo se vigila.
+-- * Vigilante: si el latido (Cmd.seq) no cambia en 0,5 s con un modo activo, suelta el gas,
+--   frena y centra el volante (en modo cai escribe directamente en CarControls0.v0).
+
+local CMD_NAME = 'Beam2acBench.Cmd.v1'
+local TEL_NAME = 'Beam2acBench.Tel.v1'
+local CAI_CONTROLS = 'AcTools.CSP.NewBehaviour.CustomAI.CarControls0.v0'
+local MAGIC_CMD = 0x22AC0222
+local MAGIC_TEL = 0x22AC1222
+local VERSION = 1
+local CMD_CDEF = '@CMD_CDEF@'
+local TEL_CDEF = '@TEL_CDEF@'
+local CAI_CDEF = '@CAI_CDEF@'
+local WATCHDOG_S = 0.5
+
+local ffi = require('ffi')
+local OUT_DIR = ac.getFolder(ac.FolderID.ScriptOrigin) .. '/registros'
+local WHEEL_KEYS = { 'ang', 'shaftv', 'shafti', 'angi', 'fbt', 'drvt', 'brkt', 'hbt', 'fx', 'load', 'lrad', 'sr' }
+
+local tel = ac.writeMemoryMappedFile(TEL_NAME, TEL_CDEF)
+-- Cmd lo crea Python; hasta entonces se usa una copia local a cero y se reintenta cada segundo
+local cmdLocal = ffi.new('struct { ' .. CMD_CDEF .. ' }')
+local cmd = cmdLocal
+local cmdMapped = false
+local lastCmdTry = -1e9
+local caiCtl = nil
+local telSize = ffi.sizeof(ffi.typeof('struct { ' .. TEL_CDEF .. ' }'))
+local cmdSize = ffi.sizeof(cmdLocal)
+
+local function tryMapCmd(now)
+  if cmdMapped or now - lastCmdTry < 1000 then return end
+  lastCmdTry = now
+  local ok, m = pcall(ac.readMemoryMappedFile, CMD_NAME, CMD_CDEF)
+  if ok and m ~= nil then
+    cmd = m
+    cmdMapped = true
+  end
+end
+
+local fileName = nil
+local lines = {}
+local rows = 0
+local lastFlush = 0
+local lastSeq = -1
+local lastSeqTime = 0
+local lastAction = 0
+local lastGearReq = -99
+local watchdogTripped = false
+local errorText = ''
+
+local function setStr(dst, cap, s)
+  s = tostring(s or '')
+  if #s > cap - 1 then s = s:sub(1, cap - 1) end
+  ffi.fill(dst, cap, 0)
+  ffi.copy(dst, s, #s)
+end
+
+local function fail(msg)
+  errorText = tostring(msg)
+  setStr(tel.error, 128, errorText)
+end
+
+local function num(x)
+  if x == nil then return 'nan' end
+  if type(x) == 'boolean' then return x and '1' or '0' end
+  return string.format('%.9g', x)
+end
+
+local function header()
+  local cols = { 'sim_ms', 'segment', 'gear', 'gas', 'brake', 'handbrake', 'clutch', 'rpm', 'speed_kmh',
+    'steer', 'drivetrain_torque', 'phys_available', 'gear_ratio', 'final_ratio', 'drivetrain_velocity',
+    'clutch_state', 'engine_inertia', 'drivetrain_inertia', 'clutch_inertia',
+    'cphys_alive', 'cphys_engine_torque', 'cphys_gear', 'cphys_counter', 'cphys_dt',
+    'cphys_alt_f', 'cphys_alt_r', 'cphys_alt_c', 'cphys_rmsinc_f', 'cphys_rmsinc_r', 'cphys_rmsinc_c' }
+  for i = 0, 3 do
+    for _, k in ipairs(WHEEL_KEYS) do cols[#cols + 1] = k .. i end
+  end
+  for _, k in ipairs({ 'phys_ms', 'seg_uid', 'seg_meas', 'cmd_seq', 'ctl_state', 'ctl_mode', 'yaw_rate',
+    'pos_x', 'pos_y', 'pos_z', 'collided_with', 'collision_depth', 'wheels_outside', 'damage_sum' }) do
+    cols[#cols + 1] = k
+  end
+  return table.concat(cols, ',')
+end
+
+local function flush()
+  if fileName == nil or #lines == 0 then return end
+  local f = io.open(fileName, 'a')
+  if f then
+    f:write(table.concat(lines, '\n') .. '\n')
+    f:close()
+  else
+    fail('no se pudo escribir ' .. fileName)
+  end
+  lines = {}
+end
+
+local function openLog(runId)
+  flush()
+  if not io.dirExists(OUT_DIR) then io.createDir(OUT_DIR) end
+  fileName = OUT_DIR .. '/' .. ac.getCarID(0) .. '_' .. runId .. '.csv'
+  local f = io.open(fileName, 'w')
+  if f then
+    f:write(header() .. '\n')
+    f:close()
+    rows = 0
+    setStr(tel.file, 200, fileName)
+  else
+    fail('no se pudo crear ' .. fileName)
+    fileName = nil
+  end
+end
+
+local function closeLog()
+  flush()
+  fileName = nil
+  setStr(tel.file, 200, '')
+end
+
+local function v3(dst, v)
+  dst[0], dst[1], dst[2] = v.x, v.y, v.z
+end
+
+local function probe()
+  local bits = 0
+  local car = ac.getCar(0)
+  if physics and physics.setCarPosition and pcall(physics.setCarPosition, 0, car.position, car.look) then bits = bits + 1 end
+  if physics and physics.setCarVelocity and pcall(physics.setCarVelocity, 0, car.velocity) then bits = bits + 2 end
+  if physics and physics.disableCarCollisions and pcall(physics.disableCarCollisions, 0, true) then bits = bits + 4 end
+  if ac.overrideCarControls then
+    local ok, c = pcall(ac.overrideCarControls, 0)
+    if ok and c ~= nil then bits = bits + 8 end
+  end
+  if physics and physics.resetCarState then bits = bits + 16 end
+  return bits
+end
+
+local function doAction(a)
+  local ok, err = true, nil
+  if a == 1 then
+    ok, err = pcall(function()
+      physics.setCarPosition(0, vec3(cmd.pos[0], cmd.pos[1], cmd.pos[2]), vec3(cmd.dir[0], cmd.dir[1], cmd.dir[2]))
+      physics.setCarVelocity(0, vec3(cmd.vel[0], cmd.vel[1], cmd.vel[2]))
+    end)
+  elseif a == 2 then
+    ok, err = pcall(physics.setCarVelocity, 0, vec3(0, 0, 0))
+  elseif a == 3 then
+    ok, err = pcall(physics.disableCarCollisions, 0, true)
+  elseif a == 4 then
+    ok, err = pcall(physics.resetCarState, 0, 1)
+  elseif a == 5 then
+    closeLog()
+  elseif a == 6 then
+    openLog(ffi.string(cmd.run_id))
+  elseif a == 7 then
+    tel.phys_api = probe()
+  elseif a == 8 then
+    ok, err = pcall(physics.teleportCarTo, 0, ac.SpawnSet.Start)
+  elseif a == 9 then
+    ok, err = pcall(physics.teleportCarTo, 0, ac.SpawnSet.Pits)
+  elseif a == 10 then
+    ok, err = pcall(ac.simulateCustomHotkeyPress, '__CM_START_SESSION', 5)
+  elseif a == 11 then
+    ok, err = pcall(ac.simulateCustomHotkeyPress, '__CM_START_STOP_SESSION', 5)
+  elseif a == 12 then
+    ok, err = pcall(physics.engageGear, 0, cmd.gear_req)
+  end
+  tel.action_result = ok and 1 or -1
+  if not ok then fail('accion ' .. a .. ': ' .. tostring(err)) end
+end
+
+local function safeControls()
+  pcall(physics.setGentleStop, 0, true)
+  if cmd.mode == 1 then
+    local c = ac.overrideCarControls(0)
+    if c then
+      c.combineAxis = false
+      c.gas, c.brake, c.steer, c.handbrake = 0, 0.6, 0, 0
+    end
+  elseif cmd.mode == 2 then
+    if caiCtl == nil then caiCtl = ac.writeMemoryMappedFile(CAI_CONTROLS, CAI_CDEF) end
+    caiCtl.gas, caiCtl.brake, caiCtl.steer = 0, 0.6, 0
+  end
+end
+
+local function applyLuaControls()
+  local c = ac.overrideCarControls(0)
+  if c == nil then
+    tel.override_active = 0
+    return
+  end
+  c.combineAxis = false
+  c.gas, c.brake, c.clutch, c.steer, c.handbrake = cmd.gas, cmd.brake, cmd.clutch, cmd.steer, cmd.handbrake
+  tel.override_active = c:active() and 1 or 0
+  if cmd.gear_req ~= lastGearReq and cmd.gear_req > -2 then
+    if pcall(physics.engageGear, 0, cmd.gear_req) then lastGearReq = cmd.gear_req end
+  end
+end
+
+local function logRow(car, ph, sim)
+  local v = { num(sim.time), num(cmd.seg_uid), num(car.gear), num(car.gas), num(car.brake), num(car.handbrake),
+    num(car.clutch), num(car.rpm), num(car.speedKmh), num(car.steer), num(car.drivetrainTorque) }
+  if ph ~= nil and ph.isAvailable then
+    local list = { '1', num(ph.gearRatio), num(ph.finalRatio), num(ph.drivetrainVelocity), num(ph.clutchState),
+      num(ph.engineInertia), num(ph.drivetrainInertia), num(ph.clutchInertia) }
+    for _, x in ipairs(list) do v[#v + 1] = x end
+  else
+    v[#v + 1] = '0'
+    for _ = 1, 7 do v[#v + 1] = 'nan' end
+  end
+  for _ = 1, 11 do v[#v + 1] = 'nan' end -- cphys_*: sin script de física (G2.21: nunca se ejecutó)
+  for i = 0, 3 do
+    local w = car.wheels[i]
+    local pw = (ph ~= nil and ph.isAvailable) and ph.wheels[i] or nil
+    v[#v + 1] = num(w.angularSpeed)
+    if pw ~= nil then
+      for _, x in ipairs({ pw.shaftVelocity, pw.shaftInertia, pw.angularInertia, pw.feedbackTorque, pw.driveTorque,
+        pw.brakeTorque, pw.handbrakeTorque }) do v[#v + 1] = num(x) end
+    else
+      for _ = 1, 7 do v[#v + 1] = 'nan' end
+    end
+    v[#v + 1] = num(w.fx)
+    v[#v + 1] = num(w.load)
+    v[#v + 1] = num(w.tyreLoadedRadius)
+    v[#v + 1] = num(w.slipRatio)
+  end
+  local dmg = 0
+  for i = 0, 4 do dmg = dmg + (car.damage[i] or 0) end
+  for _, x in ipairs({ car.timestamp, cmd.seg_uid, cmd.seg_meas, cmd.seq, cmd.state, cmd.mode,
+    car.localAngularVelocity.y, car.position.x, car.position.y, car.position.z, car.collidedWith,
+    car.collisionDepth, car.wheelsOutside, dmg }) do v[#v + 1] = num(x) end
+  lines[#lines + 1] = table.concat(v, ',')
+  rows = rows + 1
+end
+
+local function publish(car, ph, sim)
+  tel.magic, tel.version, tel.struct_size = MAGIC_TEL, VERSION, telSize
+  tel.frame = tel.frame + 1
+  tel.phys_ms, tel.sim_ms = car.timestamp, sim.time
+  tel.cmd_seq_seen, tel.seg_uid_seen = cmd.seq, cmd.seg_uid
+  tel.gear, tel.collided_with, tel.wheels_outside = car.gear, car.collidedWith, car.wheelsOutside
+  tel.rows = rows
+  tel.is_live = sim.isLive and 1 or 0
+  tel.paused = sim.isPaused and 1 or 0
+  tel.in_menu = sim.isInMainMenu and 1 or 0
+  tel.watchdog = watchdogTripped and 1 or 0
+  tel.cars_count = sim.carsCount
+  tel.rpm, tel.speed_kmh = car.rpm, car.speedKmh
+  tel.gas, tel.brake, tel.clutch, tel.steer, tel.handbrake = car.gas, car.brake, car.clutch, car.steer, car.handbrake
+  tel.drivetrain_torque, tel.collision_depth = car.drivetrainTorque, car.collisionDepth
+  tel.fps, tel.sim_dt = sim.fps, sim.dt
+  v3(tel.pos, car.position)
+  v3(tel.vel, car.velocity)
+  v3(tel.look, car.look)
+  v3(tel.up, car.up)
+  v3(tel.local_vel, car.localVelocity)
+  v3(tel.local_ang_vel, car.localAngularVelocity)
+  local okPh = ph ~= nil and ph.isAvailable
+  tel.phys_available = okPh and 1 or 0
+  if okPh then
+    tel.gear_ratio, tel.final_ratio = ph.gearRatio, ph.finalRatio
+  end
+  for i = 0, 3 do
+    local w = car.wheels[i]
+    tel.ang[i], tel.load[i] = w.angularSpeed, w.load
+    if okPh then
+      tel.shaftv[i], tel.fbt[i] = ph.wheels[i].shaftVelocity, ph.wheels[i].feedbackTorque
+    end
+  end
+  for i = 0, 4 do tel.damage[i] = car.damage[i] or 0 end
+end
+
+local initialised = false
+
+function script.update(dt)
+  local sim = ac.getSim()
+  local car = ac.getCar(0)
+  local ph = ac.getCarPhysics(0)
+  if not initialised then
+    setStr(tel.car_id, 64, ac.getCarID(0))
+    initialised = true
+  end
+  tryMapCmd(sim.time)
+  local cmdOk = cmd.magic == MAGIC_CMD and cmd.version == VERSION and cmd.struct_size == cmdSize
+  if cmd.magic == MAGIC_CMD and cmd.struct_size ~= cmdSize then
+    fail('Cmd: tamaño Python ' .. cmd.struct_size .. ' distinto de Lua ' .. cmdSize)
+  end
+  if cmdOk then
+    if cmd.seq ~= lastSeq then
+      lastSeq = cmd.seq
+      lastSeqTime = sim.time
+      if watchdogTripped then pcall(physics.setGentleStop, 0, false) end
+      watchdogTripped = false
+    end
+    if cmd.action_seq ~= lastAction then
+      lastAction = cmd.action_seq
+      doAction(cmd.action)
+      tel.action_done_seq = cmd.action_seq
+    end
+    local stale = (sim.time - lastSeqTime) > WATCHDOG_S * 1000
+    if cmd.mode ~= 0 and stale then
+      watchdogTripped = true
+      safeControls()
+    elseif cmd.mode == 1 then
+      applyLuaControls()
+    end
+    if fileName ~= nil then logRow(car, ph, sim) end
+  end
+  publish(car, ph, sim)
+  if sim.time - lastFlush > 1000 then
+    flush()
+    lastFlush = sim.time
+  end
+end
+
+function windowMain(dt)
+  ui.text('beam2ac banco LSD (G2.22)')
+  ui.text('filas: ' .. rows .. '   segmento: ' .. tostring(cmd.seg_uid) .. '   medida: ' .. tostring(cmd.seg_meas))
+  ui.text('modo: ' .. tostring(cmd.mode) .. '   estado: ' .. tostring(cmd.state) .. '   latido: ' .. tostring(cmd.seq))
+  if watchdogTripped then ui.text('VIGILANTE: sin latido del controlador, mandos en reposo') end
+  ui.text('archivo: ' .. tostring(fileName))
+  if errorText ~= '' then ui.text('ERROR: ' .. errorText) end
+end

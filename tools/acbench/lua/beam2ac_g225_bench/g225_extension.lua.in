@@ -1,0 +1,353 @@
+
+-- ===========================================================================================
+-- beam2ac G2.25: bloque AÑADIDO a la app de G2.22 (arriba, sin cambios salvo los textos de la
+-- ventana). GENERADO por tools/acbench/app_g225.py; estructura Geo de tools/acbench/bridge_geo.py.
+--
+-- * Publica Beam2acBench.Geo.v1 en cada fotograma: pose visual y física, graphicsOffset, ruedas
+--   (física, contacto, nulo WHEEL_xx de la escena y las dos en el marco de la carrocería),
+--   colisión, limitador, aceleración.
+-- * CSV de geometría propio (<car>_<run_id>_geo.csv en capturas/), una fila por fotograma con
+--   sim_ms y phys_ms para unirlo con el CSV de G2.22.
+-- * Acciones 13 (capturas con ac.GeometryShot), 14 (volcado JSON), 15/16 (abrir/cerrar el CSV de
+--   geometría); se confirman en Geo.act_done_seq (la app de G2.22 confirma en Tel sin hacer nada).
+-- ===========================================================================================
+
+local GEO_NAME = 'Beam2acBench.Geo.v1'
+local MAGIC_GEO = 0x25AC2225
+local GEO_VERSION = 1
+local GEO_CDEF = '@GEO_CDEF@'
+local geo = ac.writeMemoryMappedFile(GEO_NAME, GEO_CDEF)
+local geoSize = ffi.sizeof(ffi.typeof('struct { ' .. GEO_CDEF .. ' }'))
+local CAP_DIR = ac.getFolder(ac.FolderID.ScriptOrigin) .. '/capturas'
+local WHEEL_NODES = { 'WHEEL_LF', 'WHEEL_RF', 'WHEEL_LR', 'WHEEL_RR' }
+local carRoot = nil
+local wheelRefs = {}
+local geoErr = ''
+local lastGeoAction = 0
+local geoFile = nil
+local geoLines = {}
+local geoRows = 0
+local geoLastFlush = 0
+local shot = nil
+
+local function geoFail(msg)
+  geoErr = tostring(msg)
+  setStr(geo.error, 160, geoErr)
+end
+
+local function ensureCapDir()
+  if not io.dirExists(CAP_DIR) then io.createDir(CAP_DIR) end
+end
+
+local function findCarNodes()
+  if carRoot ~= nil then return end
+  local ok, err = pcall(function()
+    local root = ac.findNodes('carRoot:0')
+    if root == nil or root:size() == 0 then return end -- se reintenta en el siguiente fotograma
+    carRoot = root
+    local bits = 0
+    for i, name in ipairs(WHEEL_NODES) do
+      local r = carRoot:findNodes(name)
+      if r ~= nil and r:size() > 0 then
+        wheelRefs[i - 1] = r
+        bits = bits + 2 ^ (i - 1)
+      end
+    end
+    geo.nodes_found = bits
+  end)
+  if not ok then geoFail('nodos: ' .. tostring(err)) end
+end
+
+local function put3(dst, off, v)
+  dst[off], dst[off + 1], dst[off + 2] = v.x, v.y, v.z
+end
+
+-- Nulo WHEEL_xx dibujado: el de la escena (findNodes); si no se encontró, la transformación que AC
+-- aplica a ese nulo (car.wheels[i].transformWheel) y se marca el bit 16 de nodes_found.
+local function wheelNodePos(i)
+  local r = wheelRefs[i]
+  local m = r ~= nil and r:getWorldTransformationRaw() or nil
+  if m ~= nil then return m.position end
+  local ok, p = pcall(function() return ac.getCar(0).wheels[i].transformWheel.position end)
+  if ok and p ~= nil then
+    if geo.nodes_found < 16 then geo.nodes_found = geo.nodes_found + 16 end
+    return p
+  end
+  return nil
+end
+
+local function geoPublish(car, sim)
+  geo.magic, geo.version, geo.struct_size = MAGIC_GEO, GEO_VERSION, geoSize
+  geo.frame = geo.frame + 1
+  geo.phys_ms, geo.sim_ms = car.timestamp, sim.time
+  geo.limiter_on = car.isEngineLimiterOn and 1 or 0
+  geo.engaged_gear = car.engagedGear
+  geo.collided_with = car.collidedWith
+  geo.geo_rows = geoRows
+  put3(geo.graphics_offset, 0, car.graphicsOffset)
+  geo.cg_height, geo.rpm_limiter, geo.rpm_minimum = car.cgHeight, car.rpmLimiter, car.rpmMinimum
+  local bt, pt = car.bodyTransform, car.transform
+  put3(geo.body_pos, 0, bt.position)
+  put3(geo.body_look, 0, bt.look)
+  put3(geo.body_up, 0, bt.up)
+  put3(geo.phys_pos, 0, pt.position)
+  put3(geo.phys_look, 0, pt.look)
+  put3(geo.phys_up, 0, pt.up)
+  local w2l = car.worldToLocal
+  for i = 0, 3 do
+    local w = car.wheels[i]
+    put3(geo.wheel_pos, 3 * i, w.position)
+    put3(geo.wheel_contact, 3 * i, w.contactPoint)
+    put3(geo.wheel_pos_body, 3 * i, w2l:transformPoint(w.position))
+    local np = wheelNodePos(i)
+    if np ~= nil then
+      put3(geo.wheel_node, 3 * i, np)
+      put3(geo.wheel_node_body, 3 * i, w2l:transformPoint(np))
+    else
+      for k = 0, 2 do
+        geo.wheel_node[3 * i + k] = 0 / 0
+        geo.wheel_node_body[3 * i + k] = 0 / 0
+      end
+    end
+    geo.susp_travel[i], geo.tyre_radius[i], geo.loaded_radius[i] = w.suspensionTravel, w.tyreRadius, w.tyreLoadedRadius
+  end
+  put3(geo.collision_pos, 0, car.collisionPosition)
+  geo.collision_depth = car.collisionDepth
+  put3(geo.aabb_center, 0, car.aabbCenter)
+  put3(geo.aabb_size, 0, car.aabbSize)
+  put3(geo.accel, 0, car.acceleration)
+  geo.ground_distance = car.groundDistance
+end
+
+local function geoHeader()
+  local cols = { 'sim_ms', 'phys_ms', 'limiter_on', 'engaged_gear', 'collided_with', 'collision_depth',
+    'col_x', 'col_y', 'col_z', 'cg_height', 'acc_x', 'acc_y', 'acc_z' }
+  for _, p in ipairs({ 'body', 'phys' }) do
+    for _, a in ipairs({ 'pos', 'look', 'up' }) do
+      for _, c in ipairs({ 'x', 'y', 'z' }) do cols[#cols + 1] = p .. '_' .. a .. '_' .. c end
+    end
+  end
+  for i = 0, 3 do
+    for _, k in ipairs({ 'wp', 'wc', 'wn', 'wnb', 'wpb' }) do
+      for _, c in ipairs({ 'x', 'y', 'z' }) do cols[#cols + 1] = k .. i .. '_' .. c end
+    end
+    cols[#cols + 1] = 'travel' .. i
+    cols[#cols + 1] = 'lrad' .. i
+  end
+  return table.concat(cols, ',')
+end
+
+local function geoRow()
+  local v = { num(geo.sim_ms), num(geo.phys_ms), num(geo.limiter_on), num(geo.engaged_gear), num(geo.collided_with),
+    num(geo.collision_depth) }
+  for k = 0, 2 do v[#v + 1] = num(geo.collision_pos[k]) end
+  v[#v + 1] = num(geo.cg_height)
+  for k = 0, 2 do v[#v + 1] = num(geo.accel[k]) end
+  for _, arr in ipairs({ geo.body_pos, geo.body_look, geo.body_up, geo.phys_pos, geo.phys_look, geo.phys_up }) do
+    for k = 0, 2 do v[#v + 1] = num(arr[k]) end
+  end
+  for i = 0, 3 do
+    for _, arr in ipairs({ geo.wheel_pos, geo.wheel_contact, geo.wheel_node, geo.wheel_node_body, geo.wheel_pos_body }) do
+      for k = 0, 2 do v[#v + 1] = num(arr[3 * i + k]) end
+    end
+    v[#v + 1] = num(geo.susp_travel[i])
+    v[#v + 1] = num(geo.loaded_radius[i])
+  end
+  geoLines[#geoLines + 1] = table.concat(v, ',')
+  geoRows = geoRows + 1
+end
+
+local function geoFlush()
+  if geoFile == nil or #geoLines == 0 then return end
+  local f = io.open(geoFile, 'a')
+  if f then
+    f:write(table.concat(geoLines, '\n') .. '\n')
+    f:close()
+  else
+    geoFail('no se pudo escribir ' .. geoFile)
+  end
+  geoLines = {}
+end
+
+local function geoOpen(runId)
+  geoFlush()
+  ensureCapDir()
+  geoFile = CAP_DIR .. '/' .. ac.getCarID(0) .. '_' .. runId .. '_geo.csv'
+  local f = io.open(geoFile, 'w')
+  if f then
+    f:write(geoHeader() .. '\n')
+    f:close()
+    geoRows = 0
+    setStr(geo.last_file, 200, geoFile)
+  else
+    geoFail('no se pudo crear ' .. geoFile)
+    geoFile = nil
+  end
+end
+
+local function geoClose()
+  geoFlush()
+  geoFile = nil
+end
+
+local function v3t(v)
+  return { v.x, v.y, v.z }
+end
+
+local function geoDump(tag)
+  ensureCapDir()
+  local car = ac.getCar(0)
+  local d = { tag = tag, car_id = ac.getCarID(0), sim_ms = ac.getSim().time, phys_ms = car.timestamp,
+    graphics_offset = v3t(car.graphicsOffset), graphics_pitch = car.graphicsPitchRotation,
+    cg_height = car.cgHeight, mass = car.mass, steer_lock = car.steerLock,
+    aabb_center = v3t(car.aabbCenter), aabb_size = v3t(car.aabbSize),
+    body = { pos = v3t(car.bodyTransform.position), look = v3t(car.bodyTransform.look), up = v3t(car.bodyTransform.up),
+      side = v3t(car.bodyTransform.side) },
+    phys = { pos = v3t(car.transform.position), look = v3t(car.transform.look), up = v3t(car.transform.up),
+      side = v3t(car.transform.side) },
+    position = v3t(car.position), rpm_limiter = car.rpmLimiter, rpm_minimum = car.rpmMinimum,
+    wheels = {}, nodes = {} }
+  for i = 0, 3 do
+    local w = car.wheels[i]
+    local np = wheelNodePos(i)
+    d.wheels[i + 1] = { position = v3t(w.position), contact = v3t(w.contactPoint), tyre_radius = w.tyreRadius,
+      loaded_radius = w.tyreLoadedRadius, load = w.load, travel = w.suspensionTravel,
+      node = np and v3t(np) or false, node_body = np and v3t(car.worldToLocal:transformPoint(np)) or false,
+      pos_body = v3t(car.worldToLocal:transformPoint(w.position)) }
+  end
+  -- jerarquía: nodos (no mallas) bajo la raíz del coche, con su posición en el marco de la carrocería
+  local ok, err = pcall(function()
+    local all = carRoot:findNodes('?')
+    local n = math.min(all:size(), 400)
+    d.node_count = all:size()
+    for i = 1, n do
+      local one = all:at(i)
+      local m = one:getWorldTransformationRaw()
+      d.nodes[#d.nodes + 1] = { name = all:name(i), body = m and v3t(car.worldToLocal:transformPoint(m.position)) or false }
+    end
+    local bodytr = carRoot:findNodes('BODYTR')
+    if bodytr:size() > 0 then
+      local mn, mx, cnt = bodytr:getLocalAABB()
+      d.bodytr_local_aabb = { min = v3t(mn), max = v3t(mx), meshes = cnt }
+      local bm = bodytr:getWorldTransformationRaw()
+      d.bodytr_world = { pos = v3t(bm.position), look = v3t(bm.look), up = v3t(bm.up) }
+    end
+  end)
+  if not ok then d.hierarchy_error = tostring(err) end
+  local path = CAP_DIR .. '/' .. ac.getCarID(0) .. '_' .. tag .. '_geometria.json'
+  local f = io.open(path, 'w')
+  if not f then
+    geoFail('no se pudo crear ' .. path)
+    return false
+  end
+  f:write(JSON.stringify(d))
+  f:close()
+  setStr(geo.last_file, 200, path)
+  return true
+end
+
+-- Vistas relativas al coche (marco visual): centro a 0,6 m sobre el origen del modelo; side =
+-- look × up = derecha del coche en AC (+X es la izquierda).
+local function views(set)
+  local car = ac.getCar(0)
+  local bt = car.bodyTransform
+  local look, up = bt.look:clone():normalize(), bt.up:clone():normalize()
+  local side = look:clone():cross(up):normalize()
+  local c = bt.position + up * 0.6
+  local out = {}
+  local function add(name, pos, dir, upv, fov, size)
+    out[#out + 1] = { name = name, pos = pos, dir = dir, up = upv, fov = fov, size = size }
+  end
+  if set == 2 then
+    add('lado_derecho_cerca', c + side * 20, -side, up, 0, vec2(6.4, 3.6))
+    add('lado_izquierdo_cerca', c - side * 20, side, up, 0, vec2(6.4, 3.6))
+    return out
+  end
+  add('lado_derecho', c + side * 20, -side, up, 0, vec2(8, 4.5))
+  add('lado_izquierdo', c - side * 20, side, up, 0, vec2(8, 4.5))
+  add('frontal', c + look * 20, -look, up, 0, vec2(4.8, 2.7))
+  add('trasera', c - look * 20, look, up, 0, vec2(4.8, 2.7))
+  add('cenital', c + up * 20, -up, look, 0, vec2(8, 4.5))
+  -- G2.25 (atlanta r01): las vistas en perspectiva de GeometryShot no mostraron el coche; todas son
+  -- ortográficas (las de r01 sí funcionaron). Diagonales a 45° desde arriba (20°) y lateral baja.
+  local d1 = (look + side):normalize() * 0.94 + up * 0.34
+  add('diagonal_del_der', c + d1 * 20, (-d1):normalize(), up, 0, vec2(8, 4.5))
+  local d2 = (-look - side):normalize() * 0.94 + up * 0.34
+  add('diagonal_tras_izq', c + d2 * 20, (-d2):normalize(), up, 0, vec2(8, 4.5))
+  local cl = bt.position + up * 0.25
+  add('bajo_lado_izquierdo', cl - side * 20, side, up, 0, vec2(6.4, 1.8))
+  return out
+end
+
+local function capture(tag, set)
+  ensureCapDir()
+  if shot == nil then
+    shot = ac.GeometryShot(ac.findNodes('sceneRoot:yes'), vec2(1600, 900), 1, false)
+    shot:setClearColor(rgbm(0.55, 0.65, 0.78, 1))
+    pcall(function() shot:setTransparentPass(true) end)
+    pcall(function() shot:setClippingPlanes(0.05, 200) end)
+  end
+  local n = 0
+  for _, v in ipairs(views(set)) do
+    if v.fov == 0 then shot:setOrthogonalParams(v.size, 60) end
+    shot:update(v.pos, v.dir, v.up, v.fov)
+    local path = CAP_DIR .. '/' .. ac.getCarID(0) .. '_' .. tag .. '_' .. v.name .. '.png'
+    shot:save(path, ac.ImageFormat.PNG)
+    setStr(geo.last_file, 200, path)
+    n = n + 1
+  end
+  geo.shots_done = geo.shots_done + n
+  return true
+end
+
+local function geoAction(a)
+  local ok, res = true, true
+  if a == 13 then
+    ok, res = pcall(capture, ffi.string(cmd.run_id), cmd.run_no)
+  elseif a == 14 then
+    ok, res = pcall(geoDump, ffi.string(cmd.run_id))
+  elseif a == 15 then
+    ok, res = pcall(geoOpen, ffi.string(cmd.run_id))
+    res = true
+  elseif a == 16 then
+    ok, res = pcall(geoClose)
+    res = true
+  elseif a == 6 then -- abrir el CSV de G2.22: se abre también el de geometría con el mismo run_id
+    ok, res = pcall(geoOpen, ffi.string(cmd.run_id))
+    res = true
+  elseif a == 5 then
+    ok, res = pcall(geoClose)
+    res = true
+  else
+    return
+  end
+  geo.act_result = (ok and res) and 1 or -1
+  if not ok then geoFail('accion ' .. a .. ': ' .. tostring(res)) end
+end
+
+local g222Update = script.update
+function script.update(dt)
+  g222Update(dt)
+  local sim = ac.getSim()
+  local car = ac.getCar(0)
+  findCarNodes()
+  local okPub, errPub = pcall(geoPublish, car, sim)
+  if not okPub then geoFail('geo: ' .. tostring(errPub)) end
+  if cmd.magic == MAGIC_CMD and cmd.action_seq ~= lastGeoAction then
+    lastGeoAction = cmd.action_seq
+    geoAction(cmd.action)
+    geo.act_done_seq = cmd.action_seq
+  end
+  if geoFile ~= nil then geoRow() end
+  if sim.time - geoLastFlush > 1000 then
+    geoFlush()
+    geoLastFlush = sim.time
+  end
+end
+
+local g222Window = windowMain
+function windowMain(dt)
+  g222Window(dt)
+  ui.text('G2.25: geo filas ' .. geoRows .. '   capturas ' .. tostring(geo.shots_done) .. '   nodos ' .. tostring(geo.nodes_found))
+  if geoErr ~= '' then ui.text('ERROR G2.25: ' .. geoErr) end
+end
