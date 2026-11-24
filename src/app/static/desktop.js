@@ -672,6 +672,11 @@ function addonRow() {
       } }, "Instalar complemento KN5"),
       el("button", { class: "secondary", type: "button", onclick: () => openUrl(a.source) }, "Ver el complemento en GitHub")));
 }
+async function loadSettings() {
+  try { SETTINGS = await api("/api/settings"); } catch (e) { toast(e.message, "warn"); }
+  renderSettings();
+  if (CURRENT && DETAIL) renderAsistente();  // los botones dependen de la ruta de AC y de Blender
+}
 // Aviso naranja en Inicio: rutas de Ajustes sin guardar y qué dejaría de funcionar sin ellas
 const SETUP_NEEDS = [
   ["ac_root", "Assetto Corsa", "Sin esta ruta no se puede tomar el piloto sentado ni sus manos, ni comprobar si el car_id ya está instalado: los botones «Comenzar la conversión» y «Exportar» quedan desactivados."],
