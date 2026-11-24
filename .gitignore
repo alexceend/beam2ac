@@ -1,0 +1,60 @@
+# POLÍTICA: lista blanca. Todo se ignora salvo lo que se nombra abajo (código y datos propios).
+# Material de terceros (Kunos, Automation, BeamNG, binarios, SDK de audio) NO se versiona nunca:
+# el programa lo lee de las instalaciones del usuario. Para añadir algo nuevo, nómbralo aquí a propósito.
+/*
+!/.gitignore
+!/.flake8
+!/.github/
+!/LICENSE
+!/README.md
+!/SECURITY.md
+!/pyproject.toml
+!/pytest.ini
+!/conftest.py
+!/requirements*.txt
+!/physics_translator_diy.py
+!/src/
+!/tests/
+!/tests_not_required/
+!/tools/
+!/catalog/
+!/measurements/
+!/packaging/
+!/knowledge_base/
+
+# Dentro de lo permitido, nunca:
+# Medidas de coches de terceros y scripts del Ibiza (CC BY-NC-SA): solo en el disco del autor
+/measurements/beamng_bench/
+/tools/variants/original/
+/tools/variants/ADAPTATIONS.diff
+/tools/kn5-obj-converter-main/
+/tools/blender-KN5-exporter/
+# Autoría sin confirmar (docs/research/cvt_generalizacion_2026-11-19.md) y muestras de terceros: nunca en git
+/script-cvt.lua
+/sample_*/
+/samples_beamng/
+assetto_corsa_tools/
+/knowledge_base/*.docx
+/knowledge_base/*.pdf
+__pycache__/
+*.pyc
+.venv*/
+# formatos de juego y binarios de terceros
+*.kn5
+*.knh
+*.ksanim
+*.bank
+*.wav
+*.ogg
+*.dae
+*.dds
+*.dll
+*.exe
+*.i64
+*.idb
+*.rar
+*.zip
+*.7z
+*.pdf
+*.fspro
+*.pc

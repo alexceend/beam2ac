@@ -1,0 +1,4 @@
+# Dependencias de ejecución del conversor.
+# Todavía no hay ninguna: el código actual solo usa la biblioteca estándar.
+# numpy / scipy se añadirán cuando una fase los necesite (ver docs/PLAN.md).
+# Blender (bpy) no se instala con pip: el pipeline usa `blender --background --python`.
