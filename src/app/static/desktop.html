@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; frame-src 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/static/icon.svg">
+<title>beam2ac</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/desktop.css">
+</head>
+<body class="desktop">
+<header class="appbar">
+  <button id="btn-toggle" class="icon-btn" type="button" aria-label="Ocultar o mostrar la barra lateral" aria-controls="sidebar" aria-expanded="true" title="Barra lateral">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <img src="/static/icon.svg" width="26" height="26" alt="" style="border-radius:6px">
+  <div class="title"><strong>beam2ac</strong></div>
+  <button id="btn-env-open" class="icon-btn appbar-first" type="button" aria-label="Entorno" title="Entorno"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+  <button id="btn-settings" class="icon-btn" type="button" aria-label="Ajustes" title="Ajustes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+  <label class="lang-pick"><span class="sr-only">Idioma</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg>
+    <select id="lang" aria-label="Idioma"><option value="es">Español</option><option value="en">English</option></select>
+  </label>
+</header>
+<div class="shell">
+  <aside id="sidebar" aria-label="Proyectos">
+   <div class="side-inner">
+    <button id="btn-home" class="home-btn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg> Inicio
+    </button>
+    <div class="side-head">
+      <h2>Proyectos</h2>
+    </div>
+    <div id="projects" class="projects"></div>
+   </div>
+  </aside>
+  <main id="content">
+    <section id="welcome">
+      <div id="setup-warn" class="notice warning" role="alert" hidden></div>
+      <div class="panel">
+        <h2>Cómo funciona</h2>
+        <p class="small">beam2ac convierte un coche creado en <strong>Automation</strong> y exportado a <strong>BeamNG</strong> en un coche
+          de <strong>Assetto Corsa</strong>. Al elegir una carpeta o un zip (o escribir su ruta y pulsar Intro) se crea un <strong>proyecto</strong> y se abre solo.
+          Antes de empezar, guarda en <strong>Ajustes</strong> (la rueda de la barra superior) las rutas de Assetto Corsa y de Blender; si falta alguna, un aviso naranja aquí en Inicio te dice cuál y qué dejaría de funcionar. El icono de la pantalla (<strong>Entorno</strong>) comprueba qué tienes instalado. Un proyecto tiene tres pestañas (el botón «Vista avanzada / simple», junto al título, muestra u oculta los detalles técnicos):</p>
+        <ul class="small">
+          <li><strong>Conversión</strong>: Resumen, Diagnóstico, Resultados y, a la derecha, el <strong>Pipeline</strong> (donde se convierte de verdad).</li>
+          <li><strong>Vista 3D</strong>: editor de cámaras (ojos del piloto, capó, parachoques) y, desde ahí, de la animación del volante y las manos.
+            Los cambios se guardan en el proyecto y se aplican al coche.</li>
+          <li><strong>Atributos y decisiones</strong>: cada valor físico que el conversor necesita (con su origen y confianza). Lo que no se pueda
+            deducir se decide aquí; nada se rellena con ceros.</li>
+        </ul>
+        <h3>El Pipeline (panel «Conversión», a la derecha)</h3>
+        <ol class="small">
+          <li><strong>Etapas</strong>: <code>source → physics → attributes → geometry → draft → resolved_ini → report</code>, más <code>model</code>
+            (malla 3D con Blender, tarda minutos). «Ejecutar etapas» las calcula; cada etapa reutiliza su resultado si sus entradas no han cambiado,
+            y un fallo se conserva sin borrar nada.</li>
+          <li><strong>Decisiones pendientes</strong>: lo que el conversor no sabe resolver solo (por ejemplo un reparto de tracción o una curva)
+            queda como bloqueo hasta que lo decides en «Atributos y decisiones».</li>
+          <li><strong>Exportación</strong>: crea una exportación nueva del coche para Assetto Corsa (siempre con volante y piloto). Aquí eliges el <code>car_id</code>,
+            los <strong>detalles del coche</strong> (nombre, descripción, portada…) y los <strong>extras</strong> (volante, neumáticos de AC, ABS, control de tracción,
+            reparto de frenada, cambio, turbo). Nunca sobrescribe una exportación anterior ni instala en el juego sin que lo marques.
+            El veredicto es «bloqueado» o «completo, sin probar en el juego».</li>
+        </ol>
+        <p class="muted small">Orden recomendado: guardar rutas en Ajustes → elegir el coche → ejecutar etapas (con el modelo 3D) → resolver decisiones → ajustar cámaras en Vista 3D → exportar.
+          «Exportable» no significa probado: hay que conducirlo en Assetto Corsa para validarlo.</p>
+        </div>
+      <div class="panel">
+        <h2>Convertir un coche</h2>
+        <p class="muted small">Carpeta de una exportación de Automation a BeamNG (la que contiene los <code>.pc</code>, o la raíz del mod).
+          Se analiza y se crea el proyecto directamente; las opciones se ajustan dentro de él.</p>
+        <form id="analyze" class="actions">
+          <input id="an-path" type="text" placeholder="Ruta de la carpeta del vehículo o del zip del mod" aria-label="Carpeta o zip del vehículo" style="flex:1;min-width:280px">
+          <button id="btn-pick" class="secondary" type="button" hidden>Elegir carpeta…</button>
+          <button id="btn-pick-zip" class="secondary" type="button" hidden>Elegir zip…</button>
+        </form>
+        <div id="analysis"></div>
+      </div>
+    </section>
+    <section id="project" hidden>
+      <div class="proj-head">
+        <div class="proj-title-row"><h2 id="proj-title"></h2><button id="view-toggle" class="secondary small" type="button"></button></div>
+        <div id="proj-meta" class="muted small"></div>
+      </div>
+      <nav class="tabs" role="tablist">
+        <button role="tab" data-tab="conversion" aria-selected="true">Conversión</button>
+        <button role="tab" data-tab="vista">Vista 3D</button>
+        <button role="tab" data-tab="atributos">Atributos y decisiones</button>
+      </nav>
+      <div id="tab-conversion" class="tab split">
+        <div class="col-left">
+          <section class="pane" data-pane="resumen"><header><h3>Resumen</h3><button class="secondary small pane-open" type="button" data-open="resumen">Abrir en pestaña nueva</button></header><div id="tab-resumen" class="pane-body"></div></section>
+          <section class="pane" data-pane="diagnostico"><header><h3>Diagnóstico</h3><button class="secondary small pane-open" type="button" data-open="diagnostico">Abrir en pestaña nueva</button></header><div id="tab-diagnostico" class="pane-body"></div></section>
+          <section class="pane" data-pane="resultados"><header><h3>Resultados</h3><button class="secondary small pane-open" type="button" data-open="resultados">Abrir en pestaña nueva</button></header><div id="tab-resultados" class="pane-body"></div></section>
+        </div>
+        <div class="col-right">
+          <section class="pane" data-pane="asistente"><header><h3>Pipeline de conversión</h3><button class="secondary small pane-open" type="button" data-open="asistente">Abrir en pestaña nueva</button></header><div id="tab-asistente" class="pane-body"></div></section>
+        </div>
+      </div>
+      <div id="tab-vista" class="tab panel" hidden></div>
+      <div id="tab-atributos" class="tab panel" hidden></div>
+    </section>
+  </main>
+</div>
+<dialog id="dlg-settings" class="massdlg" aria-label="Ajustes">
+  <div class="dlg-head"><h2>Ajustes</h2><button class="icon-btn" type="button" data-close aria-label="Cerrar" title="Cerrar">✕</button></div>
+  <div id="settings" class="small"></div>
+</dialog>
+<dialog id="dlg-env" class="massdlg" aria-label="Entorno">
+  <div class="dlg-head"><h2>Entorno <button id="btn-env" class="secondary small" type="button">Comprobar</button></h2><button class="icon-btn" type="button" data-close aria-label="Cerrar" title="Cerrar">✕</button></div>
+  <div id="env" class="muted small">Estado de la instalación de Assetto Corsa, Steam, Blender y el catálogo (solo lectura).</div>
+</dialog>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<div id="start-popup" role="status" aria-live="polite" hidden></div>
+<aside id="jobs-modal" aria-label="Tareas en ejecución" hidden>
+  <header><strong>Tareas en ejecución</strong>
+    <button id="jobs-min" class="icon-btn" type="button" aria-label="Minimizar" title="Minimizar">–</button></header>
+  <div id="jobs-list"></div>
+</aside>
+<script src="/static/i18n_en.js"></script>
+<script src="/static/i18n.js"></script>
+<script src="/static/desktop.js"></script>
+</body>
+</html>

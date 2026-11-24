@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data: blob:">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/static/icon.svg">
+<title>beam2ac · vista 3D</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1e1e2e; color: #cdd6f4; font: 12.5px system-ui, sans-serif; overflow: hidden; }
+  #hud { position: absolute; top: 8px; left: 10px; background: #000b; padding: 8px 10px; border-radius: 6px; max-width: 360px; }
+  #hud table { border-collapse: collapse; } #hud td { padding: 1px 6px 1px 0; }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; }
+  canvas { display: block; }
+</style>
+<!-- three.js 0.160.0 local (vendor/three-0.160.0/MANIFEST.json); nunca CDN -->
+<script type="importmap">
+{ "imports": {
+    "three": "/static/vendor/three-0.160.0/three.module.js",
+    "three/addons/": "/static/vendor/three-0.160.0/addons/"
+} }
+</script>
+</head>
+<body>
+<div id="hud">cargando…</div>
+<script src="/static/i18n_en.js"></script>
+<script src="/static/i18n.js"></script>
+<script type="module" src="/static/scene.js"></script>
+</body>
+</html>

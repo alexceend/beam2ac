@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data: blob:">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/static/icon.svg">
+<title>beam2ac · animación del piloto</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1e1e2e; color: #cdd6f4; font: 13px system-ui, sans-serif; overflow: hidden; }
+  #wrap { display: flex; height: 100%; } #view { flex: 1; position: relative; min-width: 0; }
+  #side { width: 330px; padding: 10px 12px; overflow: auto; background: #181825; border-left: 1px solid #45475a; }
+  canvas { display: block; } h3 { margin: 12px 0 4px; font-size: 13px; } .muted { color: #a6adc8; font-size: 12px; }
+  .row { display: grid; grid-template-columns: 1fr 78px; gap: 3px 8px; align-items: center; margin: 3px 0; } input[type=range] { width: 100%; } label.item { display: flex; gap: 6px; align-items: center; padding: 3px 0; cursor: pointer; }
+  .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .xyz { display: grid; grid-template-columns: 18px 1fr; gap: 3px 6px; align-items: center; margin: 6px 0; }
+  input[type=number] { width: 100%; box-sizing: border-box; background: #1e1e2e; color: inherit; border: 1px solid #45475a; padding: 3px 5px; border-radius: 4px; }
+  button { background: #cba6f7; color: #11111b; border: 0; border-radius: 5px; padding: 5px 10px; cursor: pointer; margin: 2px 4px 2px 0; }
+  button.secondary { background: #313244; } #msg { margin-top: 8px; min-height: 2.4em; } .warn { color: #f9e2af; } .ok { color: #a6e3a1; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "/static/vendor/three-0.160.0/three.module.js", "three/addons/": "/static/vendor/three-0.160.0/addons/" } }
+</script>
+</head>
+<body>
+<div id="wrap"><div id="view"></div><div id="side">cargando…</div></div>
+<script src="/static/i18n_en.js"></script>
+<script src="/static/i18n.js"></script>
+<script type="module" src="/static/animation.js"></script>
+</body>
+</html>

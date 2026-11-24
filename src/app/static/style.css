@@ -1,0 +1,57 @@
+/* Paleta Catppuccin (MIT, https://github.com/catppuccin/catppuccin): Mocha (oscuro, por defecto) y Latte (claro si el
+   sistema lo pide). Mocha usa los tonos oficiales salvo --na (#959bb5 en vez de overlay2, que daba 4,45:1 sobre chip).
+   En Latte los acentos usados como texto (morado, teal, verde, ámbar, rojo, lavanda, azul) se oscurecen hacia negro lo
+   justo para llegar a 4,5:1 sobre bg, panel y chip (el tono se conserva), y --muted/--na son grises propios (#5f627a). Los estados (verde/ámbar/rojo) mantienen su significado. */
+:root {
+  --bg: #1e1e2e; --panel: #181825; --text: #cdd6f4; --muted: #a6adc8; --line: #45475a;
+  --accent: #cba6f7; --accent-2: #94e2d5; --on-accent: #11111b;
+  --known: #a6e3a1; --inferred: #f9e2af; --ambiguous: #f38ba8; --manual: #b4befe;
+  --format: #89b4fa; --na: #959bb5; --chip: #313244; --shadow: 0 8px 28px #0006;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #eff1f5; --panel: #e6e9ef; --text: #4c4f69; --muted: #5f627a; --line: #bcc0cc;
+    --accent: #7d34dc; --accent-2: #116c71; --on-accent: #eff1f5;
+    --known: #2d701e; --inferred: #8a5812; --ambiguous: #c50e36; --manual: #4e5cac;
+    --format: #1a5ad8; --na: #5f627a; --chip: #dce0e8; --shadow: 0 8px 28px #4c4f6926;
+    color-scheme: light;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 14px/1.45 system-ui, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); }
+header { padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 2; }
+.title { font-size: 15px; }
+.muted { color: var(--muted); }
+nav { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+nav button { border: 1px solid var(--line); background: var(--chip); color: var(--text); border-radius: 14px; padding: 3px 10px; cursor: pointer; }
+nav button[aria-pressed="true"] { border-color: var(--accent); outline: 1px solid var(--accent); }
+main { display: grid; grid-template-columns: minmax(280px, 38%) 1fr; height: calc(100vh - 96px); }
+#listpane { border-right: 1px solid var(--line); overflow: auto; padding: 10px; }
+#search { width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--text); margin-bottom: 8px; }
+.group h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; margin: 14px 4px 4px; color: var(--muted); }
+.item { display: block; width: 100%; text-align: left; padding: 6px 8px; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--text); cursor: pointer; }
+.item:hover, .item[aria-current="true"] { background: var(--panel); border-color: var(--line); }
+.item .k { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+.item .v { color: var(--muted); font-size: 12px; }
+#detail { overflow: auto; padding: 14px 18px 40px; }
+#detail h2 { font-size: 16px; margin: 0 0 6px; font-family: ui-monospace, Consolas, monospace; word-break: break-all; }
+#detail h4 { margin: 18px 0 6px; font-size: 13px; }
+.badge { display: inline-block; border-radius: 10px; padding: 1px 8px; font-size: 12px; margin-right: 4px; border: 1px solid currentColor; }
+.s-known { color: var(--known); } .s-inferred { color: var(--inferred); } .s-ambiguous { color: var(--ambiguous); }
+.s-manual_required { color: var(--manual); } .s-format_requirement { color: var(--format); } .s-not_applicable { color: var(--na); }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+th, td { border-bottom: 1px solid var(--line); padding: 4px 6px; text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+code, .mono { font-family: ui-monospace, Consolas, monospace; font-size: 12px; word-break: break-word; }
+ul { margin: 4px 0; padding-left: 18px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin: 8px 0; }
+form label { display: block; margin: 8px 0 3px; font-size: 12.5px; color: var(--muted); }
+form input, form select, form textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--text); font: inherit; }
+form textarea { min-height: 60px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+button.primary { margin-top: 10px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: var(--on-accent); font-weight: 600; border: 0; border-radius: 6px; padding: 7px 14px; cursor: pointer; }
+button.small { font-size: 12px; padding: 2px 8px; border-radius: 5px; border: 1px solid var(--line); background: var(--chip); color: var(--text); cursor: pointer; }
+.warn { color: var(--ambiguous); }
+.ok { color: var(--known); }
+@media (max-width: 760px) { main { grid-template-columns: 1fr; height: auto; } #listpane { max-height: 45vh; border-right: 0; border-bottom: 1px solid var(--line); } }

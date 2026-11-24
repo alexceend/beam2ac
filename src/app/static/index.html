@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>beam2ac · atributos</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="title">
+    <strong>beam2ac</strong> · revisión de atributos
+    <span id="vehicle" class="muted"></span>
+  </div>
+  <div id="preview" class="muted"></div>
+  <nav id="statusbar" aria-label="Filtrar por estado"></nav>
+</header>
+<main>
+  <section id="listpane" aria-label="Atributos">
+    <input id="search" type="search" placeholder="Buscar atributo (p. ej. TOTALMASS, tyres.ini)…" autocomplete="off">
+    <div id="list"></div>
+  </section>
+  <section id="detail" aria-live="polite">
+    <p class="muted">Elige un atributo de la lista.</p>
+  </section>
+</main>
+<script src="/static/i18n_en.js"></script>
+<script src="/static/i18n.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
