@@ -6,6 +6,7 @@
 !/.flake8
 !/.github/
 !/LICENSE
+!/CREDITS.md
 !/README.md
 !/SECURITY.md
 !/pyproject.toml

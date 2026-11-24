@@ -642,7 +642,7 @@ const SET_HELP = {
   steam_root: "Para qué: autodetectar AC y BeamNG a partir de tu biblioteca de Steam. Importancia: baja; si ya indicas las rutas de AC y BeamNG, no hace falta.",
   beamng_root: "Para qué: solo para los bancos de medida (neumáticos y aerodinámica), que lanzan BeamNG con una carpeta de usuario aislada para medir el coche. Importancia: baja para convertir (la conversión NO lee la instalación de BeamNG: parte del zip/carpeta exportado desde Automation). Déjala vacía si no vas a usar esas medidas.",
   beamng_mods_dir: "Para qué: de aquí sale la lista de coches; ahí están los .zip que Automation exporta a BeamNG. Importancia: alta para elegir coches desde la lista. Si está vacía puedes usar «Convertir un coche» y elegir cualquier carpeta o zip.",
-  blender_path: "Para qué: construir el modelo 3D (.kn5) con Blender 3.6 en segundo plano. Importancia: obligatoria. Sin Blender el coche se exporta sin modelo y no se puede jugar en Assetto Corsa.",
+  blender_path: "Para qué: construir el modelo 3D (.kn5) con Blender 3.6 en segundo plano. Importancia: obligatoria. Sin Blender el coche se exporta sin modelo y no se puede jugar en Assetto Corsa. Necesita además el complemento «assetto_corsa_tools» (exportador KN5, de terceros, GPL-3.0): se instala desde aquí con el botón «Instalar complemento KN5». El importador de Collada (.dae) ya viene con Blender 3.6.",
   fmod_path: "Para qué: generar un banco de sonido propio del motor (FMOD Studio 1.08.12). Importancia: opcional. Sin él se reutiliza un sonido de coche de Kunos.",
   projects_dir: "Para qué: dónde se guardan tus proyectos (etapas, decisiones y resultados). Importancia: media; cámbiala para usar otro disco. Se aplica al reiniciar la aplicación.",
   export_dir: "Para qué: dónde se deja el paquete del coche exportado. Importancia: baja; vacía, el paquete queda en la carpeta exports/ del proyecto. No puede ser una carpeta de AC ni de BeamNG.",
@@ -670,7 +670,7 @@ async function loadSettings() {
 // Aviso naranja en Inicio: rutas de Ajustes sin guardar y qué dejaría de funcionar sin ellas
 const SETUP_NEEDS = [
   ["ac_root", "Assetto Corsa", "Sin esta ruta no se puede tomar el piloto sentado ni sus manos, ni comprobar si el car_id ya está instalado: los botones «Comenzar la conversión» y «Exportar» quedan desactivados."],
-  ["blender_path", "Blender 3.6", "Sin Blender no se construye el modelo 3D (.kn5), así que el coche no se podría conducir en Assetto Corsa: la conversión y la exportación quedan desactivadas."],
+  ["blender_path", "Blender 3.6", "Sin Blender no se construye el modelo 3D (.kn5), así que el coche no se podría conducir en Assetto Corsa: la conversión y la exportación quedan desactivadas. Además de Blender hace falta el complemento KN5 (assetto_corsa_tools), que se instala desde Ajustes."],
   ["fmod_path", "FMOD Studio 1.08.12", "Sin FMOD el coche sale sin el sonido propio de su motor."],
   ["beamng_root", "BeamNG.drive", "Solo se usa para medir neumáticos y aerodinámica con BeamNG; sin ella esas medidas no están disponibles. Convertir no la necesita."],
 ];
@@ -725,6 +725,7 @@ async function loadEnvironment() {
       ["Circuitos y apps beam2ac instalados", ac.found ? ([...ac.beam2ac_tracks, ...ac.beam2ac_apps].join(", ") || "ninguno") : "—"],
       ["Steam", e.steam.installed ? "instalado" : "no detectado"],
       ["Blender (modelo 3D)", e.blender.found ? e.blender.path : "no encontrado: la exportación saldría sin KN5"],
+      ["Complemento KN5 de Blender", e.blender_addon ? (e.blender_addon.installed ? (e.blender_addon.matches_pinned ? "instalado" : "instalado, distinto de la versión fijada") : "no instalado: instálalo en Ajustes o el modelo 3D no se exporta") : "—"],
       ["Catálogo de reglas", e.catalog.ok ? `${e.catalog.rules} reglas, ${e.catalog.attributes} atributos` : `error: ${e.catalog.error}`],
     ]), el("p", { class: "muted small" }, "Esta aplicación no instala coches ni abre los juegos. La validación en el juego se hace aparte."));
   } catch (err) { box.textContent = err.message; }
