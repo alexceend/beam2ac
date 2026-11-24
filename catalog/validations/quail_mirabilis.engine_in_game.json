@@ -1,0 +1,50 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "quail_mirabilis.fbd0e.engine_curve_in_game",
+  "vehicle": "quail_mirabilis",
+  "method": "in_game_value",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "fbd0e",
+  "expected": {
+   "max_power_hp": 867.674,
+   "max_power_rpm": 12000
+  },
+  "observed": {
+   "max_power_hp": 867.715,
+   "max_abs_torque_delta_Nm": 0.0
+  },
+  "tolerance": {
+   "torque_Nm": 0.1,
+   "power_hp": 0.1
+  },
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g231_2026-11-12/banco_camso/userpath/current/beam2ac_dyno/quail_mirabilis.json",
+    "locator": "points[].windowB / fullTorqueData",
+    "sha256": "b249b768c3266853cee055f5703bfd86da882250b825df67335fdbd2c39cc011",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g231_2026-11-12/banco_camso/medicion.json",
+    "locator": "quail_mirabilis",
+    "sha256": "65bc91bb5a3c11aebe7c6c0e7fe8be9448938bda8f89397b5a357451fe13397f",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g231_hyacinth_quail_2026-11-12.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-12",
+  "note": "24 puntos entre 1000 rpm y el techo (12000 rpm, excluido: el limitador corta el par): |Δ| máx. 0.0000 N·m; pico del juego 867.674 hp frente a 867.715 hp del IR (Δ -0.042); ficha: Power 867, implícita 867.216 hp"
+ }
+]

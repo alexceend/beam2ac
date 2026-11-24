@@ -1,0 +1,166 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "ctrl.steer_ratio_rod_behind_40340",
+ "version": 1,
+ "target": "ac:car.ini/CONTROLS/STEER_RATIO",
+ "kind": "computed",
+ "transform": {
+  "id": "scale",
+  "params": {
+   "factor": -1
+  },
+  "input_units": {
+   "x": "1"
+  },
+  "output_unit": "1",
+  "formula": "STEER_RATIO = -1 × relación en el centro"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.steering.steering_ratio"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.front.linkage",
+   "op": "in",
+   "value": [
+    "dwb_5link",
+    "dwb_equivalent"
+   ]
+  },
+  {
+   "fact": "ir.steering.mechanism",
+   "op": "eq",
+   "value": "rack"
+  },
+  {
+   "fact": "ir.steering.tie_rod_position",
+   "op": "eq",
+   "value": "behind"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "modelo de enlaces rígidos de BeamNG (vigas NORMAL ≥ 1000 N/m; las del 200409 ≥ 10⁶): la elasticidad de las barras, de la cremallera y de la carrocería no se representa en AC",
+  "pose de reposo = enlaces con longitud L·beamPrecompression y el centro de rueda a la altura de la pose del JBeam, sin carga (src/extract/linkage.py)",
+  "ningún vehículo 200409 se ha probado en AC; DWB de AC sin probar en ningún coche del proyecto (el Ibiza aprobado es STRUT)",
+  "relación en el centro: grados de volante por grado de rueda con la cinemática del DWB delantero (convergencia frente al desplazamiento lateral del punto del chasis de la barra, que es el extremo de la cremallera)",
+  "AC: desplazamiento de WBCAR_STEER = STEER_LOCK·volante/STEER_RATIO·LSRR; BeamNG: recorrido de la cremallera·entrada ⇒ LSRR/STEER_RATIO = recorrido/STEER_LOCK (exacto); el reparto entre las dos claves sigue la convención de Kunos (LSRR = m por grado de rueda), que solo afecta a la señal de ángulo y al término giroscópico del FFB",
+  "BeamNG gira 1–1,5° menos a tope que el modelo rígido (elasticidad; banco de G2.15): AC (rígido) dará el ángulo del modelo",
+  "signo: con la barra detrás del eje, STEER_RATIO negativo (convención de Kunos; Ibiza 38022 con −12,14 conducido en AC con el giro correcto, informe_direccion_piloto_integracion_2026-10-24.md)",
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/precompresion_banco.md",
+   "locator": "longitudes de los enlaces en el juego = L·beamPrecompression (≤ 0,07 mm)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/elastico.md",
+   "locator": "8 barras del 200409: cualquier DWB a ≤ 0,0024° del equilibrio elástico",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/extract/steering.py",
+   "locator": "build_steering (rack_nodes)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2.1-2.6 [Confirmed]",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ibiza_damping_research.md",
+   "locator": "§2.1 amortiguador de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero",
+   "locator": "dirección de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g216_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/cinematica_dwb.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-11",
+   "author": "claude (G2.27, trabajo paralelo: cobertura del 40340, encargada por el usuario)",
+   "action": "create",
+   "reason": "clon de ctrl.steer_ratio_rod_behind_200409@1 para el exportador 40340",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.27 (paralelo)"
+}

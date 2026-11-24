@@ -1,0 +1,68 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "2020_rpm_atlanta_gt_3_6t.2020_rpm_atlanta_gt_3_6t.engine_curve_in_game",
+  "vehicle": "2020_rpm_atlanta_gt_3_6t",
+  "method": "in_game_value",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "2020_rpm_atlanta_gt_3_6t",
+  "expected": {
+   "500": 213.866,
+   "700": 266.0547,
+   "800": 273.2691,
+   "1000": 285.1579,
+   "1500": 305.9398,
+   "2000": 324.2721,
+   "2500": 360.5528,
+   "3000": 438.7188,
+   "3424": 542.1634,
+   "3500": 539.8896,
+   "4000": 530.1116,
+   "4500": 518.402,
+   "5000": 505.7753,
+   "5500": 488.5633,
+   "6000": 461.0295,
+   "6499": 432.2408
+  },
+  "observed": {
+   "500": 213.87,
+   "700": 266.05,
+   "800": 273.27,
+   "1000": 285.16,
+   "1500": 305.94,
+   "2000": 324.27,
+   "2500": 360.55,
+   "3000": 438.72,
+   "3424": 542.09,
+   "3500": 539.89,
+   "4000": 530.11,
+   "4500": 518.4,
+   "5000": 505.78,
+   "5500": 488.56,
+   "6000": 461.03,
+   "6499": 432.2506
+  },
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "report",
+    "path": "output/g210_d_g29_decisions_2026-11-02/medicion_beamng/medicion.json",
+    "locator": "2020_rpm_atlanta_gt_3_6t",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g210_d_g29_decisions_2026-11-02/medicion_beamng/lua_src/lua/vehicle/extensions/beam2acDyno.lua",
+    "locator": "banco en el eje del motor",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-02",
+  "note": "esperado: par neto medido en BeamNG 0.38.6.0 (buildbot build 19963, 29/04/2026) (banco en el eje, régimen estable a plena carga, normalizado a densidad relativa 1), N·m por rpm; observado: power.lut del conversor (interpolación lineal de ir.engine.wot_torque_curve) en esas rpm; tolerancia en % de la medida; peor desviación 0.0135 %"
+ }
+]

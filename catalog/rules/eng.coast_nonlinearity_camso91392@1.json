@@ -1,0 +1,144 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "eng.coast_nonlinearity_camso91392",
+ "version": 1,
+ "target": "ac:engine.ini/COAST_REF/NON_LINEARITY",
+ "kind": "computed",
+ "transform": {
+  "id": "ac_coast_ref",
+  "params": {
+   "output": "non_linearity",
+   "law": "acs_from_minimum"
+  },
+  "input_units": {
+   "curve": "table:rpm->N·m",
+   "ceiling": "rpm",
+   "minimum": "rpm"
+  },
+  "output_unit": "1",
+  "formula": "ac_coast_ref (src/ac/coast_ref.py coast_ref_from_minimum): RPM, TORQUE = último punto (r, t) de la curva con r ≤ techo; NON_LINEARITY = 0; AC aplica freno(rpm) = TORQUE·(rpm − MINIMUM)/(RPM − MINIMUM) para rpm > MINIMUM y 0 por debajo (motor de AC)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "curve": "ir.engine.coast_curve",
+  "ceiling": "ir.engine.speed_ceiling",
+  "minimum": "ir.engine.idle_speed"
+ },
+ "conditions": [
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  },
+  {
+   "fact": "ir.formats.code_versions.camsoEngine",
+   "op": "eq",
+   "value": "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "freno motor de AC con [COAST_REF] y NON_LINEARITY = 0: lineal desde MINIMUM (0 en MINIMUM y por debajo) hasta TORQUE en RPM (AC); anclado en el freno de BeamNG en el techo de rpm (mismo método que eng.coast_*@2 del Ibiza)",
+  "freno de BeamNG = fila de gas cerrado 0 de la tabla de par − fricción (camsoEngine.lua:725 max(0, …) (samples_beamng, exportador 40340)); en el ralentí BeamNG ya frena y AC da 0: el error decrece linealmente hasta 0 en el techo (misma limitación que en G2.24)",
+  "ningún coche con esta versión del Lua se ha probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_combustion.py",
+   "locator": "coast_curve",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "engine.coast_curve",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/combustionEngine.lua",
+   "locator": "l. 731-806 updateTorque (freno motor)",
+   "sha256": "c3aa446393cc4af240fb71ddab4880afb857090a97f18d1d89b904e44728a03d",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC (COAST_CURVE=FROM_COAST_REF)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g224_diagnostico_exports_ac_2026-11-09.md",
+   "locator": "§4 (problema C)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g210_d_g29_decisions_2026-11-02.md",
+   "locator": "§3 D-G29c",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g224_2026-11-09/diagnostico/coast_error.py",
+   "locator": "perfil de error por vehículo",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-11",
+   "author": "claude (G2.27, trabajo paralelo: bloqueos del 40340, encargada por el usuario)",
+   "action": "create",
+   "reason": "sin [COAST_REF] AC da freno motor 0; el IR ya tiene la curva de esta versión",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.27 (paralelo)"
+}

@@ -1,0 +1,149 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "eng.minimum_camso91392",
+ "version": 1,
+ "target": "ac:engine.ini/ENGINE_DATA/MINIMUM",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "rpm"
+  },
+  "output_unit": "rpm",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "bng.engine.idle_rpm"
+ },
+ "conditions": [
+  {
+   "fact": "bng.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  },
+  {
+   "fact": "bng.code.camsoEngine_sha256",
+   "op": "eq",
+   "value": "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "MINIMUM = idleRPM (hipótesis)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_camso.py",
+   "locator": "camsoEngine.lua citado por línea",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "sample_beamng/vehicles/seat_ibiza_acfr/lua/powertrain/camsoEngine.lua",
+   "locator": "versión 47437d5c",
+   "sha256": "47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "samples_beamng/thershow_sucette_poubelle/vehicles/sucette_poubelle/lua/powertrain/camsoEngine.lua",
+   "locator": "versión 91392d70 (diff de 1 línea, l. 725)",
+   "sha256": "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/catalogo_motor_awd_vmax_2026-10-30.md",
+   "locator": "§1",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/catalogo_motor_awd_vmax_2026-10-30.md",
+   "locator": "§1 ac:engine.ini/ENGINE_DATA/MINIMUM",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-30",
+   "author": "claude (catálogo de motor para camsoEngine 91392d70, autorizado)",
+   "action": "create",
+   "reason": "Lua idéntico (idleRPM, l. 1760-1761 / 1763-1764); misma hipótesis que el Ibiza",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "derivada de eng.minimum@1 (Ibiza, ámbito vehículo), que no cambia"
+}

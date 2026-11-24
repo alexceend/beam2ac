@@ -1,0 +1,50 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "autist_cuanto.b78dc.engine_curve_in_game",
+  "vehicle": "autist_cuanto",
+  "method": "in_game_value",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "b78dc",
+  "expected": {
+   "max_power_hp": 254.241,
+   "max_power_rpm": 5840
+  },
+  "observed": {
+   "max_power_hp": 254.182,
+   "max_abs_torque_delta_Nm": 0.0
+  },
+  "tolerance": {
+   "torque_Nm": 0.1,
+   "power_hp": 0.1
+  },
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g231_2026-11-12/banco_camso/userpath/current/beam2ac_dyno/autist_cuanto.json",
+    "locator": "points[].windowB / fullTorqueData",
+    "sha256": "3fa4c6f475627f724f600c2c0c5a42489666fea06abb8a9649b12538b65b8582",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g231_2026-11-12/banco_camso/medicion.json",
+    "locator": "autist_cuanto",
+    "sha256": "65bc91bb5a3c11aebe7c6c0e7fe8be9448938bda8f89397b5a357451fe13397f",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g231_hyacinth_quail_2026-11-12.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-12",
+  "note": "14 puntos entre 1000 rpm y el techo (7600 rpm, excluido: el limitador corta el par): |Δ| máx. 0.0000 N·m; pico del juego 254.241 hp frente a 254.182 hp del IR (Δ +0.059); ficha: Power 254, implícita 254.349 hp"
+ }
+]

@@ -1,0 +1,98 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "app.awd.rear_diff_preload",
+ "version": 1,
+ "target": "ac:drivetrain.ini/AWD/REAR_DIFF_PRELOAD",
+ "kind": "applicability",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": null
+  },
+  "input_units": {},
+  "output_unit": "N·m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "generic",
+  "vehicle": "",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {},
+ "conditions": [],
+ "applies_when": [
+  {
+   "fact": "ac:drivetrain.ini/TRACTION/TYPE",
+   "op": "eq",
+   "value": "AWD"
+  }
+ ],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+   "locator": "transmisión 2WD de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/catalogo_motor_awd_vmax_2026-10-30.md",
+   "locator": "§2",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+   "locator": "transmisión 2WD de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/catalogo_motor_awd_vmax_2026-10-30.md",
+   "locator": "§2",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "code",
+   "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+   "locator": "transmisión 2WD de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/catalogo_motor_awd_vmax_2026-10-30.md",
+   "locator": "§2",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-30",
+   "author": "claude (tracción total del autist_cuanto)",
+   "action": "create",
+   "reason": "el cálculo 2WD de AC solo usa [DIFFERENTIAL]; [AWD] solo con TYPE=AWD",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "con TYPE distinto de AWD, el cálculo 2WD de AC no usa REAR_DIFF_PRELOAD"
+}

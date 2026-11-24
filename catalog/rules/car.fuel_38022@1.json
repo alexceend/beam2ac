@@ -1,0 +1,126 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "car.fuel_38022",
+ "version": 1,
+ "target": "ac:car.ini/FUEL/FUEL",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "L"
+  },
+  "output_unit": "L",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.mass.fuel_start"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409",
+  "clon de la regla del 40340: el 38022 comparte la mecánica de BeamNG; solo hay contraste estático (estructura y masa frente a la ficha) y las medidas de banco se hicieron con 40340/200409; el neumático necesita el banco propio del coche"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/ac/assemble.py",
+   "locator": "mainTank",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/ir/legacy_facts.py",
+   "locator": "ir_facts: mismo parámetro que bng.fuel.start",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/car.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g2_reglas_ir_2026-10-30.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§E",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_38022_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: cobertura del exportador 38022, misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de car.fuel_40340@1 para el exportador 38022",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

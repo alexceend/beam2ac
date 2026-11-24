@@ -1,0 +1,125 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "eng.minimum_combustion",
+ "version": 1,
+ "target": "ac:engine.ini/ENGINE_DATA/MINIMUM",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "rpm"
+  },
+  "output_unit": "rpm",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.engine.idle_speed"
+ },
+ "conditions": [
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "combustionEngine"
+  },
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "MINIMUM de AC (ralentí, assetto_engine_semantics.md) = idleRPM de combustionEngine, objetivo del controlador de ralentí (idleAV = idleRPM · rpmToAV, l. 1700-1701; control l. 706-717); equivalencia en AC sin verificar (misma hipótesis que eng.minimum_camso91392@2)"
+ ],
+ "open_issues": [
+  "Automation 200409 exporta idleRPM con decimales (645.5273…); la lectura de un MINIMUM no entero en AC no está verificada"
+ ],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_combustion.py",
+   "locator": "read_combustion_engine",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_combustion_engine",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/combustionEngine.lua",
+   "locator": "l. 1700-1701 (idleRPM, idleAV); l. 706-717 (control de ralentí)",
+   "sha256": "c3aa446393cc4af240fb71ddab4880afb857090a97f18d1d89b904e44728a03d",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/assetto_engine_semantics.md",
+   "locator": "[ENGINE_DATA]",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g210_d_g29_decisions_2026-11-02.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g210_d_g29_decisions_2026-11-02/siete_200409.md",
+   "locator": "por vehículo",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-02",
+   "author": "claude (G2.10: decisiones D-G29a/b/c, encargadas por el usuario)",
+   "action": "create",
+   "reason": "D-G29a: idleRPM es un dato del JBeam (sin valor por defecto en el Lua) con la misma semántica de ralentí que en camsoEngine",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": ""
+}

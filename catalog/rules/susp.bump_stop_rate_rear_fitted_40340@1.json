@@ -1,0 +1,135 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.bump_stop_rate_rear_fitted_40340",
+ "version": 1,
+ "target": "ac:suspensions.ini/REAR/BUMP_STOP_RATE",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "N/m"
+  },
+  "output_unit": "N/m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.rear.bumpstop_rate"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.rear.linkage",
+   "op": "in",
+   "value": [
+    "dwb_fitted"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "ningún vehículo 200409 se ha probado en AC",
+  "BeamNG [M] (banco de G2.17, 7 vehículos, 28 topes): el tope empieza exactamente cuando la viga mide la longitud de creación ∓ *BoundRange y, en la zona de transición, F = 11·beamLimitSpring·p + (beamLimitSpring/boundZone)·p² a lo largo de la viga",
+  "recorrido hasta el contacto con la cinemática del DWB (rígido) desde el reposo del modelo (la base de AC)",
+  "AC usa una sola BUMP_STOP_RATE para arriba y abajo: se toma la palanca en el contacto de compresión; en el de extensión la rigidez real difiere en (MR_abajo/MR_arriba)² (cinematica_g217.md)",
+  "AC no amortigua los topes (suspensión de AC): beamLimitDamp de BeamNG se pierde (ir…bumpstop_damping)",
+  "solo el término lineal 11·kL·MR²: el cuadrático (kL/boundZone)·p² no se exporta porque BUMP_STOP_PROGRESSIVE no está en el catálogo y añadirlo cambia los bloqueos de los proyectos históricos (decisión D-G217-BSP; queda en ir…bumpstop_progressive): dentro de la zona AC da hasta p/(11·z) menos (≤ 8,3 % al final de la zona)",
+  "más allá de la zona (p > boundZone) BeamNG pasa a F = 12·kL·z + kL·(p − z) [M] (banco, sesión 3): AC (lineal 11·kL) es más rígido a partir de una fuerza en la viga de 12·kL·z",
+  "dwb_fitted: la trasera tiene más de 5 barras de rango 6 (longitudes de reposo incompatibles); BeamNG la guía por el equilibrio elástico del conjunto completo [M, banco cinemático de G2.29: dentro del ruido], no por un subconjunto de 5 barras (0,35–0,42° de convergencia fuera)",
+  "los 5 puntos del chasis del doble triángulo están AJUSTADOS (Gauss-Newton regularizado hacia los nodos reales; máx. 40 mm de desplazamiento) para reproducir caída, convergencia, vía y avance del centro de rueda del conjunto completo en ±60 mm a ≤ 0,5 de la tolerancia (0,01° / 0,1 mm): son anclajes equivalentes, no los físicos (src/extract/linkage.py::_fit_dwb)",
+  "el giro de la mangueta alrededor del eje de rueda no se ajusta: la palanca del muelle del DWB ajustado difiere 0,2–0,8 % de la del conjunto completo (≤ 1,6 % en la rigidez en rueda)",
+  "ningún 40340 se ha probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage_g217",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g217_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g217_suspension_steering_2026-11-04/banco/resultados_s1_s2.md y topes_s1_s2_s3.md",
+   "locator": "banco de BeamNG (2 sesiones + topes)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g229_consolidacion_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g230_trasera_sobredeterminada_2026-11-12.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-12",
+   "author": "claude (G2.30, encargada por el usuario)",
+   "action": "create",
+   "reason": "derivada de susp.bump_stop_rate_rear_40340@1 para la trasera dwb_fitted",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.30"
+}

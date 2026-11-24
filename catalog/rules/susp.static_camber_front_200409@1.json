@@ -1,0 +1,131 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.static_camber_front_200409",
+ "version": 1,
+ "target": "ac:suspensions.ini/FRONT/STATIC_CAMBER",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "deg"
+  },
+  "output_unit": "deg",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.front.rest_camber"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.front.linkage",
+   "op": "in",
+   "value": [
+    "dwb_5link",
+    "dwb_equivalent"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "modelo de enlaces rígidos de BeamNG (vigas NORMAL ≥ 1000 N/m; las del 200409 ≥ 10⁶): la elasticidad de las barras, de la cremallera y de la carrocería no se representa en AC",
+  "pose de reposo = enlaces con longitud L·beamPrecompression y el centro de rueda a la altura de la pose del JBeam, sin carga (src/extract/linkage.py)",
+  "ningún vehículo 200409 se ha probado en AC; DWB de AC sin probar en ningún coche del proyecto (el Ibiza aprobado es STRUT)",
+  "caída del eje de rueda en la pose de reposo (incluye la precompresión de los enlaces); en AC el buje empieza con la orientación del coche y STATIC_CAMBER gira el neumático: la caída inicial es la de BeamNG",
+  "mismo signo: negativa = parte alta hacia dentro (AC §2.6 [C])",
+  "la convergencia en reposo (TOE_OUT) queda pendiente: el efecto del signo de TOE_OUT no está validado"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/precompresion_banco.md",
+   "locator": "longitudes de los enlaces en el juego = L·beamPrecompression (≤ 0,07 mm)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/elastico.md",
+   "locator": "8 barras del 200409: cualquier DWB a ≤ 0,0024° del equilibrio elástico",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2.1-2.6 [Confirmed]",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ibiza_damping_research.md",
+   "locator": "§2.1 amortiguador de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g216_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/cinematica_dwb.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-04",
+   "author": "claude (G2.16: arquitectura de suspensión y dirección del 200409, encargada por el usuario)",
+   "action": "create",
+   "reason": "G2.16: STATIC_CAMBER = caída en reposo",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.16: solo 200409 y eje front DWB medido"
+}

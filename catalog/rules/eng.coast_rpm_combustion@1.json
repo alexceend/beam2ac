@@ -1,0 +1,153 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "eng.coast_rpm_combustion",
+ "version": 1,
+ "target": "ac:engine.ini/COAST_REF/RPM",
+ "kind": "computed",
+ "transform": {
+  "id": "ac_coast_ref",
+  "params": {
+   "output": "rpm",
+   "law": "acs_from_minimum"
+  },
+  "input_units": {
+   "curve": "table:rpm->N·m",
+   "ceiling": "rpm",
+   "minimum": "rpm"
+  },
+  "output_unit": "rpm",
+  "formula": "ac_coast_ref (src/ac/coast_ref.py coast_ref_from_minimum): RPM, TORQUE = último punto (r, t) de la curva con r ≤ techo; NON_LINEARITY = 0; AC aplica freno(rpm) = TORQUE·(rpm − MINIMUM)/(RPM − MINIMUM) para rpm > MINIMUM y 0 por debajo (motor de AC)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "curve": "ir.engine.coast_curve",
+  "ceiling": "ir.engine.speed_ceiling",
+  "minimum": "ir.engine.idle_speed"
+ },
+ "conditions": [
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "combustionEngine"
+  },
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.engine.rev_limiter_mode",
+   "op": "eq",
+   "value": "activo"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "freno motor de AC con [COAST_REF] y NON_LINEARITY = 0: lineal desde MINIMUM (0 en MINIMUM y por debajo) hasta TORQUE en RPM (AC); anclado en el freno de BeamNG en el techo de rpm (mismo método que eng.coast_*@2 del Ibiza)",
+  "error conocido y aceptado por el usuario (G2.24): BeamNG ya frena friction + engineBrakeTorque + dynamicFriction·ω en el ralentí (54-77 N·m en los 200409) y AC 0; el error decrece linealmente hasta 0 en el techo. Ningún RPM/TORQUE/NON_LINEARITY lo elimina en MINIMUM (G2.10 §3, D-G29c)",
+  "MINIMUM = idle_speed truncado (getInt), el mismo valor que AC usa con eng.minimum_combustion@2"
+ ],
+ "open_issues": [
+  "COAST_CURVE desde archivo y [COAST_SETTINGS] (gasCoastOffsetCurve) de AC sin analizar: podrían representar el freno en el ralentí"
+ ],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_combustion.py",
+   "locator": "coast_curve",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "engine.coast_curve",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/combustionEngine.lua",
+   "locator": "l. 731-806 updateTorque (freno motor)",
+   "sha256": "c3aa446393cc4af240fb71ddab4880afb857090a97f18d1d89b904e44728a03d",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC (COAST_CURVE=FROM_COAST_REF)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g224_diagnostico_exports_ac_2026-11-09.md",
+   "locator": "§4 (problema C)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g210_d_g29_decisions_2026-11-02.md",
+   "locator": "§3 D-G29c",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g224_2026-11-09/diagnostico/coast_error.py",
+   "locator": "perfil de error por vehículo",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-09",
+   "author": "claude (G2.24: decisión del usuario sobre D-G29c, «anclar en el techo»)",
+   "action": "create",
+   "reason": "sin [COAST_REF] AC aplica freno motor 0 (AC) y las rpm no bajan (prueba del usuario, G2.23); el usuario elige el ajuste anclado en el techo con el error en el ralentí documentado",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "solo con limitador activo: el techo es entonces el LIMITER de eng.limiter_combustion@2"
+}

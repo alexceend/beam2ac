@@ -1,0 +1,167 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "brk.max_torque_knee_38022",
+ "version": 1,
+ "target": "ac:brakes.ini/DATA/MAX_TORQUE",
+ "kind": "computed",
+ "transform": {
+  "id": "linear_sum",
+  "params": {
+   "coefficients": {
+    "front": 1,
+    "rear": 1
+   }
+  },
+  "input_units": {
+   "front": "N·m",
+   "rear": "N·m"
+  },
+  "output_unit": "N·m",
+  "formula": "MAX_TORQUE = T_rueda_del + T_rueda_tras (pedal 1)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "front": "ir.brakes.axles.front.max_torque_per_wheel",
+  "rear": "ir.brakes.axles.rear.max_torque_per_wheel"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.brakes.axles.front.input_split",
+   "op": "eq",
+   "value": 1
+  },
+  {
+   "fact": "ir.brakes.axles.rear.input_split",
+   "op": "eq",
+   "value": 0.5
+  },
+  {
+   "fact": "ir.brakes.axles.rear.split_coef",
+   "op": "eq",
+   "value": 0.5
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "par nominal: BeamNG multiplica el par por la eficiencia térmica de la pastilla (wheels.lua calculateThermalEfficiency, ≤ 1; 'sport' ≈ 0,92 y 'semi-race' ≈ 0,86 a 20 °C); AC sin [TEMPS_*] no tiene pérdida térmica: se convierte el par a eficiencia 1",
+  "ABS de BeamNG no convertido (electronics.ini pendiente): con el ABS activo el par real de BeamNG lo limita el controlador",
+  "brakeSpring y el retardo de presión (0,04 s) de BeamNG no tienen equivalente en AC",
+  "ningún vehículo 200409 se ha probado en AC",
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409",
+  "codo de pedal trasero de BeamNG (brakeInputSplit 0,5, brakeSplitCoef 0,5) sin equivalente en AC: se iguala el par de cada eje a pedal 1; por debajo del codo (pedal ≤ 0,5) el eje trasero de AC da el 75 % del par de BeamNG y el delantero es exacto (reparto delantero de AC mayor que el del origen a medio pedal)",
+  "clon de la regla del 40340: el 38022 comparte la mecánica de BeamNG; solo hay contraste estático (estructura y masa frente a la ficha) y las medidas de banco se hicieron con 40340/200409; el neumático necesita el banco propio del coche"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/brakes_tyres.py",
+   "locator": "brake_torque, front_share",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/wheels.lua",
+   "locator": "updateBrakeNoABS l. 554-557; updateWheelTorques l. 642",
+   "sha256": "1eaf8b31…",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/wheels.lua",
+   "locator": "updateWheelVelocities l. 595-596: max(principal, parkingTorque·entrada)",
+   "sha256": "1eaf8b31…",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "frenos de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "frenos de AC (MAX_TORQUE, FRONT_SHARE, HANDBRAKE_TORQUE)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+   "locator": "§2",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g215_direction_brakes_aero_2026-11-03.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/inventario.md",
+   "locator": "frenos por rueda de los 7 vehículos 200409",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g229_consolidacion_2026-11-11.md",
+   "locator": "§2.1",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_38022_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: cobertura del exportador 38022, misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de brk.max_torque_knee_40340@1 para el exportador 38022",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

@@ -1,0 +1,103 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "susp.type_rear",
+ "version": 1,
+ "target": "ac:suspensions.ini/REAR/TYPE",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "enum"
+  },
+  "output_unit": "enum",
+  "formula": ""
+ },
+ "scope": {
+  "level": "vehicle",
+  "vehicle": "seat_ibiza_acfr",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "bng.suspension.rear.ac_type"
+ },
+ "conditions": [],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "tipo AC deducido de la etiqueta declarada de la pieza (MacPherson/strut → STRUT)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/suspension.py",
+   "locator": "TYPE_BY_LABEL",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/suspensions.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/masa_geometria.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (susp.type_rear)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": ""
+}

@@ -1,0 +1,133 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.awd_rear_diff_preload_lsd_200409",
+ "version": 1,
+ "target": "ac:drivetrain.ini/AWD/REAR_DIFF_PRELOAD",
+ "kind": "computed",
+ "transform": {
+  "id": "scale",
+  "params": {
+   "factor": 2.0
+  },
+  "input_units": {
+   "x": "N·m"
+  },
+  "output_unit": "N·m",
+  "formula": "REAR_DIFF_PRELOAD = 2 · lsdPreload"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.drivetrain.differentials.rear.preload"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "combustionEngine"
+  },
+  {
+   "fact": "ir.drivetrain.layout",
+   "op": "eq",
+   "value": "AWD"
+  },
+  {
+   "fact": "ir.drivetrain.differentials.center.kind",
+   "op": "in",
+   "value": [
+    "open",
+    "lsd"
+   ]
+  },
+  {
+   "fact": "ir.drivetrain.differentials.rear.kind",
+   "op": "eq",
+   "value": "lsd"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "BeamNG (medido, G2.12.1): al saturar, el par de bloqueo es lsdPreload + coef·|T_entrada| a cada salida con signo opuesto ⇒ diferencia entre salidas = 2·lsdTorque (error ≤ 4,5·10⁻¹³ N·m)",
+  "AC (el cálculo 4WD de AC [C], medido en el banco de G2.21): cada semieje recibe ±lim/2 ⇒ diferencia = lim; factor 2 = (2·lsdTorque)/lim",
+  "solo iguala el par SATURADO: por debajo, BeamNG bloquea con un muelle angular (deslizamiento 0) y AC aplica lim·Δω/(|Δω|+0,1), que oscila dentro de la ventana con límites grandes",
+  "el diferencial de eje de AC calcula su límite con el par NOMINAL s·T·r (FRONT_SHARE), BeamNG con el par real del eje (incluye lo que pasa el central)",
+  "la entrada del diferencial de eje incluye el grupo final: precarga ya en la rueda"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/differential.lua",
+   "locator": "l. 42-66 (LSDUpdateTorque), 333-335 (valores por defecto)",
+   "sha256": "1b53a79101bdd31cda16b7b00e86ee1494b909149aca6d42d236e964c6e0aa0a",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g2121_lsd_validation_2026-11-02/resultados.md",
+   "locator": "bloqueo saturado y diferencia 2·lsdTorque (medido)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión 4WD de AC (límites y ±lim/2)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/lab/ac_step4wd.py",
+   "locator": "port de la lectura",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g221_lsd_validation_implementation_2026-11-07.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "output/g222_2026-11-07/repetibilidad/veredicto.json",
+   "locator": "params",
+   "sha256": "817abbc2285a9d41e143a79468c53a10a3bc8cf4a7f633387948e5d6223bdf98",
+   "note": "banco de AC"
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-07",
+   "author": "claude (G2.21: D-G212-LSD, con la mitad AC medida en el banco de AC)",
+   "action": "create",
+   "reason": "G2.21: D-G212-LSD con las dos mitades medidas",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.21: precarga del diferencial rear"
+}

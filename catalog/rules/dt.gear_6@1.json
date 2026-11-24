@@ -1,0 +1,100 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "dt.gear_6",
+ "version": 1,
+ "target": "ac:drivetrain.ini/GEARS/GEAR_6",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "1"
+  },
+  "output_unit": "1",
+  "formula": ""
+ },
+ "scope": {
+  "level": "vehicle",
+  "vehicle": "seat_ibiza_acfr",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {
+  "x": "bng.gearbox.forward_ratio_6"
+ },
+ "conditions": [],
+ "applies_when": [
+  {
+   "fact": "bng.gearbox.forward_count",
+   "op": "ge",
+   "value": 6
+  }
+ ],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/drivetrain.py",
+   "locator": "build_drivetrain",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/drivetrain.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (dt.gear_6)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": ""
+}

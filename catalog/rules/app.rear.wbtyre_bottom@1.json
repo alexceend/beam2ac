@@ -1,0 +1,87 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "app.rear.wbtyre_bottom",
+ "version": 1,
+ "target": "ac:suspensions.ini/REAR/WBTYRE_BOTTOM",
+ "kind": "applicability",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": null
+  },
+  "input_units": {},
+  "output_unit": "m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "generic",
+  "vehicle": "",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {},
+ "conditions": [],
+ "applies_when": [
+  {
+   "fact": "ac:suspensions.ini/REAR/TYPE",
+   "op": "in",
+   "value": [
+    "DWB",
+    "STRUT"
+   ]
+  }
+ ],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ibiza_front_suspension_research.md",
+   "locator": "§2.1 suspensión de puntal de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ibiza_front_suspension_research.md",
+   "locator": "§2.1 suspensión de puntal de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "doc",
+   "path": "docs/research/ibiza_front_suspension_research.md",
+   "locator": "§2.1 suspensión de puntal de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: eje rígido → AXLE, decisión autónoma de la misión de desbloqueo)",
+   "action": "create",
+   "reason": "aplicabilidad por TYPE con eje rígido (AXLE)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "G2.44"
+}

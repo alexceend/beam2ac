@@ -1,0 +1,50 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "porsche_gt3_rs.18547.engine_curve_in_game",
+  "vehicle": "porsche_gt3_rs",
+  "method": "in_game_value",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "18547",
+  "expected": {
+   "max_power_hp": 498.412,
+   "max_power_rpm": 8059
+  },
+  "observed": {
+   "max_power_hp": 498.268,
+   "max_abs_torque_delta_Nm": 0.0
+  },
+  "tolerance": {
+   "torque_Nm": 0.1,
+   "power_hp": 0.2
+  },
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_camso/userpath/current/beam2ac_dyno/porsche_gt3_rs.json",
+    "locator": "points[].windowB / fullTorqueData",
+    "sha256": "f346e5c45679eb86f8f76eb9b42ba4b6fe6aeca41e7d695fb5657bfe1fa78b31",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_camso/medicion.json",
+    "locator": "porsche_gt3_rs",
+    "sha256": "3f2156394aeed86a2fe2db792c7959e49e534804e3f33ea6bbd8d758f214fc28",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g244_38022_2026-11-14.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-14",
+  "note": "16 puntos entre 1000 rpm y el techo (8500 rpm, excluido: el limitador corta el par): |Δ| máx. 0.0000 N·m; pico del juego 498.412 hp frente a 498.268 hp del IR (Δ +0.144); ficha: Power 499, implícita 498.891 hp"
+ }
+]

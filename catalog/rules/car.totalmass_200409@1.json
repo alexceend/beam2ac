@@ -1,0 +1,134 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "car.totalmass_200409",
+ "version": 1,
+ "target": "ac:car.ini/BASIC/TOTALMASS",
+ "kind": "computed",
+ "transform": {
+  "id": "linear_sum",
+  "params": {
+   "coefficients": {
+    "total": 1,
+    "driver": 1,
+    "hub_front": -2,
+    "hub_rear": -2
+   }
+  },
+  "input_units": {
+   "total": "kg",
+   "driver": "kg",
+   "hub_front": "kg",
+   "hub_rear": "kg"
+  },
+  "output_unit": "kg",
+  "formula": "TOTALMASS = masa BeamNG + piloto − 2·HUB_MASS_del − 2·HUB_MASS_tras"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "total": "ir.mass.total",
+  "driver": "ir.mass.driver",
+  "hub_front": "ac:suspensions.ini/FRONT/HUB_MASS",
+  "hub_rear": "ac:suspensions.ini/REAR/HUB_MASS"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "masa total de BeamNG = carrocería + bujes (suma de nodos; sin los 2 nodos de cámara de camerasInternal, 0,48 kg: decisión técnica de G2.14)",
+  "cada eje aporta 2·HUB_MASS (DWB/STRUT por esquina); solo se resuelve con los dos ejes independientes, porque HUB_MASS solo se resuelve en ellos",
+  "piloto según la decisión 2 del proyecto (ir.mass.driver)",
+  "ningún vehículo 200409 se ha probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/mass_geometry.py",
+   "locator": "compute_mass_geometry",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "CLAUDE.md",
+   "locator": "decisión 2",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "catalog/rules/car.totalmass@2.json",
+   "locator": "misma fórmula (Ibiza, validated)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2.8 reparto de masas: cuerpo, bujes; getMass de DWB/STRUT y de AXLE (× 0,5)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.13: masa en AC = TOTALMASS + bujes + combustible",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g214_suspension_2026-11-03.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g214_suspension_2026-11-03/masas.md",
+   "locator": "partición por cierre rígido en 10 vehículos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "catalog/decisions/seat_ibiza_acfr.jsonl",
+   "locator": "ac:suspensions.ini/FRONT/HUB_MASS = 49.15 (base aprobada; mismo método)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-03",
+   "author": "claude (G2.14: suspensión y parámetros derivados del 200409, encargada por el usuario)",
+   "action": "create",
+   "reason": "G2.14: TOTALMASS del 200409 con la fórmula de car.totalmass@2 sobre los HUB_MASS medidos",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.14: solo exportador 200409; la masa física de AC (TOTALMASS + ΣHUB_MASS) es masa BeamNG + piloto sea cual sea el reparto"
+}

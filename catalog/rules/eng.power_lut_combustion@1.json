@@ -1,0 +1,153 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "eng.power_lut_combustion",
+ "version": 1,
+ "target": "ac:power.lut",
+ "kind": "computed",
+ "transform": {
+  "id": "table",
+  "params": {},
+  "input_units": {
+   "x": "table:rpm->N·m"
+  },
+  "output_unit": "table:rpm->N·m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {
+  "x": "ir.engine.wot_torque_curve"
+ },
+ "conditions": [
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "combustionEngine"
+  },
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.engine.forced_induction",
+   "op": "eq",
+   "value": true
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "curva = estimación de régimen estable del juego (turbocharger.lua getTorqueCoefs, válvula en start + rango/2) × curva NA − fricción; medida en BeamNG con un banco en el eje del motor en 7 vehículos: |medida − estimación| ≤ 4e-05 N·m en las rpm medidas",
+  "AC interpola linealmente entre los puntos del IR (rpm de la tabla del JBeam, techo y rpm añadidas hasta ≤ 0,1 N·m de la curva por rpm, src.importers.beamng.refine_knots): |power.lut − medida| ≤ 0.073 N·m en las rpm medidas (500 rpm … techo − 1)",
+  "densidad relativa del aire = 1: la estimación no incluye intakeAirDensityCoef (combustionEngine.lua l. 748); la medida se normaliza",
+  "decisión 1: el boost ya está en la tabla; sin [TURBO_n]; la dinámica del turbo (retardo, PID de la válvula) no se traslada"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_combustion.py",
+   "locator": "read_combustion_engine",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_combustion_engine",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/combustionEngine.lua",
+   "locator": "l. 82-103 (getTorqueData, turbo); l. 731-802 (updateTorque)",
+   "sha256": "c3aa446393cc4af240fb71ddab4880afb857090a97f18d1d89b904e44728a03d",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/turbocharger.lua",
+   "locator": "l. 527-547 getTorqueCoefs; l. 163-205 updateFixedStep",
+   "sha256": "004810d6fb991b086288c1a2802f30419922eed0221632efe923d4d87ad76f29",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/assetto_engine_semantics.md",
+   "locator": "[ENGINE_DATA]",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g210_d_g29_decisions_2026-11-02.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g210_d_g29_decisions_2026-11-02/medicion_beamng/medicion.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g210_d_g29_decisions_2026-11-02/medicion_beamng/medicion.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [
+  "2020_rpm_atacama_sport__4x4.2020_rpm_atacama_sport__4x4.engine_curve_in_game",
+  "2020_rpm_atlanta_gt_3_6t.2020_rpm_atlanta_gt_3_6t.engine_curve_in_game",
+  "2020_rpm_legion_grand_touring.2020_rpm_legion_grand_touring.engine_curve_in_game",
+  "2020_rpm_patagonia_xt_v8.2020_rpm_patagonia_xt_v8.engine_curve_in_game",
+  "2020_rpm_prothean_s.2020_rpm_prothean_s.engine_curve_in_game",
+  "2021_rpm_portland_touring.2021_rpm_portland_touring.engine_curve_in_game",
+  "rpm_omega_one_concept.rpm_omega_one_concept.engine_curve_in_game"
+ ],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-02",
+   "author": "claude (G2.10: decisiones D-G29a/b/c, encargadas por el usuario)",
+   "action": "create",
+   "reason": "D-G29b: la curva estimada coincide con el par medido en el juego en régimen estable en todos los vehículos 200409 del corpus (no solo la potencia máxima)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "solo turbo (lo medido); NA, compresor y N2O quedan fuera por condición o porque el extractor deja la curva ausente"
+}

@@ -1,0 +1,50 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "susui_espol_vtec.03496.engine_curve_in_game",
+  "vehicle": "susui_espol_vtec",
+  "method": "in_game_value",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "03496",
+  "expected": {
+   "max_power_hp": 122.235,
+   "max_power_rpm": 7921
+  },
+  "observed": {
+   "max_power_hp": 122.235,
+   "max_abs_torque_delta_Nm": 0.0
+  },
+  "tolerance": {
+   "torque_Nm": 0.1,
+   "power_hp": 0.2
+  },
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_camso/userpath/current/beam2ac_dyno/susui_espol_vtec.json",
+    "locator": "points[].windowB / fullTorqueData",
+    "sha256": "0deb57a0cc837d6ea188c8df1b35a8b2ea0632f03d00c9961e776ddd76ed3a5c",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_camso/medicion.json",
+    "locator": "susui_espol_vtec",
+    "sha256": "3f2156394aeed86a2fe2db792c7959e49e534804e3f33ea6bbd8d758f214fc28",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g244_38022_2026-11-14.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-14",
+  "note": "18 puntos entre 1000 rpm y el techo (8400 rpm, excluido: el limitador corta el par): |Δ| máx. 0.0000 N·m; pico del juego 122.235 hp frente a 122.235 hp del IR (Δ +0.000); ficha: Power 122, implícita 122.332 hp"
+ }
+]

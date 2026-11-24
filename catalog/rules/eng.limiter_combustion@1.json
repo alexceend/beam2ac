@@ -1,0 +1,128 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "eng.limiter_combustion",
+ "version": 1,
+ "target": "ac:engine.ini/ENGINE_DATA/LIMITER",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "rpm"
+  },
+  "output_unit": "rpm",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.engine.speed_ceiling"
+ },
+ "conditions": [
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "combustionEngine"
+  },
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.engine.rev_limiter_mode",
+   "op": "eq",
+   "value": "activo"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "LIMITER de AC (rpm de corte) = maxRPM de combustionEngine tras el limitador (revLimiterRPM, por defecto maxRPM = min(maxRPM del JBeam, rpm máx. de la tabla), l. 1957-1971); el modo de corte (rpmDrop, timeBased, soft) y LIMITER_HZ no se trasladan; equivalencia en AC sin verificar (misma hipótesis que eng.limiter_camso91392@2)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_combustion.py",
+   "locator": "read_combustion_engine",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_combustion_engine",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/combustionEngine.lua",
+   "locator": "l. 1955-1989 (maxRPM, hasRevLimiter, revLimiterType/RPM)",
+   "sha256": "c3aa446393cc4af240fb71ddab4880afb857090a97f18d1d89b904e44728a03d",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/assetto_engine_semantics.md",
+   "locator": "[ENGINE_DATA]",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g210_d_g29_decisions_2026-11-02.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g210_d_g29_decisions_2026-11-02/siete_200409.md",
+   "locator": "por vehículo",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-02",
+   "author": "claude (G2.10: decisiones D-G29a/b/c, encargadas por el usuario)",
+   "action": "create",
+   "reason": "D-G29a: el techo lo calcula el Lua a partir de datos del JBeam y de sus valores por defecto (registrados en el IR); sin limitador el juego reduce el par pasado maxRPM (redlineTorqueDropOffRange) y AC corta: se excluye",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": ""
+}

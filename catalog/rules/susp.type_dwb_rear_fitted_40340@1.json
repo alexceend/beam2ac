@@ -1,0 +1,143 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.type_dwb_rear_fitted_40340",
+ "version": 1,
+ "target": "ac:suspensions.ini/REAR/TYPE",
+ "kind": "computed",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": "DWB"
+  },
+  "input_units": {},
+  "output_unit": "enum",
+  "formula": "DWB si la estructura medida del eje es un doble triángulo (5 barras) o un conjunto de más barras con un DWB equivalente"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {},
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.rear.linkage",
+   "op": "in",
+   "value": [
+    "dwb_fitted"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "pose de reposo = enlaces con longitud L·beamPrecompression y el centro de rueda a la altura de la pose del JBeam, sin carga (src/extract/linkage.py)",
+  "ningún vehículo 200409 se ha probado en AC; DWB de AC sin probar en ningún coche del proyecto (el Ibiza aprobado es STRUT)",
+  "la arquitectura sale de la estructura de vigas, no de la etiqueta de la pieza: 'Double Wishbone' trasero del 200409 son 8 barras (dos rótulas por triángulo) de rango 5 cuyo DWB de 5 barras se desvía ≤ 0,0024° en ±60 mm",
+  "dwb_fitted: la trasera tiene más de 5 barras de rango 6 (longitudes de reposo incompatibles); BeamNG la guía por el equilibrio elástico del conjunto completo [M, banco cinemático de G2.29: dentro del ruido], no por un subconjunto de 5 barras (0,35–0,42° de convergencia fuera)",
+  "los 5 puntos del chasis del doble triángulo están AJUSTADOS (Gauss-Newton regularizado hacia los nodos reales; máx. 40 mm de desplazamiento) para reproducir caída, convergencia, vía y avance del centro de rueda del conjunto completo en ±60 mm a ≤ 0,5 de la tolerancia (0,01° / 0,1 mm): son anclajes equivalentes, no los físicos (src/extract/linkage.py::_fit_dwb)",
+  "el giro de la mangueta alrededor del eje de rueda no se ajusta: la palanca del muelle del DWB ajustado difiere 0,2–0,8 % de la del conjunto completo (≤ 1,6 % en la rigidez en rueda)",
+  "ningún 40340 se ha probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/precompresion_banco.md",
+   "locator": "longitudes de los enlaces en el juego = L·beamPrecompression (≤ 0,07 mm)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/elastico.md",
+   "locator": "8 barras del 200409: cualquier DWB a ≤ 0,0024° del equilibrio elástico",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2.1-2.6 [Confirmed]",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ibiza_damping_research.md",
+   "locator": "§2.1 amortiguador de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g216_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/cinematica_dwb.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g229_consolidacion_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g230_trasera_sobredeterminada_2026-11-12.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-12",
+   "author": "claude (G2.30, encargada por el usuario)",
+   "action": "create",
+   "reason": "derivada de susp.type_dwb_rear_40340@1 para la trasera dwb_fitted",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.30"
+}

@@ -1,0 +1,145 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.awd_front_diff_coast_lsd_viscc_40340",
+ "version": 1,
+ "target": "ac:drivetrain.ini/AWD/FRONT_DIFF_COAST",
+ "kind": "computed",
+ "transform": {
+  "id": "scale",
+  "params": {
+   "factor": 2.0
+  },
+  "input_units": {
+   "x": "1"
+  },
+  "output_unit": "1",
+  "formula": "FRONT_DIFF_COAST = 2 · rev_lock_coef"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.drivetrain.differentials.front.rev_lock_coef"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  },
+  {
+   "fact": "ir.drivetrain.layout",
+   "op": "eq",
+   "value": "AWD"
+  },
+  {
+   "fact": "ir.drivetrain.differentials.front.kind",
+   "op": "eq",
+   "value": "lsd"
+  },
+  {
+   "fact": "ir.drivetrain.differentials.front.rev_lock_coef",
+   "op": "le",
+   "value": 1.0
+  },
+  {
+   "fact": "ir.drivetrain.differentials.center.kind",
+   "op": "eq",
+   "value": "viscous"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "BeamNG (medido, G2.12.1): al saturar, el par de bloqueo es lsdPreload + coef·|T_entrada| a cada salida con signo opuesto ⇒ diferencia entre salidas = 2·lsdTorque (error ≤ 4,5·10⁻¹³ N·m)",
+  "AC (el cálculo 4WD de AC [C], medido en el banco de G2.21): cada semieje recibe ±lim/2 ⇒ diferencia = lim; factor 2 = (2·lsdTorque)/lim",
+  "solo iguala el par SATURADO: por debajo, BeamNG bloquea con un muelle angular (deslizamiento 0) y AC aplica lim·Δω/(|Δω|+0,1), que oscila dentro de la ventana con límites grandes",
+  "el diferencial de eje de AC calcula su límite con el par NOMINAL s·T·r (FRONT_SHARE), BeamNG con el par real del eje (incluye lo que pasa el central)",
+  "BeamNG usa min(coef, 1); la regla solo se aplica con coef ≤ 1",
+  "AC: COAST se aplica con el par del motor ≤ 0",
+  "derivada de la regla del 200409/DCT para el exportador 40340 con camsoEngine y caja manual: la mecánica de AC (el cálculo 4WD de AC, G2.12/G2.22) y la del juego (differential.lua, G2.12.1) no dependen del exportador ni del motor; solo hay contraste estático con autist_cuanto (no probado en AC)",
+  "el modo del eje no depende del diferencial central (differential.lua l. 126-134); central viscous: una sola muestra (autist_quantic), sin probar en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/differential.lua",
+   "locator": "l. 42-66 (LSDUpdateTorque), 333-335 (valores por defecto)",
+   "sha256": "1b53a79101bdd31cda16b7b00e86ee1494b909149aca6d42d236e964c6e0aa0a",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g2121_lsd_validation_2026-11-02/resultados.md",
+   "locator": "bloqueo saturado y diferencia 2·lsdTorque (medido)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión 4WD de AC (límites y ±lim/2)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/lab/ac_step4wd.py",
+   "locator": "port de la lectura",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g221_lsd_validation_implementation_2026-11-07.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "output/g222_2026-11-07/repetibilidad/veredicto.json",
+   "locator": "params",
+   "sha256": "817abbc2285a9d41e143a79468c53a10a3bc8cf4a7f633387948e5d6223bdf98",
+   "note": "banco de AC, AC "
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g230_trasera_sobredeterminada_2026-11-12.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-22",
+   "author": "claude (conversión de autist_quantic, encargada por el usuario)",
+   "action": "create",
+   "reason": "clon de dt.awd_front_diff_coast_lsd_40340@1 con central viscous",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "autist_quantic central viscoso 2026-11-22"
+}

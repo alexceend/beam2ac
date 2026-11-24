@@ -1,0 +1,113 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "dt.traction",
+ "version": 1,
+ "target": "ac:drivetrain.ini/TRACTION/TYPE",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "enum"
+  },
+  "output_unit": "enum",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {
+  "x": "bng.drivetrain.traction"
+ },
+ "conditions": [
+  {
+   "fact": "bng.drivetrain.traction",
+   "op": "in",
+   "value": [
+    "FWD",
+    "RWD"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/ac/drivetrain.py",
+   "locator": "traction_type",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/drivetrain.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/inventario_spicy_mandala_2026-10-25.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [
+  "seat_ibiza_acfr.35b84.traction",
+  "spicy_mandala.56a86.traction"
+ ],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (familia: tracción validada contra info_*.json en 2 vehículos (FWD y RWD); AWD sin soporte)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "familia: tracción validada contra info_*.json en 2 vehículos (FWD y RWD); AWD sin soporte"
+}

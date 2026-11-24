@@ -1,0 +1,77 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "app.front.strut_tyre",
+ "version": 1,
+ "target": "ac:suspensions.ini/FRONT/STRUT_TYRE",
+ "kind": "applicability",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": null
+  },
+  "input_units": {},
+  "output_unit": "m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "generic",
+  "vehicle": "",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {},
+ "conditions": [],
+ "applies_when": [
+  {
+   "fact": "ac:suspensions.ini/FRONT/TYPE",
+   "op": "ne",
+   "value": "DWB"
+  }
+ ],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§1 y §2.2 suspensión de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§1 y §2.2 suspensión de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§1 y §2.2 suspensión de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (tarea B4)",
+   "action": "create",
+   "reason": "claves leídas por cada clase de suspensión (análisis)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "con [FRONT] TYPE=DWB AC no lee STRUT_TYRE"
+}

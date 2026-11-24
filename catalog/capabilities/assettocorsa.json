@@ -1,0 +1,390 @@
+{
+ "schema": "beam2ac.target_capabilities/1",
+ "target": "assettocorsa",
+ "levels": {
+  "direct": "representable directamente (misma semántica, evidencia en los dos lados)",
+  "approximation": "representable mediante aproximación (se pierde forma o detalle, se cuantifica)",
+  "fidelity_loss": "representable con pérdida de fidelidad conocida (AC omite un efecto)",
+  "not_representable": "AC no tiene el mecanismo",
+  "pending_research": "no se sabe todavía si o cómo lo representa AC"
+ },
+ "note": "Rasgos del vehículo (IR) frente a lo que AC puede representar. 'when': condiciones de src/ir/conditions.py; vacío = siempre. Añadir un rasgo no exige tocar el código.",
+ "features": [
+  {
+   "id": "engine.wot_curve",
+   "level": "direct",
+   "when": [{"path": "engine.wot_torque_curve", "op": "present"}],
+   "reason": "power.lut = par neto a plena carga (fila 99 − fricción); validado en el Ibiza en el juego",
+   "evidence": ["docs/research/motor.md", "catalog/rules/eng.power_lut@3.json"]
+  },
+  {
+   "id": "engine.coast_curve",
+   "level": "approximation",
+   "when": [{"path": "engine.coast_curve", "op": "present"}],
+   "reason": "COAST_REF de AC es lineal desde 0 (NON_LINEARITY=0); la curva de BeamNG no lo es (error máx. publicado en bng.engine.coast_ref_torque)",
+   "evidence": ["src/ac/engine.py fit_coast_ref", "docs/research/catalogo_motor_awd_vmax_2026-10-30.md §1"]
+  },
+  {
+   "id": "engine.turbo_dynamics",
+   "level": "not_representable",
+   "when": [{"path": "engine.forced_induction", "op": "eq", "value": true}],
+   "reason": "decisión 1 del proyecto: el boost va en power.lut y no se usa [TURBO_n]; el retardo del turbo se pierde",
+   "evidence": ["CLAUDE.md Decisiones del proyecto 1"]
+  },
+  {
+   "id": "drivetrain.friction_losses",
+   "level": "fidelity_loss",
+   "when": [{"path": "drivetrain.gearbox.kind", "op": "present"}],
+   "reason": "transmisión 2WD de AC no aplica pérdidas de caja ni de diferencial; en BeamNG restan 3–10 % del par en rueda (rama C6 experimental, sin aplicar)",
+   "evidence": ["docs/research/rama_perdidas_c6_2026-10-30.md"]
+  },
+  {
+   "id": "drivetrain.awd_center_split",
+   "level": "direct",
+   "when": [{"path": "drivetrain.differentials.center.kind", "op": "in", "value": ["open", "lsd"]}],
+   "reason": "G2.12: reparto fijo del central (diffTorqueSplit, differential.lua l. 37-39 y 64-65) = [AWD] FRONT_SHARE de TYPE=AWD (el cálculo 4WD de AC/el bloque de aceleración de la transmisión de AC: 2·s·Δω delante, 2·(1−s)·Δω detrás con las 4 inercias igualadas por loadINI). AWD2 (la variante 4WD nueva de AC) es tracción trasera con acoplamiento por deslizamiento: no equivale",
+   "evidence": ["docs/research/g212_awd_2026-11-02.md §3", "output/g212_awd_2026-11-02/acs_awd_analisis.md"]
+  },
+  {
+   "id": "drivetrain.awd_center_locked",
+   "level": "approximation",
+   "when": [{"path": "drivetrain.differentials.center.kind", "op": "eq", "value": "locked"}],
+   "reason": "G2.44 (D-G212-LOCK): BeamNG locked = reparto fijo 0,5/0,5 con lockTorque automático (differential.lua); AC no tiene central rígido: CENTRE_DIFF_PRELOAD acotado por la oscilación del paso de 1/333 s y POWER = COAST = 0. El par entre ejes queda limitado; sin prueba en AC (provisional)",
+   "evidence": ["docs/research/g212_awd_2026-11-02.md §5", "docs/research/g244_central_bloqueado_2026-11-14.md"]
+  },
+  {
+   "id": "drivetrain.awd_wheel_inertia",
+   "level": "fidelity_loss",
+   "when": [{"path": "drivetrain.layout", "op": "eq", "value": "AWD"}],
+   "reason": "G2.12: con TYPE=AWD, transmisión de AC iguala la ANGULAR_INERTIA de las 4 ruedas a la media de la delantera y la trasera; BeamNG conserva las inercias de cada rueda",
+   "evidence": ["output/g212_awd_2026-11-02/acs_awd_analisis.md §1"]
+  },
+  {
+   "id": "differential.lsd_dynamics",
+   "level": "fidelity_loss",
+   "when": [{"path": "drivetrain.differentials.*.kind", "op": "eq", "value": "lsd"}],
+   "reason": "BeamNG: bloqueo con muelle de ángulo (lockSpring, sin deslizamiento bajo el límite) y segundo tope lockTorque; AC (el cálculo 2WD de AC y el cálculo 4WD de AC): rozamiento lim·Δω/(|Δω|+0,1) con lim = PRELOAD + POWER|COAST·|T_eje|; diferencia máx. BeamNG 2·lsdTorque, AC lim ⇒ factor 2 estructural (G2.12, laboratorio src/lab/awd_lab.py) SIN validar en el juego; en AWD el límite del eje usa el par nominal s·T·r",
+   "evidence": ["docs/research/frenos_diferencial_transmision_2026-10-26/informe.md §6"]
+  },
+  {
+   "id": "differential.torque_vectoring",
+   "level": "not_representable",
+   "when": [{"path": "drivetrain.differentials.*.kind", "op": "eq", "value": "torqueVectoring"}],
+   "reason": "diferencial abierto + controlador externo en BeamNG (differential.lua l. 126); AC no tiene vectorización de par",
+   "evidence": ["docs/research/frenos_diferencial_transmision_2026-10-26/informe.md §6"]
+  },
+  {
+   "id": "gearbox.sequential_mode",
+   "level": "pending_research",
+   "when": [{"path": "drivetrain.gearbox.kind", "op": "eq", "value": "sequentialGearbox"}],
+   "reason": "las relaciones son directas; el modo de cambio secuencial (sin saltos) no tiene equivalente verificado en AC",
+   "evidence": ["src/extract/drivetrain.py GEARBOX_TYPES"]
+  },
+  {
+   "id": "brakes.input_split_knee",
+   "level": "fidelity_loss",
+   "when": [{"path": "brakes.front_share_full_pedal", "op": "differs", "value": "brakes.front_share_below_knee"}],
+   "reason": "brakeInputSplit de BeamNG reparte distinto por debajo del codo; FRONT_SHARE de AC es constante: exacto solo a pedal 1",
+   "evidence": ["docs/research/frenos_diferencial_transmision_2026-10-26/informe.md §7"]
+  },
+  {
+   "id": "tyres.model",
+   "level": "approximation",
+   "when": [{"path": "tyres.axles.*.force_slip_samples", "op": "present"}],
+   "reason": "G2.20: curvas Fx/Fy del neumático MEDIDAS en el juego (banco virtual, coche sin modificar, asociadas por la huella del origen) → modelo SCTM de AC (VERSION 10) ajustado por mínimos cuadrados; se pierden la relajación, la dinámica de la estructura y la caída fuera de CAMBER_GAIN; error del ajuste en los supuestos de cada clave",
+   "evidence": ["docs/research/g220_tyre_grip_model_2026-11-07.md", "output/g220_2026-11-07/validacion_neumatico.md"]
+  },
+  {
+   "id": "tyres.model_unmeasured",
+   "level": "pending_research",
+   "when": [{"path": "tyres.axles.*.force_slip_samples", "op": "absent"}],
+   "reason": "neumático de BeamNG por nodos y vigas (rozamiento por nodo en el C++: stage2.lua → obj:setNode) sin medida del banco para este origen: sin equivalencia; no se resuelve con curvas neutras ni estimaciones",
+   "evidence": ["docs/research/porsche_fisica_completa_2026-10-26.md §3", "docs/research/g219_desbloqueo_integral_200409.md §3", "docs/research/g220_tyre_grip_model_2026-11-07.md"]
+  },
+  {
+   "id": "tyres.relaxation",
+   "level": "approximation",
+   "when": [{"path": "tyres.axles.*.force_slip_samples", "op": "present"}],
+   "reason": "G2.25 (decisión del usuario): RELAXATION_LENGTH = 0,0725 m es un valor de referencia (mediana de 222 ejes de AC), NO medido en BeamNG; la relajación real no se midió (hace falta un escalón de deriva a >= 500 Hz)",
+   "evidence": ["docs/research/g220_tyre_grip_model_2026-11-07.md", "docs/research/g225_validacion_funcional_ac_2026-11-09.md"]
+  },
+  {
+   "id": "aero.wings",
+   "level": "approximation",
+   "when": [{"path": "aero.cda", "op": "present"}],
+   "reason": "cefaero (fuerzas objetivo) frente a alas de AC (A1: 3 alas de 1 m², área = CHORD·SPAN [H])",
+   "evidence": ["docs/research/segundo_coche_porsche_2026-10-26.md §6.5"]
+  },
+  {
+   "id": "chassis.flex",
+   "level": "not_representable",
+   "when": [],
+   "reason": "BeamNG deforma la estructura (nodos y vigas); AC es un sólido rígido",
+   "evidence": ["docs/README.md (resumen por juego)"]
+  },
+  {
+   "id": "suspension.active_dampers",
+   "level": "not_representable",
+   "when": [{"path": "formats.code_versions", "op": "has_key", "value": "camso_activeDampers"}],
+   "reason": "controlador Lua de amortiguación activa presente en el vehículo (su uso en la configuración no se comprueba); AC no tiene suspensión activa",
+   "evidence": ["lua/controller/camso_activeDampers.lua"]
+  },
+  {
+   "id": "gearbox.dct_shift",
+   "level": "fidelity_loss",
+   "when": [{"path": "drivetrain.gearbox.kind", "op": "eq", "value": "dctGearbox"}],
+   "reason": "DCT de BeamNG: dos embragues con traspaso de dctClutchTime a 10·dctClutchTime según la agresividad (shiftLogic/dctGearbox.lua l. 511, 698), salida con embrague controlado e igualación de rpm; AC: CHANGE_UP_TIME/CHANGE_DN_TIME fijos (transmisión de AC, ms) y un único embrague. Las relaciones sí son directas (dt.*_dct@1)",
+   "evidence": ["docs/research/g211_transmissions_2026-11-02.md §3", "output/g211_transmissions_2026-11-02/acs_drivetrain/c"]
+  },
+  {
+   "id": "gearbox.automatic_modes",
+   "level": "not_representable",
+   "when": [{"path": "drivetrain.gearbox.kind", "op": "in", "value": ["dctGearbox", "automaticGearbox"]}],
+   "reason": "BeamNG cambia solo (modos PRNDSM del vehicleController); en AC el cambio automático es una ayuda del piloto ([AUTO_SHIFTER] UP/DOWN, cambio automático de AC), no una propiedad del coche",
+   "evidence": ["docs/research/g211_transmissions_2026-11-02.md §3.4"]
+  },
+  {
+   "id": "drivetrain.torque_converter",
+   "level": "not_representable",
+   "when": [{"path": "drivetrain.torque_converter.stall_torque_ratio", "op": "present"}],
+   "reason": "AC no tiene convertidor de par (ni cadenas ni sección en transmisión de AC); en BeamNG desliza y multiplica el par en las marchas sin bloqueo (en los 3 coches 200409: 1.ª-5.ª siempre; ×1,8 con la salida parada, 12-17 % de deslizamiento a 2000 rpm a plena carga). Sin la decisión D-G211-TC no se aplica ninguna relación",
+   "evidence": ["docs/research/g211_transmissions_2026-11-02.md §4", "output/g211_transmissions_2026-11-02/convertidor_regimen.md"]
+  },
+  {
+   "id": "brakes.thermal_fade",
+   "level": "fidelity_loss",
+   "when": [{"path": "brakes.axles.*.thermal_model", "op": "eq", "value": "enabled"}],
+   "reason": "G2.15: BeamNG multiplica el par de freno por la eficiencia térmica de la pastilla (wheels.lua calculateThermalEfficiency; 'sport' ≈ 0,92 y 'semi-race' ≈ 0,86 a 20 °C, 1 en su ventana); AC tiene [TEMPS_FRONT/REAR] opcionales (TORQUE_K, PERF_CURVE, COOL_TRANSFER, COOL_SPEED_FACTOR: frenos de AC) sin correspondencia demostrada: se convierte el par nominal",
+   "evidence": ["docs/research/g215_direction_brakes_aero_2026-11-03.md §4", "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c"]
+  },
+  {
+   "id": "brakes.abs_controller",
+   "level": "pending_research",
+   "when": [{"path": "brakes.axles.*.abs", "op": "eq", "value": "enabled"}],
+   "reason": "G2.15: ABS de BeamNG = controlador PI hacia absSlipRatioTarget (wheels.lua updateABSCoef, absHz); ABS de AC = corte todo/nada por SLIP_RATIO_LIMIT a más de 20 km/h, 1, 2 o 4 canales (ABS de AC, ABS de AC, electronics.ini): sin equivalencia demostrada",
+   "evidence": ["docs/research/g215_direction_brakes_aero_2026-11-03.md §4"]
+  },
+  {
+   "id": "steering.geometry",
+   "level": "approximation",
+   "when": [{"path": "steering.mechanism", "op": "eq", "value": "rack"}],
+   "reason": "G2.16/G2.17: D-G214-TYPE cerrada; STEER_RATIO y LINEAR_STEER_ROD_RATIO salen de la cinemática medida (reglas ctrl.steer_ratio_*, ctrl.linear_steer_rod_ratio_200409@2); aproximación: los topes SUPPORT de BeamNG no existen en AC y la puerta de dirección en AC no está ejecutada; sin reglas para el 38022",
+   "evidence": ["docs/research/g215_direction_brakes_aero_2026-11-03.md §3", "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero", "docs/research/g217_suspension_steering_2026-11-04.md"]
+  },
+  {
+   "id": "aero.triangles",
+   "level": "approximation",
+   "when": [{"path": "aero.model", "op": "eq", "value": "triangles"}, {"path": "aero.cda_vs_aoa", "op": "present"}],
+   "reason": "G2.19: aerodinámica por triángulos MEDIDA en el juego (banco de G2.15, asociada por la huella del origen) → 3 alas de AC (arrastre en el eje trasero, carga en cada eje) con LUT por ángulo de ataque: resultante y cabeceo exactos a 50 m/s; se pierden la guiñada (CdA ≤ 2,4 %, ClA ≤ 5,1 % a ±10°), el efecto suelo y el arrastre de las ruedas girando",
+   "evidence": ["docs/research/g219_desbloqueo_integral_200409.md §4", "output/g219_2026-11-06/aero/validacion_aero.md"]
+  },
+  {
+   "id": "aero.triangles_unmeasured",
+   "level": "pending_research",
+   "when": [{"path": "aero.model", "op": "eq", "value": "triangles"}, {"path": "aero.cda_vs_aoa", "op": "absent"}],
+   "reason": "G2.15/G2.19: aerodinámica por triángulos sin medida del banco para este origen: el C++ del juego no tiene fórmula reconstruida",
+   "evidence": ["docs/research/g219_desbloqueo_integral_200409.md §4", "docs/research/g215_direction_brakes_aero_2026-11-03.md §5"]
+  },
+  {
+   "id": "suspension.dwb_linkage",
+   "level": "direct",
+   "when": [
+    {
+     "path": "suspension.axles.*.linkage",
+     "op": "eq",
+     "value": "dwb_5link"
+    }
+   ],
+   "reason": "G2.16: 5 barras rígidas buje–chasis que forman un doble triángulo son las 5 restricciones DBall de suspensión de AC (TYPE=DWB); misma trayectoria (residuo 1e-13 m). Se pierde la elasticidad de las vigas de BeamNG",
+   "evidence": [
+    "docs/research/g216_suspension_steering_2026-11-04.md",
+    "output/g216_suspension_2026-11-04/cinematica_dwb.md",
+    "docs/research/ac_suspension_coordinates.md"
+   ]
+  },
+  {
+   "id": "suspension.dwb_equivalent_linkage",
+   "level": "approximation",
+   "when": [
+    {
+     "path": "suspension.axles.*.linkage",
+     "op": "eq",
+     "value": "dwb_equivalent"
+    }
+   ],
+   "reason": "G2.16: más de 5 barras de rango 5 (dos rótulas por triángulo): un DWB de 5 de ellas reproduce la trayectoria del equilibrio elástico del conjunto a ≤ 0,0024° y 0,003 mm en ±60 mm (tolerancia 0,01°/0,1 mm); el reparto de fuerzas entre barras no se conserva",
+   "evidence": [
+    "docs/research/g216_suspension_steering_2026-11-04.md",
+    "output/g216_suspension_2026-11-04/elastico.md"
+   ]
+  },
+  {
+   "id": "suspension.overconstrained_linkage",
+   "level": "pending_research",
+   "when": [
+    {
+     "path": "suspension.axles.*.linkage",
+     "op": "eq",
+     "value": "overconstrained"
+    }
+   ],
+   "reason": "G2.16: barras incompatibles (rango 6 o desviación > tolerancia; trasera 38022/40340: 0,5-1,1°): ningún DWB es equivalente; elegir uno (R1 del Porsche) o ML es una decisión",
+   "evidence": [
+    "docs/research/g216_suspension_steering_2026-11-04.md",
+    "output/g216_suspension_2026-11-04/cinematica_dwb.md"
+   ]
+  },
+  {
+   "id": "suspension.strut_rail",
+   "level": "approximation",
+   "when": [{"path": "suspension.axles.*.linkage", "op": "eq", "value": "strut_rail"}],
+   "reason": "G2.19: puntal en raíl (nodo deslizante con fixToRail) = TYPE=STRUT de AC (suspensión de puntal de AC): misma cinemática (≤ 3,5·10⁻⁴° en ±60 mm); muelle y amortiguador llevados al eje del puntal con su palanca EN REPOSO; tope de AC de rigidez fija 500 000 N/m (solo el punto de contacto es equivalente)",
+   "evidence": ["docs/research/g219_desbloqueo_integral_200409.md §8", "output/g219_2026-11-06/puntal/validacion_puntal.md"]
+  },
+  {
+   "id": "suspension.underconstrained_linkage",
+   "level": "pending_research",
+   "when": [{"path": "suspension.axles.*.linkage", "op": "eq", "value": "underconstrained"}],
+   "reason": "G2.16/G2.19: las barras rígidas no guían la mangueta y no hay un raíl que la complete como puntal: sin equivalente",
+   "evidence": ["docs/research/g216_suspension_steering_2026-11-04.md", "docs/research/g219_desbloqueo_integral_200409.md §8"]
+  },
+  {
+   "id": "suspension.coupled_axle",
+   "level": "pending_research",
+   "when": [
+    {
+     "path": "suspension.axles.*.linkage",
+     "op": "eq",
+     "value": "coupled"
+    }
+   ],
+   "reason": "G2.44: solo el eje rígido o torsional SIN barras reconocibles (menos de 3 enlaces sobre 3 montajes del eje, p. ej. ballesta); con barras es suspension.rigid_axle",
+   "evidence": [
+    "docs/research/g216_suspension_steering_2026-11-04.md",
+    "docs/research/ac_suspension_coordinates.md"
+   ]
+  },
+  {
+   "id": "suspension.rigid_axle",
+   "level": "approximation",
+   "when": [
+    {
+     "path": "suspension.axles.*.linkage",
+     "op": "eq",
+     "value": "rigid_axle"
+    }
+   ],
+   "reason": "G2.44: TYPE=AXLE con J<n> medidos (3-8 vigas rígidas), muelle y amortiguador en heave puro; TORQUE_REACTION y LEAF_SPRING_LAT_K = 0 por elección; suspensión de eje de AC del análisis es dudoso (posición del muelle); sin prueba en AC",
+   "evidence": [
+    "docs/research/g244_eje_rigido_2026-11-14.md"
+   ]
+  },
+  {
+   "id": "suspension.damper_fast",
+   "level": "direct",
+   "when": [
+    {
+     "path": "suspension.axles.*.damper_rate_fast_bump",
+     "op": "present"
+    }
+   ],
+   "reason": "G2.17 [M]: en BeamNG el amortiguador al acortarse usa beamDamp y, por encima de beamDampVelocitySplit, la pendiente beamDampFast (continua); al alargarse, beamDampRebound/beamDampReboundFast/beamDampVelocitySplitRebound; es la misma ley que amortiguador de AC [C]. Se pierde el filtro dampCutoffHz",
+   "evidence": [
+    "docs/research/g217_suspension_steering_2026-11-04.md",
+    "output/g217_suspension_steering_2026-11-04/banco/resultados_s1_s2.md",
+    "output/g217_suspension_steering_2026-11-04/acs_suspension/c2"
+   ]
+  },
+  {
+   "id": "steering.dwb_rack",
+   "level": "approximation",
+   "when": [
+    {
+     "path": "steering.tie_rod_position",
+     "op": "present"
+    }
+   ],
+   "reason": "G2.16: con DWB delantero y la barra en el extremo de la cremallera, LSRR/STEER_RATIO = recorrido/STEER_LOCK es exacto; AC (rígido) gira 1-1,5° más a tope que BeamNG (elástico, banco de G2.15)",
+   "evidence": [
+    "docs/research/g216_suspension_steering_2026-11-04.md",
+    "docs/research/g215_direction_brakes_aero_2026-11-03.md"
+   ]
+  },
+  {
+   "id": "drivetrain.dct_clutch_capacity",
+   "level": "approximation",
+   "when": [
+    {
+     "path": "drivetrain.gearbox.kind",
+     "op": "eq",
+     "value": "dctGearbox"
+    }
+   ],
+   "reason": "G2.16: MAX_TORQUE = lockTorque (misma capacidad); AC transmite Δω/(|Δω|+4)·MAX_TORQUE al deslizar y es rígido cerrado; BeamNG, muelle-amortiguador limitado a ±lockTorque (dctGearbox.lua l. 73-75)",
+   "evidence": [
+    "docs/research/g216_suspension_steering_2026-11-04.md",
+    "docs/research/frenos_diferencial_transmision_2026-10-26/informe.md"
+   ]
+  },
+  {
+   "id": "suspension.bumpstops",
+   "level": "fidelity_loss",
+   "when": [
+    {
+     "path": "suspension.axles.*.bumpstop_rate",
+     "op": "present"
+    }
+   ],
+   "reason": "G2.17: posición exacta (cinemática del DWB; arranque medido en el juego); ley medida F = 11·k·p + (k/boundZone)·p² en la zona y 12·k·z + k·(p − z) más allá: se exporta el término lineal (BUMP_STOP_PROGRESSIVE pendiente, D-G217-BSP); AC no amortigua los topes (beamLimitDamp se pierde), usa una sola rigidez para arriba y abajo y su tope del puntal (STRUT) es fijo a 500 000 N/m",
+   "evidence": [
+    "docs/research/g217_suspension_steering_2026-11-04.md",
+    "output/g217_suspension_steering_2026-11-04/banco/resultados_s1_s2.md",
+    "output/g217_suspension_steering_2026-11-04/cinematica_g217.md"
+   ]
+  },
+  {
+   "id": "suspension.antiroll_torsionbar",
+   "level": "approximation",
+   "when": [
+    {
+     "path": "suspension.axles.*.antiroll_rate",
+     "op": "present"
+    }
+   ],
+   "reason": "G2.17: barra de torsión de BeamNG (par = spring·θ) → [ARB] de AC (F = k·Δy vertical) con k = k_t·(dθ/dh)² de la cinemática rígida; el banco da 1–4,5 % menos (elasticidad); lineal alrededor del reposo",
+   "evidence": [
+    "docs/research/g217_suspension_steering_2026-11-04.md",
+    "output/g217_suspension_steering_2026-11-04/cinematica_g217.md"
+   ]
+  },
+  {
+   "id": "suspension.front_toe_rod",
+   "level": "direct",
+   "when": [
+    {
+     "path": "suspension.axles.front.rod_inward_shift_per_toe_in",
+     "op": "present"
+    }
+   ],
+   "reason": "G2.17 [C]: TOE_OUT de AC es un desplazamiento lineal (m) del punto del chasis de la barra (el desplazamiento de la barra de dirección); la convergencia de reposo se lleva con la sensibilidad de la barra del DWB (error de primer orden ≤ 6·10⁻⁴)",
+   "evidence": [
+    "docs/research/g217_suspension_steering_2026-11-04.md",
+    "output/g217_suspension_steering_2026-11-04/cinematica_g217.md"
+   ]
+  },
+  {
+   "id": "suspension.rear_toe",
+   "level": "not_representable",
+   "when": [
+    {
+     "path": "suspension.axles.rear.rest_toe",
+     "op": "present"
+    }
+   ],
+   "reason": "G2.17 [C]: AC solo aplica TOE_OUT trasero con 4WS o al cambiar el reglaje (lambda de SetupManager); al cargar, el buje trasero queda alineado (0°): la convergencia trasera de BeamNG (+0,19° en el 200409) no se representa",
+   "evidence": [
+    "docs/research/g217_suspension_steering_2026-11-04.md"
+   ]
+  }
+ ]
+}

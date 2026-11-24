@@ -1,0 +1,122 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "aero.wing0_cl_gain_cefaero_40340",
+ "version": 1,
+ "target": "ac:aero.ini/WING_0/CL_GAIN",
+ "kind": "computed",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": 1.0
+  },
+  "input_units": {},
+  "output_unit": "1",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {},
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.aero.model",
+   "op": "eq",
+   "value": "cefaero"
+  },
+  {
+   "fact": "ir.aero.cda_vs_aoa",
+   "op": "exists",
+   "value": null
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "CL_GAIN = 1: la LUT ya es el coeficiente del origen; getFloat devolvería 0 si faltara (sin fuerza) [C]",
+  "aerodinámica analítica de cefaero.lua (l. 117-142): arrastre vehicleArea·½ρv² y carga cla·½ρv² por grupo de nodos, sin dependencia del ángulo de ataque (LUT plana); cla con ρ₀ = 1,225 (l. 17, 157-163)",
+  "no representado: arrastre lateral (×1,25) y vertical (×1,5) del Lua, factor |arriba·vertical| de la carga y arrastre de los triángulos de rueda (dragCoef 1, C++ del juego); sin daño aerodinámico",
+  "ningún 40340 se ha probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/aero.py",
+   "locator": "build_aero, axle_equivalent",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "samples_beamng/thershow_hyacinth_sage/vehicles/hyacinth_sage/lua/controller/cefaero.lua",
+   "locator": "l. 117-142, 157-163, 226-270 (md5 2320b788…, igual en los 5 del 40340 y en el Ibiza)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC (CHORD, SPAN, POSITION, LUT, GAIN, ANGLE)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC (aoa = atan(lv.y/lv.z))",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/g215_direction_brakes_aero_2026-11-03.md",
+   "locator": "§5.4",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g229_consolidacion_2026-11-11.md",
+   "locator": "§2.2",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-11",
+   "author": "claude (G2.29, encargada por el usuario)",
+   "action": "create",
+   "reason": "clon de aero.wing0_cl_gain_200409@1 para cefaero (40340)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.29"
+}

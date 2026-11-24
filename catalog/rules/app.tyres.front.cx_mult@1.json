@@ -1,0 +1,77 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "app.tyres.front.cx_mult",
+ "version": 1,
+ "target": "ac:tyres.ini/FRONT/CX_MULT",
+ "kind": "applicability",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": null
+  },
+  "input_units": {},
+  "output_unit": "1",
+  "formula": ""
+ },
+ "scope": {
+  "level": "generic",
+  "vehicle": "",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {},
+ "conditions": [],
+ "applies_when": [
+  {
+   "fact": "ac:tyres.ini/HEADER/VERSION",
+   "op": "ge",
+   "value": 10
+  }
+ ],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "output/g220_2026-11-07/acs_tyre/c",
+   "locator": "neumático de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g220_2026-11-07/acs_tyre/c",
+   "locator": "neumático de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g220_tyre_grip_model_2026-11-07.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-07",
+   "author": "claude (G2.20: modelo de agarre del neumático, encargada por el usuario)",
+   "action": "create",
+   "reason": "la lectura de compuestos de AC: CX_MULT solo con VERSION ≥ 10",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "G2.20: CX_MULT solo existe para AC con VERSION ≥ 10"
+}

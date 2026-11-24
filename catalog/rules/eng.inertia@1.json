@@ -1,0 +1,121 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "eng.inertia",
+ "version": 1,
+ "target": "ac:engine.ini/ENGINE_DATA/INERTIA",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "kg·m²"
+  },
+  "output_unit": "kg·m²",
+  "formula": ""
+ },
+ "scope": {
+  "level": "vehicle",
+  "vehicle": "seat_ibiza_acfr",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "bng.engine.inertia"
+ },
+ "conditions": [
+  {
+   "fact": "bng.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  },
+  {
+   "fact": "bng.code.camsoEngine_sha256",
+   "op": "eq",
+   "value": "47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "solo la inercia del motor; falta additionalEngineInertia del embrague (Lua:1001)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_camso.py",
+   "locator": "camsoEngine.lua citado por línea",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (eng.inertia)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": ""
+}

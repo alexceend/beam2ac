@@ -1,0 +1,152 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "eng.coast_torque_camso91392",
+ "version": 2,
+ "target": "ac:engine.ini/COAST_REF/TORQUE",
+ "kind": "computed",
+ "transform": {
+  "id": "ac_coast_ref",
+  "params": {
+   "output": "torque",
+   "law": "acs_least_squares",
+   "round": 1
+  },
+  "input_units": {
+   "curve": "table:rpm->N·m",
+   "ceiling": "rpm",
+   "minimum": "rpm"
+  },
+  "output_unit": "N·m",
+  "formula": "ac_coast_ref (src/ac/coast_ref.py coast_ref_least_squares): pendiente s = Σ t·x / Σ x² con x = rpm − MINIMUM sobre MINIMUM < rpm ≤ techo; RPM = último punto ≤ techo, TORQUE = s·(RPM − MINIMUM); NON_LINEARITY = 0; AC aplica freno(rpm) = s·(rpm − MINIMUM) (motor de AC)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "curve": "ir.engine.coast_curve",
+  "ceiling": "ir.engine.speed_ceiling",
+  "minimum": "ir.engine.idle_speed"
+ },
+ "conditions": [
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  },
+  {
+   "fact": "ir.formats.code_versions.camsoEngine",
+   "op": "eq",
+   "value": "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "pendiente del freno motor por MÍNIMOS CUADRADOS sobre MINIMUM < rpm ≤ techo (ley de AC, lineal desde MINIMUM, NON_LINEARITY = 0; NON_LINEARITY ≠ 0 añade un término convexo y no sirve para el desfase de BeamNG en el ralentí). Sustituye al ancla en el techo (la @1) porque esta deja el freno de AC 2,3–2,7 veces más lento que el de BeamNG; el error en MINIMUM no se elimina y arriba sobra freno (+9…+18 N·m)",
+  "freno de BeamNG = fila de gas cerrado 0 de la tabla de par − fricción (camsoEngine.lua:725 max(0, …) (samples_beamng, exportador 40340)); en el ralentí BeamNG ya frena y AC da 0: el error decrece linealmente hasta 0 en el techo (misma limitación que en G2.24)",
+  "ningún coche con esta versión del Lua se ha probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_combustion.py",
+   "locator": "coast_curve",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "engine.coast_curve",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/combustionEngine.lua",
+   "locator": "l. 731-806 updateTorque (freno motor)",
+   "sha256": "c3aa446393cc4af240fb71ddab4880afb857090a97f18d1d89b904e44728a03d",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC (COAST_CURVE=FROM_COAST_REF)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g224_diagnostico_exports_ac_2026-11-09.md",
+   "locator": "§4 (problema C)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g210_d_g29_decisions_2026-11-02.md",
+   "locator": "§3 D-G29c",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g224_2026-11-09/diagnostico/coast_error.py",
+   "locator": "perfil de error por vehículo",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g231_hyacinth_quail_2026-11-12.md",
+   "locator": "§4",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "eng.coast_torque_camso91392@1",
+ "history": [
+  {
+   "date": "2026-11-12",
+   "author": "claude (G2.31, encargada por el usuario)",
+   "action": "new_version",
+   "reason": "quail no baja de régimen en 8 s con el ancla en el techo (AC, G2.31)",
+   "status_from": "provisional",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.31"
+}

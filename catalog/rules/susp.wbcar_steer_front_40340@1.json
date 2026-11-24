@@ -1,0 +1,140 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.wbcar_steer_front_40340",
+ "version": 1,
+ "target": "ac:suspensions.ini/FRONT/WBCAR_STEER",
+ "kind": "measured",
+ "transform": {
+  "id": "vector_identity",
+  "params": {
+   "length": 3
+  },
+  "input_units": {
+   "x": "m"
+  },
+  "output_unit": "m",
+  "formula": "punto de anclaje − centro de rueda en reposo; ejes (lateral hacia dentro, arriba, adelante), rueda derecha"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.front.anchors.rod_chassis"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.front.linkage",
+   "op": "in",
+   "value": [
+    "dwb_5link",
+    "dwb_equivalent"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "modelo de enlaces rígidos de BeamNG (vigas NORMAL ≥ 1000 N/m; las del 200409 ≥ 10⁶): la elasticidad de las barras, de la cremallera y de la carrocería no se representa en AC",
+  "pose de reposo = enlaces con longitud L·beamPrecompression y el centro de rueda a la altura de la pose del JBeam, sin carga (src/extract/linkage.py)",
+  "ningún vehículo 200409 se ha probado en AC; DWB de AC sin probar en ningún coche del proyecto (el Ibiza aprobado es STRUT)",
+  "en un conjunto de más de 5 barras, el DWB es el subconjunto de rango 5 mejor condicionado dentro de la tolerancia (todos dan la misma trayectoria a ≤ 0,01°/0,1 mm); el reparto de fuerzas entre barras no se conserva (en AC son rígidas)",
+  "la base de AC (±TRACK/2) es el centro de rueda de la pose del JBeam; el centro en reposo se desplaza < 0,1 mm (precompresión de los enlaces)",
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/precompresion_banco.md",
+   "locator": "longitudes de los enlaces en el juego = L·beamPrecompression (≤ 0,07 mm)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/elastico.md",
+   "locator": "8 barras del 200409: cualquier DWB a ≤ 0,0024° del equilibrio elástico",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2.1-2.6 [Confirmed]",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ibiza_damping_research.md",
+   "locator": "§2.1 amortiguador de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g216_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/cinematica_dwb.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-11",
+   "author": "claude (G2.27, trabajo paralelo: cobertura del 40340, encargada por el usuario)",
+   "action": "create",
+   "reason": "clon de susp.wbcar_steer_front_200409@1 para el exportador 40340",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.27 (paralelo)"
+}

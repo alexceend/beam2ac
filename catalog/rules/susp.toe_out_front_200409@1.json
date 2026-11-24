@@ -1,0 +1,133 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.toe_out_front_200409",
+ "version": 1,
+ "target": "ac:suspensions.ini/FRONT/TOE_OUT",
+ "kind": "computed",
+ "transform": {
+  "id": "ac_toe_out",
+  "params": {},
+  "input_units": {
+   "toe": "deg",
+   "shift": "m/deg"
+  },
+  "output_unit": "m",
+  "formula": "TOE_OUT = −convergencia en reposo × desplazamiento hacia dentro de la barra por grado de toe-in"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "toe": "ir.suspension.axles.front.rest_toe",
+  "shift": "ir.suspension.axles.front.rod_inward_shift_per_toe_in"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.front.linkage",
+   "op": "in",
+   "value": [
+    "dwb_5link",
+    "dwb_equivalent"
+   ]
+  },
+  {
+   "fact": "ir.steering.tie_rod_position",
+   "op": "in",
+   "value": [
+    "ahead",
+    "behind"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "modelo de enlaces rígidos de BeamNG (src/extract/linkage.py): la elasticidad de las barras y de la carrocería no se representa en AC",
+  "ningún vehículo 200409 se ha probado en AC",
+  "AC monta el buje alineado con la carrocería (suspensión de AC) y los puntos WBTYRE_* son los de la mangueta en reposo: sin TOE_OUT la rueda queda a 0°; TOE_OUT gira la mangueta la convergencia de reposo, que la deja 0,08–0,19° más girada que en BeamNG (efecto de segundo orden en la geometría)",
+  "la barra delantera del DWB es la de dirección (unida al extremo de la cremallera: steering.tie_rod_position presente)",
+  "convergencia de reposo = la que fija la precompresión de las barras (L·beamPrecompression, [M] G2.16), sin carga"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage_g217",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g217_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g217_suspension_steering_2026-11-04/cinematica_g217.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-04",
+   "author": "claude (G2.17: cierre de suspensión y dirección del 200409, encargada por el usuario)",
+   "action": "create",
+   "reason": "G2.17: TOE_OUT delantero como desplazamiento lineal de la barra [C]",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.17: solo 200409, DWB delantero medido y barra de dirección; el trasero no tiene regla (AC no aplica TOE_OUT trasero al cargar)"
+}

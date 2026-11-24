@@ -1,0 +1,41 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "hyacinth_sage.70548.mass_in_game",
+  "vehicle": "hyacinth_sage",
+  "method": "in_game_value",
+  "covers": [
+   "bng.mass.total"
+  ],
+  "result": "pass",
+  "variant": "70548",
+  "expected": 1437.9295,
+  "observed": 1437.4495,
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g229_2026-11-11/banco_neumatico/userpath_s1/current/beam2ac_tyre/hyacinth_sage_s1.meta.json",
+    "locator": "totalMass",
+    "sha256": "fb854e7d66dc0a6249a55835f0074fe2443a09cc97e37a1457af495202d92464",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g229_2026-11-11/banco_neumatico/userpath_s2/current/beam2ac_tyre/hyacinth_sage_s2.meta.json",
+    "locator": "totalMass",
+    "sha256": "d22ad71400ccb19ac881ffe613917c394647cd70d27a2ce79208077f84dbe86b",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g229_consolidacion_2026-11-11.md",
+    "locator": "§2.5",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-11",
+  "note": "esperado: Σ obj:getNodeMass en BeamNG 0.38.6 (dos sesiones idénticas); observado: masa del conversor; Δ = -0.48 kg (nodos de cámara que añade el juego, G2.13)"
+ }
+]

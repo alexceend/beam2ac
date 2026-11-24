@@ -1,0 +1,138 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "aero.wing2_name_200409",
+ "version": 1,
+ "target": "ac:aero.ini/WING_2/NAME",
+ "kind": "format",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": "REAR"
+  },
+  "input_units": {},
+  "output_unit": "text",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {},
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.aero.model",
+   "op": "eq",
+   "value": "triangles"
+  },
+  {
+   "fact": "ir.aero.cda_vs_aoa",
+   "op": "exists",
+   "value": null
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/aero_bench.py",
+   "locator": "reduce_case / aero_tables",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/measurements.py",
+   "locator": "find (huella del origen)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_aero_bench",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC (CHORD, SPAN, POSITION, LUT, GAIN, ANGLE)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC (aoa = atan(lv.y/lv.z))",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/g215_direction_brakes_aero_2026-11-03.md",
+   "locator": "§5.4",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g219_desbloqueo_integral_200409.md",
+   "locator": "§4 aerodinámica",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g215_direction_brakes_aero_2026-11-03.md",
+   "locator": "§5.2 banco (sesión 4)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g219_2026-11-06/aero/validacion_aero.md",
+   "locator": "emulación de las alas de AC frente a los 14 casos del banco",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-06",
+   "author": "claude (G2.19: desbloqueo integral del 200409, encargada por el usuario)",
+   "action": "create",
+   "reason": "G2.19 (D-G215-AERO): aerodinámica por triángulos medida en el juego, representada con tres alas de AC (arrastre + carga por eje)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.19: solo 200409 con aerodinámica por triángulos medida; nombre del ala (solo informativo en AC)"
+}

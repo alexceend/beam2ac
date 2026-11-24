@@ -1,0 +1,149 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "eng.inertia_combustion",
+ "version": 1,
+ "target": "ac:engine.ini/ENGINE_DATA/INERTIA",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "kg·m²"
+  },
+  "output_unit": "kg·m²",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.engine.inertia"
+ },
+ "conditions": [
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "combustionEngine"
+  },
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.engine.clutch_additional_inertia",
+   "op": "eq",
+   "value": 0.0
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "INERTIA de AC («engine inertia», comentario de Kunos) = inercia de rotación del motor de BeamNG (device.inertia, kg·m², l. 1717); equivalencia de semántica en AC sin verificar (misma hipótesis que eng.inertia_camso91392@2)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_combustion.py",
+   "locator": "read_combustion_engine",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_combustion_engine",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/combustionEngine.lua",
+   "locator": "l. 1717 (inertia or 0.1); l. 932-949 (validate: + additionalEngineInertia de los hijos clutchlike)",
+   "sha256": "c3aa446393cc4af240fb71ddab4880afb857090a97f18d1d89b904e44728a03d",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/dctGearbox.lua",
+   "locator": "l. 387",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/torqueConverter.lua",
+   "locator": "l. 146",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/frictionClutch.lua",
+   "locator": "l. 242",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/assetto_engine_semantics.md",
+   "locator": "[ENGINE_DATA]",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g210_d_g29_decisions_2026-11-02.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g210_d_g29_decisions_2026-11-02/siete_200409.md",
+   "locator": "por vehículo",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-02",
+   "author": "claude (G2.10: decisiones D-G29a/b/c, encargadas por el usuario)",
+   "action": "create",
+   "reason": "D-G29a: el Lua suma a la inercia del motor la additionalEngineInertia de sus hijos clutchlike (por defecto 0 en el Lua de cada hijo); la regla solo aplica cuando esa suma es 0 y por tanto la inercia total es la del motor",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": ""
+}

@@ -1,0 +1,137 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.bumpstop_up_rear_axle",
+ "version": 1,
+ "target": "ac:suspensions.ini/REAR/BUMPSTOP_UP",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "m"
+  },
+  "output_unit": "m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.rear.bumpstop_travel_up"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409",
+    "40340",
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.rear.linkage",
+   "op": "eq",
+   "value": "rigid_axle"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "modelo de enlaces rígidos de BeamNG (src/extract/linkage.py): la elasticidad de las barras y de la carrocería no se representa en AC",
+  "ningún vehículo 200409 se ha probado en AC",
+  "BeamNG [M] (banco de G2.17, 7 vehículos, 28 topes): el tope empieza exactamente cuando la viga mide la longitud de creación ∓ *BoundRange y, en la zona de transición, F = 11·beamLimitSpring·p + (beamLimitSpring/boundZone)·p² a lo largo de la viga",
+  "recorrido hasta el contacto con la cinemática del DWB (rígido) desde el reposo del modelo (la base de AC)",
+  "heave puro: el eje sube sin girar; palancas = componente vertical del eje del muelle/amortiguador/tope (la cinemática con las barras la resuelve el motor de AC con las mismas barras como DistanceJoint)",
+  "suspensión de eje de AC [C] sale con el aviso «local variable allocation has failed»: el punto del muelle (centro + semivía·ATTACH_REL_POS, anclaje en la carrocería 0,2 m por encima) es lectura dudosa; sin prueba en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage_g217",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de eje de AC, step",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g217_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g217_suspension_steering_2026-11-04/banco/resultados_s1_s2.md y topes_s1_s2_s3.md",
+   "locator": "banco de BeamNG (2 sesiones + topes)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g217_suspension_steering_2026-11-04/cinematica_g217.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: eje rígido → AXLE, decisión autónoma de la misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de susp.bumpstop_up_rear_200409@1 para el eje rígido",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

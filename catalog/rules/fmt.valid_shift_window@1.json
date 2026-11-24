@@ -1,0 +1,73 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "fmt.valid_shift_window",
+ "version": 1,
+ "target": "ac:drivetrain.ini/GEARBOX/VALID_SHIFT_RPM_WINDOW",
+ "kind": "format",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": 800
+  },
+  "input_units": {},
+  "output_unit": "rpm",
+  "formula": ""
+ },
+ "scope": {
+  "level": "generic",
+  "vehicle": "",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {},
+ "conditions": [],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "valor por referencia: ks_toyota_celica_st185 y ks_toyota_ae86 usan 800; ks_audi_r8_lms y ks_abarth500_assetto_corse usan 1000"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.15: sin la clave AC divide por 0",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.15: sin la clave AC divide por 0",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.15: sin la clave AC divide por 0",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (requisito de formato de AC)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "requisito de formato de AC"
+}

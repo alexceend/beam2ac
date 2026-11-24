@@ -1,0 +1,87 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "tyre.rear.width",
+ "version": 1,
+ "target": "ac:tyres.ini/REAR/WIDTH",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "m"
+  },
+  "output_unit": "m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "vehicle",
+  "vehicle": "seat_ibiza_acfr",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "bng.tyre.rear.width"
+ },
+ "conditions": [],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/brakes_tyres.py",
+   "locator": "WheelTyre",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+   "locator": "neumáticos",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/tyres.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+   "locator": "neumáticos",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (tyre.rear.width)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": ""
+}

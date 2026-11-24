@@ -1,0 +1,94 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "app.tyres.rear.xmu_40340",
+ "version": 1,
+ "target": "ac:tyres.ini/REAR/XMU",
+ "kind": "applicability",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": null
+  },
+  "input_units": {},
+  "output_unit": "1",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {},
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  }
+ ],
+ "applies_when": [
+  {
+   "fact": "ac:tyres.ini/HEADER/VERSION",
+   "op": "lt",
+   "value": 5
+  }
+ ],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "clon de la regla del 200409 para el exportador 40340: el neumático se midió en el banco de BeamNG (el de G2.20, sin cambios) con ESTE vehículo del 40340 (G2.29, dos sesiones); el ajuste y sus tolerancias son los mismos; ningún 40340 se ha probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "output/g220_2026-11-07/acs_tyre/c",
+   "locator": "neumático de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g220_2026-11-07/acs_tyre/c",
+   "locator": "neumático de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g220_tyre_grip_model_2026-11-07.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g229_consolidacion_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-11",
+   "author": "claude (G2.29, encargada por el usuario)",
+   "action": "create",
+   "reason": "clon de app.tyres.rear.xmu_200409@1 para el exportador 40340",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "G2.29"
+}

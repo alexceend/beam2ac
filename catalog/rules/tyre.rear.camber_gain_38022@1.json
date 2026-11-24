@@ -1,0 +1,162 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "tyre.rear.camber_gain_38022",
+ "version": 1,
+ "target": "ac:tyres.ini/REAR/CAMBER_GAIN",
+ "kind": "computed",
+ "transform": {
+  "id": "ac_sctm_fit",
+  "params": {
+   "output": "CAMBER_GAIN",
+   "max_rms": 0.06,
+   "round": 4,
+   "kappa_reference": "free_rolling_at_alpha"
+  },
+  "input_units": {
+   "samples": "dataset",
+   "fz0": "N"
+  },
+  "output_unit": "1",
+  "formula": "mínimos cuadrados de (F_SCTM − F_medida)/Fz con κ' = κ − κ₀(α, rueda), κ₀ = giro libre medido a la misma deriva (src.ac.tyre_fit.free_rolling_slip)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "samples": "ir.tyres.axles.rear.force_slip_samples",
+  "fz0": "ir.tyres.axles.rear.reference_load"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.tyres.axles.rear.force_slip_samples",
+   "op": "exists",
+   "value": null
+  },
+  {
+   "fact": "ir.tyres.axles.rear.reference_load",
+   "op": "exists",
+   "value": null
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "parámetro AJUSTADO (no medido directamente): reproduce las curvas Fx/Fy medidas con el error del ajuste que figura en los supuestos del valor",
+  "superficie: smallgrid de BeamNG; en AC el agarre se multiplica por el de la pista (gripMod × dynamicGripLevel)",
+  "sin térmica ni desgaste (el banco no los activa; temperatura constante 288,15 K)",
+  "ningún 200409 se ha probado en AC",
+  "clon de la regla del 200409 para el exportador 40340: el neumático se midió en el banco de BeamNG (el de G2.20, sin cambios) con ESTE vehículo del 40340 (G2.29, dos sesiones); el ajuste y sus tolerancias son los mismos; ningún 40340 se ha probado en AC",
+  "κ referido al giro libre MEDIDO de la misma rueda a la misma deriva (filas «lat» del banco; G2.31): con caída el giro libre a 5° está en κ = 0,001–0,018, no en 0. La medida del giro libre es independiente del error del modelo; no se ajusta nada para bajar el error. AC mide κ respecto a su radio fijo: el desfase de 0,4–1,8 % en la velocidad de giro libre en curva no se representa",
+  "clon de la regla del 40340: el 38022 comparte la mecánica de BeamNG; solo hay contraste estático (estructura y masa frente a la ficha) y las medidas de banco se hicieron con 40340/200409; el neumático necesita el banco propio del coche"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/tyre_bench.py",
+   "locator": "reduce_rows / binned_points / vertical_*",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_tyre_bench",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g220_2026-11-07/banco/lua_src/lua/vehicle/extensions/beam2acTyre.lua",
+   "locator": "banco virtual",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g220_2026-11-07/acs_tyre/c",
+   "locator": "neumático de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g220_2026-11-07/acs_tyre/c",
+   "locator": "neumático de AC (claves; desplazamientos en ../tipos.txt)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g220_2026-11-07/acs_tyre/c",
+   "locator": "neumático de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/ac/tyre_sctm.py",
+   "locator": "transcripción del modelo",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g220_tyre_grip_model_2026-11-07.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g229_consolidacion_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g231_hyacinth_quail_2026-11-12.md",
+   "locator": "§2",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_38022_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: cobertura del exportador 38022, misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de tyre.rear.camber_gain_40340@2 para el exportador 38022",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

@@ -1,0 +1,128 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.diff_coast_2wd_lsd_38022",
+ "version": 1,
+ "target": "ac:drivetrain.ini/DIFFERENTIAL/COAST",
+ "kind": "computed",
+ "transform": {
+  "id": "scale",
+  "params": {
+   "factor": 2.0
+  },
+  "input_units": {
+   "x": "1"
+  },
+  "output_unit": "1",
+  "formula": "COAST = 2 · rev_lock_coef"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.drivetrain.driven_axle_differential.rev_lock_coef"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.drivetrain.layout",
+   "op": "in",
+   "value": [
+    "FWD",
+    "RWD"
+   ]
+  },
+  {
+   "fact": "ir.drivetrain.driven_axle_differential.kind",
+   "op": "eq",
+   "value": "lsd"
+  },
+  {
+   "fact": "ir.drivetrain.driven_axle_differential.rev_lock_coef",
+   "op": "le",
+   "value": 1.0
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "BeamNG (medido, G2.12.1): diferencia entre salidas al saturar = 2·(lsdPreload + coef·|T|)",
+  "AC 2WD (el cálculo 2WD de AC [C]; medido en agarre partido, G2.27): diferencia entre ruedas = lim",
+  "solo iguala el par SATURADO; por debajo AC bloquea estáticamente y BeamNG con un muelle angular",
+  "medido en AC con coches de diagnóstico (B0, G2.27) y la variante ib2 del Ibiza (38022); la regla 38022 no se ha validado en AC con una exportación del pipeline",
+  "clon de la regla de 40340 para el exportador 38022: misma extracción (camsoEngine, caja manual/secuencial, diferencial lsd) y mismo destino. Origen de la regla: decisión del usuario (D-INV-GBI/D-G227-IBIZA). Evidencia en AC: el mapeo se midió con coches de diagnóstico (B0 y inercia 0,01 de G2.27) y la variante ib2 del Ibiza (38022, 32/32, comprobación funcional); ninguna exportación generada con esta regla se ha probado aún en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "report",
+   "path": "docs/research/g2121_lsd_validation_2026-11-02.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión 2WD de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§B0",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "output/g227_2026-11-10/b0/b0_resumen.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g2121_lsd_validation_2026-11-02.md",
+   "locator": "mitad BeamNG",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g239_integracion_fisica_ida_2026-11-13.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-13",
+   "author": "claude (G2.39: decisión del usuario sobre D-INV-GBI y D-G227-IBIZA)",
+   "action": "create",
+   "reason": "clon de la regla de 40340 para el exportador 38022: misma extracción (camsoEngine, caja manual/secuencial, diferencial lsd) y mismo destino. Origen de la regla: decisión del usuario (D-INV-GBI/D-G227-IBIZA). Evidencia en AC: el mapeo se midió con coches de diagnóstico (B0 y inercia 0,01 de G2.27) y la variante ib2 del Ibiza (38022, 32/32, comprobación funcional); ninguna exportación generada con esta regla se ha probado aún en AC",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.39"
+}

@@ -1,0 +1,71 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "fmt.setup_show_clicks",
+ "version": 1,
+ "target": "ac:setup.ini/DISPLAY_METHOD/SHOW_CLICKS",
+ "kind": "format",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": 0
+  },
+  "input_units": {},
+  "output_unit": "1",
+  "formula": ""
+ },
+ "scope": {
+  "level": "generic",
+  "vehicle": "",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {},
+ "conditions": [],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.12: sin setup.ini AC no crea QuickMenuPitstop",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.12: sin setup.ini AC no crea QuickMenuPitstop",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.12: sin setup.ini AC no crea QuickMenuPitstop",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (requisito de formato de AC)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "requisito de formato de AC"
+}

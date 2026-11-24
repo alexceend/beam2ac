@@ -1,0 +1,132 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "eng.power_lut",
+ "version": 1,
+ "target": "ac:power.lut",
+ "kind": "computed",
+ "transform": {
+  "id": "table",
+  "params": {},
+  "input_units": {
+   "x": "table:rpm->N·m"
+  },
+  "output_unit": "table:rpm->N·m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {
+  "x": "bng.engine.net_wot_curve"
+ },
+ "conditions": [
+  {
+   "fact": "bng.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  },
+  {
+   "fact": "bng.code.camsoEngine_sha256",
+   "op": "eq",
+   "value": "47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "fricción interpolada linealmente (createCurve no está en la muestra)",
+  "decisión 1: el boost ya está en la tabla; sin [TURBO_n]"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_camso.py",
+   "locator": "camsoEngine.lua citado por línea",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/inventario_spicy_mandala_2026-10-25.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [
+  "seat_ibiza_acfr.35b84.engine_curve",
+  "spicy_mandala.56a86.engine_curve"
+ ],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (familia: validación numérica independiente en 2 vehículos con el mismo camsoEngine.lua)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "familia: validación numérica independiente en 2 vehículos con el mismo camsoEngine.lua"
+}

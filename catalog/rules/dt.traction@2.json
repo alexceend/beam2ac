@@ -1,0 +1,135 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.traction",
+ "version": 2,
+ "target": "ac:drivetrain.ini/TRACTION/TYPE",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "enum"
+  },
+  "output_unit": "enum",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {
+  "x": "ir.drivetrain.layout"
+ },
+ "conditions": [
+  {
+   "fact": "ir.drivetrain.layout",
+   "op": "in",
+   "value": [
+    "FWD",
+    "RWD"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/ac/drivetrain.py",
+   "locator": "traction_type",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/ir/legacy_facts.py",
+   "locator": "ir_facts: mismo parámetro que bng.drivetrain.traction",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/drivetrain.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/inventario_spicy_mandala_2026-10-25.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g2_reglas_ir_2026-10-30.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [
+  "seat_ibiza_acfr.35b84.traction",
+  "spicy_mandala.56a86.traction"
+ ],
+ "supersedes": "dt.traction@1",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (familia: tracción validada contra info_*.json en 2 vehículos (FWD y RWD); AWD sin soporte)",
+   "status_from": "",
+   "status_to": "validated"
+  },
+  {
+   "date": "2026-10-31",
+   "author": "claude (G2: reglas sobre el IR)",
+   "action": "new_version",
+   "reason": "entradas y condiciones sobre hechos nativos del IR (ir.*); transformación, ámbito, supuestos y validaciones sin cambios",
+   "status_from": "validated",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "familia: tracción validada contra info_*.json en 2 vehículos (FWD y RWD); AWD sin soporte"
+}

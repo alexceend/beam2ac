@@ -1,0 +1,146 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.spring_rate_front_38022",
+ "version": 1,
+ "target": "ac:suspensions.ini/FRONT/SPRING_RATE",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "N/m"
+  },
+  "output_unit": "N/m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.front.wheel_rate"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.front.linkage",
+   "op": "in",
+   "value": [
+    "dwb_5link",
+    "dwb_equivalent"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "modelo de enlaces rígidos de BeamNG (vigas NORMAL ≥ 1000 N/m; las del 200409 ≥ 10⁶): la elasticidad de las barras, de la cremallera y de la carrocería no se representa en AC",
+  "pose de reposo = enlaces con longitud L·beamPrecompression y el centro de rueda a la altura de la pose del JBeam, sin carga (src/extract/linkage.py)",
+  "ningún vehículo 200409 se ha probado en AC; DWB de AC sin probar en ningún coche del proyecto (el Ibiza aprobado es STRUT)",
+  "rigidez en rueda = beamSpring·MR² con MR = |dL/dh| del muelle en el DWB (trabajo virtual); AC la aplica en vertical en la base (suspensión de AC)",
+  "palanca casi constante (0,4–1,2 % en ±40 mm, cinematica_dwb.md): PROGRESSIVE_SPRING_RATE queda pendiente (sin regla)",
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409",
+  "clon de la regla del 40340: el 38022 comparte la mecánica de BeamNG; solo hay contraste estático (estructura y masa frente a la ficha) y las medidas de banco se hicieron con 40340/200409; el neumático necesita el banco propio del coche"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/precompresion_banco.md",
+   "locator": "longitudes de los enlaces en el juego = L·beamPrecompression (≤ 0,07 mm)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/elastico.md",
+   "locator": "8 barras del 200409: cualquier DWB a ≤ 0,0024° del equilibrio elástico",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2.1-2.6 [Confirmed]",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ibiza_damping_research.md",
+   "locator": "§2.1 amortiguador de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g216_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g216_suspension_2026-11-04/cinematica_dwb.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_38022_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: cobertura del exportador 38022, misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de susp.spring_rate_front_40340@1 para el exportador 38022",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

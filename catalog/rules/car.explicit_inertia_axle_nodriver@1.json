@@ -1,0 +1,161 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "car.explicit_inertia_axle_nodriver",
+ "version": 1,
+ "target": "ac:car.ini/EXPLICIT_INERTIA/INERTIA",
+ "kind": "computed",
+ "transform": {
+  "id": "ac_body_inertia",
+  "params": {
+   "rear_hub_is_axle": true
+  },
+  "input_units": {
+   "inertia": "kg·m²",
+   "total": "kg",
+   "front_fraction": "1",
+   "wheelbase": "m",
+   "track_front": "m",
+   "track_rear": "m",
+   "height_front": "m",
+   "height_rear": "m",
+   "hub_front": "kg",
+   "hub_rear": "kg"
+  },
+  "output_unit": "kg·m²",
+  "formula": "I_c = I − Σ h_i(|r_i|²1 − r_i r_iᵀ) − M_c(|e|²1 − e eᵀ), e = −Σ h_i r_i / M_c (diagonal)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "inertia": "ir.mass.inertia_about_cog",
+  "total": "ir.mass.total",
+  "front_fraction": "ir.dimensions.front_axle_fraction",
+  "wheelbase": "ir.dimensions.wheelbase",
+  "track_front": "ir.dimensions.track_front",
+  "track_rear": "ir.dimensions.track_rear",
+  "height_front": "ir.dimensions.wheel_center_height_rel_cog_front",
+  "height_rear": "ir.dimensions.wheel_center_height_rel_cog_rear",
+  "hub_front": "ac:suspensions.ini/FRONT/HUB_MASS",
+  "hub_rear": "ac:suspensions.ini/REAR/HUB_MASS"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409",
+    "40340",
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.mass.driver",
+   "op": "eq",
+   "value": 0
+  },
+  {
+   "fact": "ir.suspension.axles.rear.linkage",
+   "op": "eq",
+   "value": "rigid_axle"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "piloto 0 kg (D-G217-CG = A): el cuerpo es el mismo que el de CG_LOCATION/BASEY sin piloto",
+  "masas puntuales en los nodos de BeamNG (G2.13: nodos y masa del conversor = juego); sin los 2 nodos de cámara (0,48 kg)",
+  "AC solo admite la diagonal: los productos de inercia (≤ 116 kg·m² en los cuatro 200409 probados) se descartan",
+  "heave puro: el eje sube sin girar; palancas = componente vertical del eje del muelle/amortiguador/tope (la cinemática con las barras la resuelve el motor de AC con las mismas barras como DistanceJoint)",
+  "suspensión de eje de AC [C] sale con el aviso «local variable allocation has failed»: el punto del muelle (centro + semivía·ATTACH_REL_POS, anclaje en la carrocería 0,2 m por encima) es lectura dudosa; sin prueba en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/mass_geometry.py",
+   "locator": "_inertia, compute_mass_geometry",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "mass.inertia_about_cog",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/attrs/transforms.py",
+   "locator": "t_ac_body_inertia",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "coche de AC: [EXPLICIT_INERTIA] → setMassExplicitInertia; si no, [BASIC] INERTIA → el cálculo de inercia por caja de masa (ausente = 0,0,0)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.13 rama explícita (Ibiza v6)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de eje de AC, step",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g226_prothean_omega_2026-11-10.md",
+   "locator": "§2 inercia nula en G2.25 y corrección en AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g226_2026-11-10/inercia/calcular_inercia.json",
+   "locator": "tensor exacto con los centros de rueda medidos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: eje rígido → AXLE, decisión autónoma de la misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de car.explicit_inertia_200409_nodriver@1: HUB_MASS trasero (AXLE) = eje entero, contado una vez",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

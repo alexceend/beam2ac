@@ -1,0 +1,122 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.hub_mass_front_200409",
+ "version": 1,
+ "target": "ac:suspensions.ini/FRONT/HUB_MASS",
+ "kind": "measured",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "kg"
+  },
+  "output_unit": "kg",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.front.unsprung_mass_per_wheel"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "el cuerpo rígido del buje de BeamNG (cierre rígido de vigas NORMAL, src/extract/unsprung.py) equivale al cuerpo del buje de AC (DWB/STRUT); en ambos los brazos no tienen masa",
+  "los nodos de mecanismo unidos al buje (extremos de la cremallera, unidos al chasis por hydros) van con la carrocería, como en el Ibiza (HUB_MASS 49,15 aprobado) y el Porsche (fase C5)",
+  "la inercia del buje de AC es una caja fija (0,2; 0,6; 0,6) que no se puede igualar",
+  "con TYPE=STRUT AC reparte HUB_MASS entre el buje (0,8) y el tubo del puntal (0,2); la masa física por esquina sigue siendo HUB_MASS (docs/research/ibiza_front_suspension_research.md, [Confirmed])",
+  "ningún vehículo 200409 se ha probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/unsprung.py",
+   "locator": "partition (cierre rígido de nodos)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_unsprung",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g213_chassis_geometry_2026-11-03/banco/resultados.md",
+   "locator": "masa física del juego = Σ nodeWeight (+ cámaras): las vigas no tienen masa",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2.8 reparto de masas: cuerpo, bujes; getMass de DWB/STRUT y de AXLE (× 0,5)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.13: masa en AC = TOTALMASS + bujes + combustible",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g214_suspension_2026-11-03.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g214_suspension_2026-11-03/masas.md",
+   "locator": "partición por cierre rígido en 10 vehículos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "catalog/decisions/seat_ibiza_acfr.jsonl",
+   "locator": "ac:suspensions.ini/FRONT/HUB_MASS = 49.15 (base aprobada; mismo método)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-03",
+   "author": "claude (G2.14: suspensión y parámetros derivados del 200409, encargada por el usuario)",
+   "action": "create",
+   "reason": "G2.14: masa no suspendida medida por cierre rígido de nodos; solo ejes independientes del 200409",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.14: solo exportador 200409 y eje front independiente (el hecho no existe en un eje acoplado)"
+}

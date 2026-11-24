@@ -1,0 +1,158 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.wbcar_steer_front_strut_38022",
+ "version": 1,
+ "target": "ac:suspensions.ini/FRONT/WBCAR_STEER",
+ "kind": "measured",
+ "transform": {
+  "id": "vector_identity",
+  "params": {
+   "length": 3
+  },
+  "input_units": {
+   "x": "m"
+  },
+  "output_unit": "m",
+  "formula": "nodo − centro de rueda en reposo (X hacia dentro, rueda derecha)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.front.anchors.rod_chassis"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.front.linkage",
+   "op": "in",
+   "value": [
+    "strut_rail"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "mangueta rígida con L·beamPrecompression y el nodo deslizante en su raíl (en la pose del JBeam está a 2,37 mm del raíl en atlanta; el juego lo lleva al raíl)",
+  "ningún 200409 se ha probado en AC",
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409",
+  "clon de la regla del 40340: el 38022 comparte la mecánica de BeamNG; solo hay contraste estático (estructura y masa frente a la ficha) y las medidas de banco se hicieron con 40340/200409; el neumático necesita el banco propio del coche"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "_strut_corner (raíl + brazo + bieleta)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/extract/suspension.py",
+   "locator": "collect_rails (rails + slidenodes)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage (strut_motion_ratio)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c",
+   "locator": "suspensión de puntal de AC (rótula, deslizadera, barras)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c",
+   "locator": "suspensión de puntal de AC (reflejo de X)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c",
+   "locator": "suspensión de puntal de AC (muelle, amortiguador, topes)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c",
+   "locator": "suspensión de puntal de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g219_desbloqueo_integral_200409.md",
+   "locator": "§8 puntal",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g219_2026-11-06/puntal/validacion_direccion.md",
+   "locator": "giro de rueda del modelo frente al banco de G2.15 (atlanta)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g219_2026-11-06/puntal/validacion_puntal.md",
+   "locator": "cinemática del puntal y palancas",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_38022_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: cobertura del exportador 38022, misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de susp.wbcar_steer_front_strut_40340@1 para el exportador 38022",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

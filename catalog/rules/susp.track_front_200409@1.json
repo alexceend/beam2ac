@@ -1,0 +1,139 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.track_front_200409",
+ "version": 1,
+ "target": "ac:suspensions.ini/FRONT/TRACK",
+ "kind": "measured",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "m"
+  },
+  "output_unit": "m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.dimensions.track_front"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "la pose de definición del JBeam (nodos sin carga, antes de asentarse) equivale a la base de diseño de las ruedas en AC; comprobado en AC solo con el Ibiza (exportador 38022, susp.wheelbase@2/track_*@2), sin prueba en AC de ningún 200409"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/mass_geometry.py",
+   "locator": "_group_axles (centros de rueda por eje)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/extract/wheels.py",
+   "locator": "collect_wheels (centro = media de node1/node2)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/extract/nodes.py",
+   "locator": "apply_node_offset, collect_nodes",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/common/jbeam/utils.lua",
+   "locator": "updateNodeTransformCache: cachePosX + sign(posX)·op.x",
+   "sha256": "93d597ba093cbf631afd1a15274039ef86a6f2244ebadac03bd801d877c8f213",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/common/mathlib.lua",
+   "locator": "l. 1134 sign(x): −1, 0, 1",
+   "sha256": "5c13f764807c8d38afb5b55d6e54ff3c916e1750e1ed7761ef2e6a5c2f976a43",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/common/jbeam/tableSchema.lua",
+   "locator": "processJbeamTableRow: ctx.newList[newID] = newRow (id repetido: vale la última fila)",
+   "sha256": "e3ebee180750afa7d83e278f663942d3784d8f2d3a32f4a7577dd7961fea67f3",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2 bases de rueda (TRACK × 0,5, WHEELBASE)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/suspensions.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g213_chassis_geometry_2026-11-03.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g213_chassis_geometry_2026-11-03/banco/resultados.md",
+   "locator": "posiciones instanciadas por BeamNG 0.38.6 frente al conversor",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g213_chassis_geometry_2026-11-03/banco/lua_src/lua/vehicle/extensions/beam2acGeo.lua",
+   "locator": "volcado de v.data.nodes",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-03",
+   "author": "claude (G2.13: geometría del chasis del exportador 200409, encargada por el usuario)",
+   "action": "create",
+   "reason": "G2.13: geometría medida en los nodos, idéntica a la que instancia BeamNG en los 7 vehículos 200409; misma semántica de destino que la regla del Ibiza",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.13: solo exportador 200409; distancia lateral entre los centros de rueda del eje delantero"
+}

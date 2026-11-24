@@ -1,0 +1,50 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "spicy_mandala.56a86.engine_curve_in_game",
+  "vehicle": "spicy_mandala",
+  "method": "in_game_value",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "56a86",
+  "expected": {
+   "max_power_hp": 90.867,
+   "max_power_rpm": 6953
+  },
+  "observed": {
+   "max_power_hp": 90.851,
+   "max_abs_torque_delta_Nm": 0.0
+  },
+  "tolerance": {
+   "torque_Nm": 0.1,
+   "power_hp": 0.2
+  },
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_camso/userpath/current/beam2ac_dyno/spicy_mandala.json",
+    "locator": "points[].windowB / fullTorqueData",
+    "sha256": "ddcb6e7fa0801c0e3eb45eef3264eb9628ed826e871d8ab52fa89f1c6bca1812",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_camso/medicion.json",
+    "locator": "spicy_mandala",
+    "sha256": "3f2156394aeed86a2fe2db792c7959e49e534804e3f33ea6bbd8d758f214fc28",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g244_38022_2026-11-14.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-14",
+  "note": "14 puntos entre 1000 rpm y el techo (7500 rpm, excluido: el limitador corta el par): |Δ| máx. 0.0000 N·m; pico del juego 90.867 hp frente a 90.851 hp del IR (Δ +0.015); ficha: Power 90, implícita 90.897 hp"
+ }
+]

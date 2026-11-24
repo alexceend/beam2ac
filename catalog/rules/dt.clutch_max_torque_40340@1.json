@@ -1,0 +1,129 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.clutch_max_torque_40340",
+ "version": 1,
+ "target": "ac:drivetrain.ini/CLUTCH/MAX_TORQUE",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "N·m"
+  },
+  "output_unit": "N·m",
+  "formula": "MAX_TORQUE = 1,25·par neto máx. + maxRPM·inercia·π/30"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.drivetrain.clutch.lock_torque_default"
+ },
+ "conditions": [
+  {
+   "fact": "ir.drivetrain.clutch.lock_torque",
+   "op": "absent",
+   "value": null
+  },
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  },
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "lockTorque de BeamNG ≈ par máximo transmisible del embrague de AC (MAX_TORQUE): la clave no está comentada en los INI de Kunos",
+  "clon de la regla del Ibiza (38022): en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "lua/vehicle/powertrain/frictionClutch.lua",
+   "locator": "174",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "sample_beamng/vehicles/seat_ibiza_acfr/lua/powertrain/camsoEngine.lua",
+   "locator": "64-74, 252, 1997, 2007",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/ir/legacy_facts.py",
+   "locator": "ir_facts: mismo parámetro que bng.clutch.lock_torque, bng.clutch.lock_torque_default, bng.engine.device_type",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "file",
+   "path": "sample_assetto_unpacked/ks_toyota_ae86/data/drivetrain.ini",
+   "locator": "[CLUTCH] MAX_TORQUE",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.13: 494,3 N·m (fórmula de frictionClutch.lua)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/casos_reales_2026-10-26.md",
+   "locator": "embrague",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g2_reglas_ir_2026-10-30.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "tests/test_g27_p_rules.py",
+   "locator": "tests/test_g27_p_rules.py (variante lockTorque)",
+   "sha256": "",
+   "note": "evidencia SINTÉTICA (D-G26c): copia modificada del Ibiza por el importador real; ningún vehículo real recorre la rama presente"
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-11",
+   "author": "claude (G2.27, trabajo paralelo: cobertura del 40340, encargada por el usuario)",
+   "action": "create",
+   "reason": "clon de dt.clutch_max_torque@2 (Ibiza) para el exportador 40340",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.27 (paralelo)"
+}

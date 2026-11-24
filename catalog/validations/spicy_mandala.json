@@ -1,0 +1,104 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "spicy_mandala.56a86.engine_curve",
+  "vehicle": "spicy_mandala",
+  "method": "info_reference",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "56a86",
+  "expected": {
+   "torque": 113,
+   "power_hp_implied": 90.897
+  },
+  "observed": {
+   "torque": 113.1,
+   "power_hp": 90.851
+  },
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "report",
+    "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/inventario_spicy_mandala_2026-10-25.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-10-26",
+  "note": "potencia implícita Weight/(Weight/Power); rpm de pico: empate en la meseta"
+ },
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "spicy_mandala.56a86.traction",
+  "vehicle": "spicy_mandala",
+  "method": "info_reference",
+  "covers": [
+   "ac:drivetrain.ini/TRACTION/TYPE"
+  ],
+  "result": "pass",
+  "variant": "56a86",
+  "expected": "RWD",
+  "observed": "RWD",
+  "tolerance": null,
+  "evidence": [
+   {
+    "type": "report",
+    "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/inventario_spicy_mandala_2026-10-25.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-10-26",
+  "note": ""
+ },
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "spicy_mandala.56a86.mass",
+  "vehicle": "spicy_mandala",
+  "method": "info_reference",
+  "covers": [
+   "bng.mass.total"
+  ],
+  "result": "fail",
+  "variant": "56a86",
+  "expected": 1025,
+  "observed": 1028.19,
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "report",
+    "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/inventario_spicy_mandala_2026-10-25.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-10-26",
+  "note": "Δ +3,19 kg sin explicar"
+ }
+]

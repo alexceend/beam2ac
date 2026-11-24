@@ -1,0 +1,80 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "car.fuel",
+ "version": 1,
+ "target": "ac:car.ini/FUEL/FUEL",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "L"
+  },
+  "output_unit": "L",
+  "formula": ""
+ },
+ "scope": {
+  "level": "vehicle",
+  "vehicle": "seat_ibiza_acfr",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {
+  "x": "bng.fuel.start"
+ },
+ "conditions": [],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/ac/assemble.py",
+   "locator": "mainTank",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/car.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (car.fuel)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": ""
+}

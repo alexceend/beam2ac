@@ -1,0 +1,70 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "rpm_omega_one_concept.rpm_omega_one_concept.engine_curve_in_game",
+  "vehicle": "rpm_omega_one_concept",
+  "method": "in_game_value",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "rpm_omega_one_concept",
+  "expected": {
+   "500": 195.7607,
+   "700": 242.4881,
+   "800": 251.3868,
+   "1000": 261.0075,
+   "1500": 278.9543,
+   "2000": 288.772,
+   "2500": 319.0008,
+   "3000": 388.7428,
+   "3429": 504.8885,
+   "3500": 501.357,
+   "4000": 489.262,
+   "4500": 474.9172,
+   "5000": 462.4063,
+   "5500": 451.5214,
+   "6000": 427.5342,
+   "6500": 406.6099,
+   "6999": 382.1774
+  },
+  "observed": {
+   "500": 195.76,
+   "700": 242.4184,
+   "800": 251.39,
+   "1000": 261.01,
+   "1500": 278.95,
+   "2000": 288.77,
+   "2500": 319.0,
+   "3000": 388.74,
+   "3429": 504.8556,
+   "3500": 501.36,
+   "4000": 489.26,
+   "4500": 474.92,
+   "5000": 462.41,
+   "5500": 451.52,
+   "6000": 427.53,
+   "6500": 406.61,
+   "6999": 382.1897
+  },
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "report",
+    "path": "output/g210_d_g29_decisions_2026-11-02/medicion_beamng/medicion.json",
+    "locator": "rpm_omega_one_concept",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g210_d_g29_decisions_2026-11-02/medicion_beamng/lua_src/lua/vehicle/extensions/beam2acDyno.lua",
+    "locator": "banco en el eje del motor",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-02",
+  "note": "esperado: par neto medido en BeamNG 0.38.6.0 (buildbot build 19963, 29/04/2026) (banco en el eje, régimen estable a plena carga, normalizado a densidad relativa 1), N·m por rpm; observado: power.lut del conversor (interpolación lineal de ir.engine.wot_torque_curve) en esas rpm; tolerancia en % de la medida; peor desviación 0.0288 %"
+ }
+]

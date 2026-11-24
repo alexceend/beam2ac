@@ -1,0 +1,41 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "quail_mirabilis.fbd0e.mass_in_game",
+  "vehicle": "quail_mirabilis",
+  "method": "in_game_value",
+  "covers": [
+   "bng.mass.total"
+  ],
+  "result": "pass",
+  "variant": "fbd0e",
+  "expected": 1323.5962,
+  "observed": 1323.1162,
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g229_2026-11-11/banco_neumatico/userpath_s1/current/beam2ac_tyre/quail_mirabilis_s1.meta.json",
+    "locator": "totalMass",
+    "sha256": "e486eca095bd98810346326928b10732eb73ce3764d7c3c3bd2a878779593c5c",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g229_2026-11-11/banco_neumatico/userpath_s2/current/beam2ac_tyre/quail_mirabilis_s2.meta.json",
+    "locator": "totalMass",
+    "sha256": "de652cd04126d70057e5c6561bf298ebf074394b66a954ca48d2d3a2af5d441f",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g229_consolidacion_2026-11-11.md",
+    "locator": "§2.5",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-11",
+  "note": "esperado: Σ obj:getNodeMass en BeamNG 0.38.6 (dos sesiones idénticas); observado: masa del conversor; Δ = -0.48 kg (nodos de cámara que añade el juego, G2.13)"
+ }
+]

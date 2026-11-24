@@ -1,0 +1,41 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "composed_fox.4974f.mass_in_game",
+  "vehicle": "composed_fox",
+  "method": "in_game_value",
+  "covers": [
+   "bng.mass.total"
+  ],
+  "result": "pass",
+  "variant": "4974f",
+  "expected": 891.8781,
+  "observed": 891.3981,
+  "tolerance": 0.6,
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_neumatico/userpath_s1/current/beam2ac_tyre/composed_fox_s1.meta.json",
+    "locator": "totalMass",
+    "sha256": "bc6312aec3ff7db886acf22f617e1dd7668ad36951f3a25c3a2154112aac9816",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_neumatico/userpath_s2/current/beam2ac_tyre/composed_fox_s2.meta.json",
+    "locator": "totalMass",
+    "sha256": "d00d2def2057c7e50641c9d3e8a073ce3a4bca4442b2bee9e25accb237d9cca1",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g229_consolidacion_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-14",
+  "note": "esperado: Σ obj:getNodeMass en BeamNG 0.38.6 (dos sesiones idénticas); observado: masa del conversor; Δ = -0.48 kg (nodos de cámara que añade el juego, G2.13)"
+ }
+]

@@ -1,0 +1,140 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.gear_count_dct_40340",
+ "version": 1,
+ "target": "ac:drivetrain.ini/GEARS/COUNT",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "1"
+  },
+  "output_unit": "1",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.drivetrain.gearbox.forward_count"
+ },
+ "conditions": [
+  {
+   "fact": "ir.drivetrain.gearbox.kind",
+   "op": "eq",
+   "value": "dctGearbox"
+  },
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  },
+  {
+   "fact": "ir.drivetrain.gearbox.forward_count",
+   "op": "le",
+   "value": 8
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "en régimen estable la DCT es una relación rígida (un embrague cerrado; dctGearbox.lua l. 74-79) y AC aplica la misma relación (FINAL·marcha); el traspaso entre embragues (0,05-0,5 s), los modos automáticos y la salida con embrague controlado de BeamNG no se trasladan"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/drivetrain.py",
+   "locator": "build_drivetrain, _split_gears",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/extract/automatic_transmission.py",
+   "locator": "read_dct",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/dctGearbox.lua",
+   "locator": "l. 417-445 (gearRatios por signo; índice 0 = punto muerto)",
+   "sha256": "d07d3ba3ab3919c383f593dec54e9afec02264e1a9337b0dae90ee81a1da0d63",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/dctGearbox.lua",
+   "locator": "l. 53-86 (par de los dos embragues; régimen estable = entrada·relación)",
+   "sha256": "d07d3ba3ab3919c383f593dec54e9afec02264e1a9337b0dae90ee81a1da0d63",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/drivetrain.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión de AC (COUNT, GEAR_R, GEAR_%d, FINAL); transmisión 2WD de AC y el cálculo 4WD de AC (ratio = finalRatio · relación de la marcha)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g211_transmissions_2026-11-02.md",
+   "locator": "§3",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "vendeta_romaigna.zip",
+   "locator": "camso_transmission_059f0.jbeam: dctGearbox, 7 marchas",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-22",
+   "author": "claude (DCT 40340 con vendeta_romaigna, encargado por el usuario)",
+   "action": "create",
+   "reason": "G2.11: nº de marchas hacia delante de la DCT (relaciones ≥ 0 tras el punto muerto); limitado a 8 porque el catálogo no tiene GEAR_9",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "40340 + camsoEngine (vendeta_romaigna); no amplía dt.*_dct (200409) ni dt.*_atc_40340"
+}

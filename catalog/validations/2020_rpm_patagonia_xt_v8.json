@@ -1,0 +1,68 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "2020_rpm_patagonia_xt_v8.2020_rpm_patagonia_xt_v8.engine_curve_in_game",
+  "vehicle": "2020_rpm_patagonia_xt_v8",
+  "method": "in_game_value",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "2020_rpm_patagonia_xt_v8",
+  "expected": {
+   "500": 273.725,
+   "700": 341.7376,
+   "800": 349.9139,
+   "1000": 364.9565,
+   "1500": 388.728,
+   "2000": 406.3548,
+   "2500": 441.5611,
+   "3000": 515.3501,
+   "3500": 720.4251,
+   "3629": 772.8849,
+   "4000": 758.9906,
+   "4500": 737.7691,
+   "5000": 713.6761,
+   "5500": 691.6847,
+   "6000": 661.4321,
+   "6499": 621.2157
+  },
+  "observed": {
+   "500": 273.72,
+   "700": 341.74,
+   "800": 349.91,
+   "1000": 364.96,
+   "1500": 388.73,
+   "2000": 406.35,
+   "2500": 441.56,
+   "3000": 515.35,
+   "3500": 720.43,
+   "3629": 772.8311,
+   "4000": 758.99,
+   "4500": 737.77,
+   "5000": 713.68,
+   "5500": 691.68,
+   "6000": 661.43,
+   "6499": 621.226
+  },
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "report",
+    "path": "output/g210_d_g29_decisions_2026-11-02/medicion_beamng/medicion.json",
+    "locator": "2020_rpm_patagonia_xt_v8",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g210_d_g29_decisions_2026-11-02/medicion_beamng/lua_src/lua/vehicle/extensions/beam2acDyno.lua",
+    "locator": "banco en el eje del motor",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-02",
+  "note": "esperado: par neto medido en BeamNG 0.38.6.0 (buildbot build 19963, 29/04/2026) (banco en el eje, régimen estable a plena carga, normalizado a densidad relativa 1), N·m por rpm; observado: power.lut del conversor (interpolación lineal de ir.engine.wot_torque_curve) en esas rpm; tolerancia en % de la medida; peor desviación 0.0070 %"
+ }
+]

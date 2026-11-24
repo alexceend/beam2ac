@@ -1,0 +1,90 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "ctrl.ffmult_40340",
+ "version": 1,
+ "target": "ac:car.ini/CONTROLS/FFMULT",
+ "kind": "reference",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": 1.95
+  },
+  "input_units": {},
+  "output_unit": "1",
+  "formula": "FFMULT = mediana del corpus de AC"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {},
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "valor de referencia (mediana de 113 coches de AC; 1,3–4,5), no medido en el origen",
+  "sin la clave AC no da fuerza en el volante (Ibiza v7, prueba del usuario)",
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§E",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§E",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§E",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-11",
+   "author": "claude (G2.27, trabajo paralelo: cobertura del 40340, encargada por el usuario)",
+   "action": "create",
+   "reason": "clon de ctrl.ffmult_200409@1 para el exportador 40340",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.27 (paralelo)"
+}

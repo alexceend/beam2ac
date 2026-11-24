@@ -1,0 +1,113 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "tyre.rear.radius_40340",
+ "version": 1,
+ "target": "ac:tyres.ini/REAR/RADIUS",
+ "kind": "measured",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "m"
+  },
+  "output_unit": "m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.tyres.axles.rear.radius"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "radio de los nodos sin carga",
+  "mismo bloque pressureWheels y misma semántica que la regla del Ibiza (tyre.rear.radius@2), usada en la base conducida en AC; ningún 200409 se ha probado en AC",
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/brakes_tyres.py",
+   "locator": "WheelTyre",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "samples_beamng/2020_rpm_legion_grand_touring/vehicles/2020_rpm_legion_grand_touring/wheels_front.jbeam",
+   "locator": "pressureWheels radius (comentarios del exportador)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/tyres.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+   "locator": "§4",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g219_desbloqueo_integral_200409.md",
+   "locator": "§3 neumáticos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+   "locator": "§4",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-11",
+   "author": "claude (G2.27, trabajo paralelo: cobertura del 40340, encargada por el usuario)",
+   "action": "create",
+   "reason": "clon de tyre.rear.radius_200409@1 para el exportador 40340",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.27 (paralelo)"
+}

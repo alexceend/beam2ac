@@ -1,0 +1,140 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.damp_fast_bumpthreshold_rear_coupled_40340",
+ "version": 1,
+ "target": "ac:suspensions.ini/REAR/DAMP_FAST_BUMPTHRESHOLD",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "m/s"
+  },
+  "output_unit": "m/s",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.rear.damper_fast_threshold_bump"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.rear.linkage",
+   "op": "in",
+   "value": [
+    "dwb_coupled"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "ningún vehículo 200409 se ha probado en AC",
+  "BeamNG [M] (banco de G2.17, 3 arquitecturas, un parámetro cada vez): al acortarse el amortiguador actúan beamDamp (lento) y beamDampFast (pendiente por encima de beamDampVelocitySplit), al alargarse beamDampRebound, beamDampReboundFast y beamDampVelocitySplitRebound; la ley es continua en el umbral, como amortiguador de AC de AC",
+  "coeficientes y umbral llevados a la rueda con la palanca cinemática del amortiguador en reposo (MR² y 1/MR); la palanca varía ≤ 2,3 % en ±40 mm",
+  "el filtro dampCutoffHz (500 Hz) de BeamNG no existe en AC (desfase despreciable por debajo de 50 Hz)",
+  "dwb_coupled: eje trasero torsional. Las dos ruedas son un único cuerpo rígido (cierre rígido de nodos, src/extract/unsprung.py) unido a la carrocería por UNA rótula por lado (nodo con ≥ 3 vigas rígidas a la carrocería) y suspendido por un muelle y un amortiguador por lado; la torsión de la viga la da una torsionbar, no una viga rígida (src/extract/coupled_axle.py)",
+  "AC no tiene viga de torsión: se traduce cada semieje como una rueda independiente con un DWB de 5 barras (precedente oficial: Abarth 500 Assetto Corse, viga de torsión real con DWB, docs/PLAN.md). Los 5 puntos del chasis son los pivotes REALES (rótula propia y rótula del otro lado), no ajustados: el semieje gira alrededor del eje que los une y las barras reproducen esa trayectoria exacta",
+  "recorrido SIMÉTRICO (las dos ruedas suben a la vez): las vigas del semieje a nodos móviles del otro lado se descartan tras comprobar que conservan su distancia al reflejado (≤ 0,1 mm en ±60 mm; si no, el eje queda 'coupled' y bloquea). La torsión diferencial de la viga no entra en la cinemática: su rigidez va a [ARB] REAR (torsionbar, misma conversión que una barra estabilizadora); sin contraste en AC",
+  "el DWB resultante reproduce el barrido del cuerpo rígido completo a 0,0000° y 0,0000 mm de desviación (solo un eje en el corpus: ranunculus_alfonsino)",
+  "ningún 40340 se ha probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage_g217",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "amortiguador de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g217_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g217_suspension_steering_2026-11-04/banco/resultados_s1_s2.md y topes_s1_s2_s3.md",
+   "locator": "banco de BeamNG (2 sesiones + topes)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g229_consolidacion_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/extract/coupled_axle.py",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-22",
+   "author": "claude (eje trasero torsional, encargada por el usuario)",
+   "action": "create",
+   "reason": "derivada de susp.damp_fast_bumpthreshold_rear_40340@1 para la trasera torsional dwb_coupled",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "eje torsional"
+}

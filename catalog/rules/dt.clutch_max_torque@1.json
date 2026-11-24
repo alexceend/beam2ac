@@ -1,0 +1,100 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "dt.clutch_max_torque",
+ "version": 1,
+ "target": "ac:drivetrain.ini/CLUTCH/MAX_TORQUE",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "N·m"
+  },
+  "output_unit": "N·m",
+  "formula": "MAX_TORQUE = 1,25·par neto máx. + maxRPM·inercia·π/30"
+ },
+ "scope": {
+  "level": "vehicle",
+  "vehicle": "seat_ibiza_acfr",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "bng.clutch.lock_torque_default"
+ },
+ "conditions": [
+  {
+   "fact": "bng.clutch.lock_torque",
+   "op": "absent",
+   "value": null
+  },
+  {
+   "fact": "bng.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "lockTorque de BeamNG ≈ par máximo transmisible del embrague de AC (MAX_TORQUE): la clave no está comentada en los INI de Kunos"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "lua/vehicle/powertrain/frictionClutch.lua",
+   "locator": "174",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "sample_beamng/vehicles/seat_ibiza_acfr/lua/powertrain/camsoEngine.lua",
+   "locator": "64-74, 252, 1997, 2007",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "file",
+   "path": "sample_assetto_unpacked/ks_toyota_ae86/data/drivetrain.ini",
+   "locator": "[CLUTCH] MAX_TORQUE",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.13: 494,3 N·m (fórmula de frictionClutch.lua)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/casos_reales_2026-10-26.md",
+   "locator": "embrague",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (fase 5)",
+   "action": "create",
+   "reason": "fórmula de frictionClutch.lua:174 verificada contra la base del Ibiza",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "fase 5: reproduce el valor DIAG de la base del Ibiza"
+}

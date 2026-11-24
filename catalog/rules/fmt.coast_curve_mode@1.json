@@ -1,0 +1,71 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "fmt.coast_curve_mode",
+ "version": 1,
+ "target": "ac:engine.ini/HEADER/COAST_CURVE",
+ "kind": "format",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": "FROM_COAST_REF"
+  },
+  "input_units": {},
+  "output_unit": "text",
+  "formula": ""
+ },
+ "scope": {
+  "level": "generic",
+  "vehicle": "",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {},
+ "conditions": [],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/ac/engine.py",
+   "locator": "render_engine_ini",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "src/ac/engine.py",
+   "locator": "render_engine_ini",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "code",
+   "path": "src/ac/engine.py",
+   "locator": "render_engine_ini",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (requisito de formato de AC)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "requisito de formato de AC"
+}

@@ -1,0 +1,123 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.arb_front_200409",
+ "version": 1,
+ "target": "ac:suspensions.ini/ARB/FRONT",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "N/m"
+  },
+  "output_unit": "N/m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.front.antiroll_rate"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.front.linkage",
+   "op": "in",
+   "value": [
+    "dwb_5link",
+    "dwb_equivalent"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "modelo de enlaces rígidos de BeamNG (src/extract/linkage.py): la elasticidad de las barras y de la carrocería no se representa en AC",
+  "ningún vehículo 200409 se ha probado en AC",
+  "AC [C] (barra estabilizadora de AC): F = k·(y_der − y_izq) vertical en cada buje ⇒ energía ½k·Δy²; BeamNG: barra de torsión, par = spring·θ (bdebugImpl.lua) ⇒ ½k_t·θ² con θ = (dθ/dh)·Δy ⇒ k = k_t·(dθ/dh)²",
+  "dθ/dh de la cinemática rígida del DWB; el banco da 1–4,5 % menos (elasticidad; cinematica_g217.md)",
+  "lineal en reposo (sin variación de dθ/dh con el recorrido)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage_g217",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c3",
+   "locator": "barra estabilizadora de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c",
+   "locator": "coche de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g217_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g217_suspension_steering_2026-11-04/banco/resultados_s1_s2.md y topes_s1_s2_s3.md",
+   "locator": "banco de BeamNG (2 sesiones + topes)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g217_suspension_steering_2026-11-04/cinematica_g217.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-04",
+   "author": "claude (G2.17: cierre de suspensión y dirección del 200409, encargada por el usuario)",
+   "action": "create",
+   "reason": "G2.17: barra estabilizadora (rigidez vertical equivalente)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.17: solo 200409 y eje front DWB medido con una barra de torsión entre las dos manguetas"
+}

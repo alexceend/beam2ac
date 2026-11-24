@@ -1,0 +1,135 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "aero.wing2_chord_cefaero_38022",
+ "version": 1,
+ "target": "ac:aero.ini/WING_2/CHORD",
+ "kind": "computed",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": 1.0
+  },
+  "input_units": {},
+  "output_unit": "m",
+  "formula": "área CHORD·SPAN = 1 m²: la LUT lleva C·A"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {},
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.aero.model",
+   "op": "eq",
+   "value": "cefaero"
+  },
+  {
+   "fact": "ir.aero.cda_vs_aoa",
+   "op": "exists",
+   "value": null
+  },
+  {
+   "fact": "ir.identity.vehicle_id",
+   "op": "ne",
+   "value": "seat_ibiza_acfr"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "ala de referencia de 1 m² (CHORD = SPAN = 1 m): solo fija la escala de la LUT (C·A en m²); no es una superficie física",
+  "aerodinámica analítica de cefaero.lua (l. 117-142): arrastre vehicleArea·½ρv² y carga cla·½ρv² por grupo de nodos, sin dependencia del ángulo de ataque (LUT plana); cla con ρ₀ = 1,225 (l. 17, 157-163)",
+  "no representado: arrastre lateral (×1,25) y vertical (×1,5) del Lua, factor |arriba·vertical| de la carga y arrastre de los triángulos de rueda (dragCoef 1, C++ del juego); sin daño aerodinámico",
+  "ningún 40340 se ha probado en AC",
+  "clon de la regla del 40340: el 38022 comparte la mecánica de BeamNG; solo hay contraste estático (estructura y masa frente a la ficha) y las medidas de banco se hicieron con 40340/200409; el neumático necesita el banco propio del coche"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/aero.py",
+   "locator": "build_aero, axle_equivalent",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "samples_beamng/thershow_hyacinth_sage/vehicles/hyacinth_sage/lua/controller/cefaero.lua",
+   "locator": "l. 117-142, 157-163, 226-270 (md5 2320b788…, igual en los 5 del 40340 y en el Ibiza)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC (CHORD, SPAN, POSITION, LUT, GAIN, ANGLE)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC (aoa = atan(lv.y/lv.z))",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/g215_direction_brakes_aero_2026-11-03.md",
+   "locator": "§5.4",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g229_consolidacion_2026-11-11.md",
+   "locator": "§2.2",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_38022_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: cobertura del exportador 38022, misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de aero.wing2_chord_cefaero_40340@1 para el exportador 38022",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

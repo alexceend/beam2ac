@@ -1,0 +1,151 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "ctrl.linear_steer_rod_ratio_38022",
+ "version": 1,
+ "target": "ac:car.ini/CONTROLS/LINEAR_STEER_ROD_RATIO",
+ "kind": "measured",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "m/deg"
+  },
+  "output_unit": "m/deg",
+  "formula": "LSRR = desplazamiento lateral de la barra por grado de rueda (m/°)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.steering.rack_displacement_per_wheel_degree"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.front.linkage",
+   "op": "in",
+   "value": [
+    "dwb_5link",
+    "dwb_equivalent"
+   ]
+  },
+  {
+   "fact": "ir.steering.mechanism",
+   "op": "eq",
+   "value": "rack"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "modelo de enlaces rígidos de BeamNG (src/extract/linkage.py): la elasticidad de las barras y de la carrocería no se representa en AC",
+  "ningún vehículo 200409 se ha probado en AC",
+  "unidad del destino documentada en la REGLA (m por grado de la señal de ángulo nominal STEER_LOCK·volante/STEER_RATIO; [C] coche de AC, dirección de AC): el atributo del catálogo sigue con unidad 'undocumented' porque las dos decisiones históricas (Ibiza 0,003156, Porsche 0,003504) se registraron así y el generador de INI dejaría de escribirlas si el atributo cambiase (D-G216-LSRR, output/g217_suspension_steering_2026-11-04/lsrr/prueba_unidad.md)",
+  "AC: desplazamiento de WBCAR_STEER = STEER_LOCK·volante/STEER_RATIO·LSRR; BeamNG: recorrido de la cremallera·entrada ⇒ LSRR/STEER_RATIO = recorrido/STEER_LOCK (exacto); el reparto entre las dos claves sigue la convención de Kunos (LSRR = m por grado de rueda)",
+  "BeamNG gira 1–1,5° menos a tope que el modelo rígido (elasticidad; banco de G2.15): AC (rígido) dará el ángulo del modelo",
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409",
+  "clon de la regla del 40340: el 38022 comparte la mecánica de BeamNG; solo hay contraste estático (estructura y masa frente a la ficha) y las medidas de banco se hicieron con 40340/200409; el neumático necesita el banco propio del coche"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage_g217",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "coche de AC (LINEAR_STEER_ROD_RATIO; 0 ⇒ 0,003)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c2",
+   "locator": "coche de AC: finalSteerAngleSignal = steerLock·steer/steerRatio (grados)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero",
+   "locator": "dirección de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g217_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g217_suspension_steering_2026-11-04/lsrr/prueba_unidad.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_38022_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: cobertura del exportador 38022, misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de ctrl.linear_steer_rod_ratio_40340@1 para el exportador 38022",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

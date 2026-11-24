@@ -1,0 +1,119 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.bump_stop_rate_front_200409",
+ "version": 1,
+ "target": "ac:suspensions.ini/FRONT/BUMP_STOP_RATE",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "N/m"
+  },
+  "output_unit": "N/m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.front.bumpstop_rate"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.front.linkage",
+   "op": "in",
+   "value": [
+    "dwb_5link",
+    "dwb_equivalent"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "modelo de enlaces rígidos de BeamNG (src/extract/linkage.py): la elasticidad de las barras y de la carrocería no se representa en AC",
+  "ningún vehículo 200409 se ha probado en AC",
+  "BeamNG [M] (banco de G2.17, 7 vehículos, 28 topes): el tope empieza exactamente cuando la viga mide la longitud de creación ∓ *BoundRange y, en la zona de transición, F = 11·beamLimitSpring·p + (beamLimitSpring/boundZone)·p² a lo largo de la viga",
+  "recorrido hasta el contacto con la cinemática del DWB (rígido) desde el reposo del modelo (la base de AC)",
+  "AC usa una sola BUMP_STOP_RATE para arriba y abajo: se toma la palanca en el contacto de compresión; en el de extensión la rigidez real difiere en (MR_abajo/MR_arriba)² (cinematica_g217.md)",
+  "AC no amortigua los topes (suspensión de AC): beamLimitDamp de BeamNG se pierde (ir…bumpstop_damping)",
+  "solo el término lineal 11·kL·MR²: el cuadrático (kL/boundZone)·p² no se exporta porque BUMP_STOP_PROGRESSIVE no está en el catálogo y añadirlo cambia los bloqueos de los proyectos históricos (decisión D-G217-BSP; queda en ir…bumpstop_progressive): dentro de la zona AC da hasta p/(11·z) menos (≤ 8,3 % al final de la zona)",
+  "más allá de la zona (p > boundZone) BeamNG pasa a F = 12·kL·z + kL·(p − z) [M] (banco, sesión 3): AC (lineal 11·kL) es más rígido a partir de una fuerza en la viga de 12·kL·z"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/linkage.py",
+   "locator": "analyse_corner",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_linkage_g217",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g217_suspension_steering_2026-11-04.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g217_suspension_steering_2026-11-04/banco/resultados_s1_s2.md y topes_s1_s2_s3.md",
+   "locator": "banco de BeamNG (2 sesiones + topes)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-04",
+   "author": "claude (G2.17: cierre de suspensión y dirección del 200409, encargada por el usuario)",
+   "action": "create",
+   "reason": "G2.17: rigidez del tope (término lineal medido en el banco)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.17: término lineal de la ley medida; solo 200409 y eje front DWB"
+}

@@ -1,0 +1,109 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "car.totalmass",
+ "version": 1,
+ "target": "ac:car.ini/BASIC/TOTALMASS",
+ "kind": "computed",
+ "transform": {
+  "id": "linear_sum",
+  "params": {
+   "coefficients": {
+    "total": 1,
+    "driver": 1,
+    "hub_front": -2,
+    "hub_rear": -2
+   }
+  },
+  "input_units": {
+   "total": "kg",
+   "driver": "kg",
+   "hub_front": "kg",
+   "hub_rear": "kg"
+  },
+  "output_unit": "kg",
+  "formula": "TOTALMASS = masa BeamNG + piloto − 2·HUB_MASS_del − 2·HUB_MASS_tras"
+ },
+ "scope": {
+  "level": "vehicle",
+  "vehicle": "seat_ibiza_acfr",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {
+  "total": "bng.mass.total",
+  "driver": "project.driver_mass",
+  "hub_front": "ac:suspensions.ini/FRONT/HUB_MASS",
+  "hub_rear": "ac:suspensions.ini/REAR/HUB_MASS"
+ },
+ "conditions": [],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "masa total de BeamNG = carrocería + bujes (suma de nodos)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/mass_geometry.py",
+   "locator": "compute_mass_geometry",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "CLAUDE.md",
+   "locator": "decisión 2",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2.8: AC suma HUB_MASS a la masa del cuerpo",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.13: masa en AC = TOTALMASS + bujes + combustible",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "file",
+   "path": "output/seat_ibiza_acfr/physics_bases/ibiza_v18bu_2026-10-25/seat_ibiza_acfr/data",
+   "locator": "",
+   "sha256": "",
+   "note": "base física aprobada y congelada del Ibiza (solo lectura)"
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ibiza_mass_suspension_proposal.md",
+   "locator": "§1.4",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (reproduce el TOTALMASS de la base aprobada (1119,6); el generador antiguo escribía masa + piloto)",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "reproduce el TOTALMASS de la base aprobada (1119,6); el generador antiguo escribía masa + piloto"
+}

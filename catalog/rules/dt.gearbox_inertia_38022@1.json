@@ -1,0 +1,120 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.gearbox_inertia_38022",
+ "version": 1,
+ "target": "ac:drivetrain.ini/GEARBOX/INERTIA",
+ "kind": "reference",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": 0.01
+  },
+  "input_units": {},
+  "output_unit": "kg·m²",
+  "formula": "INERTIA = mínimo del corpus de AC (origen: 0)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {},
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.drivetrain.gearbox.kind",
+   "op": "in",
+   "value": [
+    "manualGearbox",
+    "sequentialGearbox"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "valor de referencia (mínimo y moda de 113 coches de AC), no medido en el origen",
+  "la caja de BeamNG no tiene inercia propia (calculateInertia solo refleja los hijos); AC no admite 0: ausente o 0 = 1,0 kg·m²",
+  "sin probar en AC con una exportación generada por esta regla; el valor 0,01 se validó en AC con coches 200409 (G2.27, aceleración a ≤ 1,5 %) y se probó (32/32, comprobación funcional) en ib2 (Ibiza 38022); la validación de G2.25/G2.26 se hizo con 1,0",
+  "clon de la regla de 40340 para el exportador 38022: misma extracción (camsoEngine, caja manual/secuencial, diferencial lsd) y mismo destino. Origen de la regla: decisión del usuario (D-INV-GBI/D-G227-IBIZA). Evidencia en AC: el mapeo se midió con coches de diagnóstico (B0 y inercia 0,01 de G2.27) y la variante ib2 del Ibiza (38022, 32/32, comprobación funcional); ninguna exportación generada con esta regla se ha probado aún en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "BeamNG.drive 0.38.6 lua/vehicle/powertrain",
+   "locator": "manualGearbox.lua l. 372-384 (calculateInertia)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión de AC, loadINI, la inercia desde las ruedas",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "output/investigacion_2026-11-10/corpus_ac.json",
+   "locator": "gearbox.INERTIA",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/investigacion_capacidades_2026-11-10.md",
+   "locator": "§A",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "output/investigacion_2026-11-10/freno_motor/aceleracion_inercia_caja.txt",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "output/investigacion_2026-11-10/freno_motor/descomposicion.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g239_integracion_fisica_ida_2026-11-13.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-13",
+   "author": "claude (G2.39: decisión del usuario sobre D-INV-GBI y D-G227-IBIZA)",
+   "action": "create",
+   "reason": "clon de la regla de 40340 para el exportador 38022: misma extracción (camsoEngine, caja manual/secuencial, diferencial lsd) y mismo destino. Origen de la regla: decisión del usuario (D-INV-GBI/D-G227-IBIZA). Evidencia en AC: el mapeo se midió con coches de diagnóstico (B0 y inercia 0,01 de G2.27) y la variante ib2 del Ibiza (38022, 32/32, comprobación funcional); ninguna exportación generada con esta regla se ha probado aún en AC",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.39"
+}

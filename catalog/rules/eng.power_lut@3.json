@@ -1,0 +1,214 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "eng.power_lut",
+ "version": 3,
+ "target": "ac:power.lut",
+ "kind": "computed",
+ "transform": {
+  "id": "table",
+  "params": {},
+  "input_units": {
+   "x": "table:rpm->N·m"
+  },
+  "output_unit": "table:rpm->N·m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {
+  "x": "bng.engine.net_wot_curve"
+ },
+ "conditions": [
+  {
+   "fact": "bng.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  },
+  {
+   "fact": "bng.code.camsoEngine_sha256",
+   "op": "in",
+   "value": [
+    "47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed",
+    "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "fricción: el juego antepone (0, 0) y usa createCurve (Catmull-Rom, ve_utils.lua l. 234-287; camsoEngine.lua l. 1975-1981); la implementación interpola de forma lineal y toma power.lut en los puntos de la tabla de par. Coincide con el juego en todos los puntos desde 500 rpm (|Δ| ≤ 3e-14 N·m) en los 5 coches medidos con este camsoEngine.lua; de 100 a 400 rpm difiere 0,3–1,6 N·m (por debajo del ralentí). Entre puntos, AC interpola linealmente (curva de AC): error máx. 1,45 N·m (0,79 %) en el Ibiza frente a la curva del juego",
+  "decisión 1: el boost ya está en la tabla; sin [TURBO_n]"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_camso.py",
+   "locator": "camsoEngine.lua citado por línea",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/ve_utils.lua",
+   "locator": "l. 234-287 CatMullRomSpline/createCurve",
+   "sha256": "23f2026d27de0092ddb36a78eaa3018a164cb7493c32889e872807d889bf6ac1",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "sample_beamng/vehicles/seat_ibiza_acfr/lua/powertrain/camsoEngine.lua",
+   "locator": "versión 47437d5c",
+   "sha256": "47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "samples_beamng/thershow_sucette_poubelle/vehicles/sucette_poubelle/lua/powertrain/camsoEngine.lua",
+   "locator": "versión 91392d70 (diff de 1 línea, l. 725)",
+   "sha256": "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/catalogo_motor_awd_vmax_2026-10-30.md",
+   "locator": "§1",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/motor.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/inventario_spicy_mandala_2026-10-25.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/investigacion_powerlut_preload_2026-10-26.md",
+   "locator": "§A",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/research_powerlut_preload_2026-10-26/powerlut_study.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/research_powerlut_preload_2026-10-26/powerlut_between_points.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/research_powerlut_preload_2026-10-26/code_evidence.json",
+   "locator": "curva de AC; motor de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/catalogo_motor_awd_vmax_2026-10-30.md",
+   "locator": "§1.1 power.lut",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [
+  "seat_ibiza_acfr.35b84.engine_curve",
+  "spicy_mandala.56a86.engine_curve"
+ ],
+ "supersedes": "eng.power_lut@2",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (familia: validación numérica independiente en 2 vehículos con el mismo camsoEngine.lua)",
+   "status_from": "",
+   "status_to": "validated"
+  },
+  {
+   "date": "2026-10-26",
+   "author": "claude (correcciones documentales power.lut/PRELOAD, autorizadas)",
+   "action": "new_version",
+   "reason": "corrige el texto del supuesto de fricción (contradicho por el código del juego); transformación, entradas, condiciones y valores sin cambios",
+   "status_from": "validated",
+   "status_to": "validated"
+  },
+  {
+   "date": "2026-10-30",
+   "author": "claude (catálogo de motor para camsoEngine 91392d70, autorizado)",
+   "action": "new_version",
+   "reason": "admite camsoEngine.lua 91392d70: fila 99 y fricción idénticas (diff de 1 línea, solo gas cerrado); transformación, entradas y ámbito sin cambios",
+   "status_from": "validated",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "familia: validación numérica independiente en 2 vehículos con el mismo camsoEngine.lua"
+}

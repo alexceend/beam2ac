@@ -1,0 +1,41 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "spicy_mandala.56a86.mass_in_game",
+  "vehicle": "spicy_mandala",
+  "method": "in_game_value",
+  "covers": [
+   "bng.mass.total"
+  ],
+  "result": "pass",
+  "variant": "56a86",
+  "expected": 1028.6698,
+  "observed": 1028.1898,
+  "tolerance": 0.6,
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_neumatico/userpath_s1/current/beam2ac_tyre/spicy_mandala_s1.meta.json",
+    "locator": "totalMass",
+    "sha256": "807ee71d9a5fa41cefd5f223fb559fe35333139e51c350d77bbaa868806a3fd7",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_neumatico/userpath_s2/current/beam2ac_tyre/spicy_mandala_s2.meta.json",
+    "locator": "totalMass",
+    "sha256": "9f3849556f1638063179e6ee77d0908f9ada5facff193a04cf58b62d5fd05670",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g229_consolidacion_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-14",
+  "note": "esperado: Σ obj:getNodeMass en BeamNG 0.38.6 (dos sesiones idénticas); observado: masa del conversor; Δ = -0.48 kg (nodos de cámara que añade el juego, G2.13)"
+ }
+]

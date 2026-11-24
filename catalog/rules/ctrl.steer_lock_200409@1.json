@@ -1,0 +1,112 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "ctrl.steer_lock_200409",
+ "version": 1,
+ "target": "ac:car.ini/CONTROLS/STEER_LOCK",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "deg"
+  },
+  "output_unit": "deg",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.steering.steering_wheel_lock"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.steering.mechanism",
+   "op": "eq",
+   "value": "rack"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "misma magnitud en los dos juegos: grados de volante con el mando a tope (BeamNG hydros.lua l. 500; AC coche de AC steerLock·controls.steer)",
+  "STEER_RATIO y LINEAR_STEER_ROD_RATIO pendientes: el ángulo de rueda en AC no queda fijado por STEER_LOCK solo",
+  "precedente: STEER_LOCK = steeringWheelLock (450) en el Ibiza 38022, conducido en AC con un G29 (docs/research/informe_direccion_piloto_integracion_2026-10-24.md)",
+  "ningún vehículo 200409 se ha probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/steering.py",
+   "locator": "build_steering",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/input.lua",
+   "locator": "initSecondStage l. 149-182",
+   "sha256": "25438ea9…",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "STEER_LOCK, STEER_RATIO (12 por defecto), LINEAR_STEER_ROD_RATIO (0,003)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero",
+   "locator": "dirección de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g215_direction_brakes_aero_2026-11-03.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/inventario.md",
+   "locator": "frenos por rueda de los 7 vehículos 200409",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-03",
+   "author": "claude (G2.15: dirección, frenos y aerodinámica del 200409, encargada por el usuario)",
+   "action": "create",
+   "reason": "G2.15: STEER_LOCK = steeringWheelLock (misma semántica en los dos juegos)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.15: solo 200409 y cremallera en raíl movida por hidros"
+}

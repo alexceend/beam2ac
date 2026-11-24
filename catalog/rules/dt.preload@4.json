@@ -1,0 +1,171 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.preload",
+ "version": 4,
+ "target": "ac:drivetrain.ini/DIFFERENTIAL/PRELOAD",
+ "kind": "direct",
+ "transform": {
+  "id": "scale",
+  "params": {
+   "factor": 2.0
+  },
+  "input_units": {
+   "x": "N·m"
+  },
+  "output_unit": "N·m",
+  "formula": "PRELOAD = 2 · lsdPreload"
+ },
+ "scope": {
+  "level": "vehicle",
+  "vehicle": "seat_ibiza_acfr",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.drivetrain.driven_axle_differential.preload"
+ },
+ "conditions": [],
+ "applies_when": [
+  {
+   "fact": "ir.drivetrain.driven_axle_differential.kind",
+   "op": "eq",
+   "value": "lsd"
+  }
+ ],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "unidad del origen: N·m, confirmada en código (differential.lua:57 suma lsdPreload a un par); el rótulo «N/m» de BeamNG es un error de rótulo",
+  "factor 2 medido: BeamNG (G2.12.1) 2·lsdTorque entre salidas; AC 2WD (el cálculo 2WD de AC [C]; B0 G2.27) diferencia = lim"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/drivetrain.py",
+   "locator": "build_drivetrain",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/differential.lua",
+   "locator": "l. 42-66 LSDUpdateTorque",
+   "sha256": "1b53a79101bdd31cda16b7b00e86ee1494b909149aca6d42d236e964c6e0aa0a",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/ir/legacy_facts.py",
+   "locator": "ir_facts: mismo parámetro que bng.diff.lsd_preload, bng.diff.type",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/drivetrain.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/investigacion_powerlut_preload_2026-10-26.md",
+   "locator": "§B",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/research_powerlut_preload_2026-10-26/preload_run2/preload_survey.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/research_powerlut_preload_2026-10-26/code_evidence.json",
+   "locator": "transmisión 2WD de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g2_reglas_ir_2026-10-30.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "dt.preload@3",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (src/ac/drivetrain.py: 'unidad declarada N/m, se asume Nm')",
+   "status_from": "",
+   "status_to": "provisional"
+  },
+  {
+   "date": "2026-10-26",
+   "author": "claude (correcciones documentales power.lut/PRELOAD, autorizadas)",
+   "action": "new_version",
+   "reason": "unidad de entrada N·m (hecho corregido); valor sin cambios; factor de conversión declarado sin resolver",
+   "status_from": "provisional",
+   "status_to": "provisional"
+  },
+  {
+   "date": "2026-11-01",
+   "author": "claude (G2: reglas sobre el IR)",
+   "action": "new_version",
+   "reason": "entradas y condiciones sobre hechos nativos del IR (ir.*); transformación, ámbito, supuestos y validaciones sin cambios",
+   "status_from": "provisional",
+   "status_to": "provisional"
+  },
+  {
+   "date": "2026-11-13",
+   "author": "claude (G2.39: decisión del usuario sobre D-INV-GBI y D-G227-IBIZA)",
+   "action": "new_version",
+   "reason": "BeamNG: diferencia = 2·lsdTorque; AC 2WD: diferencia = lim (medido, G2.22/B0); ib2 32/32 en AC",
+   "status_from": "provisional",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.39: factor 2 (D-G227-IBIZA, variante ib2)"
+}

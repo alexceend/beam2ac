@@ -1,0 +1,148 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.hub_mass_rear_axle",
+ "version": 1,
+ "target": "ac:suspensions.ini/REAR/HUB_MASS",
+ "kind": "measured",
+ "transform": {
+  "id": "scale",
+  "params": {
+   "factor": 2.0
+  },
+  "input_units": {
+   "x": "kg"
+  },
+  "output_unit": "kg",
+  "formula": "HUB_MASS(AXLE) = masa del eje entero = 2 × (masa por rueda equivalente)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.suspension.axles.rear.unsprung_mass_per_wheel"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409",
+    "40340",
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.suspension.axles.rear.linkage",
+   "op": "eq",
+   "value": "rigid_axle"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "el cuerpo rígido del buje de BeamNG (cierre rígido de vigas NORMAL, src/extract/unsprung.py) equivale al cuerpo del buje de AC (DWB/STRUT); en ambos los brazos no tienen masa",
+  "los nodos de mecanismo unidos al buje (extremos de la cremallera, unidos al chasis por hydros) van con la carrocería, como en el Ibiza (HUB_MASS 49,15 aprobado) y el Porsche (fase C5)",
+  "la inercia del buje de AC es una caja fija (0,2; 0,6; 0,6) que no se puede igualar",
+  "con TYPE=STRUT AC reparte HUB_MASS entre el buje (0,8) y el tubo del puntal (0,2); la masa física por esquina sigue siendo HUB_MASS (docs/research/ibiza_front_suspension_research.md, [Confirmed])",
+  "ningún vehículo 200409 se ha probado en AC",
+  "heave puro: el eje sube sin girar; palancas = componente vertical del eje del muelle/amortiguador/tope (la cinemática con las barras la resuelve el motor de AC con las mismas barras como DistanceJoint)",
+  "suspensión de eje de AC [C] sale con el aviso «local variable allocation has failed»: el punto del muelle (centro + semivía·ATTACH_REL_POS, anclaje en la carrocería 0,2 m por encima) es lectura dudosa; sin prueba en AC",
+  "en AC un AXLE aporta HUB_MASS UNA vez (G2.14); el valor por rueda del IR es la mitad del eje"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/unsprung.py",
+   "locator": "partition (cierre rígido de nodos)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_unsprung",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g213_chassis_geometry_2026-11-03/banco/resultados.md",
+   "locator": "masa física del juego = Σ nodeWeight (+ cámaras): las vigas no tienen masa",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2.8 reparto de masas: cuerpo, bujes; getMass de DWB/STRUT y de AXLE (× 0,5)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.13: masa en AC = TOTALMASS + bujes + combustible",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de eje de AC, step",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g214_suspension_2026-11-03.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g214_suspension_2026-11-03/masas.md",
+   "locator": "partición por cierre rígido en 10 vehículos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "catalog/decisions/seat_ibiza_acfr.jsonl",
+   "locator": "ac:suspensions.ini/FRONT/HUB_MASS = 49.15 (base aprobada; mismo método)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: eje rígido → AXLE, decisión autónoma de la misión de desbloqueo)",
+   "action": "create",
+   "reason": "HUB_MASS del eje rígido = eje entero",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

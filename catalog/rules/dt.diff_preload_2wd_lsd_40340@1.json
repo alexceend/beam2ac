@@ -1,0 +1,115 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.diff_preload_2wd_lsd_40340",
+ "version": 1,
+ "target": "ac:drivetrain.ini/DIFFERENTIAL/PRELOAD",
+ "kind": "computed",
+ "transform": {
+  "id": "scale",
+  "params": {
+   "factor": 2.0
+  },
+  "input_units": {
+   "x": "N·m"
+  },
+  "output_unit": "N·m",
+  "formula": "PRELOAD = 2 · preload"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.drivetrain.driven_axle_differential.preload"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.drivetrain.layout",
+   "op": "in",
+   "value": [
+    "FWD",
+    "RWD"
+   ]
+  },
+  {
+   "fact": "ir.drivetrain.driven_axle_differential.kind",
+   "op": "eq",
+   "value": "lsd"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "BeamNG (medido, G2.12.1): diferencia entre salidas al saturar = 2·(lsdPreload + coef·|T|)",
+  "AC 2WD (el cálculo 2WD de AC [C]; medido en agarre partido, G2.27): diferencia entre ruedas = lim",
+  "solo iguala el par SATURADO; por debajo AC bloquea estáticamente y BeamNG con un muelle angular",
+  "medido en AC con un coche de diagnóstico 38022 (FWD); ningún 40340 probado en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "report",
+   "path": "docs/research/g2121_lsd_validation_2026-11-02.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión 2WD de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§B0",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "output/g227_2026-11-10/b0/b0_resumen.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g2121_lsd_validation_2026-11-02.md",
+   "locator": "mitad BeamNG",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-11",
+   "author": "claude (G2.27: B0 en agarre partido, encargada por el usuario)",
+   "action": "create",
+   "reason": "B0: semántica 2WD de AC medida; factor 2 como en el AWD (G2.23)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.27"
+}

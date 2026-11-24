@@ -1,0 +1,117 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "aero.wing0_lut_aoa_cl_file_cefaero_40340",
+ "version": 1,
+ "target": "ac:aero.ini/WING_0/LUT_AOA_CL",
+ "kind": "format",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": "beam2ac_aero_w0_cl.lut"
+  },
+  "input_units": {},
+  "output_unit": "text",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {},
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.aero.model",
+   "op": "eq",
+   "value": "cefaero"
+  },
+  {
+   "fact": "ir.aero.cda_vs_aoa",
+   "op": "exists",
+   "value": null
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/aero.py",
+   "locator": "build_aero, axle_equivalent",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "samples_beamng/thershow_hyacinth_sage/vehicles/hyacinth_sage/lua/controller/cefaero.lua",
+   "locator": "l. 117-142, 157-163, 226-270 (md5 2320b788…, igual en los 5 del 40340 y en el Ibiza)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC (CHORD, SPAN, POSITION, LUT, GAIN, ANGLE)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC (aoa = atan(lv.y/lv.z))",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g215_direction_brakes_aero_2026-11-03/acs_dir_frenos_aero/c",
+   "locator": "ala de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/g215_direction_brakes_aero_2026-11-03.md",
+   "locator": "§5.4",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g229_consolidacion_2026-11-11.md",
+   "locator": "§2.2",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-11",
+   "author": "claude (G2.29, encargada por el usuario)",
+   "action": "create",
+   "reason": "clon de aero.wing0_lut_aoa_cl_file_200409@1 para cefaero (40340)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.29"
+}

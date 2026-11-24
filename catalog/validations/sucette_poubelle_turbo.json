@@ -1,0 +1,41 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "sucette_poubelle_turbo.88925.mass_in_game",
+  "vehicle": "sucette_poubelle_turbo",
+  "method": "in_game_value",
+  "covers": [
+   "bng.mass.total"
+  ],
+  "result": "pass",
+  "variant": "88925",
+  "expected": 1203.3303,
+  "observed": 1202.8503,
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g229_2026-11-11/banco_neumatico/userpath_s1/current/beam2ac_tyre/sucette_poubelle_turbo_s1.meta.json",
+    "locator": "totalMass",
+    "sha256": "75bb38d42a813c85cc47c790d9c6c342036d0dae1de00a10e9202a9c6cd89268",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g229_2026-11-11/banco_neumatico/userpath_s2/current/beam2ac_tyre/sucette_poubelle_turbo_s2.meta.json",
+    "locator": "totalMass",
+    "sha256": "93d216ff625cf31b2f6df8a56bd3433998d4f3a340d6cc02c6b1f0b3ed6e9c58",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g229_consolidacion_2026-11-11.md",
+    "locator": "§2.5",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-11",
+  "note": "esperado: Σ obj:getNodeMass en BeamNG 0.38.6 (dos sesiones idénticas); observado: masa del conversor; Δ = -0.48 kg (nodos de cámara que añade el juego, G2.13)"
+ }
+]

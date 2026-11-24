@@ -1,0 +1,121 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "tyre.front.radius_38022",
+ "version": 1,
+ "target": "ac:tyres.ini/FRONT/RADIUS",
+ "kind": "measured",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "m"
+  },
+  "output_unit": "m",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.tyres.axles.front.radius"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "radio de los nodos sin carga",
+  "mismo bloque pressureWheels y misma semántica que la regla del Ibiza (tyre.front.radius@2), usada en la base conducida en AC; ningún 200409 se ha probado en AC",
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409",
+  "clon de la regla del 40340: el 38022 comparte la mecánica de BeamNG; solo hay contraste estático (estructura y masa frente a la ficha) y las medidas de banco se hicieron con 40340/200409; el neumático necesita el banco propio del coche"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/brakes_tyres.py",
+   "locator": "WheelTyre",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "file",
+   "path": "samples_beamng/2020_rpm_legion_grand_touring/vehicles/2020_rpm_legion_grand_touring/wheels_front.jbeam",
+   "locator": "pressureWheels radius (comentarios del exportador)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/tyres.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+   "locator": "§4",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g219_desbloqueo_integral_200409.md",
+   "locator": "§3 neumáticos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+   "locator": "§4",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_38022_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: cobertura del exportador 38022, misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de tyre.front.radius_40340@1 para el exportador 38022",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

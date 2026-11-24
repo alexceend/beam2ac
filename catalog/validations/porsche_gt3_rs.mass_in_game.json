@@ -1,0 +1,41 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "porsche_gt3_rs.18547.mass_in_game",
+  "vehicle": "porsche_gt3_rs",
+  "method": "in_game_value",
+  "covers": [
+   "bng.mass.total"
+  ],
+  "result": "pass",
+  "variant": "18547",
+  "expected": 1198.0511,
+  "observed": 1197.571,
+  "tolerance": 0.6,
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_neumatico/userpath_s1/current/beam2ac_tyre/porsche_gt3_rs_s1.meta.json",
+    "locator": "totalMass",
+    "sha256": "db0cb0c1e5171a79add6d8de48f325c0927fdd826896fe72a78036722c21d2f8",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_neumatico/userpath_s2/current/beam2ac_tyre/porsche_gt3_rs_s2.meta.json",
+    "locator": "totalMass",
+    "sha256": "c9fd98677899e727275922be8ebb196d095fb5732080f55f34196ed58200e8fc",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g229_consolidacion_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-14",
+  "note": "esperado: Σ obj:getNodeMass en BeamNG 0.38.6 (dos sesiones idénticas); observado: masa del conversor; Δ = -0.48 kg (nodos de cámara que añade el juego, G2.13)"
+ }
+]

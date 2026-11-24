@@ -1,0 +1,170 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.awd_front_diff_preload_openmode",
+ "version": 1,
+ "target": "ac:drivetrain.ini/AWD/FRONT_DIFF_PRELOAD",
+ "kind": "computed",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": 0
+  },
+  "input_units": {},
+  "output_unit": "N·m",
+  "formula": "diferencial en modo inicial open: sin par de bloqueo"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {},
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "combustionEngine"
+  },
+  {
+   "fact": "ir.drivetrain.layout",
+   "op": "eq",
+   "value": "AWD"
+  },
+  {
+   "fact": "ir.drivetrain.differentials.center.initial_mode",
+   "op": "eq",
+   "value": "locked"
+  },
+  {
+   "fact": "ir.drivetrain.differentials.center.lock_torque",
+   "op": "absent",
+   "value": null
+  },
+  {
+   "fact": "ir.drivetrain.differentials.front.initial_mode",
+   "op": "eq",
+   "value": "open"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "diffType es una lista ['open','locked']: BeamNG arranca en el primer modo (open) y deja el resto como modos conmutables en el juego (differential.lua l. 307-309); AC no tiene ese selector ⇒ se representa el modo inicial",
+  "open no transfiere par entre salidas (como dt.awd_*_diff_*_open@1)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/differential.lua",
+   "locator": "l. 315-317 (diffTorqueSplit), 37-39 (open), 64-65 (lsd), 98-99 (locked)",
+   "sha256": "1b53a79101bdd31cda16b7b00e86ee1494b909149aca6d42d236e964c6e0aa0a",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/extract/traction.py",
+   "locator": "classify_traction, awd_axle_roles",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g212_awd_2026-11-02/beamng_awd_analisis.md",
+   "locator": "§1-§2",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/differential.lua",
+   "locator": "l. 86-100 (locked), 235-238 (lockTorque automático), 307-309 (lista de modos)",
+   "sha256": "1b53a79101bdd31cda16b7b00e86ee1494b909149aca6d42d236e964c6e0aa0a",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain.lua",
+   "locator": "l. 10: stabilityCoef = 250",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión de AC ([TRACTION] TYPE, [AWD], igualación de inercias)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión 4WD de AC; el bloque de aceleración de la transmisión de AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g212_awd_2026-11-02/acs_awd_analisis.md",
+   "locator": "§1-§3",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g212_ac_reference_corpus_2026-11-02.md",
+   "locator": "§4 (7 AWD, 6 AWD2 en el corpus)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g219_2026-11-06/central/estabilidad.py",
+   "locator": "oscilación del central de AC con lim grande",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/lab/ac_step4wd.py",
+   "locator": "port de el cálculo 4WD de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g244_central_bloqueado_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: D-G212-LOCK, decisión autónoma de la misión de desbloqueo)",
+   "action": "create",
+   "reason": "G2.44 D-G212-LOCK: FRONT_DIFF_PRELOAD = 0 (modo inicial open)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44: central locked de los 200409; aproximación, no validada en AC"
+}

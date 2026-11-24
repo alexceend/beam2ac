@@ -1,0 +1,106 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "tyre.front.damp_200409",
+ "version": 1,
+ "target": "ac:tyres.ini/FRONT/DAMP",
+ "kind": "reference",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": 500.0
+  },
+  "input_units": {},
+  "output_unit": "N·s/m",
+  "formula": "DAMP = mediana del corpus de AC"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {},
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.tyres.axles.front.force_slip_samples",
+   "op": "exists",
+   "value": null
+  },
+  {
+   "fact": "ir.tyres.axles.front.reference_load",
+   "op": "exists",
+   "value": null
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "valor de referencia (mediana de 222 ejes VERSION ≥ 10 de coches de AC), no medido en el origen",
+  "ausente, AC lee 0: carga y fuerza del neumático oscilan parado (G2.25)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "report",
+   "path": "docs/research/g220_tyre_grip_model_2026-11-07.md",
+   "locator": "§no determinables",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "file",
+   "path": "output/g225_2026-11-09/diagnostico_collider/encuesta_neumatico.json",
+   "locator": "resumen.damp_v10 / relax_v10",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g220_2026-11-07/acs_tyre/c",
+   "locator": "neumático de AC (claves)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g225_validacion_funcional_ac_2026-11-09.md",
+   "locator": "§neumático",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "decision",
+   "path": "output/g225_2026-11-09/preflight/autorizacion.md",
+   "locator": "Decisión del usuario sobre el neumático",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-09",
+   "author": "claude (G2.25: validación en AC, decisión del usuario «medianas del corpus»)",
+   "action": "create",
+   "reason": "G2.25: sin la clave AC lee 0 (oscilación parado medida en AC)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.25"
+}

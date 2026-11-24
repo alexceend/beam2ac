@@ -1,0 +1,41 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "autist_cuanto.b78dc.mass_in_game",
+  "vehicle": "autist_cuanto",
+  "method": "in_game_value",
+  "covers": [
+   "bng.mass.total"
+  ],
+  "result": "pass",
+  "variant": "b78dc",
+  "expected": 1354.452,
+  "observed": 1353.972,
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g229_2026-11-11/banco_neumatico/userpath_s1/current/beam2ac_tyre/autist_cuanto_s1.meta.json",
+    "locator": "totalMass",
+    "sha256": "3794085d320b51afa4dfbf543117596b1f8e2a281cb243b1b59e56df49fda7c8",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g229_2026-11-11/banco_neumatico/userpath_s2/current/beam2ac_tyre/autist_cuanto_s2.meta.json",
+    "locator": "totalMass",
+    "sha256": "89db7bb379ab106dd973cb44493111037f43538d13afcfd9dc7b1d8898b1a65c",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g229_consolidacion_2026-11-11.md",
+    "locator": "§2.5",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-11",
+  "note": "esperado: Σ obj:getNodeMass en BeamNG 0.38.6 (dos sesiones idénticas); observado: masa del conversor; Δ = -0.48 kg (nodos de cámara que añade el juego, G2.13)"
+ }
+]

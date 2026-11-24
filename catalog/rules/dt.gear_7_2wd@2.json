@@ -1,0 +1,174 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.gear_7_2wd",
+ "version": 2,
+ "target": "ac:drivetrain.ini/GEARS/GEAR_7",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "1"
+  },
+  "output_unit": "1",
+  "formula": ""
+ },
+ "scope": {
+  "level": "architecture",
+  "vehicle": "",
+  "variant": "",
+  "family": "",
+  "conditions": [
+   {
+    "fact": "bng.drivetrain.traction",
+    "op": "in",
+    "value": [
+     "FWD",
+     "RWD"
+    ]
+   },
+   {
+    "fact": "bng.gearbox.type",
+    "op": "in",
+    "value": [
+     "manualGearbox",
+     "sequentialGearbox"
+    ]
+   }
+  ]
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.drivetrain.gearbox.forward_ratios.7"
+ },
+ "conditions": [],
+ "applies_when": [
+  {
+   "fact": "ir.drivetrain.gearbox.forward_count",
+   "op": "ge",
+   "value": 7
+  }
+ ],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/drivetrain.py",
+   "locator": "build_drivetrain",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/manualGearbox.lua",
+   "locator": "l. 549-575",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/sequentialGearbox.lua",
+   "locator": "l. 359-385",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/differential.lua",
+   "locator": "l. 33, 249",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/ir/legacy_facts.py",
+   "locator": "ir_facts: mismo parámetro que bng.gearbox.forward_count, bng.gearbox.forward_ratio_7",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/drivetrain.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+   "locator": "transmisión 2WD de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/catalogo_motor_awd_vmax_2026-10-30.md",
+   "locator": "§4",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g2_reglas_ir_2026-10-30.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "dt.gear_7_2wd@1",
+ "history": [
+  {
+   "date": "2026-10-30",
+   "author": "claude (reglas reutilizables por arquitectura, objetivo 4)",
+   "action": "create",
+   "reason": "derivada de dt.gear_7@1 (Ibiza, ámbito vehículo, sin cambios): relación directa con semántica confirmada en los dos lados para 2WD",
+   "status_from": "",
+   "status_to": "provisional"
+  },
+  {
+   "date": "2026-10-30",
+   "author": "claude (G2: reglas sobre el IR)",
+   "action": "new_version",
+   "reason": "entradas y condiciones sobre hechos nativos del IR (ir.*); transformación, ámbito, supuestos y validaciones sin cambios",
+   "status_from": "provisional",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "derivada de dt.gear_7@1"
+}

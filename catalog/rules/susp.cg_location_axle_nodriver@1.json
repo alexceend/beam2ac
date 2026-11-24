@@ -1,0 +1,158 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.cg_location_axle_nodriver",
+ "version": 1,
+ "target": "ac:suspensions.ini/BASIC/CG_LOCATION",
+ "kind": "computed",
+ "transform": {
+  "id": "ac_body_cg",
+  "params": {
+   "output": "cg_location",
+   "rear_hub_is_axle": true
+  },
+  "input_units": {
+   "total": "kg",
+   "front_fraction": "1",
+   "hub_front": "kg",
+   "hub_rear": "kg"
+  },
+  "output_unit": "1",
+  "formula": "CG_LOCATION = (M·f − 2·h_d) / (M − 2·h_d − 2·h_t)"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "total": "ir.mass.total",
+  "front_fraction": "ir.dimensions.front_axle_fraction",
+  "hub_front": "ac:suspensions.ini/FRONT/HUB_MASS",
+  "hub_rear": "ac:suspensions.ini/REAR/HUB_MASS"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409",
+    "40340",
+    "38022"
+   ]
+  },
+  {
+   "fact": "ir.mass.driver",
+   "op": "eq",
+   "value": 0
+  },
+  {
+   "fact": "ir.suspension.axles.rear.linkage",
+   "op": "eq",
+   "value": "rigid_axle"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "piloto 0 kg (decisión D-G217-CG = A del usuario en G2.18): BeamNG no tiene piloto; solo coherente con TOTALMASS sin piloto, por eso la regla exige ir.mass.driver = 0",
+  "el cuerpo de AC = vehículo entero de BeamNG menos 2·HUB_MASS por eje en los centros de rueda (mismo reparto que car.totalmass_200409@1)",
+  "sin los 2 nodos de cámara (0,48 kg) de camerasInternal (decisión técnica de G2.14)",
+  "ningún vehículo 200409 se ha probado en AC",
+  "heave puro: el eje sube sin girar; palancas = componente vertical del eje del muelle/amortiguador/tope (la cinemática con las barras la resuelve el motor de AC con las mismas barras como DistanceJoint)",
+  "suspensión de eje de AC [C] sale con el aviso «local variable allocation has failed»: el punto del muelle (centro + semivía·ATTACH_REL_POS, anclaje en la carrocería 0,2 m por encima) es lectura dudosa; sin prueba en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/mass_geometry.py",
+   "locator": "compute_mass_geometry (CdG, ejes)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "dimensions.wheel_center_height_rel_cog_*",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/attrs/transforms.py",
+   "locator": "t_ac_body_cg",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "§2.7 base de rueda (±TRACK/2, BASEY, (1 − CG_LOCATION)·WB | −CG_LOCATION·WB); §2.8 reparto de masas cuerpo/bujes",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/g217_suspension_steering_2026-11-04.md",
+   "locator": "§7 suspensión de AC [C]; decisión D-G217-CG",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+   "locator": "suspensión de eje de AC, step",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g218_preparacion_validacion_ac_2026-11-05.md",
+   "locator": "§3 decisión D-G217-CG = A",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g214_suspension_2026-11-03/cdg.md",
+   "locator": "valores «sin piloto» de los 6 vehículos con ejes independientes",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g213_chassis_geometry_2026-11-03/banco/resultados.md",
+   "locator": "nodos y masa del conversor = juego (≤ 2,7·10⁻¹⁶ m)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.44: eje rígido → AXLE, decisión autónoma de la misión de desbloqueo)",
+   "action": "create",
+   "reason": "clon de susp.cg_location_200409_nodriver@1: HUB_MASS trasero (AXLE) = eje entero, contado una vez",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.44"
+}

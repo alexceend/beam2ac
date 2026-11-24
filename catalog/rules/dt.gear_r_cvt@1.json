@@ -1,0 +1,136 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.gear_r_cvt",
+ "version": 1,
+ "target": "ac:drivetrain.ini/GEARS/GEAR_R",
+ "kind": "direct",
+ "transform": {
+  "id": "scale",
+  "params": {
+   "factor": -1.0
+  },
+  "input_units": {
+   "x": "1"
+  },
+  "output_unit": "1",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.drivetrain.gearbox.cvt_ratio_max"
+ },
+ "conditions": [
+  {
+   "fact": "ir.drivetrain.gearbox.kind",
+   "op": "eq",
+   "value": "cvtGearbox"
+  },
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "camsoEngine"
+  },
+  {
+   "fact": "ir.drivetrain.torque_converter.stall_torque_ratio",
+   "op": "exists",
+   "value": null
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "APROXIMACIÓN: AC no tiene CVT ni convertidor de par; la caja se emula con una marcha 1,0 y FINAL = grupo final, y un script de CSP (sin verificar en AC: data/script.lua solo corre con física extendida, G2.22) fija en ejecución FINAL·relación CVT. Sin script, la relación total es fija e igual al grupo final",
+  "[I] en BeamNG la relación en marcha atrás varía como en marcha adelante; aquí se fija la de salida desde parado (maxGearRatio)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/drivetrain.py",
+   "locator": "build_drivetrain, _cvt_range",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/extract/automatic_transmission.py",
+   "locator": "read_cvt",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/cvtGearbox.lua",
+   "locator": "l. 116-124 (signo de la marcha atrás, rango)",
+   "sha256": "10d84c4870d5b24be91090d1d6c36e78e7628d1b3c101882850a07cabd30c3a4",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/controller/vehicleController/shiftLogic/cvtGearbox.lua",
+   "locator": "l. 229-240 (rpm objetivo y relación; parado = maxGearRatio)",
+   "sha256": "a52436d1b93ba6487bb2275e576fd246ad70859ac5da2cee38b9dee7b3721555",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/drivetrain.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión de AC (COUNT, GEAR_R, GEAR_%d, FINAL); transmisión 2WD de AC y el cálculo 4WD de AC (ratio = finalRatio · relación de la marcha)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/cvt_generalizacion_2026-11-19.md",
+   "locator": "§2.2-§2.3",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-19",
+   "author": "claude (soporte CVT con agus_1_nrt_1, encargado por el usuario)",
+   "action": "create",
+   "reason": "CVT: marcha atrás = −maxGearRatio (BeamNG reutiliza el rango con signo −1; parado, el controlador fija maxGearRatio)",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "CVT (40340, agus_1_nrt_1); no amplía dt.*_atc/_dct"
+}

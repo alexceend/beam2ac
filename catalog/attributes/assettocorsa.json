@@ -1,0 +1,6270 @@
+[
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:power.lut",
+  "game": "assettocorsa",
+  "unit": "table:rpm->N·m",
+  "dtype": "table",
+  "description": "curva de par a plena carga de AC",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/motor.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:engine.ini/HEADER/VERSION",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "integer",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/motor.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:engine.ini/HEADER/POWER_CURVE",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/motor.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:engine.ini/HEADER/COAST_CURVE",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/motor.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:engine.ini/ENGINE_DATA/INERTIA",
+  "game": "assettocorsa",
+  "unit": "kg·m²",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/motor.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:engine.ini/ENGINE_DATA/LIMITER",
+  "game": "assettocorsa",
+  "unit": "rpm",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/motor.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:engine.ini/ENGINE_DATA/MINIMUM",
+  "game": "assettocorsa",
+  "unit": "rpm",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/motor.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:engine.ini/COAST_REF/RPM",
+  "game": "assettocorsa",
+  "unit": "rpm",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/motor.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:engine.ini/COAST_REF/TORQUE",
+  "game": "assettocorsa",
+  "unit": "N·m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/motor.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:engine.ini/COAST_REF/NON_LINEARITY",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/motor.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/TRACTION/TYPE",
+  "game": "assettocorsa",
+  "unit": "enum",
+  "dtype": "enum",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/COUNT",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "integer",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/GEAR_R",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/GEAR_1",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/GEAR_2",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/GEAR_3",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/GEAR_4",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/GEAR_5",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/GEAR_6",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/GEAR_7",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/*/data/drivetrain.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: 1 mod con GEAR_7/GEAR_8; ningún coche Kunos legible"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/GEAR_8",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/*/data/drivetrain.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: 1 mod con GEAR_7/GEAR_8; ningún coche Kunos legible"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/GEAR_9",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "relación de la 9.ª marcha (transmisión de AC: GEAR_%d de 1 a COUNT, sin límite; ausente = 0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+    "locator": "transmisión de AC (bucle GEAR_%d hasta COUNT)",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/g211_transmissions_2026-11-02.md",
+    "locator": "COUNT sin límite (addGear)",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARS/FINAL",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/DIFFERENTIAL/PRELOAD",
+  "game": "assettocorsa",
+  "unit": "N·m",
+  "dtype": "number",
+  "description": "Nm según el SDK de Kunos",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/DIFFERENTIAL/POWER",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "rampa de bloqueo del diferencial 2WD con par motor: lim = PRELOAD + |relación total|·RAMPA·|par del motor| (transmisión 2WD de AC; ausente = 0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+    "locator": "transmisión 2WD de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+    "locator": "§B0",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/DIFFERENTIAL/COAST",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "rampa de bloqueo del diferencial 2WD con par de retención: lim = PRELOAD + |relación total|·RAMPA·|par del motor| (transmisión 2WD de AC; ausente = 0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+    "locator": "transmisión 2WD de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+    "locator": "§B0",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARBOX/VALID_SHIFT_RPM_WINDOW",
+  "game": "assettocorsa",
+  "unit": "rpm",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": true
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/GEARBOX/INERTIA",
+  "game": "assettocorsa",
+  "unit": "kg·m²",
+  "dtype": "number",
+  "description": "inercia de embrague y caja en el eje del motor (transmisión de AC: clutchInertia = drive.inertia = valor; ausente o 0 = 1,0 kg·m²)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+    "sha256": "",
+    "note": "",
+    "locator": "transmisión de AC (clutchInertia = 1.0) loadINI ([GEARBOX] INERTIA) la inercia desde las ruedas"
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/investigacion_capacidades_2026-11-10.md",
+    "locator": "§A",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/CLUTCH/MAX_TORQUE",
+  "game": "assettocorsa",
+  "unit": "N·m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/transmision.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/BASIC/WHEELBASE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/BASIC/CG_LOCATION",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:120 fracción de WHEELBASE",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/ARB/FRONT",
+  "game": "assettocorsa",
+  "unit": "N/m",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:262",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/ARB/REAR",
+  "game": "assettocorsa",
+  "unit": "N/m",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:262",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/TYPE",
+  "game": "assettocorsa",
+  "unit": "enum",
+  "dtype": "enum",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/TRACK",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/BASEY",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/SPRING_RATE",
+  "game": "assettocorsa",
+  "unit": "N/m",
+  "dtype": "number",
+  "description": "en rueda",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/PROGRESSIVE_SPRING_RATE",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: l. 209: F = (SPRING_RATE + PROGRESSIVE_SPRING_RATE·d)·d"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/DAMP_BUMP",
+  "game": "assettocorsa",
+  "unit": "N·s/m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/DAMP_REBOUND",
+  "game": "assettocorsa",
+  "unit": "N·s/m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/DAMP_FAST_BUMP",
+  "game": "assettocorsa",
+  "unit": "N·s/m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/DAMP_FAST_REBOUND",
+  "game": "assettocorsa",
+  "unit": "N·s/m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/DAMP_FAST_BUMPTHRESHOLD",
+  "game": "assettocorsa",
+  "unit": "m/s",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/DAMP_FAST_REBOUNDTHRESHOLD",
+  "game": "assettocorsa",
+  "unit": "m/s",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/BUMPSTOP_UP",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/BUMPSTOP_DN",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/BUMP_STOP_RATE",
+  "game": "assettocorsa",
+  "unit": "N/m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_abarth500_assetto_corse/data/suspensions.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: 119 suspensions.ini"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/PACKER_RANGE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/HUB_MASS",
+  "game": "assettocorsa",
+  "unit": "kg",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:390 (≤ 0 equivale a 20 kg)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/ROD_LENGTH",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:226",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/STATIC_CAMBER",
+  "game": "assettocorsa",
+  "unit": "deg",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:314",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/TOE_OUT",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:192",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/STRUT_CAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_abarth500_assetto_corse/data/suspensions.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: 88 suspensions.ini"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/STRUT_TYRE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_abarth500_assetto_corse/data/suspensions.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: tipo STRUT"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/WBCAR_BOTTOM_FRONT",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/WBCAR_BOTTOM_REAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/WBCAR_STEER",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/WBCAR_TOP_FRONT",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: §2.2, l. 131"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/WBCAR_TOP_REAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: §2.2, l. 131"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/WBTYRE_BOTTOM",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/WBTYRE_STEER",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/FRONT/WBTYRE_TOP",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: §2.2, l. 131"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/TYPE",
+  "game": "assettocorsa",
+  "unit": "enum",
+  "dtype": "enum",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": true
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/TRACK",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/BASEY",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/SPRING_RATE",
+  "game": "assettocorsa",
+  "unit": "N/m",
+  "dtype": "number",
+  "description": "en rueda",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/PROGRESSIVE_SPRING_RATE",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: l. 209: F = (SPRING_RATE + PROGRESSIVE_SPRING_RATE·d)·d"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/DAMP_BUMP",
+  "game": "assettocorsa",
+  "unit": "N·s/m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/DAMP_REBOUND",
+  "game": "assettocorsa",
+  "unit": "N·s/m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/DAMP_FAST_BUMP",
+  "game": "assettocorsa",
+  "unit": "N·s/m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/DAMP_FAST_REBOUND",
+  "game": "assettocorsa",
+  "unit": "N·s/m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/DAMP_FAST_BUMPTHRESHOLD",
+  "game": "assettocorsa",
+  "unit": "m/s",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/DAMP_FAST_REBOUNDTHRESHOLD",
+  "game": "assettocorsa",
+  "unit": "m/s",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/BUMPSTOP_UP",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/BUMPSTOP_DN",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/BUMP_STOP_RATE",
+  "game": "assettocorsa",
+  "unit": "N/m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_abarth500_assetto_corse/data/suspensions.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: 119 suspensions.ini"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/PACKER_RANGE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/HUB_MASS",
+  "game": "assettocorsa",
+  "unit": "kg",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:390 (≤ 0 equivale a 20 kg)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/ROD_LENGTH",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:226",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/STATIC_CAMBER",
+  "game": "assettocorsa",
+  "unit": "deg",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:314",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/TOE_OUT",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "docs/research/ac_suspension_coordinates.md:192",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/STRUT_CAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_abarth500_assetto_corse/data/suspensions.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: 88 suspensions.ini"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/STRUT_TYRE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_abarth500_assetto_corse/data/suspensions.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: tipo STRUT"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/WBCAR_BOTTOM_FRONT",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/WBCAR_BOTTOM_REAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/WBCAR_STEER",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/WBCAR_TOP_FRONT",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: §2.2, l. 131"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/WBCAR_TOP_REAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: §2.2, l. 131"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/WBTYRE_BOTTOM",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/WBTYRE_STEER",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/REAR/WBTYRE_TOP",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.1-2.2 (marco de la rueda)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/ac_suspension_coordinates.md",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: §2.2, l. 131"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/HEADER/VERSION",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "integer",
+  "description": "elección de modelo de neumático de AC",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/COMPOUND_DEFAULT/INDEX",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "integer",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/RADIUS",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/RIM_RADIUS",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/WIDTH",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/PRESSURE_STATIC",
+  "game": "assettocorsa",
+  "unit": "psi",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/NAME",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/ANGULAR_INERTIA",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/CAMBER_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/DAMP",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/DCAMBER_0",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/DCAMBER_1",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/DX0",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/DX1",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/DX_REF",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/DY0",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/DY1",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/DY_REF",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/FALLOFF_LEVEL",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/FALLOFF_SPEED",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/FLEX",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/FLEX_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/FRICTION_LIMIT_ANGLE",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/FZ0",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/LS_EXPX",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/LS_EXPY",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/PRESSURE_D_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/PRESSURE_FLEX_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/PRESSURE_IDEAL",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/PRESSURE_RR_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/PRESSURE_SPRING_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/RATE",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/RELAXATION_LENGTH",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/ROLLING_RESISTANCE_0",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/ROLLING_RESISTANCE_1",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/ROLLING_RESISTANCE_SLIP",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/XMU",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/BRAKE_DX_MOD",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_abarth500_assetto_corse/data/tyres.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: 116 tyres.ini legibles"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/COMBINED_FACTOR",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_mazda_mx5_nc/data/tyres.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: 40 tyres.ini legibles"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/CX_MULT",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "SCTM (VERSION ≥ 10): el deslizamiento del máximo longitudinal es el lateral dividido por CX_MULT (neumático de AC: cf·cfXmult)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/g220_2026-11-07/acs_tyre/c",
+    "locator": "neumático de AC (CX_MULT con VERSION ≥ 10); neumático de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/SPEED_SENSITIVITY",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/WEAR_CURVE",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/WEAR_CURVE/table",
+  "game": "assettocorsa",
+  "unit": "table:km->%",
+  "dtype": "table",
+  "description": "contenido de la LUT que nombra ac:tyres.ini/FRONT/WEAR_CURVE: x = km virtuales [C: registro de AC 'MAX WEAR AT: 25.5 vKM , mult 0.88' para la fila 25.5|88], y = % de agarre (multiplicador = y/100) [C]; filas x|y con x estrictamente creciente",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/propuesta_frontshare_luts_2026-10-26.md",
+    "locator": "§2.1 hechos 1-2",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/FRONT/SHORT_NAME",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/BLISTER_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/BLISTER_GAMMA",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/COOL_FACTOR",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/CORE_TRANSFER",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/FRICTION_K",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/GRAIN_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/GRAIN_GAMMA",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/INTERNAL_CORE_TRANSFER",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/PATCH_TRANSFER",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/PERFORMANCE_CURVE",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/PERFORMANCE_CURVE/table",
+  "game": "assettocorsa",
+  "unit": "table:°C->1",
+  "dtype": "table",
+  "description": "contenido de la LUT que nombra ac:tyres.ini/THERMAL_FRONT/PERFORMANCE_CURVE: x = temperatura en °C [I: comentario de Kunos 'temperature/grip relation', rangos 0-300], y = multiplicador de agarre (1 en el óptimo) [I]; filas x|y con x estrictamente creciente",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/propuesta_frontshare_luts_2026-10-26.md",
+    "locator": "§2.1 hechos 1 y 3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/ROLLING_K",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/SURFACE_ROLLING_K",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_FRONT/SURFACE_TRANSFER",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/RADIUS",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/RIM_RADIUS",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/WIDTH",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/PRESSURE_STATIC",
+  "game": "assettocorsa",
+  "unit": "psi",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/NAME",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/ANGULAR_INERTIA",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/CAMBER_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/DAMP",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/DCAMBER_0",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/DCAMBER_1",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/DX0",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/DX1",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/DX_REF",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/DY0",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/DY1",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/DY_REF",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/FALLOFF_LEVEL",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/FALLOFF_SPEED",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/FLEX",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/FLEX_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/FRICTION_LIMIT_ANGLE",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/FZ0",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/LS_EXPX",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/LS_EXPY",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/PRESSURE_D_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/PRESSURE_FLEX_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/PRESSURE_IDEAL",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/PRESSURE_RR_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/PRESSURE_SPRING_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/RATE",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/RELAXATION_LENGTH",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/ROLLING_RESISTANCE_0",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/ROLLING_RESISTANCE_1",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/ROLLING_RESISTANCE_SLIP",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/XMU",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/BRAKE_DX_MOD",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_abarth500_assetto_corse/data/tyres.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: 116 tyres.ini legibles"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/COMBINED_FACTOR",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_mazda_mx5_nc/data/tyres.ini",
+    "locator": "",
+    "sha256": "",
+    "note": "evidencia de existencia de la clave: 40 tyres.ini legibles"
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/CX_MULT",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "SCTM (VERSION ≥ 10): el deslizamiento del máximo longitudinal es el lateral dividido por CX_MULT (neumático de AC: cf·cfXmult)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/g220_2026-11-07/acs_tyre/c",
+    "locator": "neumático de AC (CX_MULT con VERSION ≥ 10); neumático de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/SPEED_SENSITIVITY",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/WEAR_CURVE",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/WEAR_CURVE/table",
+  "game": "assettocorsa",
+  "unit": "table:km->%",
+  "dtype": "table",
+  "description": "contenido de la LUT que nombra ac:tyres.ini/REAR/WEAR_CURVE: x = km virtuales [C: registro de AC 'MAX WEAR AT: 25.5 vKM , mult 0.88' para la fila 25.5|88], y = % de agarre (multiplicador = y/100) [C]; filas x|y con x estrictamente creciente",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/propuesta_frontshare_luts_2026-10-26.md",
+    "locator": "§2.1 hechos 1-2",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/REAR/SHORT_NAME",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "modelo de neumático de AC sin equivalente documentado",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/BLISTER_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/BLISTER_GAMMA",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/COOL_FACTOR",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/CORE_TRANSFER",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/FRICTION_K",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/GRAIN_GAIN",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/GRAIN_GAMMA",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/INTERNAL_CORE_TRANSFER",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/PATCH_TRANSFER",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/PERFORMANCE_CURVE",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/PERFORMANCE_CURVE/table",
+  "game": "assettocorsa",
+  "unit": "table:°C->1",
+  "dtype": "table",
+  "description": "contenido de la LUT que nombra ac:tyres.ini/THERMAL_REAR/PERFORMANCE_CURVE: x = temperatura en °C [I: comentario de Kunos 'temperature/grip relation', rangos 0-300], y = multiplicador de agarre (1 en el óptimo) [I]; filas x|y con x estrictamente creciente",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/propuesta_frontshare_luts_2026-10-26.md",
+    "locator": "§2.1 hechos 1 y 3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/ROLLING_K",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/SURFACE_ROLLING_K",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:tyres.ini/THERMAL_REAR/SURFACE_TRANSFER",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "térmico de AC sin equivalente en BeamNG",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "neumáticos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:brakes.ini/DATA/FRONT_SHARE",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "frenos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:brakes.ini/DATA/MAX_TORQUE",
+  "game": "assettocorsa",
+  "unit": "N·m",
+  "dtype": "number",
+  "description": "¿por rueda o total? sin verificar",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "frenos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:brakes.ini/DATA/HANDBRAKE_TORQUE",
+  "game": "assettocorsa",
+  "unit": "N·m",
+  "dtype": "number",
+  "description": "misma ambigüedad",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "frenos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:brakes.ini/DATA/COCKPIT_ADJUSTABLE",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "integer",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+    "locator": "frenos",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/HEADER/VERSION",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "integer",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/INFO/SCREEN_NAME",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/BASIC/TOTALMASS",
+  "game": "assettocorsa",
+  "unit": "kg",
+  "dtype": "number",
+  "description": "con piloto y sin combustible (convención Kunos)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/BASIC/GRAPHICS_OFFSET",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "docs/research/ac_suspension_coordinates.md §2.7",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/FUEL/FUEL",
+  "game": "assettocorsa",
+  "unit": "L",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/FUEL/MAX_FUEL",
+  "game": "assettocorsa",
+  "unit": "L",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/CONTROLS/FFMULT",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/CONTROLS/STEER_LOCK",
+  "game": "assettocorsa",
+  "unit": "deg",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/CONTROLS/STEER_RATIO",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/CONTROLS/LINEAR_STEER_ROD_RATIO",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "m por grado según el comentario de la base; sin fuente del SDK",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:car.ini/EXPLICIT_INERTIA/INERTIA",
+  "game": "assettocorsa",
+  "unit": "kg·m²",
+  "dtype": "vector",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/NAME",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "§9.7 aero mínima",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": true
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:setup.ini/DISPLAY_METHOD/SHOW_CLICKS",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "integer",
+  "description": "",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/ensamblado.md",
+    "locator": "§9.12",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": true
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/HEADER/VERSION",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "integer",
+  "description": "versión del formato (2 en los aero.ini oficiales legibles)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/CHORD",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "cuerda; con SPAN da el área (comentario de los aero.ini oficiales; ala de AC sin analizar [H])",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/SPAN",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "envergadura; área = CHORD·SPAN [H]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/POSITION",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto de aplicación respecto al CdG, marco del cuerpo de AC [C: ala de AC, addLocalForceAtLocalPos]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/LUT_AOA_CL",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "LUT del coeficiente de sustentación frente al ángulo de ataque",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/LUT_AOA_CD",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "LUT del coeficiente de arrastre frente al ángulo de ataque",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/CL_GAIN",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "multiplicador de CL [C: cl = LUT_AOA_CL(angle+aoa)·CL_GAIN]; CL > 0 = carga [C]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/CD_GAIN",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "multiplicador de CD",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/ANGLE",
+  "game": "assettocorsa",
+  "unit": "deg",
+  "dtype": "number",
+  "description": "ángulo del ala que se suma al aoa [C]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/LUT_AOA_CL/table",
+  "game": "assettocorsa",
+  "unit": "table:deg->1",
+  "dtype": "table",
+  "description": "contenido de la LUT que nombra LUT_AOA_CL: x = ángulo (°), y = coeficiente",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_0/LUT_AOA_CD/table",
+  "game": "assettocorsa",
+  "unit": "table:deg->1",
+  "dtype": "table",
+  "description": "contenido de la LUT que nombra LUT_AOA_CD: x = ángulo (°), y = coeficiente",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/NAME",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "nombre del ala (BODY/FRONT/REAR en los oficiales)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/CHORD",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "cuerda; con SPAN da el área (comentario de los aero.ini oficiales; ala de AC sin analizar [H])",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/SPAN",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "envergadura; área = CHORD·SPAN [H]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/POSITION",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto de aplicación respecto al CdG, marco del cuerpo de AC [C: ala de AC, addLocalForceAtLocalPos]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/LUT_AOA_CL",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "LUT del coeficiente de sustentación frente al ángulo de ataque",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/LUT_AOA_CD",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "LUT del coeficiente de arrastre frente al ángulo de ataque",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/CL_GAIN",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "multiplicador de CL [C: cl = LUT_AOA_CL(angle+aoa)·CL_GAIN]; CL > 0 = carga [C]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/CD_GAIN",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "multiplicador de CD",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/ANGLE",
+  "game": "assettocorsa",
+  "unit": "deg",
+  "dtype": "number",
+  "description": "ángulo del ala que se suma al aoa [C]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/LUT_AOA_CL/table",
+  "game": "assettocorsa",
+  "unit": "table:deg->1",
+  "dtype": "table",
+  "description": "contenido de la LUT que nombra LUT_AOA_CL: x = ángulo (°), y = coeficiente",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_1/LUT_AOA_CD/table",
+  "game": "assettocorsa",
+  "unit": "table:deg->1",
+  "dtype": "table",
+  "description": "contenido de la LUT que nombra LUT_AOA_CD: x = ángulo (°), y = coeficiente",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/NAME",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "nombre del ala (BODY/FRONT/REAR en los oficiales)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/CHORD",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "cuerda; con SPAN da el área (comentario de los aero.ini oficiales; ala de AC sin analizar [H])",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/SPAN",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "number",
+  "description": "envergadura; área = CHORD·SPAN [H]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/POSITION",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto de aplicación respecto al CdG, marco del cuerpo de AC [C: ala de AC, addLocalForceAtLocalPos]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/LUT_AOA_CL",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "LUT del coeficiente de sustentación frente al ángulo de ataque",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/LUT_AOA_CD",
+  "game": "assettocorsa",
+  "unit": "text",
+  "dtype": "text",
+  "description": "LUT del coeficiente de arrastre frente al ángulo de ataque",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/CL_GAIN",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "multiplicador de CL [C: cl = LUT_AOA_CL(angle+aoa)·CL_GAIN]; CL > 0 = carga [C]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/CD_GAIN",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "multiplicador de CD",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/ANGLE",
+  "game": "assettocorsa",
+  "unit": "deg",
+  "dtype": "number",
+  "description": "ángulo del ala que se suma al aoa [C]",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/LUT_AOA_CL/table",
+  "game": "assettocorsa",
+  "unit": "table:deg->1",
+  "dtype": "table",
+  "description": "contenido de la LUT que nombra LUT_AOA_CL: x = ángulo (°), y = coeficiente",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:aero.ini/WING_2/LUT_AOA_CD/table",
+  "game": "assettocorsa",
+  "unit": "table:deg->1",
+  "dtype": "table",
+  "description": "contenido de la LUT que nombra LUT_AOA_CD: x = ángulo (°), y = coeficiente",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/segundo_coche_porsche_2026-10-26.md",
+    "locator": "§6.5",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "docs/research/convenciones_fisicas_2026-10-26.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/AWD/FRONT_SHARE",
+  "game": "assettocorsa",
+  "unit": "%",
+  "dtype": "number",
+  "description": "par al eje delantero, en % (loadINI ×0,01); uso en transmisión 4WD de AC sin analizar (E0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+    "locator": "transmisión de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_toyota_celica_st185/data/drivetrain.ini",
+    "locator": "[AWD]",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/AWD/CENTRE_DIFF_POWER",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "bloqueo del diferencial CENTRE con par (0–1); uso en transmisión 4WD de AC sin analizar (E0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+    "locator": "transmisión de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_toyota_celica_st185/data/drivetrain.ini",
+    "locator": "[AWD]",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/AWD/CENTRE_DIFF_COAST",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "bloqueo del diferencial CENTRE en retención; uso en transmisión 4WD de AC sin analizar (E0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+    "locator": "transmisión de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_toyota_celica_st185/data/drivetrain.ini",
+    "locator": "[AWD]",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/AWD/CENTRE_DIFF_PRELOAD",
+  "game": "assettocorsa",
+  "unit": "N·m",
+  "dtype": "number",
+  "description": "precarga del diferencial CENTRE; uso en transmisión 4WD de AC sin analizar (E0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+    "locator": "transmisión de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_toyota_celica_st185/data/drivetrain.ini",
+    "locator": "[AWD]",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/AWD/FRONT_DIFF_POWER",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "bloqueo del diferencial FRONT con par (0–1); uso en transmisión 4WD de AC sin analizar (E0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+    "locator": "transmisión de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_toyota_celica_st185/data/drivetrain.ini",
+    "locator": "[AWD]",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/AWD/FRONT_DIFF_COAST",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "bloqueo del diferencial FRONT en retención; uso en transmisión 4WD de AC sin analizar (E0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+    "locator": "transmisión de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_toyota_celica_st185/data/drivetrain.ini",
+    "locator": "[AWD]",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/AWD/FRONT_DIFF_PRELOAD",
+  "game": "assettocorsa",
+  "unit": "N·m",
+  "dtype": "number",
+  "description": "precarga del diferencial FRONT; uso en transmisión 4WD de AC sin analizar (E0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+    "locator": "transmisión de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_toyota_celica_st185/data/drivetrain.ini",
+    "locator": "[AWD]",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/AWD/REAR_DIFF_POWER",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "bloqueo del diferencial REAR con par (0–1); uso en transmisión 4WD de AC sin analizar (E0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+    "locator": "transmisión de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_toyota_celica_st185/data/drivetrain.ini",
+    "locator": "[AWD]",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/AWD/REAR_DIFF_COAST",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "bloqueo del diferencial REAR en retención; uso en transmisión 4WD de AC sin analizar (E0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+    "locator": "transmisión de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_toyota_celica_st185/data/drivetrain.ini",
+    "locator": "[AWD]",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:drivetrain.ini/AWD/REAR_DIFF_PRELOAD",
+  "game": "assettocorsa",
+  "unit": "N·m",
+  "dtype": "number",
+  "description": "precarga del diferencial REAR; uso en transmisión 4WD de AC sin analizar (E0)",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/research_frenos_diferencial_transmision_2026-10-26/code_evidence.json",
+    "locator": "transmisión de AC",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "doc",
+    "path": "G:/SteamLibrary/steamapps/common/assettocorsa/content/cars/ks_toyota_celica_st185/data/drivetrain.ini",
+    "locator": "[AWD]",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/HEADER/VERSION",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "[HEADER] VERSION: con ≥ 4 AC lee ATTACH_REL_POS (SuspensionAxle)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/LINK_COUNT",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "número de enlaces J<n> del eje rígido",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/ATTACH_REL_POS",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "posición lateral del muelle (fracción de la semivía)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/TORQUE_REACTION",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "reacción del par motor sobre el eje (transmisión 2WD de AC)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/LEAF_SPRING_LAT_K",
+  "game": "assettocorsa",
+  "unit": "undocumented",
+  "dtype": "number",
+  "description": "rigidez lateral de ballesta (0 = sin ballesta)",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J0_CAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto CAR del enlace 0, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J0_AXLE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto AXLE del enlace 0, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J1_CAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto CAR del enlace 1, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J1_AXLE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto AXLE del enlace 1, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J2_CAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto CAR del enlace 2, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J2_AXLE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto AXLE del enlace 2, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J3_CAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto CAR del enlace 3, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J3_AXLE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto AXLE del enlace 3, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J4_CAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto CAR del enlace 4, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J4_AXLE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto AXLE del enlace 4, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J5_CAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto CAR del enlace 5, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J5_AXLE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto AXLE del enlace 5, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J6_CAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto CAR del enlace 6, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J6_AXLE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto AXLE del enlace 6, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J7_CAR",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto CAR del enlace 7, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:suspensions.ini/AXLE/J7_AXLE",
+  "game": "assettocorsa",
+  "unit": "m",
+  "dtype": "vector",
+  "description": "punto AXLE del enlace 7, relativo al centro del eje",
+  "doc": [
+   {
+    "type": "doc",
+    "path": "docs/research/g244_eje_rigido_2026-11-14.md",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "output/g217_suspension_steering_2026-11-04/acs_suspension/c2",
+    "locator": "suspensión de eje de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ }
+]

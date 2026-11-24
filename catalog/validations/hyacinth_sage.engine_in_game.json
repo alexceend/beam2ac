@@ -1,0 +1,50 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "hyacinth_sage.70548.engine_curve_in_game",
+  "vehicle": "hyacinth_sage",
+  "method": "in_game_value",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "70548",
+  "expected": {
+   "max_power_hp": 437.297,
+   "max_power_rpm": 10373
+  },
+  "observed": {
+   "max_power_hp": 437.255,
+   "max_abs_torque_delta_Nm": 0.0
+  },
+  "tolerance": {
+   "torque_Nm": 0.1,
+   "power_hp": 0.1
+  },
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g231_2026-11-12/banco_camso/userpath/current/beam2ac_dyno/hyacinth_sage.json",
+    "locator": "points[].windowB / fullTorqueData",
+    "sha256": "2255216dcd991a263d54171d25f860a9e0f26037942428af5617382f88d1df0e",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g231_2026-11-12/banco_camso/medicion.json",
+    "locator": "hyacinth_sage",
+    "sha256": "65bc91bb5a3c11aebe7c6c0e7fe8be9448938bda8f89397b5a357451fe13397f",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g231_hyacinth_quail_2026-11-12.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-12",
+  "note": "23 puntos entre 1000 rpm y el techo (11000 rpm, excluido: el limitador corta el par): |Δ| máx. 0.0000 N·m; pico del juego 437.297 hp frente a 437.255 hp del IR (Δ +0.041); ficha: Power 437, implícita 437.788 hp"
+ }
+]

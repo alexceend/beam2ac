@@ -1,0 +1,136 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "seat_ibiza_acfr.35b84.engine_curve",
+  "vehicle": "seat_ibiza_acfr",
+  "method": "info_reference",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "35b84",
+  "expected": {
+   "torque": 308,
+   "power_hp": 339
+  },
+  "observed": {
+   "torque": 307.8,
+   "power_hp": 339.26
+  },
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "report",
+    "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/PLAN.md",
+    "locator": "valores de referencia 35b84",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-10-26",
+  "note": ""
+ },
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "seat_ibiza_acfr.35b84.traction",
+  "vehicle": "seat_ibiza_acfr",
+  "method": "info_reference",
+  "covers": [
+   "ac:drivetrain.ini/TRACTION/TYPE"
+  ],
+  "result": "pass",
+  "variant": "35b84",
+  "expected": "FWD",
+  "observed": "FWD",
+  "tolerance": null,
+  "evidence": [
+   {
+    "type": "report",
+    "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/PLAN.md",
+    "locator": "valores de referencia 35b84",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-10-26",
+  "note": ""
+ },
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "seat_ibiza_acfr.35b84.mass",
+  "vehicle": "seat_ibiza_acfr",
+  "method": "info_reference",
+  "covers": [
+   "bng.mass.total"
+  ],
+  "result": "pass",
+  "variant": "35b84",
+  "expected": 1226,
+  "observed": 1226.27,
+  "tolerance": 0.5,
+  "evidence": [
+   {
+    "type": "report",
+    "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+    "locator": "",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/PLAN.md",
+    "locator": "valores de referencia 35b84",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-10-26",
+  "note": ""
+ },
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "seat_ibiza_acfr.pkg_v18bu.functional",
+  "vehicle": "seat_ibiza_acfr",
+  "method": "in_game_functional",
+  "covers": [
+   "package:pkg_v18bu"
+  ],
+  "result": "pass",
+  "variant": "35b84",
+  "expected": null,
+  "observed": null,
+  "tolerance": null,
+  "evidence": [
+   {
+    "type": "doc",
+    "path": "CLAUDE.md",
+    "locator": "Fase B: base física funcional, no calibrada",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/seat_ibiza_acfr/physics_bases/ibiza_v18bu_2026-10-25/seat_ibiza_acfr/data",
+    "locator": "",
+    "sha256": "",
+    "note": "base física aprobada y congelada del Ibiza (solo lectura)"
+   }
+  ],
+  "date": "2026-10-26",
+  "note": "el paquete carga y se conduce; NO valida la precisión de ningún valor"
+ }
+]

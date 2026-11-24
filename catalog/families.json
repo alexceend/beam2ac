@@ -1,0 +1,79 @@
+[
+ {
+  "schema": "beam2ac.family/1",
+  "id": "automation_export",
+  "description": "Procedencia: vehículos exportados por Automation (Camshaft Software) a BeamNG, según info.json (Type, Author y ExporterVersion reconocido). No implica ningún adaptador (camsoEngine, combustionEngine, cajas): cada regla de la familia limita con condiciones propias las versiones del exportador o el adaptador en los que está validada",
+  "membership": [
+   {
+    "fact": "ir.identity.source_tool",
+    "op": "eq",
+    "value": "Automation"
+   },
+   {
+    "fact": "ir.identity.author",
+    "op": "eq",
+    "value": "Camshaft Software LTD"
+   },
+   {
+    "fact": "ir.formats.exporter_version",
+    "op": "in",
+    "value": [
+     "38022",
+     "40340",
+     "200409"
+    ]
+   }
+  ],
+  "evidence": [
+   {
+    "type": "file",
+    "path": "info.json",
+    "locator": "Type 'Automation', Author 'Camshaft Software LTD'",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "lua/powertrain/camsoEngine.lua",
+    "locator": "dispositivo propio del exportador",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "code",
+    "path": "src/ir/legacy_facts.py",
+    "locator": "ir_facts: mismo parámetro que bng.info.type, bng.code.camsoEngine_sha256",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g2_reglas_ir_2026-10-30.md",
+    "locator": "§10 (G2.5b): pertenencia sobre hechos ir.*",
+    "sha256": "",
+    "note": "pertenencia anterior hasta 2026-10-31: bng.info.type eq 'Automation'; bng.code.camsoEngine_sha256 exists None"
+   },
+   {
+    "type": "code",
+    "path": "src/importers/automation.py",
+    "locator": "is_automation_info: TYPE, AUTHOR, KNOWN_EXPORTER_VERSIONS",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/procedencia_automation_2026-11-01.md",
+    "locator": "§1.1 (marcadores 17/17 y 0/123), §5.2 capa 1",
+    "sha256": "",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/procedencia_implementacion_2026-11-02.md",
+    "locator": "pertenencia por procedencia (D-P1, D-P2)",
+    "sha256": "",
+    "note": "pertenencia anterior hasta 2026-11-02: ir.identity.source_tool eq 'Automation'; ir.formats.code_versions.camsoEngine exists None; descripción anterior: Vehículos exportados por Automation (Camshaft Software) a BeamNG"
+   }
+  ]
+ }
+]

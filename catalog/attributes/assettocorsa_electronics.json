@@ -1,0 +1,74 @@
+[
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:electronics.ini/ABS/PRESENT",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "integer",
+  "description": "[ABS] PRESENT de electronics.ini",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/g227_2026-11-10/acs/c",
+    "locator": "ABS de AC, ABS de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:electronics.ini/ABS/ACTIVE",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "integer",
+  "description": "[ABS] ACTIVE de electronics.ini",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/g227_2026-11-10/acs/c",
+    "locator": "ABS de AC, ABS de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:electronics.ini/ABS/SLIP_RATIO_LIMIT",
+  "game": "assettocorsa",
+  "unit": "1",
+  "dtype": "number",
+  "description": "[ABS] SLIP_RATIO_LIMIT de electronics.ini",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/g227_2026-11-10/acs/c",
+    "locator": "ABS de AC, ABS de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ },
+ {
+  "schema": "beam2ac.attribute/1",
+  "id": "ac:electronics.ini/ABS/RATE_HZ",
+  "game": "assettocorsa",
+  "unit": "Hz",
+  "dtype": "number",
+  "description": "[ABS] RATE_HZ de electronics.ini",
+  "doc": [
+   {
+    "type": "code",
+    "path": "output/g227_2026-11-10/acs/c",
+    "locator": "ABS de AC, ABS de AC",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "required_for_load": false
+ }
+]

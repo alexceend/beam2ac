@@ -1,0 +1,88 @@
+{
+ "schema": "beam2ac.rule/1",
+ "id": "fmt.valid_shift_window",
+ "version": 2,
+ "target": "ac:drivetrain.ini/GEARBOX/VALID_SHIFT_RPM_WINDOW",
+ "kind": "format",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": 800
+  },
+  "input_units": {},
+  "output_unit": "rpm",
+  "formula": ""
+ },
+ "scope": {
+  "level": "generic",
+  "vehicle": "",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {},
+ "conditions": [],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "valor por referencia: 800 es el más frecuente entre contenidos independientes (67 contenidos independientes de drivetrain.ini con la clave; valores: {'800': 37, '900': 11, '600': 6, '1000': 4, '500': 4, '1800': 2, '300': 1, '1200': 1, '2000': 1}; Kunos probables: [('1000', 'ks_abarth500_assetto_corse'), ('1000', 'ks_audi_r8_lms,ks_audi_r8_lms_horny'), ('800', 'ks_toyota_ae86'), ('800', 'ks_toyota_celica_st185,ks_toyota_celica_st185_horny')]); no deriva de BeamNG"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.15: sin la clave AC divide por 0",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.15: sin la clave AC divide por 0",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.15: sin la clave AC divide por 0",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "reference_vehicle",
+   "path": "output\\ac_reference_catalog_2026-10-26\\run1\\index.json",
+   "locator": "ac:drivetrain.ini/GEARBOX/VALID_SHIFT_RPM_WINDOW",
+   "sha256": "",
+   "note": "67 contenidos independientes de drivetrain.ini con la clave; valores: {'800': 37, '900': 11, '600': 6, '1000': 4, '500': 4, '1800': 2, '300': 1, '1200': 1, '2000': 1}; Kunos probables: [('1000', 'ks_abarth500_assetto_corse'), ('1000', 'ks_audi_r8_lms,ks_audi_r8_lms_horny'), ('800', 'ks_toyota_ae86'), ('800', 'ks_toyota_celica_st185,ks_toyota_celica_st185_horny')]"
+  }
+ ],
+ "validations": [],
+ "supersedes": "fmt.valid_shift_window@1",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (requisito de formato de AC)",
+   "status_from": "",
+   "status_to": "validated"
+  },
+  {
+   "date": "2026-10-26",
+   "author": "claude (fase 6)",
+   "action": "new_version",
+   "reason": "evidencia del catálogo de referencias de AC; el valor no cambia",
+   "status_from": "validated",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "requisito de formato de AC"
+}

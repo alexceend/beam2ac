@@ -1,0 +1,171 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "car.explicit_inertia_40340_driver",
+ "version": 1,
+ "target": "ac:car.ini/EXPLICIT_INERTIA/INERTIA",
+ "kind": "computed",
+ "transform": {
+  "id": "ac_body_inertia",
+  "params": {
+   "driver": true
+  },
+  "input_units": {
+   "inertia": "kg·m²",
+   "total": "kg",
+   "front_fraction": "1",
+   "wheelbase": "m",
+   "track_front": "m",
+   "track_rear": "m",
+   "height_front": "m",
+   "height_rear": "m",
+   "hub_front": "kg",
+   "hub_rear": "kg",
+   "driver_mass": "kg",
+   "driver_position": "m"
+  },
+  "output_unit": "kg·m²",
+  "formula": "I_c = I − Σ h_i(|r_i|²1 − r_i r_iᵀ) − M_c(|e|²1 − e eᵀ), e = −Σ h_i r_i / M_c (diagonal)  [G2.45: + masa puntual del piloto m_d en r_d (ir.mass.driver_position); con m_d = 0 coincide con la forma sin piloto]"
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "inertia": "ir.mass.inertia_about_cog",
+  "total": "ir.mass.total",
+  "front_fraction": "ir.dimensions.front_axle_fraction",
+  "wheelbase": "ir.dimensions.wheelbase",
+  "track_front": "ir.dimensions.track_front",
+  "track_rear": "ir.dimensions.track_rear",
+  "height_front": "ir.dimensions.wheel_center_height_rel_cog_front",
+  "height_rear": "ir.dimensions.wheel_center_height_rel_cog_rear",
+  "hub_front": "ac:suspensions.ini/FRONT/HUB_MASS",
+  "hub_rear": "ac:suspensions.ini/REAR/HUB_MASS",
+  "driver_mass": "ir.mass.driver",
+  "driver_position": "ir.mass.driver_position"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "40340"
+   ]
+  },
+  {
+   "fact": "ir.mass.driver",
+   "op": "gt",
+   "value": 0
+  },
+  {
+   "fact": "ir.suspension.axles.rear.linkage",
+   "op": "ne",
+   "value": "rigid_axle"
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "piloto = masa puntual m_d = ir.mass.driver en una posición ESTIMADA (src/extract/driver_position.py: cámara de cabina plausible o posición por defecto de las referencias validadas + hipótesis antropométrica, ± 0,15 m por eje); no es una medida (el origen no declara al piloto)",
+  "la masa del piloto entra exactamente una vez: en TOTALMASS (car.totalmass_*); aquí solo reparte esa masa en CdG e inercia del cuerpo",
+  "inercia propia del cuerpo del piloto ignorada (≈ 4 kg·m²)",
+  "masas puntuales en los nodos de BeamNG (G2.13: nodos y masa del conversor = juego); sin los 2 nodos de cámara (0,48 kg)",
+  "AC solo admite la diagonal: los productos de inercia (≤ 116 kg·m² en los cuatro 200409 probados) se descartan",
+  "clon de la regla del 200409: en el 40340 solo hay contraste estático (estructura y masa frente a la ficha); las medidas en el juego se hicieron con vehículos 200409"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/mass_geometry.py",
+   "locator": "_inertia, compute_mass_geometry",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "mass.inertia_about_cog",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/attrs/transforms.py",
+   "locator": "t_ac_body_inertia",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/extract/driver_position.py",
+   "locator": "estimate",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "coche de AC: [EXPLICIT_INERTIA] → setMassExplicitInertia; si no, [BASIC] INERTIA → el cálculo de inercia por caja de masa (ausente = 0,0,0)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ensamblado.md",
+   "locator": "§9.13 rama explícita (Ibiza v6)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g226_prothean_omega_2026-11-10.md",
+   "locator": "§2 inercia nula en G2.25 y corrección en AC",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g226_2026-11-10/inercia/calcular_inercia.json",
+   "locator": "tensor exacto con los centros de rueda medidos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g227_consolidacion_b0_2026-11-11.md",
+   "locator": "§P",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g245_piloto_2026-11-14.md",
+   "locator": "§2-§4",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.45: piloto en el CdG y la inercia, encargado por el usuario)",
+   "action": "create",
+   "reason": "G2.45: variante con piloto de la regla car.explicit_inertia_40340_nodriver@2",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.45: hermana con piloto de car.explicit_inertia_40340_nodriver@2; excluyente con ella"
+}

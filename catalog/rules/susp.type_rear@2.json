@@ -1,0 +1,150 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "susp.type_rear",
+ "version": 2,
+ "target": "ac:suspensions.ini/REAR/TYPE",
+ "kind": "computed",
+ "transform": {
+  "id": "text_contains_map",
+  "params": {
+   "pairs": [
+    [
+     "macpherson",
+     "STRUT"
+    ],
+    [
+     "strut",
+     "STRUT"
+    ]
+   ]
+  },
+  "input_units": {
+   "text": "text"
+  },
+  "output_unit": "enum",
+  "formula": "primer par [aguja, valor] cuya aguja está en la etiqueta (sin distinguir mayúsculas); sin coincidencia: sin valor"
+ },
+ "scope": {
+  "level": "vehicle",
+  "vehicle": "seat_ibiza_acfr",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "text": "ir.suspension.axles.rear.label"
+ },
+ "conditions": [],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "tipo AC deducido de la etiqueta declarada de la pieza (MacPherson/strut → STRUT)"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/suspension.py",
+   "locator": "TYPE_BY_LABEL",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/suspension_frenos_neumaticos_aero.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "suspension.axles.rear.label",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/attrs/transforms.py",
+   "locator": "t_text_contains_map",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "docs/research/ac_suspension_coordinates.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/suspensions.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/masa_geometria.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/spicy_mandala/attribute_inventory_2026-10-25/run3/inventory.json",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "docs/research/g2_reglas_ir_2026-10-30.md",
+   "locator": "§13.3, §14",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g26_2026-11-01/evidencia.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "susp.type_rear@1",
+ "history": [
+  {
+   "date": "2026-10-26",
+   "author": "claude (sembrado del catálogo)",
+   "action": "create",
+   "reason": "sembrado desde el comportamiento de los generadores existentes (susp.type_rear)",
+   "status_from": "",
+   "status_to": "provisional"
+  },
+  {
+   "date": "2026-11-01",
+   "author": "claude (G2.7: implementación de G2.6)",
+   "action": "new_version",
+   "reason": "la tabla MacPherson/strut → STRUT pasa a la regla (text_contains_map) sobre la etiqueta del IR; misma tabla, mismo ámbito, estado y supuestos",
+   "status_from": "provisional",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": ""
+}

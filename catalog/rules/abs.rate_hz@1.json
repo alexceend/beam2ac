@@ -1,0 +1,100 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "abs.rate_hz",
+ "version": 1,
+ "target": "ac:electronics.ini/ABS/RATE_HZ",
+ "kind": "computed",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "Hz"
+  },
+  "output_unit": "Hz",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.brakes.abs_rate_hz"
+ },
+ "conditions": [
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "38022",
+    "40340",
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.identity.vehicle_id",
+   "op": "ne",
+   "value": "seat_ibiza_acfr"
+  },
+  {
+   "fact": "ir.brakes.abs_present",
+   "op": "eq",
+   "value": 1
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "BeamNG regula con un PID hacia absSlipRatioTarget + 2/v (wheels.lua updateABSCoef, > 5 m/s); AC es todo/nada por rueda (ABS de AC: freno × 0 si slip < −límite, > 20 km/h): el límite de AC hace de disparador, no de objetivo",
+  "AC tiene un solo límite y una sola frecuencia: se pondera por el reparto de freno delantero y se toma el menor absHz",
+  "el número de canales de [ABS] no está definido en AC (CHANNELS solo existe en [ABS_V2]); los coches oficiales de Kunos usan [ABS] sin CHANNELS",
+  "ningún coche con ABS se ha probado en AC",
+  "absHz (el menor de los dos ejes)",
+  "D-G250-ABS: equivalencia de comportamiento sin medir en AC"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_abs_summary",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g227_2026-11-10/acs/c",
+   "locator": "ABS de AC, ABS de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g250_abs_termica_2026-11-15.md",
+   "locator": "§ABS",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-15",
+   "author": "claude (G2.50, encargada por el usuario)",
+   "action": "create",
+   "reason": "ABS de BeamNG a electronics.ini [ABS]",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.50"
+}

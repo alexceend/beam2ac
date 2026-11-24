@@ -1,0 +1,50 @@
+[
+ {
+  "schema": "beam2ac.validation/1",
+  "id": "composed_fox.4974f.engine_curve_in_game",
+  "vehicle": "composed_fox",
+  "method": "in_game_value",
+  "covers": [
+   "ac:power.lut"
+  ],
+  "result": "pass",
+  "variant": "4974f",
+  "expected": {
+   "max_power_hp": 58.543,
+   "max_power_rpm": 4366
+  },
+  "observed": {
+   "max_power_hp": 58.534,
+   "max_abs_torque_delta_Nm": 0.0
+  },
+  "tolerance": {
+   "torque_Nm": 0.1,
+   "power_hp": 0.2
+  },
+  "evidence": [
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_camso/userpath/current/beam2ac_dyno/composed_fox.json",
+    "locator": "points[].windowB / fullTorqueData",
+    "sha256": "9a81fca249482e2a9e9d05fc68842ac17cf1fce55c11f0aa2a41d0fdfaca98fa",
+    "note": ""
+   },
+   {
+    "type": "file",
+    "path": "output/g244_2026-11-14/banco_camso/medicion.json",
+    "locator": "composed_fox",
+    "sha256": "3f2156394aeed86a2fe2db792c7959e49e534804e3f33ea6bbd8d758f214fc28",
+    "note": ""
+   },
+   {
+    "type": "report",
+    "path": "docs/research/g244_38022_2026-11-14.md",
+    "locator": "§3",
+    "sha256": "",
+    "note": ""
+   }
+  ],
+  "date": "2026-11-14",
+  "note": "11 puntos entre 1000 rpm y el techo (5000 rpm, excluido: el limitador corta el par): |Δ| máx. 0.0000 N·m; pico del juego 58.543 hp frente a 58.534 hp del IR (Δ +0.010); ficha: Power 58, implícita 58.590 hp"
+ }
+]

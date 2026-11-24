@@ -1,0 +1,152 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "eng.minimum_combustion",
+ "version": 2,
+ "target": "ac:engine.ini/ENGINE_DATA/MINIMUM",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "rpm"
+  },
+  "output_unit": "rpm",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.engine.idle_speed"
+ },
+ "conditions": [
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "combustionEngine"
+  },
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  }
+ ],
+ "applies_when": [],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "MINIMUM de AC = idleRPM de combustionEngine (objetivo del controlador de ralentí, l. 1700-1701, 706-717). En AC (motor de AC) MINIMUM se lee con lectura de INI de AC = std::stoi (wcstol base 10; 0 → 1000): un valor con decimales se TRUNCA (645.527 → 645). motor de AC lo usa como ralentí: por debajo de MINIMUM el par de salida es al menos 15 N·m (sin calado) y el freno motor es 0"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/engine_combustion.py",
+   "locator": "read_combustion_engine",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/importers/beamng.py",
+   "locator": "_import_combustion_engine",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/combustionEngine.lua",
+   "locator": "l. 1700-1701 (idleRPM, idleAV); l. 706-717 (control de ralentí)",
+   "sha256": "c3aa446393cc4af240fb71ddab4880afb857090a97f18d1d89b904e44728a03d",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/engine.ini",
+   "locator": "comentarios de Kunos",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/assetto_engine_semantics.md",
+   "locator": "[ENGINE_DATA]",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/beamng_to_assetto_engine_mapping.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC l. 166-180 (MINIMUM)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "lectura de INI de AC (wcstol)",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g210_d_g29_decisions_2026-11-02/acs_ini",
+   "locator": "motor de AC",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g210_d_g29_decisions_2026-11-02.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g210_d_g29_decisions_2026-11-02/siete_200409.md",
+   "locator": "por vehículo",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "eng.minimum_combustion@1",
+ "history": [
+  {
+   "date": "2026-11-02",
+   "author": "claude (G2.10: decisiones D-G29a/b/c, encargadas por el usuario)",
+   "action": "create",
+   "reason": "D-G29a: idleRPM es un dato del JBeam (sin valor por defecto en el Lua) con la misma semántica de ralentí que en camsoEngine",
+   "status_from": "",
+   "status_to": "provisional"
+  },
+  {
+   "date": "2026-11-02",
+   "author": "claude (G2.10: decisiones D-G29a/b/c, encargadas por el usuario)",
+   "action": "new_version",
+   "reason": "lectura de MINIMUM en AC verificada (getInt trunca los decimales): se cierra el open_issue de la versión 1; transformación, entradas, ámbito y condiciones sin cambios",
+   "status_from": "provisional",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": ""
+}

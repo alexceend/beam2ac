@@ -1,0 +1,79 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "app.abs.present",
+ "version": 1,
+ "target": "ac:electronics.ini/ABS/PRESENT",
+ "kind": "applicability",
+ "transform": {
+  "id": "constant",
+  "params": {
+   "value": null
+  },
+  "input_units": {},
+  "output_unit": "1",
+  "formula": ""
+ },
+ "scope": {
+  "level": "generic",
+  "vehicle": "",
+  "variant": "",
+  "family": "",
+  "conditions": []
+ },
+ "status": "validated",
+ "inputs": {},
+ "conditions": [],
+ "applies_when": [
+  {
+   "fact": "ir.identity.vehicle_id",
+   "op": "ne",
+   "value": "seat_ibiza_acfr"
+  }
+ ],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "el paquete del Ibiza (referencia validada) no cambia: no se le añade electronics.ini"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión de AC, loadINI, la inercia desde las ruedas",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión de AC, loadINI, la inercia desde las ruedas",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/investigacion_capacidades_2026-11-10.md",
+   "locator": "§A",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-15",
+   "author": "claude (G2.50)",
+   "action": "create",
+   "reason": "el Ibiza queda fuera del ABS",
+   "status_from": "",
+   "status_to": "validated"
+  }
+ ],
+ "notes": "G2.50"
+}

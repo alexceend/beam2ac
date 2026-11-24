@@ -1,0 +1,146 @@
+{
+ "schema": "beam2ac.rule/2",
+ "id": "dt.gear_4_atc_200409",
+ "version": 1,
+ "target": "ac:drivetrain.ini/GEARS/GEAR_4",
+ "kind": "direct",
+ "transform": {
+  "id": "identity",
+  "params": {},
+  "input_units": {
+   "x": "1"
+  },
+  "output_unit": "1",
+  "formula": ""
+ },
+ "scope": {
+  "level": "family",
+  "vehicle": "",
+  "variant": "",
+  "family": "automation_export",
+  "conditions": []
+ },
+ "status": "provisional",
+ "inputs": {
+  "x": "ir.drivetrain.gearbox.forward_ratios.4"
+ },
+ "conditions": [
+  {
+   "fact": "ir.drivetrain.gearbox.kind",
+   "op": "eq",
+   "value": "automaticGearbox"
+  },
+  {
+   "fact": "ir.formats.exporter_version",
+   "op": "in",
+   "value": [
+    "200409"
+   ]
+  },
+  {
+   "fact": "ir.engine.device_type",
+   "op": "eq",
+   "value": "combustionEngine"
+  },
+  {
+   "fact": "ir.drivetrain.torque_converter.stall_torque_ratio",
+   "op": "exists",
+   "value": null
+  }
+ ],
+ "applies_when": [
+  {
+   "fact": "ir.drivetrain.gearbox.forward_count",
+   "op": "ge",
+   "value": 4
+  }
+ ],
+ "exceptions": [],
+ "incompatible_with": [],
+ "assumptions": [
+  "APROXIMACIÓN (D-G211-TC b): AC no tiene convertidor de par; se aplica la relación rígida FINAL·marcha (régimen estable con el bloqueo cerrado). No se reproducen el calado (~1650 rpm), la multiplicación de par (×1,8 parado) ni el deslizamiento en las marchas bajas; el cambio automático de AC es una ayuda del piloto"
+ ],
+ "open_issues": [],
+ "source_doc": [
+  {
+   "type": "code",
+   "path": "src/extract/drivetrain.py",
+   "locator": "build_drivetrain, _split_gears",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "src/extract/automatic_transmission.py",
+   "locator": "read_transmission",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/automaticGearbox.lua",
+   "locator": "gearRatios por signo",
+   "sha256": "51b48f3ae63cc4f6edf76b1f92833e12e3e2db29c4e91d4a33121f5bdf7199a5",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "G:/SteamLibrary/steamapps/common/BeamNG.drive/lua/vehicle/powertrain/torqueConverter.lua",
+   "locator": "bloqueo del convertidor",
+   "sha256": "f97bf94d2e8d76c778d4b1526ebd3fa64b0587f866367892ac3ca3273cca943f",
+   "note": ""
+  }
+ ],
+ "target_doc": [
+  {
+   "type": "doc",
+   "path": "sample_assetto/data/drivetrain.ini",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "doc",
+   "path": "docs/research/transmision.md",
+   "locator": "",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "code",
+   "path": "output/g211_transmissions_2026-11-02/acs_drivetrain/c",
+   "locator": "transmisión de AC (COUNT, GEAR_R, GEAR_%d, FINAL); transmisión 2WD de AC y el cálculo 4WD de AC (ratio = finalRatio · relación de la marcha)",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "evidence": [
+  {
+   "type": "report",
+   "path": "docs/research/g243_200409_bloqueados_2026-11-14.md",
+   "locator": "§3",
+   "sha256": "",
+   "note": ""
+  },
+  {
+   "type": "report",
+   "path": "output/g211_transmissions_2026-11-02/siete_200409.md",
+   "locator": "por vehículo",
+   "sha256": "",
+   "note": ""
+  }
+ ],
+ "validations": [],
+ "supersedes": "",
+ "history": [
+  {
+   "date": "2026-11-14",
+   "author": "claude (G2.43: desbloqueo de la automática con convertidor del 200409)",
+   "action": "create",
+   "reason": "G2.11: relación de la 4.ª marcha de la DCT",
+   "status_from": "",
+   "status_to": "provisional"
+  }
+ ],
+ "notes": "G2.43: automaticGearbox + torqueConverter del 200409; no amplía dt.*_dct"
+}
