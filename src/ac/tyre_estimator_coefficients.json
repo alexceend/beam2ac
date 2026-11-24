@@ -1,0 +1,387 @@
+{
+ "version": 1,
+ "node_load_fraction": 0.4,
+ "selected_feature_sets": {
+  "dy_ref": "lmu+dl+soft",
+  "dx_ref": "lmu+dl",
+  "ls_expy": "lmu+dl+sl",
+  "ls_expx": "lmu+dl+sv+psi",
+  "friction_limit_angle": "fla0",
+  "flex_gain": "lmu+dl+trr",
+  "falloff_level": "lmu+ratio",
+  "falloff_speed": "nl+fl+slope",
+  "cx_mult": "lmu+dl+tz+width",
+  "speed_sensitivity": "lmu+dl+sv",
+  "combined_factor": "reinf+psi"
+ },
+ "models": {
+  "dy_ref": {
+   "features": [
+    "lmu",
+    "dl",
+    "soft"
+   ],
+   "intercept": 0.04070865209743509,
+   "coef": {
+    "lmu": 0.88676017495121,
+    "dl": 0.3195672110565807,
+    "soft": 0.048462487753688444
+   },
+   "log": true
+  },
+  "dx_ref": {
+   "features": [
+    "lmu",
+    "dl"
+   ],
+   "intercept": 0.057018850989551936,
+   "coef": {
+    "lmu": 0.9432805656209295,
+    "dl": 0.2182985155088185
+   },
+   "log": true
+  },
+  "ls_expy": {
+   "features": [
+    "lmu",
+    "dl",
+    "sl"
+   ],
+   "intercept": 1.6371788470065303,
+   "coef": {
+    "lmu": -0.10344502385653942,
+    "dl": 0.9618002914131542,
+    "sl": -0.5793105498562623
+   },
+   "log": false
+  },
+  "ls_expx": {
+   "features": [
+    "lmu",
+    "dl",
+    "sv",
+    "psi"
+   ],
+   "intercept": 1.243473817620377,
+   "coef": {
+    "lmu": -0.001931856730890356,
+    "dl": 0.5855703860531428,
+    "sv": -0.007449115331325595,
+    "psi": -0.007538301690060383
+   },
+   "log": false
+  },
+  "friction_limit_angle": {
+   "features": [
+    "fla0"
+   ],
+   "intercept": 0.641435790677727,
+   "coef": {
+    "fla0": 0.9378641405270961
+   },
+   "log": false
+  },
+  "flex_gain": {
+   "features": [
+    "lmu",
+    "dl",
+    "ltrr"
+   ],
+   "intercept": -0.0357465849291216,
+   "coef": {
+    "lmu": -0.20512502955060613,
+    "dl": 0.5516040796354597,
+    "ltrr": 0.05253123673974422
+   },
+   "log": false
+  },
+  "falloff_level": {
+   "features": [
+    "lmu",
+    "ratio"
+   ],
+   "intercept": 0.021740264103938436,
+   "coef": {
+    "lmu": 0.030798521969852777,
+    "ratio": 2.0986741091892025
+   },
+   "log": false
+  },
+  "falloff_speed": {
+   "features": [
+    "nl",
+    "fl",
+    "slope"
+   ],
+   "intercept": -0.12002891230000808,
+   "coef": {
+    "nl": -0.5532373151886443,
+    "fl": 7.12029254446358,
+    "slope": 0.10530756377054332
+   },
+   "log": false
+  },
+  "cx_mult": {
+   "features": [
+    "lmu",
+    "dl",
+    "ltz",
+    "width"
+   ],
+   "intercept": -1.0870978045555733,
+   "coef": {
+    "lmu": -0.022536966340042208,
+    "dl": -0.6892907235669442,
+    "ltz": -0.8005490314208882,
+    "width": -1.364376489621842
+   },
+   "log": true
+  },
+  "speed_sensitivity": {
+   "features": [
+    "lmu",
+    "dl",
+    "sv"
+   ],
+   "intercept": 0.05094866221644193,
+   "coef": {
+    "lmu": -0.0031587090415057875,
+    "dl": 0.030043301305612943,
+    "sv": -0.01385856998206058
+   },
+   "log": false
+  },
+  "combined_factor": {
+   "features": [
+    "lreinf",
+    "psi"
+   ],
+   "intercept": 2.470186033448459,
+   "coef": {
+    "lreinf": -0.09147304232160805,
+    "psi": 0.015458153924431214
+   },
+   "log": false
+  },
+  "brake_dx_mod": {
+   "features": [],
+   "intercept": 0.0044761727948329005,
+   "coef": {},
+   "log": false
+  },
+  "camber_gain": {
+   "features": [],
+   "intercept": 0.13150824870473518,
+   "coef": {},
+   "log": false
+  }
+ },
+ "aux": {
+  "free_rolling_radius_ratio": 1.0031984539948549,
+  "inertia_factor": 0.6605342175047154,
+  "rolling_resistance": [
+   [
+    10.0,
+    0.008249677666854206
+   ],
+   [
+    20.0,
+    0.007494490311529435
+   ],
+   [
+    30.0,
+    0.004741899805384798
+   ]
+  ],
+  "vertical_stiffness": {
+   "model": "patch 4*r*p^2*w^2/Fz",
+   "scale": 0.7848735131168509
+  }
+ },
+ "struct_median": {
+  "wheelReinfBeamSpring": 17167.854492,
+  "wheelSideTransitionZone": 0.1077475,
+  "wheelTreadReinfBeamSpring": 165052.28125,
+  "wheelPeripheryBeamSpring": 93074.195312,
+  "wheelTreadBeamSpring": 205151.28125
+ },
+ "calibration_range": {
+  "frictionCoef": [
+   1,
+   1
+  ],
+  "noLoadCoef": [
+   1.060829,
+   1.985572
+  ],
+  "fullLoadCoef": [
+   0.081424,
+   0.681581
+  ],
+  "loadSensitivitySlope": [
+   6.6e-05,
+   0.000303
+  ],
+  "reference_load": [
+   1912.984594751506,
+   7308.725485821001
+  ]
+ },
+ "calibration_ratio_families": [
+  0.1,
+  0.4
+ ],
+ "validation": {
+  "car": {
+   "mean_rms": {
+    "comb_y": 0.03487873884492427,
+    "comb_x": 0.04593405262403355,
+    "lat_y": 0.04318170940058248,
+    "lon_x": 0.047720415967816406
+   },
+   "by_family": {
+    "200409/lat_y": 0.03846423955747304,
+    "200409/lon_x": 0.045691331661869075,
+    "38022/lat_y": 0.041216815303137214,
+    "38022/lon_x": 0.034718075812248644,
+    "40340/lat_y": 0.05110908093926617,
+    "40340/lon_x": 0.061261145172052646
+   },
+   "max_rms": 0.13526243495778995,
+   "worst": [
+    [
+     "bisexual_aspiration/front",
+     0.13526243495778995
+    ],
+    [
+     "hyacinth_sage/front",
+     0.09374995479036698
+    ],
+    [
+     "quail_mirabilis/front",
+     0.093650050087966
+    ],
+    [
+     "hyacinth_sage/rear",
+     0.08077786286216429
+    ]
+   ],
+   "share_below_0.06": 0.75
+  },
+  "family": {
+   "mean_rms": {
+    "comb_y": 0.03880972534164997,
+    "comb_x": 0.07680677800848842,
+    "lat_y": 0.061930820329746374,
+    "lon_x": 0.08301098466257488
+   },
+   "by_family": {
+    "200409/lat_y": 0.07371947794014944,
+    "200409/lon_x": 0.13213755641641395,
+    "38022/lat_y": 0.04249748548788141,
+    "38022/lon_x": 0.034786102436146944,
+    "40340/lat_y": 0.06240705588409639,
+    "40340/lon_x": 0.05769629084614608
+   },
+   "max_rms": 0.16014039531275767,
+   "worst": [
+    [
+     "2020_rpm_atacama_sport__4x4/rear",
+     0.16014039531275767
+    ],
+    [
+     "2020_rpm_atacama_sport__4x4/front",
+     0.1483623623984852
+    ],
+    [
+     "bisexual_aspiration/front",
+     0.13953700985020995
+    ],
+    [
+     "rpm_omega_one_concept/rear",
+     0.139292437975787
+    ]
+   ],
+   "share_below_0.06": 0.3333333333333333
+  }
+ },
+ "records": [
+  [
+   "2020_rpm_atacama_sport__4x4",
+   "ca816f8018f9540d1820d77b31733984b1188f1152d3129143800368d6519e90"
+  ],
+  [
+   "2020_rpm_atlanta_gt_3_6t",
+   "9735dd8bb32decd6cf7c1426d2c9dd7b4d8db53aa1e7bed4499cfe6c3da1bdba"
+  ],
+  [
+   "2020_rpm_atlanta_gt_3_6t_c812b1ac",
+   "005a58fdbbb12fd62930db01ac10e7c62d35183c0fb405a9a4b9d2afdac2ef64"
+  ],
+  [
+   "2020_rpm_legion_grand_touring",
+   "d4ddea85de446eaef778b1cc421dabc13e6f8e4a83fa6e79b5d0c13636be3832"
+  ],
+  [
+   "2020_rpm_patagonia_xt_v8",
+   "837febadaa8901fe2d67b90828ced804190d4ff03943bf8b13e4fdd2cc0327c0"
+  ],
+  [
+   "2020_rpm_prothean_s",
+   "f994f3b25e597c7e01947390d08498b2ae5606967cc011cd72103b0e5036b828"
+  ],
+  [
+   "2021_rpm_portland_touring",
+   "be8a44c8aed8be4f837923132d68701b6d995b6e3d9dd4e62dedeabaabf8008e"
+  ],
+  [
+   "bisexual_aspiration",
+   "0fcf3107416c1d1215e344b76a294989e47e101c14646d7f7f8e0d2c2c27716c"
+  ],
+  [
+   "autist_cuanto",
+   "9c909d338247552a5528a83625e37f782723f3537a398f038c6b35dbf6e032a2"
+  ],
+  [
+   "composed_fox",
+   "50f6d4005de64e9fcdfc73cae866eaa3e53d3509e5395e3c99038ef9cb9b17db"
+  ],
+  [
+   "composed_fox_inedito_g245",
+   "2dd27c7794d3d09f70e0f8e00ca43ebb0bab678e160c4cfbf0312974abef81b6"
+  ],
+  [
+   "hyacinth_sage",
+   "9ac5302e108be086814914f19b56775221b2b79a731ed610b3324e20e28d20ee"
+  ],
+  [
+   "porsche_gt3_rs",
+   "855fb9f79a8a3de05a89e1b95f2f7b6cd4d6d4ee76227ed75f66ed868a9af7c7"
+  ],
+  [
+   "quail_mirabilis",
+   "42e45a673cdc02887481ad871b02c7c5f3e12cea10f25f391b0d5877d252008d"
+  ],
+  [
+   "rpm_omega_one_concept",
+   "f75cd9f2780a711cd50a7f4f2ea4cb3edd114d5e748cac32afc638360b0dbb1c"
+  ],
+  [
+   "spicy_mandala",
+   "5fcc013a670698465ed2792ce0054ae313d01c9e84e9c950341a8f19ffb3ae14"
+  ],
+  [
+   "sucette_poubelle",
+   "c3969b715c419c99f5e7f8feca667865e8bf240dda4c5dc4de206728cf71d552"
+  ],
+  [
+   "sucette_poubelle_turbo",
+   "5b64375aa420ec0e7b2e15e1b306cb6d6fe37879c23c86dde12e7b3ad410b01e"
+  ],
+  [
+   "susui_espol_vtec",
+   "a9f7baf273dfcb2e2c77d022590dcd5f54e2730f589ab862d45080f8cf3c7dc7"
+  ]
+ ],
+ "trained_with": "tools/analysis/tyre_estimator_train.py"
+}

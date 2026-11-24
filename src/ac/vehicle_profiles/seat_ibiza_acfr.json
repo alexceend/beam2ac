@@ -1,0 +1,48 @@
+{
+  "car_id": "seat_ibiza_acfr",
+  "description": "Constantes propias del Seat Ibiza ACFR (export de Automation) medidas a mano en el ciclo v7-v12 y validadas en el juego. No son reglas para otros coches.",
+  "collider": {
+    "body_mesh": "35b84_body0",
+    "exclude_tokens": ["tyre", "wheel", "brake", "susp", "WHEEL", "SUSP", "COCKPIT", "STEER"],
+    "z_cuts": [-1.65, -1.05, -0.45, 0.35, 0.88, 1.47],
+    "provenance": "v7: cortes en los cambios de perfil medidos en el KN5 (informe_prueba_v7_2026-10-24.md; tools_2026-10-24_v7/v7_collider_design.py). Collider validado en el juego con v7."
+  },
+  "steering_wheel": {
+    "parent_mesh": "35b84_body0",
+    "rim_material_token": "lenkrad",
+    "move_materials": [
+      "material_78_lenkrad_wood_mat_35b84",
+      "material_79_mi_metal_chrome_03_dark_35b84",
+      "material_82_mi_metal_chrome_01_bright_35b84"
+    ],
+    "split_material": "material_80_m_blackplastic_35b84",
+    "split_axial_max_m": 0.12,
+    "split_mesh_name": "35b84_body0_steer_blackplastic",
+    "provenance": "v12: aro, radios y centro con el 100 % de sus vértices dentro del volante; el plástico negro mezcla buje y columna, con un hueco axial sin vértices entre 0,0954 y 0,1363 m (tools_2026-10-24_v12/build_v12_kn5.py). Sentido de giro y costura pendientes de la prueba en el juego."
+  },
+  "driver": {
+    "pose_source_car": "ks_toyota_ae86",
+    "hips_target": [0.34, 0.52, -0.10],
+    "knuckle_target_m": 0.025,
+    "rim_frame_decimals": 5,
+    "provenance": "test8dp: caderas en el asiento (x 0,34; cojín 0,39-0,46; informe_prueba_v7 §1), pose correcta en el juego. v12: nudillos a 0,025 m del plano del aro (medio espesor 0,019 m + 6 mm); marco del aro redondeado a 0,01 mm como en build_v12_knh.py. La pose deriva de un archivo de Kunos: no distribuible."
+  },
+  "lights": {
+    "interior_z": [-1.2, 1.0],
+    "expected_count": 19,
+    "source_mesh_name": "35b84_body0",
+    "provenance": "v15li (luces validadas en el juego): tools/variants/build_v15li.py, INTERIOR_Z = (-1.2, 1.0) (habitáculo en z del KN5: faros > 1,2; pilotos < -1,6); el glowMap da 19 materiales y el exportador llama 35b84_body0 a sus 19 mallas."
+  },
+  "hands": {
+    "variant": "v14ha_alternating_grip",
+    "left": [-55.0, 85.0, 40.0],
+    "right": [140.0, 85.0, 40.0],
+    "lift_m": 0.08,
+    "frames": 600,
+    "provenance": "v14ha (aceptada provisionalmente por el usuario): tools/variants/build_v14ha.py, HandCycle(a_min, grip, transfer) = (-55, 85, 40) izquierda y (140, 85, 40) derecha, despegue 0,08 m, 600 fotogramas; LOCK = periodo = 125. El clip deriva de la pose de Kunos: no distribuible."
+  },
+  "sound": {
+    "engine_position": "front",
+    "provenance": "motor delantero del Ibiza (output/seat_ibiza_acfr/sound_work_2026-10-25/README.md; sounds.ini de pkg_v16sn_sound). AC Audio Pipeline 1.9, p. 5 y 8."
+  }
+}

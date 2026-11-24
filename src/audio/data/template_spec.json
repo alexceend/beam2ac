@@ -1,0 +1,464 @@
+{
+ "cars_folder": "{d3721fc3-d511-4234-a503-e2362da7f3f4}",
+ "bank_folder": "{39a32fe3-f97b-4316-9cb9-8f1146258ad2}",
+ "fade_shape": 0.254718989,
+ "engine": {
+  "engine_ext": {
+   "outputFormat": "2",
+   "group": "{5206e42b-ae8f-49f6-b059-d613b2947b49}",
+   "rpms_max": 20000,
+   "automatable": {
+    "voiceStealing": 2,
+    "dopplerEnabled": true
+   },
+   "spatialiser": {
+    "distanceRolloffType": 3,
+    "minimumDistance": 6,
+    "maximumDistance": 350.000061,
+    "soundSize": 0.300000012,
+    "minimumExtent": 120,
+    "LFEUpmixEnabled": true
+   },
+   "lowpass": {
+    "cutoff": 3100,
+    "angle_curve": [
+     [
+      30.0,
+      22000.0,
+      -0.474283993
+     ],
+     [
+      180.0,
+      5400.00049,
+      null
+     ]
+    ]
+   },
+   "tracks": [
+    {
+     "name": "load",
+     "throttle_curve": [
+      [
+       0.050000002374872565,
+       -80.0,
+       -0.34993118
+      ],
+      [
+       0.4700000223238021,
+       -6.39130354,
+       0.199403748
+      ],
+      [
+       0.8500000403728336,
+       0.391303539,
+       null
+      ]
+     ],
+     "eq": null
+    },
+    {
+     "name": "coast",
+     "throttle_curve": [
+      [
+       0.0999999977648258,
+       -0.173914,
+       0.561598003
+      ],
+      [
+       0.850000040372834,
+       -80.0,
+       null
+      ]
+     ],
+     "eq": null
+    }
+   ]
+  },
+  "engine_int": {
+   "outputFormat": "2",
+   "group": "{db9dca15-49f5-4c00-93ca-e76ccaf1160e}",
+   "rpms_max": 15000,
+   "automatable": {
+    "voiceStealing": 2
+   },
+   "spatialiser": {
+    "minimumDistance": 7,
+    "maximumDistance": 50,
+    "userLFELevel": -7.5,
+    "LFEUpmixEnabled": true
+   },
+   "lowpass": null,
+   "tracks": [
+    {
+     "name": "load exh",
+     "throttle_curve": [
+      [
+       0.10000000474974513,
+       -18.2608681,
+       -0.184156984
+      ],
+      [
+       0.5200000246986747,
+       -6.39130354,
+       -0.689823747
+      ],
+      [
+       0.9000000427477062,
+       0.391303539,
+       null
+      ]
+     ],
+     "eq": {
+      "lowGain": 5,
+      "midGain": 3.5,
+      "highGain": -18,
+      "highCrossover": 2000,
+      "crossoverSlope": 0
+     }
+    },
+    {
+     "name": "coast exh",
+     "throttle_curve": [
+      [
+       0.10000000474974513,
+       -0.173913717,
+       0.641739011
+      ],
+      [
+       0.8500000403728336,
+       -80.0,
+       null
+      ]
+     ],
+     "eq": {
+      "lowGain": 5,
+      "highGain": -44,
+      "highCrossover": 1000,
+      "crossoverSlope": 0
+     }
+    }
+   ]
+  }
+ },
+ "secondary": {
+  "transmission": {
+   "outputFormat": "2",
+   "group": "{dba03e3d-9c12-43da-a5b9-9c79b7673c7f}",
+   "group_name": "grp_transmission",
+   "automatable": {
+    "voiceStealing": "2"
+   },
+   "parameters": [
+    {
+     "name": "drivetrain_speed",
+     "maximum": "350"
+    },
+    {
+     "name": "throttle"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "5",
+    "maximumDistance": "15",
+    "soundSize": "10",
+    "minimumExtent": "360"
+   }
+  },
+  "limiter": {
+   "outputFormat": "2",
+   "group": "{37b936f8-165c-484d-a2f5-d06ae99a0822}",
+   "group_name": "grp_limiter",
+   "automatable": {
+    "voiceStealing": "2",
+    "dopplerEnabled": "true"
+   },
+   "parameters": [
+    {
+     "name": "decay"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "5",
+    "maximumDistance": "25",
+    "soundSize": "15",
+    "minimumExtent": "240"
+   }
+  },
+  "gear_grind": {
+   "outputFormat": "2",
+   "group": "{f09ce222-1e68-42a9-9e16-fcb45004fcb3}",
+   "group_name": "grp_gear_int",
+   "automatable": {
+    "voiceStealing": "2"
+   },
+   "parameters": [],
+   "spatialiser": {
+    "minimumDistance": "5",
+    "maximumDistance": "14.9999981"
+   }
+  },
+  "wind": {
+   "outputFormat": "2",
+   "group": "{1c1f5d35-07d5-4d6f-b916-cd0eb4adfd60}",
+   "group_name": "grp_wind_open",
+   "automatable": {
+    "voiceStealing": "2",
+    "dopplerEnabled": "true",
+    "dopplerScale": "175"
+   },
+   "parameters": [
+    {
+     "name": "speed",
+     "maximum": "500"
+    },
+    {
+     "name": "air_pressure",
+     "minimum": "0.80000001192092896",
+     "maximum": "1.5"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "5",
+    "maximumDistance": "25",
+    "minimumExtent": "220"
+   }
+  },
+  "gear_int": {
+   "outputFormat": "1",
+   "group": "{f09ce222-1e68-42a9-9e16-fcb45004fcb3}",
+   "group_name": "grp_gear_int",
+   "automatable": {
+    "voiceStealing": "2"
+   },
+   "parameters": [
+    {
+     "name": "state"
+    }
+   ],
+   "spatialiser": null
+  },
+  "skid_ext": {
+   "outputFormat": "2",
+   "group": "{81c0ee3a-2fd8-4e25-b775-eb7845ca644f}",
+   "group_name": "grp_skid_ext",
+   "automatable": {
+    "voiceStealing": "2",
+    "dopplerEnabled": "true"
+   },
+   "parameters": [],
+   "spatialiser": {
+    "minimumDistance": "1.5"
+   }
+  },
+  "backfire_ext": {
+   "outputFormat": "2",
+   "group": "{9e2b6406-bcd0-4f61-92a5-b3e5d68d4b97}",
+   "group_name": "grp_backfire_ext",
+   "automatable": {
+    "voiceStealing": "2",
+    "dopplerEnabled": "true"
+   },
+   "parameters": [
+    {
+     "name": "throttle",
+     "seekSpeed": "2.5"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "3",
+    "maximumDistance": "24.9999943",
+    "soundSize": "1",
+    "minimumExtent": "210"
+   }
+  },
+  "door": {
+   "outputFormat": "2",
+   "group": "{559b9037-dd6c-4120-9373-477d07717f9e}",
+   "group_name": "grp_door",
+   "automatable": {
+    "voiceStealing": "2"
+   },
+   "parameters": [
+    {
+     "name": "state"
+    }
+   ],
+   "spatialiser": {
+    "maximumDistance": "15"
+   }
+  },
+  "gear_ext": {
+   "outputFormat": "2",
+   "group": "{c9a0a35d-dcc0-4002-ae01-5487466de9f8}",
+   "group_name": "grp_gear_ext",
+   "automatable": {
+    "voiceStealing": "2"
+   },
+   "parameters": [
+    {
+     "name": "state"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "2",
+    "maximumDistance": "18",
+    "soundSize": "0.5",
+    "minimumExtent": "150"
+   }
+  },
+  "bodywork": {
+   "outputFormat": "2",
+   "group": "{b3c3876b-83aa-45d3-b43a-125adcb9a753}",
+   "group_name": "grp_bodywork",
+   "automatable": {
+    "voiceStealing": "2"
+   },
+   "parameters": [
+    {
+     "name": "susp_travel_speed"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "3",
+    "maximumDistance": "10"
+   }
+  },
+  "backfire_int": {
+   "outputFormat": "2",
+   "group": "{477be05a-5cbd-468a-b1d8-637af58bba28}",
+   "group_name": "grp_backfire_int",
+   "automatable": {
+    "voiceStealing": "2"
+   },
+   "parameters": [
+    {
+     "name": "throttle"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "4",
+    "soundSize": "3",
+    "minimumExtent": "240"
+   }
+  },
+  "horn": {
+   "outputFormat": "2",
+   "group": "{c89669bc-901a-4b52-91b7-46a85014ee0d}",
+   "group_name": "grp_horn",
+   "automatable": {
+    "voiceStealing": "2",
+    "dopplerEnabled": "true"
+   },
+   "parameters": [],
+   "spatialiser": {
+    "minimumDistance": "5",
+    "maximumDistance": "19.9999962"
+   }
+  },
+  "turbo": {
+   "outputFormat": "2",
+   "group": "{35927822-c7cf-43ab-b6a2-447a4386450e}",
+   "group_name": "grp_turbo",
+   "automatable": {
+    "voiceStealing": "2",
+    "dopplerEnabled": "true"
+   },
+   "parameters": [
+    {
+     "name": "boost"
+    },
+    {
+     "name": "bov"
+    },
+    {
+     "name": "bov_decay",
+     "maximum": "10"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "4"
+   }
+  },
+  "wheel": {
+   "outputFormat": "0",
+   "group": "{208daf59-324a-4a13-994e-d284dac196ce}",
+   "group_name": "grp_wheel_open",
+   "automatable": {
+    "voiceStealing": "2",
+    "dopplerEnabled": "true",
+    "dopplerScale": "150"
+   },
+   "parameters": [
+    {
+     "name": "brake"
+    },
+    {
+     "name": "speed",
+     "maximum": "500"
+    },
+    {
+     "name": "inflation"
+    },
+    {
+     "name": "suspension_damage"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "1.5",
+    "maximumDistance": "10",
+    "soundSize": "0.5",
+    "minimumExtent": "40"
+   }
+  },
+  "tractioncontrol_ext": {
+   "outputFormat": "2",
+   "group": "{9d0c46e7-d738-480e-8d5f-b5fb315a701a}",
+   "group_name": "grp_tractioncontrol_ext",
+   "automatable": {
+    "voiceStealing": "2",
+    "dopplerEnabled": "true"
+   },
+   "parameters": [
+    {
+     "name": "decay"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "3",
+    "maximumDistance": "11.9999924",
+    "soundSize": "0.5",
+    "minimumExtent": "30"
+   }
+  },
+  "skid_int": {
+   "outputFormat": "2",
+   "group": "{37bf169d-f171-4af4-a924-d65a1f998264}",
+   "group_name": "grp_skid_int",
+   "automatable": {
+    "voiceStealing": "2"
+   },
+   "parameters": [],
+   "spatialiser": {
+    "maximumDistance": "15"
+   }
+  },
+  "tractioncontrol_int": {
+   "outputFormat": "2",
+   "group": "{dcf6df4b-a019-4819-97e4-d1b3ed67e4b1}",
+   "group_name": "grp_tractioncontrol_int",
+   "automatable": {
+    "voiceStealing": "2"
+   },
+   "parameters": [
+    {
+     "name": "decay"
+    }
+   ],
+   "spatialiser": {
+    "minimumDistance": "3",
+    "maximumDistance": "15"
+   }
+  }
+ },
+ "sdk_tree_sha256": "32b0eeb8cf86b706dda0b2bde6681d4e106ad910c3fcc5c310a41d83a9c6e70f"
+}
