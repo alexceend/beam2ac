@@ -1,0 +1,55 @@
+name: build
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # x64 == x86_64 == win64 ; arm64 == aarch64 (un solo build por arquitectura)
+          - {name: windows-x64, os: windows-latest, ui: true}
+          - {name: linux-x64, os: ubuntu-latest, ui: false}
+          - {name: linux-arm64, os: ubuntu-24.04-arm, ui: false}
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: "Dependencias (Windows, interfaz nativa con huellas)"
+        run: |
+          python -m pip install pyinstaller
+          if [ "${{ matrix.ui }}" = "true" ]; then python -m pip install --require-hashes -r requirements-ui.txt; fi
+      - name: Compilar
+        run: python -m PyInstaller packaging/beam2ac.spec --noconfirm --clean --distpath dist --workpath build
+      - name: Empaquetar
+        run: |
+          cp LICENSE dist/beam2ac/LICENSE
+          if [ "${{ matrix.ui }}" = "true" ]; then
+            printf 'beam2ac\r\n\r\n1. Descomprime toda la carpeta (no hace falta instalar nada).\r\n2. Abre beam2ac.exe.\r\n3. En Ajustes indica las rutas de Blender y Assetto Corsa (no se incluyen).\r\nRequiere Edge WebView2 Runtime (incluido en Windows 11 y Windows 10 actualizado).\r\n' > dist/beam2ac/LEEME.txt
+            (cd dist && 7z a -tzip ../beam2ac-${{ matrix.name }}.zip beam2ac)
+          else
+            printf 'beam2ac\n\n1. tar xzf beam2ac-%s.tar.gz && ./beam2ac/beam2ac\n2. Se abre el navegador en http://127.0.0.1:8766/\n3. En Ajustes indica las rutas de Blender y Assetto Corsa (no se incluyen).\nDatos en ~/beam2ac y ~/.config/beam2ac.\n' "${{ matrix.name }}" > dist/beam2ac/LEEME.txt
+            tar czf beam2ac-${{ matrix.name }}.tar.gz -C dist beam2ac
+          fi
+      - name: Arranque (Linux)
+        if: matrix.ui == false
+        run: |
+          # el servidor debe responder en 127.0.0.1 (la salida de un binario redirigido a fichero va con buffer)
+          BEAM2AC_DATA_DIR="$RUNNER_TEMP/b2a" BROWSER=true PYTHONUNBUFFERED=1 dist/beam2ac/beam2ac > log.txt 2>&1 &
+          pid=$!
+          for _ in $(seq 20); do curl -sf -o /dev/null http://127.0.0.1:8766/ && ok=1 && break; sleep 1; done
+          kill $pid || true
+          cat log.txt
+          test "${ok:-0}" = 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beam2ac-${{ matrix.name }}
+          path: beam2ac-${{ matrix.name }}.*

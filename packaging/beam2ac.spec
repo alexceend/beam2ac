@@ -1,0 +1,23 @@
+# PyInstaller: .venv-ui\Scripts\python.exe -m PyInstaller packaging/beam2ac.spec --noconfirm
+# Datos de solo lectura (código fuente incluido: huellas de etapas y el script de Blender lo necesitan).
+# NO se empaqueta docs/references (SDK de FMOD): restricción de redistribución.
+import sys
+from pathlib import Path
+
+root = Path(SPECPATH).parent
+datas = [
+    (str(root / "src"), "src"),
+    (str(root / "catalog"), "catalog"),
+    (str(root / "measurements"), "measurements"),
+    (str(root / "pyproject.toml"), "."),
+]
+a = Analysis(
+    [str(root / "packaging" / "launcher.py")],
+    pathex=[str(root)],
+    datas=datas,
+    hiddenimports=["webview.platforms.winforms", "clr_loader", "pythonnet"] if sys.platform == "win32" else [],
+    excludes=["pytest", "black", "flake8"],
+)
+pyz = PYZ(a.pure)
+exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name="beam2ac", console=sys.platform != "win32")
+coll = COLLECT(exe, a.binaries, a.datas, name="beam2ac")
