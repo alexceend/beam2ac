@@ -397,11 +397,13 @@ function analysisView(r, withCreate) {
         window.pywebview ? el("button", { class: "secondary", type: "button", onclick: async () => { const p = await window.pywebview.api.pick_folder(); if (p) f.dest.value = p; } }, "Elegir destino…") : null),
       el("p", { class: "muted small" }, "La ruta de Assetto Corsa se toma de Ajustes: de ahí sale el piloto sentado y sus manos (solo se lee). El coche siempre lleva volante y piloto; como usa material del juego original, el paquete es solo para tu equipo: no se puede compartir ni publicar. Después puedes ajustar cámaras y piloto en «Vista 3D»."),
       noBlender() ? el("div", { class: "notice err" }, BLENDER_MSG) : null,
+    !noBlender() && noAddon() ? el("div", { class: "notice err" }, ADDON_MSG) : null,
+      !noBlender() && noAddon() ? el("div", { class: "notice err" }, ADDON_MSG) : null,
       acRoot() ? null : el("div", { class: "notice err" }, AC_MSG),
       r.audio && r.audio.present ? el("p", { class: "muted small" }, r.audio.fmod.compatible ? "Sonido: el motor sonará con el audio del coche; se genera solo (FMOD 1.08.12 detectado)." : "Sonido: FMOD 1.08.12 no está instalado, así que el coche saldrá sin sonido propio. Indica tu carpeta en Ajustes para incluirlo.") : null,
       r.exportable_today ? null : el("div", { class: "notice err" }, "Conversión desactivada: el análisis encontró errores bloqueantes (ver «Claves críticas sin valor»). Puede crear el proyecto y resolverlos con decisiones."),
       el("div", { class: "actions" },
-        el("button", { class: "primary lockable", type: "submit", value: "convert", disabled: !r.exportable_today || noBlender() || !acRoot() }, "Comenzar la conversión"),
+        el("button", { class: "primary lockable", type: "submit", value: "convert", disabled: !r.exportable_today || noKn5() || !acRoot() }, "Comenzar la conversión"),
         el("button", { class: "secondary", type: "submit", value: "create" }, "Solo crear el proyecto"),
         el("span", { id: "an-msg", class: "small" })));
     const bv = r.exportable_today ? benchView(r, f) : null;
@@ -620,6 +622,9 @@ async function createFromAnalysis(r, f) {
 // Blender es obligatorio: sin el modelo 3D el coche no se puede jugar en Assetto Corsa
 const BLENDER_MSG = "Falta Blender 3.6: sin el modelo 3D el coche no se puede jugar. Indica tu ubicación en Ajustes.";
 const noBlender = () => !(SETTINGS.effective || {}).blender_path;
+const ADDON_MSG = "Falta el complemento KN5 de Blender (assetto_corsa_tools): sin él no se exporta el modelo 3D. Instálalo en Ajustes.";
+const noAddon = () => !!SETTINGS.blender_addon && !SETTINGS.blender_addon.installed;  // sin estado cargado no se bloquea
+const noKn5 = () => noBlender() || noAddon();
 const acRoot = () => (SETTINGS.effective || {}).ac_root || null;  // la ruta de AC se guarda solo en Ajustes
 const AC_MSG = "Falta la ruta de Assetto Corsa (de ella se toma el piloto): indícala en Ajustes (rueda de la barra superior).";
 // Ajustes del usuario (rutas de AC, Steam, Blender, FMOD, carpeta de entrega, piloto por defecto)
@@ -648,24 +653,24 @@ const SET_HELP = {
   export_dir: "Para qué: dónde se deja el paquete del coche exportado. Importancia: baja; vacía, el paquete queda en la carpeta exports/ del proyecto. No puede ser una carpeta de AC ni de BeamNG.",
 };
 // Complemento KN5 de Blender (assetto_corsa_tools, GPL-3): se descarga del origen solo al pulsar y confirmar
-function addonControls() {
+const ADDON_HELP = "Para qué: exportar el modelo 3D a .kn5 desde Blender (de terceros: Moppius, GPL-3.0). Importancia: obligatoria; sin él la conversión y la exportación quedan desactivadas. «Instalar complemento KN5» lo descarga del repositorio original (commit fijado, huella verificada) y lo copia a la carpeta de complementos de Blender 3.6; nunca sobrescribe una instalación existente.";
+const openUrl = (u) => (window.pywebview ? window.pywebview.api.open_url(u) : window.open(u, "_blank", "noopener"));
+function addonRow() {
   const a = SETTINGS.blender_addon;
-  if (!a) return null;  // los ajustes no cargaron: sin estado no hay botón
-  const ok = a.installed && a.matches_pinned;
-  const msg = el("span", { class: "small " + (ok ? "" : "warn") },
-    ok ? "Complemento KN5 de Blender: instalado" : a.installed ? "Complemento KN5: instalado pero distinto de la versión fijada" : "Complemento KN5 de Blender: no instalado");
-  if (a.installed) return msg;
-  return [msg, el("button", { class: "secondary", type: "button", onclick: async (e) => {
-    if (!confirm(`Se descargará assetto_corsa_tools (GPL-3.0, commit ${a.pinned_commit.slice(0, 7)}) de ${a.source} y se copiará a ${a.path}. ¿Continuar?`)) return;
-    e.target.disabled = true;
-    try { SETTINGS.blender_addon = await api("/api/blender_addon", { confirm: true }); toast("Complemento instalado", "ok"); renderSettings(); }
-    catch (err) { toast(err.message, "warn"); e.target.disabled = false; }
-  } }, "Instalar complemento KN5")];
-}
-async function loadSettings() {
-  try { SETTINGS = await api("/api/settings"); } catch (e) { toast(e.message, "warn"); }
-  renderSettings();
-  if (CURRENT && DETAIL) renderAsistente();  // los botones dependen de la ruta de AC y de Blender
+  if (!a) return null;  // los ajustes no cargaron: sin estado no hay fila
+  const state = a.installed ? (a.matches_pinned ? "instalado" : "instalado, distinto de la versión fijada") : "no instalado";
+  return el("div", {},
+    el("div", { class: "set-head" },
+      el("label", {}, "Complemento KN5 de Blender (assetto_corsa_tools)", el("span", { class: "info", tabindex: "0", title: ADDON_HELP, "aria-label": ADDON_HELP }, "ⓘ")),
+      el("span", { class: "inuse" + (a.installed ? "" : " missing") }, "En uso: " + state)),
+    el("div", { class: "actions" },
+      a.installed ? null : el("button", { class: "secondary", type: "button", onclick: async (e) => {
+        if (!confirm(`Se descargará assetto_corsa_tools (GPL-3.0, commit ${a.pinned_commit.slice(0, 7)}) de ${a.source} y se copiará a ${a.path}. ¿Continuar?`)) return;
+        e.target.disabled = true;
+        try { SETTINGS.blender_addon = await api("/api/blender_addon", { confirm: true }); toast("Complemento instalado", "ok"); renderSettings(); if (CURRENT && DETAIL) renderAsistente(); }
+        catch (err) { toast(err.message, "warn"); e.target.disabled = false; }
+      } }, "Instalar complemento KN5"),
+      el("button", { class: "secondary", type: "button", onclick: () => openUrl(a.source) }, "Ver el complemento en GitHub")));
 }
 // Aviso naranja en Inicio: rutas de Ajustes sin guardar y qué dejaría de funcionar sin ellas
 const SETUP_NEEDS = [
@@ -696,16 +701,15 @@ function renderSettings() {
     try { SETTINGS = await api("/api/settings", body); toast("Ajustes guardados", "ok"); renderSettings(); loadEnvironment(); if (CURRENT && DETAIL) renderAsistente(); }
     catch (err) { $("set-msg").textContent = err.message; $("set-msg").className = "small warn"; }
   } },
-    SET_FIELDS.map(([name, label, ph]) => el("div", {},
+    SET_FIELDS.flatMap(([name, label, ph]) => [el("div", {},
       el("div", { class: "set-head" }, el("label", {}, label, SET_HELP[name] ? el("span", { class: "info", tabindex: "0", title: SET_HELP[name], "aria-label": SET_HELP[name] }, "ⓘ") : null),
         inUse[name] !== undefined ? el("span", { class: "inuse" + (inUse[name] ? "" : " missing") }, "En uso: " + (inUse[name] || "no encontrado")) : null),
       el("div", { class: "actions" },
         el("input", { name, type: "text", value: s[name] || "", placeholder: ph, style: "flex:1;min-width:260px" }),
-        name === "blender_path" ? addonControls() : null,
         DOWNLOADS[name] ? el("button", { class: "secondary", type: "button", onclick: () => (window.pywebview ? window.pywebview.api.open_url(DOWNLOADS[name][1]) : window.open(DOWNLOADS[name][1], "_blank", "noopener")) }, DOWNLOADS[name][0]) : null,
         window.pywebview ? [
           name === "blender_path" ? el("button", { class: "secondary", type: "button", onclick: async () => { const p = await window.pywebview.api.pick_exe(); if (p) f[name].value = p; } }, "Elegir blender.exe…") : null,
-          el("button", { class: "secondary", type: "button", onclick: async () => { const p = await window.pywebview.api.pick_folder(); if (p) f[name].value = p; } }, "Elegir carpeta…")] : null))),
+          el("button", { class: "secondary", type: "button", onclick: async () => { const p = await window.pywebview.api.pick_folder(); if (p) f[name].value = p; } }, "Elegir carpeta…")] : null)), name === "blender_path" ? addonRow() : null]),
     el("div", { class: "actions" }, el("button", { class: "primary", type: "submit" }, "Guardar ajustes"), el("span", { id: "set-msg", class: "small" })));
   box.replaceChildren(f);
 }
@@ -859,12 +863,13 @@ function renderAsistente() {
     extrasBlock(),
     el("p", { class: "muted small" }, (SETTINGS.effective || {}).fmod_compatible ? "Sonido: se genera solo con FMOD 1.08.12 a partir de los WAV del coche." : "Sonido: FMOD 1.08.12 no está instalado; el coche saldrá sin sonido propio."),
     noBlender() ? el("div", { class: "notice err" }, BLENDER_MSG) : null,
+    !noBlender() && noAddon() ? el("div", { class: "notice err" }, ADDON_MSG) : null,
     acRoot() ? null : el("div", { class: "notice err" }, AC_MSG),
     el("label", { class: "opt" }, el("input", { type: "checkbox", name: "confirm", required: true }), " Confirmo crear un intento nuevo *",
       el("span", { class: "opt-help" }, "Obligatoria. Marcada: se crea una carpeta nueva con el coche dentro del proyecto. Nunca se borra ni se sobrescribe una exportación anterior. Sin marcar, el botón Exportar no funciona.")),
     el("label", { class: "opt" }, el("input", { type: "checkbox", name: "install_overwrite" }), " Instalar en Assetto Corsa y sobrescribir si ya existe un coche con el mismo car_id",
       el("span", { class: "opt-help" }, "Marcado: además de exportar, el coche se copia a la carpeta de coches de tu Assetto Corsa y ya podrás conducirlo. Si ya había uno con el mismo car_id, el anterior se guarda en la papelera de beam2ac (recuperable). Desmarcado (lo normal): no se toca el juego y copiar el coche a mano lo haces tú. Un coche «bloqueado» nunca se instala.")),
-    el("div", { class: "actions" }, el("button", { class: "primary lockable", type: "submit", disabled: noBlender() || !acRoot() }, "Exportar"),
+    el("div", { class: "actions" }, el("button", { class: "primary lockable", type: "submit", disabled: noKn5() || !acRoot() }, "Exportar"),
       el("span", { class: "muted small" }, "Crea una exportación nueva con todo lo elegido arriba. Hace falta marcar la confirmación.")));
   pane.replaceChildren(
     el("h3", {}, "1 · Etapas del pipeline"),
