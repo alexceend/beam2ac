@@ -24,12 +24,14 @@ from pathlib import Path
 
 from src.safe_paths import new_output_dir
 
+from .blender_addon import REPO_URL
 from .desktop import make_desktop_server
 from .workspace import PROJECTS_ROOT, Workspace
 
 DOWNLOAD_URLS = (
     "https://www.blender.org/download/lts/3-6/",
     "https://www.fmod.com/download",
+    REPO_URL,  # origen del complemento KN5 de Blender (fila de Ajustes)
 )
 
 
