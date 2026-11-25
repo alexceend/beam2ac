@@ -149,6 +149,57 @@ def extract_zip_audio(zip_path: Path | str, dest: Path) -> Path:
     return dest
 
 
+BUILD_ATTEMPTS = 3
+
+
+def _keep_logs(work: Path, out: Path, attempt: int) -> None:
+    """Órdenes y registros del intento a la carpeta definitiva (el proyecto FMOD temporal se borra)."""
+    for name in ("spec.json", "build_events.js", "LEEME.md"):
+        if (work / name).is_file() and not (out / name).exists():
+            shutil.copyfile(work / name, out / name)
+    for name, dst in (
+        ("fmod_output.txt", f"fmod_output_intento{attempt}.txt"),
+        ("fmod_project/build_events_log.txt", f"build_events_log_intento{attempt}.txt"),
+    ):
+        if (work / name).is_file():
+            shutil.copyfile(work / name, out / dst)
+
+
+def _staged_build(
+    spec: dict[str, Any], out: Path, fmod_cl: str, car_id: str, report: dict[str, Any]
+) -> Path:
+    """Construye el banco en una carpeta temporal CORTA y lo copia a ``out/prebuilt``.
+
+    FMOD Studio 1.08 falla de forma intermitente al escribir ``.unsaved/Metadata/AudioFile/{guid}.xml`` («Error writing
+    to … Make sure you have write permission») y entonces ``-build`` termina con «Could not locate bank»: pasó con el
+    proyecto de la app (ruta de 108 caracteres, Ibiza ``exports/007``) y también en una ruta corta. Cada intento usa un
+    proyecto nuevo (el parcial no sirve); tras ``BUILD_ATTEMPTS`` fallos se informa con los registros de todos.
+    """
+    import tempfile
+
+    events = set(spec["secondary"]) | set(spec["engine"])
+    last: Exception | None = None
+    for attempt in range(1, BUILD_ATTEMPTS + 1):
+        work = Path(tempfile.mkdtemp(prefix="b2a_fm_"))
+        try:
+            fmod_build.prepare_project(spec, work, fmod_cl)
+            try:
+                report["build"] = fmod_build.run_build(work, fmod_cl, car_id)
+                dst = fmod_build.collect(work, car_id, events)
+            finally:
+                _keep_logs(work, out, attempt)
+            shutil.copytree(dst, out / "prebuilt")
+            report["build_attempts"] = attempt
+            return out / "prebuilt"
+        except fmod_build.AudioBuildError as exc:
+            last = exc
+        finally:
+            shutil.rmtree(work, ignore_errors=True)
+    raise fmod_build.AudioBuildError(
+        f"{last} (tras {BUILD_ATTEMPTS} intentos; ver fmod_output_intento*.txt)"
+    )
+
+
 def run(
     vehicle_dir: Path | str,
     car_id: str,
@@ -201,22 +252,18 @@ def run(
                     "banco reutilizado: mismas entradas, plantilla y FMOD (sin reconstruir)"
                 )
                 raise _Reused
-            fmod_build.prepare_project(
-                spec, out, str(Path(fmod["path"]) / "fmodstudiocl.exe")
-            )
-            project = True
-            if not build:
-                report["note"] = "construcción no pedida: órdenes en LEEME.md"
-            elif not fmod["compatible"]:
+            fmod_cl = str(Path(fmod["path"]) / "fmodstudiocl.exe")
+            if not build or not fmod["compatible"]:
+                fmod_build.prepare_project(spec, out, fmod_cl)
+                project = True
                 report["note"] = (
-                    f"FMOD 1.08.12 no disponible ({fmod['path']}): proyecto preparado, banco NO construido"
+                    "construcción no pedida: órdenes en LEEME.md"
+                    if not build
+                    else f"FMOD 1.08.12 no disponible ({fmod['path']}): proyecto preparado, banco NO construido"
                 )
             else:
-                report["build"] = fmod_build.run_build(
-                    out, str(Path(fmod["path"]) / "fmodstudiocl.exe"), car_id
-                )
-                events = set(spec["secondary"]) | set(spec["engine"])
-                dst = fmod_build.collect(out, car_id, events)
+                project = True
+                dst = _staged_build(spec, out, fmod_cl, car_id, report)
                 bank = True
                 bank_sha = hashlib.sha256(
                     (dst / f"{car_id}.bank").read_bytes()
