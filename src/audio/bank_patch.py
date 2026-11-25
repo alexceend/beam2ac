@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import array
+import hashlib
 import struct
 import sys
 import uuid
@@ -344,6 +345,21 @@ def patch_samples(snd: SndChunk, wavs: dict[int, Path]) -> None:
         pcm = resample_linear(pcm, rate, s.rate)
         s.samples = len(pcm) // 2
         s.data = pcm + bytes(32 + _pad(len(pcm), 32))  # FMOD: >= 32 bytes, a 32
+    rehash(snd.fsb)
+
+
+def rehash(f: Fsb5) -> None:
+    """Clave de identidad nueva (16 bytes en 36..52) para un FSB5 modificado.
+
+    IDA (fmod64.dll, códec FSB5): el cargador NO valida ese campo contra los datos, pero lo
+    usa como clave de una caché de FSB ya cargados: dos FSB con la misma clave comparten
+    cabeceras y muestras en la misma sesión. Un FSB parcheado con la clave del original
+    sonaría con el audio del original si ambos están cargados. Se usa sha256 del contenido
+    (determinista y único por contenido); los 8 bytes finales no se tocan.
+    """
+    h = hashlib.sha256(b"".join(s.data for s in f.samples))
+    h.update(b"".join(s.name.encode("latin1") for s in f.samples))
+    f.hash24 = h.digest()[:16] + f.hash24[16:]
 
 
 def patch_bank(buf: bytes, wavs: dict[int, Path]) -> bytes:

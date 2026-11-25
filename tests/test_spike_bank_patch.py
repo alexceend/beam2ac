@@ -102,6 +102,9 @@ class TestPatch(unittest.TestCase):
             self.assertEqual(bp.rebuild_bank(new), out)
             a, b = bp.bank_fsb(old).fsb, bp.bank_fsb(new).fsb
             self.assertEqual([s.name for s in a.samples], [s.name for s in b.samples])
+            # clave de caché del FSB5 (IDA, fmod64): distinta del original, 8 bytes finales iguales
+            self.assertNotEqual(a.hash24[:16], b.hash24[:16])
+            self.assertEqual(a.hash24[16:], b.hash24[16:])
             self.assertEqual(b.samples[0].samples, 11025)
             self.assertEqual(b.samples[5].samples, 22050)
             for i in range(len(a.samples)):
