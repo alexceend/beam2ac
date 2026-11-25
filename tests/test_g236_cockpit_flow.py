@@ -21,13 +21,17 @@ class CockpitSaveGuards(unittest.TestCase):
             mock.patch.object(CE, "ROOT", self.tmp / "edits"),
             mock.patch.object(CE, "project_key", lambda proj: KEY),
             mock.patch.object(Workspace, "_project", lambda self, pid: object()),
-            mock.patch("src.project.cockpit_edits.ensure_safe_output_path", lambda p: p),
+            mock.patch(
+                "src.project.cockpit_edits.ensure_safe_output_path", lambda p: p
+            ),
         ):
             p.start()
             self.addCleanup(p.stop)
 
     def test_roundtrip_and_restore_keep_history(self):
-        r = self.ws.cockpit_save("a", {"key": KEY, "base_version": 0, "items": {"hips": [0, 1, 2]}})
+        r = self.ws.cockpit_save(
+            "a", {"key": KEY, "base_version": 0, "items": {"hips": [0, 1, 2]}}
+        )
         self.assertEqual(r["version"], 1)
         self.assertEqual(CE.current(KEY)["items"], {"hips": [0.0, 1.0, 2.0]})
         r = self.ws.cockpit_save("a", {"key": KEY, "base_version": 1, "reset": True})
@@ -40,15 +44,21 @@ class CockpitSaveGuards(unittest.TestCase):
         self.assertEqual(CE.current(KEY)["version"], 0)
 
     def test_stale_version_rejected(self):
-        self.ws.cockpit_save("a", {"key": KEY, "base_version": 0, "items": {"bonnet": [0, 1, 1]}})
+        self.ws.cockpit_save(
+            "a", {"key": KEY, "base_version": 0, "items": {"bonnet": [0, 1, 1]}}
+        )
         with self.assertRaises(WorkspaceError):
-            self.ws.cockpit_save("a", {"key": KEY, "base_version": 0, "items": {"bonnet": [0, 2, 1]}})
+            self.ws.cockpit_save(
+                "a", {"key": KEY, "base_version": 0, "items": {"bonnet": [0, 2, 1]}}
+            )
         self.assertEqual(CE.current(KEY)["items"]["bonnet"], [0.0, 1.0, 1.0])
 
     def test_invalid_values_do_not_corrupt(self):
         self.ws.cockpit_save("a", {"key": KEY, "items": {"hips": [0, 1, 2]}})
         with self.assertRaises(WorkspaceError):
-            self.ws.cockpit_save("a", {"key": KEY, "items": {"hips": [0, 1, float("nan")]}})
+            self.ws.cockpit_save(
+                "a", {"key": KEY, "items": {"hips": [0, 1, float("nan")]}}
+            )
         self.assertEqual(CE.current(KEY)["version"], 1)
 
 

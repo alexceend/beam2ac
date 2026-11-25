@@ -88,8 +88,46 @@ def clean(body: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+def _too_broad(folder: str) -> str | None:
+    """Motivo si la carpeta es demasiado amplia para ser una raíz de salida (unidad, perfil, sistema)."""
+    p = Path(folder).expanduser().resolve()
+    if p == Path(p.anchor):
+        return "es la raíz de una unidad"
+    if p == Path.home().resolve():
+        return "es la carpeta personal completa"
+    system = [
+        os.environ.get(v)
+        for v in ("SystemRoot", "ProgramFiles", "ProgramFiles(x86)", "ProgramData")
+    ]
+    system += [
+        "/usr",
+        "/etc",
+        "/bin",
+        "/sbin",
+        "/var",
+        "/boot",
+        "/lib",
+        "/opt",
+        "/proc",
+        "/sys",
+    ]
+    for sysdir in filter(None, system):
+        r = Path(sysdir).resolve()
+        if p == r or r in p.parents:
+            return f"está dentro de una carpeta del sistema ({r})"
+    return None
+
+
 def save(body: dict[str, Any], path: Path | None = None) -> dict[str, Any]:
     data = clean(body)
+    for k in (
+        "projects_dir",
+        "export_dir",
+    ):  # se rechaza ANTES de ampliar las raíces permitidas
+        if k in data:
+            why = _too_broad(data[k])
+            if why:
+                raise ValueError(f"{k}: {why}")
     apply(
         data
     )  # las carpetas elegidas pasan a ser raíces permitidas antes de comprobarlas

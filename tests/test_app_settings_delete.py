@@ -76,6 +76,14 @@ class TestProjects(unittest.TestCase):
         self.assertTrue(d.exists())
 
     def test_driver_mass_is_editable_and_validated(self) -> None:
+        # el proyecto sintético no tiene origen real: se sustituyen la carga y el recálculo de masa
+        patches = (
+            mock.patch.object(self.ws, "_project", return_value=mock.Mock()),
+            mock.patch("src.app.mass_choice.rederive", return_value=[]),
+        )
+        for p in patches:
+            p.start()
+            self.addCleanup(p.stop)
         make_project(self.root, "m1")
         self.assertEqual(
             self.ws.set_driver_mass("m1", {"driver_mass": 82.5})["driver_mass_kg"], 82.5

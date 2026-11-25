@@ -172,7 +172,9 @@ class CvtSetup:
     low_rpm: Sourced  # cvtLowRPM
     high_rpm: Sourced  # cvtHighRPM
     aggression: Sourced  # cvtAggression (ganancia del lazo de rpm; 0,5 por defecto)
-    aggression_down: Sourced  # aggressionSmoothingDown (0,15 por defecto; vehicleController l. 1016)
+    aggression_down: (
+        Sourced  # aggressionSmoothingDown (0,15 por defecto; vehicleController l. 1016)
+    )
     automatic_modes: Sourced  # automaticModes ("PRND" por defecto)
     defaults_used: dict[str, str] = field(default_factory=dict)
 

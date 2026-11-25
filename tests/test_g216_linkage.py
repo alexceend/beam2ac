@@ -32,9 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SAMPLES = ROOT / "samples_beamng"
 IBIZA = ROOT / "sample_beamng/vehicles/seat_ibiza_acfr"
 MODS = Path.home() / "AppData/Local/BeamNG/BeamNG.drive/current/mods"
-COMMON = Path(
-    (default_beamng_root() / "content/vehicles/common.zip").as_posix()
-)
+COMMON = Path((default_beamng_root() / "content/vehicles/common.zip").as_posix())
 SEVEN = [
     "2020_rpm_atacama_sport__4x4",
     "2020_rpm_atlanta_gt_3_6t",
@@ -361,7 +359,10 @@ class TestCorpusLinkage(unittest.TestCase):
         # G2.19: el puntal de atlanta (raíl + brazo + bieleta) se mide como
         # strut_rail (antes underconstrained: el modelo no representaba el raíl)
         want["2020_rpm_atlanta_gt_3_6t"] = ("strut_rail", "dwb_equivalent")
-        want["2020_rpm_atacama_sport__4x4"] = ("dwb_5link", "rigid_axle")  # G2.44: eje de barras
+        want["2020_rpm_atacama_sport__4x4"] = (
+            "dwb_5link",
+            "rigid_axle",
+        )  # G2.44: eje de barras
         for name, (f, r) in want.items():
             with self.subTest(vehicle=name):
                 ir = _ir(name)
@@ -376,9 +377,16 @@ class TestCorpusLinkage(unittest.TestCase):
         ir = _ir(name)
         self.assertEqual(ir.get("suspension.axles.rear.linkage").value, "strut_rail")
         res = _res(name)
-        for key in ("REAR/TYPE", "REAR/SPRING_RATE", "REAR/WBCAR_STEER", "REAR/STRUT_CAR"):
+        for key in (
+            "REAR/TYPE",
+            "REAR/SPRING_RATE",
+            "REAR/WBCAR_STEER",
+            "REAR/STRUT_CAR",
+        ):
             with self.subTest(key=key):
-                self.assertIn(res[f"ac:suspensions.ini/{key}"].status, ("inferred", "known"))
+                self.assertIn(
+                    res[f"ac:suspensions.ini/{key}"].status, ("inferred", "known")
+                )
 
     @need("porsche_gt3_rs")
     def test_38022_rear_is_fitted(self):

@@ -25,6 +25,7 @@ jobs:
           python-version: "3.13"
       - name: "Dependencias (Windows, interfaz nativa con huellas)"
         run: |
+          python -m pip install -r requirements.txt
           python -m pip install pyinstaller
           if [ "${{ matrix.ui }}" = "true" ]; then python -m pip install --require-hashes -r requirements-ui.txt; fi
       - name: Compilar

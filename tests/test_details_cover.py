@@ -21,14 +21,40 @@ def png(w: int, h: int) -> bytes:
 
 class TestDetails(unittest.TestCase):
     def test_clean_and_apply(self) -> None:
-        d = D.clean({"description": " hola ", "class": "Race", "year": "1995", "tags": "rwd; #race, ", "brand": ""})
-        self.assertEqual(d, {"description": "hola", "class": "race", "year": 1995, "tags": ["rwd", "#race"]})
+        d = D.clean(
+            {
+                "description": " hola ",
+                "class": "Race",
+                "year": "1995",
+                "tags": "rwd; #race, ",
+                "brand": "",
+            }
+        )
+        self.assertEqual(
+            d,
+            {
+                "description": "hola",
+                "class": "race",
+                "year": 1995,
+                "tags": ["rwd", "#race"],
+            },
+        )
         ui = {"brand": "X", "tags": ["a"], "name": "n"}
-        self.assertEqual(sorted(D.apply_to_ui(ui, d)), ["class", "description", "tags", "year"])
-        self.assertEqual((ui["brand"], ui["tags"], ui["year"]), ("X", ["rwd", "#race"], 1995))
+        self.assertEqual(
+            sorted(D.apply_to_ui(ui, d)), ["class", "description", "tags", "year"]
+        )
+        self.assertEqual(
+            (ui["brand"], ui["tags"], ui["year"]), ("X", ["rwd", "#race"], 1995)
+        )
 
     def test_invalid(self) -> None:
-        for bad in ({"class": "boat"}, {"year": "abc"}, {"year": 3000}, {"brand": "x" * 61}, {"tags": ["a"] * 21}):
+        for bad in (
+            {"class": "boat"},
+            {"year": "abc"},
+            {"year": 3000},
+            {"brand": "x" * 61},
+            {"tags": ["a"] * 21},
+        ):
             with self.assertRaises(D.DetailsError):
                 D.clean(bad)
 
@@ -79,10 +105,15 @@ class TestRenderLock(unittest.TestCase):
                 return b"jpg"
 
             with mock.patch.object(cover, "_render", fake):
-                ts = [threading.Thread(target=cover.render_cover, args=(kn5, "blender")) for _ in range(5)]
+                ts = [
+                    threading.Thread(target=cover.render_cover, args=(kn5, "blender"))
+                    for _ in range(5)
+                ]
                 [t.start() for t in ts]
                 [t.join() for t in ts]
-        self.assertEqual((len(calls), peak[0]), (1, 1))  # un solo Blender, el resto reutiliza el resultado
+        self.assertEqual(
+            (len(calls), peak[0]), (1, 1)
+        )  # un solo Blender, el resto reutiliza el resultado
 
 
 class TestCoverJpeg(unittest.TestCase):
@@ -90,16 +121,27 @@ class TestCoverJpeg(unittest.TestCase):
         from PIL import Image
 
         for w, h in ((300, 900), (1920, 400)):
-            self.assertEqual(Image.open(io.BytesIO(to_jpeg(png(w, h)))).size, (1024, 576))
+            self.assertEqual(
+                Image.open(io.BytesIO(to_jpeg(png(w, h)))).size, (1024, 576)
+            )
 
 
-@unittest.skipUnless(os.environ.get("BEAM2AC_BLENDER_TESTS"), "BEAM2AC_BLENDER_TESTS=1 (Blender)")
+@unittest.skipUnless(
+    os.environ.get("BEAM2AC_BLENDER_TESTS"), "BEAM2AC_BLENDER_TESTS=1 (Blender)"
+)
 class TestRender(unittest.TestCase):
     def test_render_eagle(self) -> None:
         from src.project.cover import render_cover
         from src.project.model import blender_path
 
-        kn5 = next(iter(Path("output/projects/eagle_inca_p395_dale_earnhardt_edition/stages/model").glob("*/model.kn5")), None)
+        kn5 = next(
+            iter(
+                Path(
+                    "output/projects/eagle_inca_p395_dale_earnhardt_edition/stages/model"
+                ).glob("*/model.kn5")
+            ),
+            None,
+        )
         if not kn5 or not blender_path():
             self.skipTest("KN5 o Blender no disponibles")
         self.assertGreater(len(render_cover(kn5, blender_path())), 10_000)

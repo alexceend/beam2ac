@@ -214,3 +214,11 @@ dialog.massdlg[id^=dlg-] { max-width: 760px; }
 .actions button.primary { margin-top: 0; }  /* style.css le da 10 px arriba y descuadraba «Guardar» respecto a sus vecinos */
 .notice.warning { border-color: #fab387; background: color-mix(in srgb, #fab387 16%, var(--chip)); }
 .row > .muted.small { align-self: center; }  /* pistas junto a un campo: centradas con él, no pegadas a la etiqueta */
+
+/* enlaces con aspecto de botón (notas del autor) */
+a.linkbtn { display: inline-block; padding: 8px 16px; border-radius: 8px; font-weight: 600; text-decoration: none; color: #fff; }
+a.linkbtn.kofi { background: #ff5e5b; }
+a.linkbtn.repo { background: #24292f; }
+a.linkbtn { display: inline-flex; align-items: center; gap: 8px; }
+a.linkbtn .ico { width: 18px; height: 18px; }
+a.linkbtn:hover { filter: brightness(1.12); }

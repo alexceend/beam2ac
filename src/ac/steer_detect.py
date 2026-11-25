@@ -58,7 +58,8 @@ def list_materials(kn5: Path, eyes: tuple[float, float, float]) -> list[dict[str
                 "vertices": len(v),
                 "distance_m": round(dist, 3),
                 "radius_m": round(radius, 3),
-                "likely": radius <= 0.5 and dist <= BALL,  # objeto pequeño cerca de los ojos
+                "likely": radius <= 0.5
+                and dist <= BALL,  # objeto pequeño cerca de los ojos
             }
         )
     return sorted(rows, key=lambda r: (not r["likely"], r["distance_m"]))
@@ -69,7 +70,8 @@ def detect_steering_wheel(
 ) -> dict[str, Any]:
     """Perfil ``steering_wheel`` (formato de ``rig_steering_wheel``) más ``detected``; ``ValueError`` si no
     hay un volante identificable (nunca se inventa uno). Con ``rim_material`` (elección del usuario) ese
-    material es el aro y no se aplican los criterios de forma: solo se mide su marco y el volumen."""
+    material es el aro y no se aplican los criterios de forma: solo se mide su marco y el volumen.
+    """
     data = Path(kn5).read_bytes()
     k = read_kn5(Path(kn5))
     mats = [m.name for m in split_kn5(data).materials]
@@ -114,11 +116,24 @@ def detect_steering_wheel(
             and max(math.dist(q, c) for q in v) <= 1.3 * r_big + thick
         )
         if ok:
-            cands.append((abs(math.dist(c, eyes) - NOMINAL), name, parent, c, z, r_big, thick, hollow))
+            cands.append(
+                (
+                    abs(math.dist(c, eyes) - NOMINAL),
+                    name,
+                    parent,
+                    c,
+                    z,
+                    r_big,
+                    thick,
+                    hollow,
+                )
+            )
     if not cands and rim_material is not None:
         raise ValueError(f"el material {rim_material!r} no tiene malla en el KN5")
     if not cands:
-        raise ValueError("ninguna malla tiene forma de aro de volante delante de los ojos")
+        raise ValueError(
+            "ninguna malla tiene forma de aro de volante delante de los ojos"
+        )
     cands.sort()
     _, rim, parent, c, z, big_r, thick, hollow = cands[0]
     if rim_material is not None and big_r > 1.5 * R_MAX:
@@ -150,20 +165,25 @@ def detect_steering_wheel(
         "rim_material_token": rim,
         "move_materials": sorted(set(move)),
         "splits": [
-            {"material": m, "mesh_name": f"{slug}_steer_{i}"} for i, m in enumerate(sorted(set(splits)))
+            {"material": m, "mesh_name": f"{slug}_steer_{i}"}
+            for i, m in enumerate(sorted(set(splits)))
         ],
         "split_radius_m": round(RADIAL_MARGIN * big_r, 4),
         "split_axial_m": AXIAL,
         "detected": {
-            "method": "elegido por el usuario"
-            if rim_material is not None
-            else "geometría del KN5 (src/ac/steer_detect.py)",
+            "method": (
+                "elegido por el usuario"
+                if rim_material is not None
+                else "geometría del KN5 (src/ac/steer_detect.py)"
+            ),
             "centre": c,
             "axis": z,
             "rim_radius_m": big_r,
             "rim_thickness_m": thick,
             "hollow": hollow,
-            "candidates": [{"material": x[1], "distance_to_nominal": x[0]} for x in cands],
+            "candidates": [
+                {"material": x[1], "distance_to_nominal": x[0]} for x in cands
+            ],
             "ignored_partial": ignored,
         },
     }

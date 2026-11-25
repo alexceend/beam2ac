@@ -254,6 +254,9 @@ def main():
             {"empty": name, "location": list(em.matrix_world.translation)}
         )
 
+    # defensa en profundidad: build.py ya valida el nombre antes de lanzar Blender
+    if os.path.basename(opts["kn5"]) != opts["kn5"] or not opts["kn5"].endswith(".kn5"):
+        log["errors"].append(f"nombre de KN5 no válido: {opts['kn5']!r}")
     kn5_path = os.path.join(opts["out"], opts["kn5"])
     if not log["errors"]:
         from assetto_corsa_tools.exporter import KN5FileWriter

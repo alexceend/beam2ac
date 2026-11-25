@@ -36,9 +36,9 @@ def _session(tmp: Path, s: str) -> None:
 class TestAeroLua(unittest.TestCase):
     def test_same_cases_as_g215_and_no_steering(self) -> None:
         new = (ar.SCRIPT).read_text("utf-8")
-        old = (
-            G215 / "lua_src/lua/vehicle/extensions/beam2acDirAero.lua"
-        ).read_text("utf-8")
+        old = (G215 / "lua_src/lua/vehicle/extensions/beam2acDirAero.lua").read_text(
+            "utf-8"
+        )
         block = old[old.index("local AERO = {") : old.index("local SETTLE_STEER")]
         self.assertIn(block.split("local SETTLE")[0].strip(), new)
         self.assertIn("local SETTLE_AERO, SAMPLE_AERO = 3.0, 1.0", new)

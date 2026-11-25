@@ -1,4 +1,5 @@
 """El cliente que corta la conexión a mitad de respuesta no debe volcar un traceback."""
+
 import threading
 import unittest
 from http.server import BaseHTTPRequestHandler
@@ -19,7 +20,9 @@ class ConnectionAbortTest(unittest.TestCase):
     def test_other_errors_still_propagate(self) -> None:
         handler = make_desktop_handler(mock.Mock(), threading.Lock())
         h = handler.__new__(handler)
-        with mock.patch.object(BaseHTTPRequestHandler, "handle", side_effect=ValueError):
+        with mock.patch.object(
+            BaseHTTPRequestHandler, "handle", side_effect=ValueError
+        ):
             with self.assertRaises(ValueError):
                 h.handle()
 

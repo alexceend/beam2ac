@@ -1,9 +1,14 @@
 """G2.43: automática con convertidor del 200409 (D-G211-TC b): marchas y FINAL por regla, aproximación declarada."""
+
 import unittest
 
 from tests.test_g211_transmissions import GEARS, _real, _session, have
 
-CARS = {"2021_rpm_portland_touring": 4.44, "2020_rpm_patagonia_xt_v8": None, "2020_rpm_atacama_sport__4x4": None}
+CARS = {
+    "2021_rpm_portland_touring": 4.44,
+    "2020_rpm_patagonia_xt_v8": None,
+    "2020_rpm_atacama_sport__4x4": None,
+}
 
 
 class TestAtcRules(unittest.TestCase):
@@ -20,7 +25,10 @@ class TestAtcRules(unittest.TestCase):
                 self.assertEqual(f.value, ir.drivetrain.final_ratio.value)
                 if final:
                     self.assertEqual(f.value, final)
-                self.assertEqual(by[GEARS + "/COUNT"].value, len(ir.drivetrain.gearbox.forward_ratios))
+                self.assertEqual(
+                    by[GEARS + "/COUNT"].value,
+                    len(ir.drivetrain.gearbox.forward_ratios),
+                )
 
 
 if __name__ == "__main__":

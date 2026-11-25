@@ -99,6 +99,8 @@ class TestFingerprintIgnoresCommonZip(unittest.TestCase):
         )
         if not (zip_.is_file() and common.is_file()):
             self.skipTest("mod o common.zip no instalados")
+        if not STORED.is_file():
+            self.skipTest("medida guardada no disponible (measurements/ local)")
         a = source_fingerprint(load_vehicle_zip(zip_, None, "4974f.pc"))
         b = source_fingerprint(load_vehicle_zip(zip_, common, "4974f.pc"))
         self.assertEqual(a, b)

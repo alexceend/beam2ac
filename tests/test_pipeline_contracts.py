@@ -46,6 +46,8 @@ class TestRegistry(unittest.TestCase):
                 self.assertTrue(p.repeatable and p.writes)
                 for module in p.modules:
                     path = module.split(" ")[0]
+                    if path.startswith("docs/") and not (ROOT / path).exists():
+                        continue  # docs/ no está en git
                     self.assertTrue((ROOT / path).exists(), path)
 
     def test_only_audio_is_optional(self):

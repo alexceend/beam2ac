@@ -29,9 +29,7 @@ BASE = (
     / "output/seat_ibiza_acfr/physics_bases/ibiza_v18bu_2026-10-25/seat_ibiza_acfr/data"
 )
 SPICY = Path.home() / "AppData/Local/BeamNG/BeamNG.drive/current/mods/spicy_mandala.zip"
-COMMON = Path(
-    (default_beamng_root() / "content/vehicles/common.zip").as_posix()
-)
+COMMON = Path((default_beamng_root() / "content/vehicles/common.zip").as_posix())
 _CACHE: dict = {}
 
 

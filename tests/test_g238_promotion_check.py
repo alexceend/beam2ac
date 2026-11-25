@@ -36,14 +36,19 @@ class TestPromotionCheck(unittest.TestCase):
                 bj = json.loads((root / CAR / "build.json").read_text())
                 self.assertEqual(bj["car_id"], CAR)
                 self.assertEqual(bj["source_attempt"], str(b))
-                self.assertEqual(bj["source_manifest_sha256"], __import__("hashlib").sha256(man_b).hexdigest())
+                self.assertEqual(
+                    bj["source_manifest_sha256"],
+                    __import__("hashlib").sha256(man_b).hexdigest(),
+                )
                 self.assertEqual(kn5(a), b"VERSION-A")
                 self.assertEqual(kn5(b), b"VERSION-B")
                 self.assertEqual((a / "manifest.json").read_bytes(), man_a)
                 self.assertEqual((b / "manifest.json").read_bytes(), man_b)
 
                 # B: intento bloqueado e intento con KN5 ausente se rechazan; B sigue intacta
-                bad = base.make_attempt(tmp, "003", verdict=VERDICT_BLOCKED, errors=3, content=b"MALO")
+                bad = base.make_attempt(
+                    tmp, "003", verdict=VERDICT_BLOCKED, errors=3, content=b"MALO"
+                )
                 inc = base.make_attempt(tmp, "004", content=b"INCOMPLETO")
                 (inc / CAR / f"{CAR}.kn5").unlink()
                 for att in (bad, inc):
@@ -52,11 +57,23 @@ class TestPromotionCheck(unittest.TestCase):
                     self.assertTrue(r["reason"])
                 self.assertEqual(kn5(root / CAR), b"VERSION-B")
                 self.assertEqual((root / CAR / "manifest.json").read_bytes(), man_b)
-                self.assertEqual(json.loads((root / CAR / "build.json").read_text())["source_attempt"], str(b))
-                self.assertEqual([p.name for p in root.iterdir() if p.name.startswith(".")], [])
+                self.assertEqual(
+                    json.loads((root / CAR / "build.json").read_text())[
+                        "source_attempt"
+                    ],
+                    str(b),
+                )
+                self.assertEqual(
+                    [p.name for p in root.iterdir() if p.name.startswith(".")], []
+                )
 
                 # el motivo del rechazo queda registrado
-                log = [json.loads(x) for x in (root / builds.LOG).read_text(encoding="utf-8").splitlines()]
+                log = [
+                    json.loads(x)
+                    for x in (root / builds.LOG)
+                    .read_text(encoding="utf-8")
+                    .splitlines()
+                ]
                 rej = [e for e in log if not e["promoted"]]
                 self.assertEqual(len(rej), 2)
                 self.assertIn("veredicto", rej[0]["reason"])

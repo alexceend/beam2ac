@@ -13,7 +13,6 @@
 !/pytest.ini
 !/conftest.py
 !/requirements*.txt
-!/physics_translator_diy.py
 !/src/
 !/tests/
 !/tests_not_required/

@@ -18,9 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 IBIZA = ROOT / "sample_beamng/vehicles/seat_ibiza_acfr"
 SAMPLES = ROOT / "samples_beamng"
 MODS = Path.home() / "AppData/Local/BeamNG/BeamNG.drive/current/mods"
-COMMON = Path(
-    (default_beamng_root() / "content/vehicles/common.zip").as_posix()
-)
+COMMON = Path((default_beamng_root() / "content/vehicles/common.zip").as_posix())
 OLD = "47437d5c0ef36243e4f9edf9409a23dc280d798d9cbb2543f62648ee234b14ed"
 NEW = "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb"
 INERTIA = "ac:engine.ini/ENGINE_DATA/INERTIA"

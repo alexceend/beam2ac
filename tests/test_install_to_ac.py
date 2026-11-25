@@ -13,6 +13,7 @@ class TestInstall(unittest.TestCase):
         self._t = tempfile.TemporaryDirectory()
         self.tmp = Path(self._t.name)
         (self.tmp / "ac" / "content" / "cars").mkdir(parents=True)
+        (self.tmp / "ac" / "acs.exe").write_bytes(b"")  # marcador de instalación de AC
         self.car = self.tmp / "src" / "beam2ac_x"
         (self.car / "data").mkdir(parents=True)
         (self.car / "data" / "car.ini").write_text("new", encoding="utf-8")
@@ -30,7 +31,9 @@ class TestInstall(unittest.TestCase):
         r = I.install_to_ac(self.car, ac, "beam2ac_x", True)
         self.assertEqual((dest / "data" / "car.ini").read_text(), "newer")
         bk = Path(r["replaced_backup"])
-        self.addCleanup(shutil.rmtree, bk, ignore_errors=True)  # la copia va a output/_papelera
+        self.addCleanup(
+            shutil.rmtree, bk, ignore_errors=True
+        )  # la copia va a output/_papelera
         self.assertEqual((bk / "data" / "car.ini").read_text(), "new")
 
     def test_failed_copy_keeps_old_car_and_leaves_no_temp(self) -> None:
@@ -42,13 +45,19 @@ class TestInstall(unittest.TestCase):
         real = shutil.copytree
 
         def boom(src, dst, *a, **k):
-            real(src, dst, *a, **k)  # copia hecha a medias o entera: igual, falla después
+            real(
+                src, dst, *a, **k
+            )  # copia hecha a medias o entera: igual, falla después
             raise OSError("disco lleno")
 
         with mock.patch.object(shutil, "copytree", boom), self.assertRaises(OSError):
             I.install_to_ac(self.car, ac, "beam2ac_x", True)
-        self.assertEqual((dest / "data" / "car.ini").read_text(), "new")  # el coche anterior sigue ahí
-        self.assertEqual([p.name for p in dest.parent.iterdir()], ["beam2ac_x"])  # sin carpeta temporal
+        self.assertEqual(
+            (dest / "data" / "car.ini").read_text(), "new"
+        )  # el coche anterior sigue ahí
+        self.assertEqual(
+            [p.name for p in dest.parent.iterdir()], ["beam2ac_x"]
+        )  # sin carpeta temporal
 
     def test_refusals(self) -> None:
         ac = self.tmp / "ac"

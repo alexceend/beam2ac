@@ -168,6 +168,9 @@ def build_aero(resolved: ResolvedConfig) -> Aero:
         issues.append("vehicleArea ausente: el Lua usa 1")
     front = num(down, "downforceTargetFront", 0.0)
     rear = num(down, "downforceTargetRear", 0.0)
+    for key in ("downforceTargetFront", "downforceTargetRear"):
+        if key not in down:
+            issues.append(f"{key} ausente: el Lua usa 0")
     speed = num(down, "targetSpeedKMH", 200.0)
     if speed <= 0:
         raise AeroDataError("targetSpeedKMH no positiva")

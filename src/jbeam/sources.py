@@ -45,7 +45,7 @@ class ZipMember:
 
     def read_bytes(self) -> bytes:
         with zipfile.ZipFile(self.zip_path, "r") as zf:
-            return zf.read(self.member)
+            return read_member_capped(zf, self.member)
 
     def read_text(self, encoding: str = "utf-8") -> str:
         return self.read_bytes().decode(encoding)
@@ -55,6 +55,18 @@ class ZipMember:
 
 
 SourceFile = Union[Path, ZipMember]
+
+MAX_MEMBER_BYTES = 512 << 20  # un miembro mayor se rechaza (bomba de compresión)
+
+
+def read_member_capped(zf: zipfile.ZipFile, name: str) -> bytes:
+    """``zf.read`` que rechaza miembros cuyo tamaño declarado supera ``MAX_MEMBER_BYTES``."""
+    size = zf.getinfo(name).file_size
+    if size > MAX_MEMBER_BYTES:
+        raise ValueError(
+            f"miembro del zip demasiado grande ({size >> 20} MiB): {name!r}"
+        )
+    return zf.read(name)
 
 
 @dataclass(frozen=True)
@@ -89,7 +101,7 @@ class ZipSource:
         members = self.members(suffix)
         with zipfile.ZipFile(self.zip_path, "r") as zf:
             for member in members:
-                yield member, zf.read(member.member)
+                yield member, read_member_capped(zf, member.member)
 
     def __str__(self) -> str:
         return f"{self.zip_path}!/{self.prefix}"

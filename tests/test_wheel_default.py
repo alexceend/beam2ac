@@ -1,4 +1,5 @@
 """Defecto sin volante: solo se monta con la casilla «Volante» (steering_wheel.json activado)."""
+
 import json
 import tempfile
 import unittest
@@ -22,9 +23,13 @@ class TestWheelDefault(unittest.TestCase):
     def test_disabled_file_and_legacy_file(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             p, f = SimpleNamespace(root=Path(tmp)), Path(tmp) / WHEEL_FILE
-            f.write_text(json.dumps({"enabled": False, "rim_material": "x"}), encoding="utf-8")
+            f.write_text(
+                json.dumps({"enabled": False, "rim_material": "x"}), encoding="utf-8"
+            )
             self.assertIsNone(wheel_override_of(p))
-            f.write_text(json.dumps({"rim_material": "x"}), encoding="utf-8")  # formato anterior
+            f.write_text(
+                json.dumps({"rim_material": "x"}), encoding="utf-8"
+            )  # formato anterior
             self.assertEqual(wheel_override_of(p)["rim_material"], "x")
 
     def test_enable_keeps_chosen_rim(self) -> None:
@@ -32,7 +37,10 @@ class TestWheelDefault(unittest.TestCase):
             f = Path(tmp) / WHEEL_FILE
             _write_wheel(f, "rim_mat")
             _write_wheel(f, None, keep=True)
-            self.assertEqual(json.loads(f.read_text("utf-8")), {"enabled": True, "rim_material": "rim_mat"})
+            self.assertEqual(
+                json.loads(f.read_text("utf-8")),
+                {"enabled": True, "rim_material": "rim_mat"},
+            )
             _write_wheel(f, None)  # «clear»: vuelve a detección automática
             self.assertEqual(json.loads(f.read_text("utf-8")), {"enabled": True})
 

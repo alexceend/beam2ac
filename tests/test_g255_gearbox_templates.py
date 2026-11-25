@@ -764,7 +764,6 @@ def test_geometria_de_piezas_alineada_y_referencias(tmp_path):
     import struct
 
     from src.ac.part_anim import node_refs
-    from src.app import workspace as W
 
     class N:
         def __init__(self, name):

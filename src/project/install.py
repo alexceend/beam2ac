@@ -30,6 +30,10 @@ def install_to_ac(
         raise InstallError("solo se instalan coches propios: car_id «beam2ac_…»")
     if not ac_root:
         raise InstallError("falta la ruta de Assetto Corsa (configúrala en Ajustes)")
+    if not (Path(ac_root) / "acs.exe").is_file():
+        raise InstallError(
+            f"{ac_root} no parece una instalación de Assetto Corsa (sin acs.exe)"
+        )
     cars = Path(ac_root) / "content" / "cars"
     if not cars.is_dir():
         raise InstallError(f"no existe {cars}: revisa la ruta de Assetto Corsa")
@@ -45,13 +49,17 @@ def install_to_ac(
         raise InstallError(f"ya existe {dest}: marca «sobrescribir» para reemplazarlo")
     tmp = cars / f".beam2ac_tmp_{car_id}"
     if tmp.exists():
-        shutil.rmtree(tmp)  # resto de una instalación interrumpida (nuestro, con prefijo propio)
+        shutil.rmtree(
+            tmp
+        )  # resto de una instalación interrumpida (nuestro, con prefijo propio)
     backup = None
     try:
         shutil.copytree(car_dir, tmp)
         if dest.exists():
             backup = ensure_safe_output_path(
-                DEFAULT_OUTPUT_DIR / "_papelera" / f"ac_{car_id}_{_dt.datetime.now():%Y%m%d_%H%M%S}"
+                DEFAULT_OUTPUT_DIR
+                / "_papelera"
+                / f"ac_{car_id}_{_dt.datetime.now():%Y%m%d_%H%M%S}"
             )
             backup.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(str(dest), str(backup))
@@ -64,4 +72,7 @@ def install_to_ac(
     except BaseException:
         shutil.rmtree(tmp, ignore_errors=True)
         raise
-    return {"installed_to": str(dest), "replaced_backup": str(backup) if backup else None}
+    return {
+        "installed_to": str(dest),
+        "replaced_backup": str(backup) if backup else None,
+    }

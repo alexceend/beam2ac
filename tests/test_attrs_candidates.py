@@ -22,9 +22,7 @@ from src.pipeline.physics_preview import (
 ROOT = Path(__file__).resolve().parents[1]
 IBIZA = ROOT / "sample_beamng" / "vehicles" / "seat_ibiza_acfr"
 SPICY = Path.home() / "AppData/Local/BeamNG/BeamNG.drive/current/mods/spicy_mandala.zip"
-COMMON = Path(
-    (default_beamng_root() / "content/vehicles/common.zip").as_posix()
-)
+COMMON = Path((default_beamng_root() / "content/vehicles/common.zip").as_posix())
 _C: dict = {}
 
 
@@ -141,7 +139,8 @@ class TestSpicyCandidates(unittest.TestCase):
         r = {x.target: x for x in res}["ac:drivetrain.ini/CLUTCH/MAX_TORQUE"]
         self.assertEqual(
             # G2.44: la regla clonada del 40340 (dt.clutch_max_torque_38022) lo resuelve
-            (r.source, r.status, r.requires_approval), ("rule", "inferred", False)
+            (r.source, r.status, r.requires_approval),
+            ("rule", "inferred", False),
         )
         self.assertAlmostEqual(
             r.value,

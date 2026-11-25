@@ -16,8 +16,24 @@ from src.safe_paths import ensure_safe_output_path
 FILE = "car_details.json"
 COVER = "cover.jpg"
 LOGO = "logo.png"  # logo de la marca subido por el usuario (``ui/badge.png``); sin él, el b2ac por defecto
-TEXT = {"name": 80, "description": 4000, "class": 40, "brand": 60, "country": 60, "author": 80}
-CLASSES = ("street", "race", "drift", "semislicks", "openwheel", "special", "tuned", "kart")
+TEXT = {
+    "name": 80,
+    "description": 4000,
+    "class": 40,
+    "brand": 60,
+    "country": 60,
+    "author": 80,
+}
+CLASSES = (
+    "street",
+    "race",
+    "drift",
+    "semislicks",
+    "openwheel",
+    "special",
+    "tuned",
+    "kart",
+)
 
 
 class DetailsError(ValueError):
@@ -76,7 +92,9 @@ def save(
 
     d = clean(raw)
     root = Path(project.root)
-    new_cover = to_jpeg(cover) if cover else None  # valida la imagen antes de escribir nada
+    new_cover = (
+        to_jpeg(cover) if cover else None
+    )  # valida la imagen antes de escribir nada
     if logo and (png_size(logo) is None or max(png_size(logo)) > 512):
         raise DetailsError("logo: debe ser un PNG de hasta 512 px")
     ensure_safe_output_path(root / FILE).write_text(

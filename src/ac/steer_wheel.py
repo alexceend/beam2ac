@@ -62,7 +62,13 @@ def rim_frame(kn5_path: Path, materials: list[str], token: str):
     Se memoriza por KN5 (ruta, fecha y tamaño): el editor de cámaras llama hasta 150 veces
     con el mismo modelo y cada lectura del KN5 tarda ~0,7 s."""
     st = Path(kn5_path).stat()
-    key = (str(Path(kn5_path).resolve()), st.st_mtime_ns, st.st_size, tuple(materials), token)
+    key = (
+        str(Path(kn5_path).resolve()),
+        st.st_mtime_ns,
+        st.st_size,
+        tuple(materials),
+        token,
+    )
     with _RIM_LOCK:
         if key not in _RIM_CACHE:
             if len(_RIM_CACHE) > 16:
@@ -182,6 +188,7 @@ def rig_steering_wheel(src: Path, dst: Path, profile: dict[str, Any]) -> dict[st
     for n, p in to_move:
         p.children.remove(n)
         geo.children.append(n)
+
     def axial(v):
         return sum((v[j] - c[j]) * z[j] for j in range(3))
 
@@ -199,7 +206,9 @@ def rig_steering_wheel(src: Path, dst: Path, profile: dict[str, Any]) -> dict[st
         rmax, amax = float(profile["split_radius_m"]), float(profile["split_axial_m"])
 
         def turns(pos, idx):
-            return all(radial(pos[i]) <= rmax and abs(axial(pos[i])) <= amax for i in idx)
+            return all(
+                radial(pos[i]) <= rmax and abs(axial(pos[i])) <= amax for i in idx
+            )
 
     split_reports, seam, pieces = [], 0, 0
     for mname, mesh_name in splits:
@@ -207,7 +216,8 @@ def rig_steering_wheel(src: Path, dst: Path, profile: dict[str, Any]) -> dict[st
         mesh = read_mesh(split_node)
         pos = mesh.positions()
         wheel_part, rest = split_mesh(
-            mesh, lambda t, pos=pos, mesh=mesh: turns(pos, mesh.indices[3 * t : 3 * t + 3])
+            mesh,
+            lambda t, pos=pos, mesh=mesh: turns(pos, mesh.indices[3 * t : 3 * t + 3]),
         )
         split_node.payload = mesh_payload(rest)
         geo.children.append(

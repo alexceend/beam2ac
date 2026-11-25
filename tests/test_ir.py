@@ -27,9 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 IBIZA = ROOT / "sample_beamng/vehicles/seat_ibiza_acfr"
 SAMPLES = ROOT / "samples_beamng"
 MODS = Path.home() / "AppData/Local/BeamNG/BeamNG.drive/current/mods"
-COMMON = Path(
-    (default_beamng_root() / "content/vehicles/common.zip").as_posix()
-)
+COMMON = Path((default_beamng_root() / "content/vehicles/common.zip").as_posix())
 REFERENCE = ROOT / "tests/fixtures/g1_hechos_referencia.json"
 IBIZA_PROJECT = ROOT / "output/projects/ibiza_35b84_b1"
 
@@ -326,6 +324,10 @@ class TestRealVehicles(unittest.TestCase):
             "quail_mirabilis": "rwd_sequential",
             "sucette_poubelle": "fwd_manual",
             "sucette_poubelle_turbo": "fwd_manual",
+            # añadidos a samples_beamng/ después (camsoEngine; clasificación medida 2026-11-25)
+            "agus_1_nrt_1": "awd_center_diff",
+            "eagle_inca_p395_dale_earnhardt_edition": "rwd_manual",
+            "turbot_aster": None,
         }
         # G2.8: exportador 200409 (añadidos el 2026-11-01): sin arquitectura (caja DCT
         # o convertidor, chasis). G2.9: el motor combustionEngine ya llega al IR (curva

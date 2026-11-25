@@ -107,7 +107,9 @@ def _read_member(ctx: RunContext, rel: str) -> bytes | None:
     prefix = vehicle_dirs_in_zip(Path(s.path))[0]
     with zipfile.ZipFile(s.path) as zf:
         try:
-            return zf.read(prefix + rel)
+            from src.jbeam.sources import read_member_capped
+
+            return read_member_capped(zf, prefix + rel)
         except KeyError:
             return None
 

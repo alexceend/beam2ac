@@ -466,7 +466,8 @@ async function startConvert(r, f) {
   const body = { path: r.path, pc: f.pc.value || null, name: null, car_id: f.car_id.value.trim(),
     driver_mass: f.driver_mass.value, analysis_driver_mass: r.driver_mass, mass_choice: massChoiceFor(r.path, (f.pc && f.pc.value) || r.config || null), dest: f.dest.value.trim() || null, ac_root: acRoot() };
   let job;
-  try { job = await api("/api/convert", body); }
+  if (!confirm("Se creará el proyecto, se ejecutará la conversión y se escribirán los archivos de salida. ¿Continuar?")) return;
+  try { job = await api("/api/convert", { ...body, confirm: true }); }
   catch (e) { box.replaceChildren(el("div", { class: "notice err" }, e.message)); return; }
   for (const b of f.querySelectorAll("button[type=submit]")) b.disabled = true;  // una conversión cada vez
   const release = externalBusy("Conversión iniciada");
@@ -567,8 +568,9 @@ async function benchStart(r, f, kind, box, status, log, actions) {
   let job;
   const btns = actions.querySelectorAll("button");
   if ([...btns].some((b) => b.disabled)) return;  // doble pulsación: ya hay un banco en marcha
+  if (!confirm("El banco lanzará BeamNG.drive en tu equipo. ¿Continuar?")) return;
   for (const b of btns) b.disabled = true;
-  try { job = await api("/api/bench_start", { kind, path: r.path, pc: (f.pc && f.pc.value) || r.config || null }); }
+  try { job = await api("/api/bench_start", { kind, path: r.path, pc: (f.pc && f.pc.value) || r.config || null, confirm: true }); }
   catch (e) { for (const b of btns) b.disabled = false; status.replaceChildren(el("div", { class: "notice err" }, e.message)); return; }
   followBench(job, r, f, box, status, log, actions);
 }
@@ -724,6 +726,8 @@ function renderSettings() {
   const f = el("form", { onsubmit: async (e) => {
     e.preventDefault();
     const body = Object.fromEntries(new FormData(f).entries());
+    if ((body.projects_dir || body.export_dir) && !confirm("Las carpetas de salida elegidas pasarán a ser carpetas donde beam2ac puede escribir. ¿Guardar?")) return;
+    body.confirm = true;
     try { SETTINGS = await api("/api/settings", body); toast("Ajustes guardados", "ok"); renderSettings(); loadEnvironment(); if (CURRENT && DETAIL) renderAsistente(); }
     catch (err) { $("set-msg").textContent = err.message; $("set-msg").className = "small warn"; }
   } },

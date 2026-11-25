@@ -160,10 +160,18 @@ class TestCamerasRegression(unittest.TestCase):
         self.assertEqual(c.bonnet_body, (0.0, 0.546, 0.683))
         self.assertEqual(c.bumper_body, (0.0, 0.575, 1.817))
         lines = (car / "data/car.ini").read_text(encoding="utf-8").splitlines()
-        self.assertIn(cam.bonnet_line(c), lines)
-        self.assertIn(cam.bumper_line(c), lines)
+        # el comentario de la línea se redactó de nuevo al anonimizar ("acs.exe CarAvatar+0x26c" ->
+        # "AC"); el valor (antes del ';') es lo congelado
+        keys = [ln.split(";")[0].rstrip() for ln in lines]
+        self.assertIn(cam.bonnet_line(c).split(";")[0].rstrip(), keys)
+        self.assertIn(cam.bumper_line(c).split(";")[0].rstrip(), keys)
+
+        def no_comments(b: bytes) -> list[bytes]:
+            return [ln for ln in b.splitlines() if not ln.startswith(b";")]
+
         self.assertEqual(
-            cam.render_dash_cam_ini(c), (car / "data/dash_cam.ini").read_bytes()
+            no_comments(cam.render_dash_cam_ini(c)),
+            no_comments((car / "data/dash_cam.ini").read_bytes()),
         )
 
 

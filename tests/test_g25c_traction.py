@@ -172,7 +172,9 @@ class TestMissingUnknownAmbiguous(unittest.TestCase):
         geo = compute_mass_geometry(r)
         wheels = [
             SimpleNamespace(
-                name=w.name, radius=w.radius + (0.01 if w.name == "RR" else 0)
+                name=w.name,
+                radius=w.radius
+                * (1.2 if w.name == "RR" else 1),  # > 5 %: DRIVEN_RADIUS_SPREAD_MAX
             )
             for w in geo.wheels
         ]

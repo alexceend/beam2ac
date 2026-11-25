@@ -105,11 +105,14 @@ _KN5_LOCK = threading.Lock()
 
 def read_kn5(path: str | Path, keep_vertices: bool = True) -> Kn5File:
     """Lee un KN5. Memoriza los 2 últimos (ruta, fecha, tamaño): una petición del editor de cámaras
-    lo lee ~5 veces (0,7 s cada una). El resultado es de solo lectura: no modificarlo."""
+    lo lee ~5 veces (0,7 s cada una). El resultado es de solo lectura: no modificarlo.
+    """
     p = Path(path)
     st = p.stat()
     key = (str(p.resolve()), st.st_mtime_ns, st.st_size, keep_vertices)
-    with _KN5_LOCK:  # el servidor tiene hilos; leer dentro del cerrojo evita lecturas duplicadas
+    with (
+        _KN5_LOCK
+    ):  # el servidor tiene hilos; leer dentro del cerrojo evita lecturas duplicadas
         if key not in _KN5_MEMO:
             if len(_KN5_MEMO) >= 2:
                 _KN5_MEMO.pop(next(iter(_KN5_MEMO)))

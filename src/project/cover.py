@@ -10,7 +10,6 @@ from __future__ import annotations
 import io
 import shutil
 import subprocess
-import sys
 import tempfile
 import threading
 from pathlib import Path
@@ -78,8 +77,12 @@ class CoverError(RuntimeError):
     pass
 
 
-_RENDER_LOCK = threading.Lock()  # un solo Blender a la vez (la interfaz y la exportación pueden pedir a la vez)
-_CACHE: dict[tuple, bytes] = {}  # (ruta, mtime, tamaño) del KN5 → JPEG; el mismo modelo no se renderiza dos veces
+_RENDER_LOCK = (
+    threading.Lock()
+)  # un solo Blender a la vez (la interfaz y la exportación pueden pedir a la vez)
+_CACHE: dict[tuple, bytes] = (
+    {}
+)  # (ruta, mtime, tamaño) del KN5 → JPEG; el mismo modelo no se renderiza dos veces
 
 
 def to_jpeg(data: bytes) -> bytes:
@@ -90,7 +93,9 @@ def to_jpeg(data: bytes) -> bytes:
         # sin Pillow solo se acepta un JPEG ya listo (el navegador lo recorta a 1024×576 antes de subirlo)
         if data[:3] == bytes([0xFF, 0xD8, 0xFF]):
             return data
-        raise CoverError("falta Pillow para convertir la imagen: sube un JPG (o instala pillow)") from None
+        raise CoverError(
+            "falta Pillow para convertir la imagen: sube un JPG (o instala pillow)"
+        ) from None
     try:
         im = Image.open(io.BytesIO(data))
         im.load()
@@ -147,8 +152,18 @@ def _render(kn5: Path, blender: str, timeout: int) -> bytes:
         obj, png = t / "kn5" / "output" / "car.obj", t / "cover.jpg"
         try:
             r = subprocess.run(
-                [blender, "--background", "--python", str(t / "wrapper.py"), "--", str(CONVERTER),
-                 str(t / "kn5"), str(t / "render.py"), str(obj), str(png)],
+                [
+                    blender,
+                    "--background",
+                    "--python",
+                    str(t / "wrapper.py"),
+                    "--",
+                    str(CONVERTER),
+                    str(t / "kn5"),
+                    str(t / "render.py"),
+                    str(obj),
+                    str(png),
+                ],
                 capture_output=True,
                 text=True,
                 timeout=timeout,
@@ -156,5 +171,9 @@ def _render(kn5: Path, blender: str, timeout: int) -> bytes:
         except subprocess.TimeoutExpired:
             raise CoverError(f"Blender tardó más de {timeout} s") from None
         if not png.is_file():
-            raise CoverError(f"Blender no generó la imagen: {(r.stderr or r.stdout)[-400:]}")
-        return png.read_bytes()  # Blender ya lo escribe en JPEG 1024×576: no hace falta Pillow
+            raise CoverError(
+                f"Blender no generó la imagen: {(r.stderr or r.stdout)[-400:]}"
+            )
+        return (
+            png.read_bytes()
+        )  # Blender ya lo escribe en JPEG 1024×576: no hace falta Pillow

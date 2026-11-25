@@ -1434,7 +1434,11 @@ def collect(
     files.append(
         PackageFile(
             f"skins/{skin}/livery.png",
-            default_logo_png(64) if "defecto" in logo_src else _livery_from(logo),
+            (
+                default_logo_png(64)
+                if "defecto" in logo_src
+                else _livery_from(logo, issues)
+            ),
             {"source": logo_src},
         )
     )
@@ -1450,7 +1454,7 @@ def collect(
     return files, issues, ctx
 
 
-def _livery_from(logo: bytes) -> bytes:
+def _livery_from(logo: bytes, issues: list | None = None) -> bytes:
     """Icono de la pintura (64 px) a partir del logo del usuario; sin Pillow se reutiliza el PNG tal cual."""
     try:
         import io
@@ -1461,6 +1465,16 @@ def _livery_from(logo: bytes) -> bytes:
         out = io.BytesIO()
         im.save(out, "PNG")
         return out.getvalue()
+    except ImportError:
+        if issues is not None:
+            issues.append(
+                Issue(
+                    "warning",
+                    "ui.sin_pillow",
+                    "falta Pillow (pip install pillow): livery.png usa el logo sin redimensionar a 64 px",
+                )
+            )
+        return logo
     except Exception:  # noqa: BLE001 - es solo un icono
         return logo
 

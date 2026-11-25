@@ -42,6 +42,7 @@ EXTRACT_SUFFIXES = (".dae", ".json", ".dds", ".png", ".cs", ".meta", ".pc")
 MODEL_KN5 = "model.kn5"
 MODEL_OPTIONS_FILE = "model_options.json"  # opciones del modelo elegidas en el exportador (mapas normales, animaciones)
 WHEEL_FILE = "steering_wheel.json"  # elección del usuario (material del aro); ver la ventana «Volante»
+MAX_ZIP_ENTRIES = 20000  # tope de entradas de un zip que se recorre
 MAX_EXTRACT_BYTES = 4 << 30  # tope de lo que se extrae de un zip (bomba de compresión)
 
 
@@ -159,6 +160,8 @@ def extract_vehicle(
     root = dest / root_name
     total = 0
     with zipfile.ZipFile(zip_path) as zf:
+        if len(zf.namelist()) > MAX_ZIP_ENTRIES:
+            raise ModelError(f"el zip tiene más de {MAX_ZIP_ENTRIES} entradas")
         for name in sorted(zf.namelist()):
             if not name.startswith(prefix) or name.endswith("/"):
                 continue
@@ -179,7 +182,16 @@ def extract_vehicle(
             if target.exists():
                 raise ModelError(f"miembro duplicado en el zip: {name!r}")
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(zf.read(name))
+            # el tamaño declarado puede mentir: el tope se aplica a los bytes leídos
+            total -= zf.getinfo(name).file_size
+            with zf.open(name) as src, target.open("wb") as out:
+                while chunk := src.read(1 << 20):
+                    total += len(chunk)
+                    if total > MAX_EXTRACT_BYTES:
+                        raise ModelError(
+                            "el zip descomprimido supera el límite de 4 GiB"
+                        )
+                    out.write(chunk)
     return root
 
 

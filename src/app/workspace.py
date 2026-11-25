@@ -1087,7 +1087,11 @@ class Workspace:
         logo = D.logo_bytes(proj)
         return {
             "project": pid,
-            "logo": "data:image/png;base64," + base64.b64encode(logo).decode() if logo else None,
+            "logo": (
+                "data:image/png;base64," + base64.b64encode(logo).decode()
+                if logo
+                else None
+            ),
             "saved": D.load(proj),
             "last_export": {
                 k: last.get(k)
@@ -1159,7 +1163,9 @@ class Workspace:
         logo = None
         if body.get("logo"):
             try:
-                logo = base64.b64decode(str(body["logo"]).split(",", 1)[-1], validate=True)
+                logo = base64.b64decode(
+                    str(body["logo"]).split(",", 1)[-1], validate=True
+                )
             except ValueError:
                 raise WorkspaceError("el logo no es válido") from None
             if len(logo) > 1 << 20:
@@ -1353,6 +1359,10 @@ class Workspace:
             if body.get("enabled") is True:
                 _write_wheel(target, None, keep=True)
             elif body.get("enabled") is False:
+                if body.get("confirm") is not True:
+                    raise WorkspaceError(
+                        "quitar el volante borra su archivo: confírmalo (confirm: true)"
+                    )
                 if target.is_file():
                     target.unlink()
             else:

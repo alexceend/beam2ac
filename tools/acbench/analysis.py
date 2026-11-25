@@ -79,6 +79,9 @@ TORQUE_CHECK_TOL = 0.05  # |mediana(T_balance − T)| ≤ 5 % de mediana|T| (y �
 
 
 def _load_variants():
+    """Carga las variantes de G2.21; sin esa evidencia local devuelve ``None`` (BY_ID vacío)."""
+    if not (G221_BANCO / "variantes.py").is_file():
+        return None
     spec = importlib.util.spec_from_file_location("g221_variantes", G221_BANCO / "variantes.py")
     mod = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
@@ -88,7 +91,7 @@ def _load_variants():
 
 
 VARIANTS = _load_variants()
-BY_ID = VARIANTS.BY_ID
+BY_ID = VARIANTS.BY_ID if VARIANTS is not None else {}
 
 
 def sha256(p: Path) -> str:

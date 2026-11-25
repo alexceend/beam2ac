@@ -1,4 +1,5 @@
 """Paquetes defectuosos de extremo a extremo (G2.42): cada defecto inyectado en una copia de una build real debe dar error."""
+
 import re
 import shutil
 import tempfile
@@ -9,7 +10,9 @@ from src.project.export import validate_package
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILDS = sorted((ROOT / "builds").glob("beam2ac_g2*_*/beam2ac_*"))
-BASES = [b for b in BUILDS if (b / "data/drivetrain.ini").is_file() and "ibiza" not in b.name]
+BASES = [
+    b for b in BUILDS if (b / "data/drivetrain.ini").is_file() and "ibiza" not in b.name
+]
 
 
 def sub(path: Path, pat: str, rep: str) -> None:
@@ -22,11 +25,19 @@ def sub(path: Path, pat: str, rep: str) -> None:
 DEFECTS = {
     "sin_aero": lambda d: (d / "data/aero.ini").unlink(),
     "sin_FINAL": lambda d: sub(d / "data/drivetrain.ini", r"^FINAL=.*\n", ""),
-    "frenos_sin_MAX_TORQUE": lambda d: sub(d / "data/brakes.ini", r"^MAX_TORQUE=.*\n", ""),
-    "FRONT_SHARE_texto": lambda d: sub(d / "data/brakes.ini", r"^FRONT_SHARE=.*", "FRONT_SHARE=abc"),
+    "frenos_sin_MAX_TORQUE": lambda d: sub(
+        d / "data/brakes.ini", r"^MAX_TORQUE=.*\n", ""
+    ),
+    "FRONT_SHARE_texto": lambda d: sub(
+        d / "data/brakes.ini", r"^FRONT_SHARE=.*", "FRONT_SHARE=abc"
+    ),
     "sin_power_lut": lambda d: (d / "data/power.lut").unlink(),
-    "marcha_a_cero": lambda d: sub(d / "data/drivetrain.ini", r"^GEAR_1=.*", "GEAR_1=0"),
-    "TOTALMASS_cero": lambda d: sub(d / "data/car.ini", r"^TOTALMASS=.*", "TOTALMASS=0"),
+    "marcha_a_cero": lambda d: sub(
+        d / "data/drivetrain.ini", r"^GEAR_1=.*", "GEAR_1=0"
+    ),
+    "TOTALMASS_cero": lambda d: sub(
+        d / "data/car.ini", r"^TOTALMASS=.*", "TOTALMASS=0"
+    ),
 }
 
 
@@ -50,7 +61,11 @@ class TestDefectivePackages(unittest.TestCase):
         for name in DEFECTS:
             with self.subTest(defect=name):
                 clean, broken = self._run(base, name)
-                self.assertGreater(len(broken), len(clean), f"{name}: sin error nuevo; base={[i.code for i in clean]}")
+                self.assertGreater(
+                    len(broken),
+                    len(clean),
+                    f"{name}: sin error nuevo; base={[i.code for i in clean]}",
+                )
 
 
 if __name__ == "__main__":

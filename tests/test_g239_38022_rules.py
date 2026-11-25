@@ -16,7 +16,9 @@ ROOT = Path(__file__).resolve().parents[1]
 RULES = ROOT / "catalog" / "rules"
 IBIZA = ROOT / "sample_beamng/vehicles/seat_ibiza_acfr"
 HYACINTH = ROOT / "samples_beamng/thershow_hyacinth_sage/vehicles/hyacinth_sage"
-ATLANTA = next((ROOT / "samples_beamng/2020_rpm_atlanta_gt_3_6t").glob("vehicles/*"))
+ATLANTA = next(
+    (ROOT / "samples_beamng/2020_rpm_atlanta_gt_3_6t").glob("vehicles/*"), None
+)
 INERTIA = "ac:drivetrain.ini/GEARBOX/INERTIA"
 DIFF = "ac:drivetrain.ini/DIFFERENTIAL/"
 NEW = (
@@ -62,6 +64,7 @@ class TestRules(unittest.TestCase):
 
 
 class TestResolution(unittest.TestCase):
+    @unittest.skipUnless(IBIZA.is_dir(), "muestra del Ibiza no disponible")
     def test_ibiza_reproduces_ib2_variant(self):
         r = resolved(IBIZA)
         self.assertEqual(r[INERTIA].value, 0.01)
@@ -71,6 +74,10 @@ class TestResolution(unittest.TestCase):
         self.assertAlmostEqual(r[DIFF + "POWER"].value, 0.5)
         self.assertAlmostEqual(r[DIFF + "COAST"].value, 0.05)
 
+    @unittest.skipUnless(
+        HYACINTH.is_dir() and ATLANTA is not None,
+        "muestras de Automation no disponibles",
+    )
     def test_other_exporters_keep_their_own_rules(self):
         h = resolved(HYACINTH)[INERTIA]
         self.assertEqual(h.rule, "dt.gearbox_inertia_40340@1")

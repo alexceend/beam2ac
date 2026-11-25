@@ -1,4 +1,5 @@
 """G2.50: un ExporterVersion desconocido solo se trata como uno conocido si TODO su código coincide."""
+
 from types import SimpleNamespace
 
 from src.importers.automation import (
@@ -13,11 +14,17 @@ E38, E40 = list(ENGINE_LUA_VERSION)
 
 def src(version, lua, typ="Automation", author="Camshaft Software LTD"):
     info = {"Type": typ, "Author": author, "ExporterVersion": version}
-    return SimpleNamespace(model_info=info, lua_sha256={f"lua/{k}.lua": v for k, v in lua.items()})
+    return SimpleNamespace(
+        model_info=info, lua_sha256={f"lua/{k}.lua": v for k, v in lua.items()}
+    )
 
 
 def lua(engine, **extra):
-    base = {n: next(iter(s)) for n, s in KNOWN_LUA.items() if n in ("camsoEngineThermals", "cefaero")}
+    base = {
+        n: next(iter(s))
+        for n, s in KNOWN_LUA.items()
+        if n in ("camsoEngineThermals", "cefaero")
+    }
     return {"camsoEngine": engine, **base, **extra}
 
 
@@ -63,7 +70,9 @@ def abs_ir(front, rear, share=0.7):
     ir = VehicleIR()
     for pos, (state, tgt, hz) in (("front", front), ("rear", rear)):
         ax = BrakeAxle()
-        ax.abs = Param.of(state, "enum", "extracted") if state else Param.missing("enum")
+        ax.abs = (
+            Param.of(state, "enum", "extracted") if state else Param.missing("enum")
+        )
         ax.abs_slip_target = Param.of(tgt, "1", "extracted")
         ax.abs_frequency = Param.of(hz, "Hz", "extracted")
         ir.brakes.axles[pos] = ax
@@ -99,7 +108,9 @@ def test_abs_single_axle_stays_missing():
 
 def test_same_name_in_two_folders_both_count():
     s = src(99999, lua(E38))
-    s.lua_sha256["lua/controller/camsoEngine.lua"] = "0" * 64  # el modificado no puede quedar tapado
+    s.lua_sha256["lua/controller/camsoEngine.lua"] = (
+        "0" * 64
+    )  # el modificado no puede quedar tapado
     assert equivalent_known_version(s)[0] is None
 
 
@@ -118,7 +129,11 @@ from src.importers.automation import is_automation_info  # noqa: E402
 
 def test_pairing_equals_info_detector_always():
     for v in (38022, 40340, 200409, 38597, "x"):
-        for t, a in (("Automation", "Camshaft Software LTD"), ("Automation", "otro"), ("Otro", "Camshaft Software LTD")):
+        for t, a in (
+            ("Automation", "Camshaft Software LTD"),
+            ("Automation", "otro"),
+            ("Otro", "Camshaft Software LTD"),
+        ):
             info = {"Type": t, "Author": a, "ExporterVersion": v}
             assert declares_automation(info) == is_automation_info(info)
 
@@ -139,7 +154,11 @@ def test_unknown_version_unknown_lua_nobody_accepts():
 
 
 def test_incomplete_info_json():
-    for info in ({}, {"Type": "Automation"}, {"Type": "Automation", "Author": "Camshaft Software LTD"}):
+    for info in (
+        {},
+        {"Type": "Automation"},
+        {"Type": "Automation", "Author": "Camshaft Software LTD"},
+    ):
         s = SimpleNamespace(model_info=info, lua_sha256={"lua/camsoEngine.lua": E40})
         assert not declares_automation(info) and not is_automation(s)
         assert equivalent_known_version(s)[0] is None

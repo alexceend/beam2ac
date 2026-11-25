@@ -74,15 +74,30 @@ def _basis(axis: tuple[float, float, float]):
         return tuple(x / n for x in v)
 
     fwd = nrm(axis)
-    up = nrm(tuple(y - sum(a * b for a, b in zip((0, 1, 0), fwd)) * f for y, f in zip((0, 1, 0), fwd)))
-    side = nrm(tuple(x - sum(a * b for a, b in zip((1, 0, 0), fwd)) * f - sum(a * b for a, b in zip((1, 0, 0), up)) * u for x, f, u in zip((1, 0, 0), fwd, up)))
+    up = nrm(
+        tuple(
+            y - sum(a * b for a, b in zip((0, 1, 0), fwd)) * f
+            for y, f in zip((0, 1, 0), fwd)
+        )
+    )
+    side = nrm(
+        tuple(
+            x
+            - sum(a * b for a, b in zip((1, 0, 0), fwd)) * f
+            - sum(a * b for a, b in zip((1, 0, 0), up)) * u
+            for x, f, u in zip((1, 0, 0), fwd, up)
+        )
+    )
     return side, up, fwd
 
 
 def hips_from_wheel(steer: dict[str, Any]) -> tuple[float, float, float]:
     """Caderas para un volante montado (``rim_centre``, ``rim_axis``) con la relación del Ibiza."""
     cb = _basis(IBIZA_WHEEL[1])
-    off = [sum((h - c) * b for h, c, b in zip(IBIZA_HIPS, IBIZA_WHEEL[0], axis)) for axis in cb]
+    off = [
+        sum((h - c) * b for h, c, b in zip(IBIZA_HIPS, IBIZA_WHEEL[0], axis))
+        for axis in cb
+    ]
     c, ax = steer["rim_centre"], steer["rim_axis"]
     basis = _basis(tuple(ax))
     return tuple(round(c[i] + sum(off[k] * basis[k][i] for k in range(3)), 4) for i in range(3))  # type: ignore[return-value]
@@ -91,10 +106,13 @@ def hips_from_wheel(steer: dict[str, Any]) -> tuple[float, float, float]:
 def generic_profile(steer: dict[str, Any]) -> dict[str, Any]:
     """Perfil mínimo para un coche SIN perfil propio pero con volante montado (detectado o elegido):
     las constantes de pose y manos son las del Ibiza (validadas allí; ``hands`` aceptadas provisionalmente), el
-    aro es el material del volante montado. Las caderas las pone el exportador (``hips_override``)."""
+    aro es el material del volante montado. Las caderas las pone el exportador (``hips_override``).
+    """
     from src.ac.assemble import PROFILE_DIR
 
-    base = json.loads((PROFILE_DIR / "seat_ibiza_acfr.json").read_text(encoding="utf-8"))
+    base = json.loads(
+        (PROFILE_DIR / "seat_ibiza_acfr.json").read_text(encoding="utf-8")
+    )
     if not steer.get("rim_material"):
         raise LocalDriverError("el volante montado no indica su material de aro")
     return {
@@ -134,7 +152,9 @@ def local_driver_files(
         path = PROJECT_ROOT / prof["path"]
         data = path.read_bytes()
         if _sha(data) != prof.get("sha256"):
-            raise LocalDriverError(f"el perfil {prof['path']} cambió desde la etapa model")
+            raise LocalDriverError(
+                f"el perfil {prof['path']} cambió desde la etapa model"
+            )
         profile = json.loads(data)
     if anim_edits:
         from .anim_preview import apply_override

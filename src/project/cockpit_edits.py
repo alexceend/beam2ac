@@ -37,7 +37,9 @@ def project_key(project: Any) -> str:
 
     cache = FingerprintCache(project)
     fp = source_fingerprint(project, cache)
-    if cache.dirty:  # sin guardar, cada llamada volvía a hashear el zip del vehículo (~3 s)
+    if (
+        cache.dirty
+    ):  # sin guardar, cada llamada volvía a hashear el zip del vehículo (~3 s)
         cache.save()
     blob = json.dumps(fp, sort_keys=True).encode()
     pc = re.sub(r"[^A-Za-z0-9_.-]", "_", str(project.source.pc or "x"))[:64]

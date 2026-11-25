@@ -370,9 +370,12 @@ def _release_lock() -> None:
 def _pid_alive(pid: int) -> bool:
     import subprocess
 
-    out = subprocess.run(
-        ["tasklist", "/FI", f"PID eq {pid}"], capture_output=True
-    ).stdout
+    try:
+        out = subprocess.run(
+            ["tasklist", "/FI", f"PID eq {pid}"], capture_output=True, timeout=30
+        ).stdout
+    except subprocess.TimeoutExpired:
+        return True  # sin respuesta: suponer vivo (lo seguro)
     return str(pid).encode() in out
 
 

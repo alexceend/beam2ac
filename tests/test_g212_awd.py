@@ -265,7 +265,9 @@ class TestSevenVehicles(unittest.TestCase):
             cat = Catalog.load(REPO_CATALOG)
             for key in [k for k in cat.rules if "_lockc@" in k or "_openmode@" in k]:
                 cat.rules.pop(key)
-            res = {r.target: r for r in ConversionSession(copy.deepcopy(ir), cat).resolve()}
+            res = {
+                r.target: r for r in ConversionSession(copy.deepcopy(ir), cat).resolve()
+            }
             self.assertNotEqual(res[TYPE_T].source, "rule", name)
             self.assertIsNone(res[FS_T].value, name)
             now = _resolve(ir)

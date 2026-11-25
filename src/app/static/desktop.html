@@ -39,55 +39,33 @@
   <main id="content">
     <section id="welcome">
       <div id="setup-warn" class="notice warning" role="alert" hidden></div>
+      <div class="panel" id="author-notes">
+        <h2>Notas del autor</h2>
+        <p class="small">Siento que es importante este comentario antes de explicar el proyecto, así que lo pongo arriba :)</p>
+        <p class="small">Hola, soy Alex. No sé si debería considerarme AUTOR del proyecto ya que, en gran medida, esto ha sido posible gracias a la ayuda de herramientas de IA. Mi labor ha sido sobre todo de diseño y de ingeniería inversa para obtener la forma que tiene cada motor (BeamNG y Kunos) de entender las físicas, y así poder relacionarlas y transformarlas. Mis conocimientos de física y mecánica son básicos, por lo que la labor de TRANSFORMACIÓN de físicas y archivos no debería atribuirse a mi autoría. Sin embargo, en el proyecto no he estado solo: agradezco enormemente la ayuda de amigos con conocimientos de mecánica y a Salva por haberme ayudado a detectar fallos y elementos a refinar.</p>
+        <p class="small">Dicho esto, si tenéis interés en más proyectos míos podéis visitar el repositorio de este proyecto, y si alguien quiere apoyarlos os dejo el enlace a mi Ko-fi. ¡Muchas gracias por leer este tostón!</p>
+        <div class="actions">
+          <a class="linkbtn repo" href="https://github.com/alexceend/beam2ac" target="_blank" rel="noopener noreferrer"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>Ver el repositorio en GitHub</a>
+          <a class="linkbtn kofi" href="https://ko-fi.com/alexceend" target="_blank" rel="noopener noreferrer"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 7h14v6a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V7z"/><path fill="none" stroke="currentColor" stroke-width="2" d="M17 8.5h1.5a2.75 2.75 0 0 1 0 5.5H17"/><path fill="#ff5e5b" d="M10 15.6s-3.2-1.9-3.2-3.8a1.7 1.7 0 0 1 3.2-.8 1.7 1.7 0 0 1 3.2.8c0 1.9-3.2 3.8-3.2 3.8z"/></svg>Apóyame en Ko-fi</a>
+        </div>
+      </div>
       <div class="panel">
         <h2>Cómo funciona</h2>
-        <p class="small">beam2ac convierte un coche creado en <strong>Automation</strong> y exportado a <strong>BeamNG</strong> en un coche
-          de <strong>Assetto Corsa</strong>. Al elegir una carpeta o un zip (o escribir su ruta y pulsar Intro) se crea un <strong>proyecto</strong> y se abre solo.
-          Antes de empezar, guarda en <strong>Ajustes</strong> (la rueda de la barra superior) las rutas de Assetto Corsa y de Blender; si falta alguna, un aviso naranja aquí en Inicio te dice cuál y qué dejaría de funcionar. El icono de la pantalla (<strong>Entorno</strong>) comprueba qué tienes instalado. Un proyecto tiene tres pestañas (el botón «Vista avanzada / simple», junto al título, muestra u oculta los detalles técnicos):</p>
+        <p class="small">Convierte un coche de Automation, exportado a BeamNG, en uno de Assetto Corsa. Guarda antes en Ajustes las rutas de Assetto Corsa y de Blender; al elegir una carpeta o un zip se crea un proyecto con tres pestañas:</p>
         <ul class="small">
-          <li><strong>Conversión</strong>: Resumen, Diagnóstico, Resultados y, a la derecha, el <strong>Pipeline</strong> (donde se convierte de verdad).</li>
-          <li><strong>Vista 3D</strong>: editor de cámaras (ojos del piloto, capó, parachoques) y, desde ahí, de la animación del volante y las manos.
-            Los cambios se guardan en el proyecto y se aplican al coche.</li>
-          <li><strong>Atributos y decisiones</strong>: cada valor físico que el conversor necesita (con su origen y confianza). Lo que no se pueda
-            deducir se decide aquí; nada se rellena con ceros.</li>
+          <li>Conversión: resumen, diagnóstico, resultados y el Pipeline (etapas, decisiones pendientes y exportación).</li>
+          <li>Vista 3D: editor de cámaras, volante y manos.</li>
+          <li>Atributos y decisiones: cada valor físico con su origen; lo que no se pueda deducir se decide aquí, nada se rellena con ceros.</li>
         </ul>
-        <h3>El Pipeline (panel «Conversión», a la derecha)</h3>
-        <ol class="small">
-          <li><strong>Etapas</strong>: <code>source → physics → attributes → geometry → draft → resolved_ini → report</code>, más <code>model</code>
-            (malla 3D con Blender, tarda minutos). «Ejecutar etapas» las calcula; cada etapa reutiliza su resultado si sus entradas no han cambiado,
-            y un fallo se conserva sin borrar nada.</li>
-          <li><strong>Decisiones pendientes</strong>: lo que el conversor no sabe resolver solo (por ejemplo un reparto de tracción o una curva)
-            queda como bloqueo hasta que lo decides en «Atributos y decisiones».</li>
-          <li><strong>Exportación</strong>: crea una exportación nueva del coche para Assetto Corsa (siempre con volante y piloto). Aquí eliges el <code>car_id</code>,
-            los <strong>detalles del coche</strong> (nombre, descripción, portada…) y los <strong>extras</strong> (volante, neumáticos de AC, ABS, control de tracción,
-            reparto de frenada, cambio, turbo). Nunca sobrescribe una exportación anterior ni instala en el juego sin que lo marques.
-            El veredicto es «bloqueado» o «completo, sin probar en el juego».</li>
-        </ol>
-        <p class="muted small">Orden recomendado: guardar rutas en Ajustes → elegir el coche → ejecutar etapas (con el modelo 3D) → resolver decisiones → ajustar cámaras en Vista 3D → exportar.
-          «Exportable» no significa probado: hay que conducirlo en Assetto Corsa para validarlo.</p>
-        </div>
-      <div class="panel" id="ac-test">
-        <h2>Probar el coche en Assetto Corsa</h2>
-        <p class="muted small">Lista rápida para comprobar una exportación. Nada de esto se prueba solo: «exportable» no significa «funciona en el juego».</p>
-        <ol class="small">
-          <li>Instala el coche (casilla «Instalar en Assetto Corsa» al exportar) y arranca una sesión de <strong>Práctica</strong> con él.</li>
-          <li><strong>Sonido y luces:</strong> arranca el motor, enciende los faros, frena y da marcha atrás.</li>
-          <li><strong>Cristales, reflejos y alerón:</strong> mira el coche desde una cámara exterior y desde dentro.</li>
-          <li><strong>Cambio automático:</strong> activa la ayuda de cambio automático y acelera: no debe oscilar entre marchas.</li>
-          <li><strong>Llamas del escape:</strong> carga a fondo más de 1 segundo dentro del rango de rpm y levanta el pie <em>sin llegar a cero</em>. Si no salen, pulsa <code>Inicio</code> (HOME) y escribe <code>set observeFlames 1</code>; después abre <code>flames.ini</code> del coche (carpeta <code>data</code>), guárdalo otra vez (Ctrl+S) para que el juego lo recargue y mira la salida del escape desde atrás. <code>set observeFlames 0</code> lo desactiva.</li>
-        </ol>
+        <p class="muted small">«Exportable» no significa probado: hay que conducirlo en Assetto Corsa para validarlo.</p>
       </div>
       <div class="panel" id="usage-notes">
         <h2>Notas de uso</h2>
-        <p class="muted small">Qué tener en cuenta al diseñar el coche en Automation y qué queda manual. Las mismas notas, con los avisos de tu coche, van en <code>export_report.md</code>.</p>
+        <p class="muted small">Qué tener en cuenta al diseñar el coche en Automation.</p>
         <ul class="small">
-          <li>No uses eje rígido delantero.</li>
-          <li>No uses diferencial bloqueable.</li>
-          <li>No uses ruedas de competición.</li>
-          <li>Calidad para un agarre óptimo en Automation: de +6 a +8.</li>
-          <li>Las revoluciones de cambio de marcha (caja automática) pueden fallar: tendrás que cambiar de forma manual.</li>
-          <li>Algunas animaciones se generan con scripts de Automation y otras hay que hacerlas en Assetto Corsa.</li>
-          <li>El depósito de combustible (editor de Vista 3D; posición inicial provisional), el collider (el export escribe un <code>collider.kn5</code> por defecto) y la caja de inercia (el export ya escribe <code>[EXPLICIT_INERTIA]</code> medido) se colocan de forma manual.</li>
+          <li>Eje rígido delantero: puede fallar, ya que Assetto Corsa no lo implementa.</li>
+          <li>Diferencial bloqueable: puede fallar, ya que Assetto Corsa no lo implementa.</li>
+          <li>Ruedas de competición: pueden fallar, ya que Assetto Corsa no las implementa.</li>
         </ul>
       </div>
       <div class="panel">

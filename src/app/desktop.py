@@ -40,9 +40,21 @@ from . import diagnostics
 from .workspace import Workspace, WorkspaceError
 
 
+def _need_confirm(body: dict[str, Any], why: str) -> None:
+    """Las acciones con efectos exigen ``confirm: true`` (la interfaz lo pide con un diálogo)."""
+    if body.get("confirm") is not True:
+        raise WorkspaceError(f"{why}: confírmalo (confirm: true)")
+
+
+class _LocalServer(ThreadingHTTPServer):
+    # En Windows SO_REUSEADDR deja que otro proceso local ocupe el mismo puerto.
+    allow_reuse_address = False
+
+
 def make_desktop_handler(ws: Workspace, lock: threading.Lock):
     class Handler(BaseHTTPRequestHandler):
         server_version = "beam2ac-desktop/1"
+        timeout = 120  # un cliente lento no retiene el hilo para siempre
 
         def log_message(self, fmt: str, *args: Any) -> None:
             return
@@ -183,6 +195,12 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                 if (
                     p == "/api/details_preview"
                 ):  # render de la portada automática (tarda unos segundos)
+                    # lanza Blender: un GET entre sitios (p. ej. <img>) no debe poder dispararlo
+                    if self.headers.get("Sec-Fetch-Site", "same-origin") not in (
+                        "same-origin",
+                        "none",
+                    ):
+                        raise WorkspaceError("petición entre sitios no permitida")
                     return self._json(200, ws.details_preview(q.get("project", "")))
                 if p == "/api/precheck":
                     return self._json(200, ws.precheck(q.get("project", "")))
@@ -239,6 +257,7 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                 if p == "/api/export":
                     return self._json(200, ws.export(body.get("project", ""), body))
                 if p == "/api/convert":
+                    _need_confirm(body, "convertir crea un proyecto y escribe archivos")
                     return self._json(200, ws.convert(body))
                 if p == "/api/delete_project":
                     return self._json(200, ws.delete(body.get("project", ""), body))
@@ -249,6 +268,8 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                 if p == "/api/settings":
                     from . import settings
 
+                    if body.get("projects_dir") or body.get("export_dir"):
+                        _need_confirm(body, "cambiar las carpetas de salida")
                     return self._json(200, settings.status(settings.save(body)))
                 if p == "/api/blender_addon":  # descarga + instala (pide confirmación)
                     from . import blender_addon
@@ -260,6 +281,7 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                     except (blender_addon.AddonError, OSError) as exc:
                         raise WorkspaceError(str(exc)) from exc
                 if p == "/api/bench_start":
+                    _need_confirm(body, "el banco lanza BeamNG.drive")
                     return self._json(200, ws.bench_start(body))
                 if p == "/api/steering":
                     return self._json(
@@ -313,6 +335,4 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
 
 def make_desktop_server(ws: Workspace, port: int = 0) -> ThreadingHTTPServer:
     """Servidor ligado SOLO a 127.0.0.1 (``port=0``: puerto libre)."""
-    return ThreadingHTTPServer(
-        ("127.0.0.1", port), make_desktop_handler(ws, threading.Lock())
-    )
+    return _LocalServer(("127.0.0.1", port), make_desktop_handler(ws, threading.Lock()))

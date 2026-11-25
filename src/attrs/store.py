@@ -23,6 +23,7 @@ una decisión = añadir otra con ``supersedes``. Solo se escribe dentro de la ca
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -235,6 +236,13 @@ def append_decision(
             raise StoreError(f"supersedes inexistente {decision.supersedes!r}")
         if decision.target not in existing.attributes:
             raise StoreError(f"destino no definido {decision.target!r}")
+    if (
+        not re.fullmatch(r"[A-Za-z0-9._-]+", decision.vehicle)
+        or ".." in decision.vehicle
+    ):
+        raise StoreError(
+            f"vehículo no válido para un nombre de archivo: {decision.vehicle!r}"
+        )
     target = _writable(Path(root) / "decisions" / f"{decision.vehicle}.jsonl")
     target.parent.mkdir(parents=True, exist_ok=True)
     line = json.dumps(S.to_dict(decision), ensure_ascii=False, sort_keys=True)

@@ -309,7 +309,9 @@ class TestProductionInvariants(unittest.TestCase):
             if "_lsd" in p.name
             and "_lsd_40340@"
             not in p.name  # G2.30: 40340 aparte; G2.27: las 2WD citan B0
-            and not p.name.endswith(("_lsd_viscc_40340@1.json", "_openmode_lsdc_40340@1.json"))  # familias 40340 posteriores
+            and not p.name.endswith(
+                ("_lsd_viscc_40340@1.json", "_openmode_lsdc_40340@1.json")
+            )  # familias 40340 posteriores
         )
         expected = sorted(f"{r.key}.json" for r in tool.build(tool.ev("report", "x")))
         self.assertEqual(names, expected)
@@ -324,7 +326,12 @@ class TestProductionInvariants(unittest.TestCase):
         names = {p.name for p in (REPO_CATALOG / "rules").glob("dt.preload@*.json")}
         self.assertEqual(
             names,
-            {"dt.preload@1.json", "dt.preload@2.json", "dt.preload@3.json", "dt.preload@4.json"},  # @4: G2.39
+            {
+                "dt.preload@1.json",
+                "dt.preload@2.json",
+                "dt.preload@3.json",
+                "dt.preload@4.json",
+            },  # @4: G2.39
         )
 
 

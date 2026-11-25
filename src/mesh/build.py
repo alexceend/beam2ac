@@ -193,9 +193,29 @@ def _local_extent(kn5: Kn5File, wheel: str, pts) -> dict[str, float]:
     return ext
 
 
+BLENDER_TIMEOUT_S = 1800  # tope generoso: un coche grande tarda minutos
+
+
+def check_kn5_name(kn5_name: str) -> str:
+    """El nombre del KN5 debe ser un nombre de archivo simple (sin rutas) y acabar en .kn5."""
+    ok = (
+        kn5_name.lower().endswith(".kn5")
+        and kn5_name not in (".kn5", "..")
+        and not any(c in kn5_name for c in "/" + chr(92) + ":" + chr(0))
+        and ".." not in kn5_name
+        and Path(kn5_name).name == kn5_name
+    )
+    if not ok:
+        raise RuntimeError(
+            f"nombre de KN5 no válido (solo un nombre .kn5 simple): {kn5_name!r}"
+        )
+    return kn5_name
+
+
 def run_blender(
     blender: str, plan_path: Path, out_dir: Path, kn5_name: str, save_blend: bool
 ) -> subprocess.CompletedProcess:
+    check_kn5_name(kn5_name)
     cmd = [
         blender,
         "--background",
@@ -214,7 +234,18 @@ def run_blender(
     ]
     if save_blend:
         cmd.append("--save-blend")
-    return subprocess.run(cmd, capture_output=True, text=True, errors="replace")
+    try:
+        return subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            errors="replace",
+            timeout=BLENDER_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            f"Blender no terminó en {BLENDER_TIMEOUT_S} s y se interrumpió"
+        ) from exc
 
 
 def build_kn5(
@@ -281,7 +312,12 @@ def main(argv: list[str] | None = None) -> int:
         print("ERROR: no se encuentra Blender (use --blender o --plan-only)")
         return 2
     kn5_name = args.kn5 or f"{Path(args.vehicle_dir).name}.kn5"
-    proc = run_blender(args.blender, plan_path, out, kn5_name, args.save_blend)
+    try:
+        proc = run_blender(args.blender, plan_path, out, kn5_name, args.save_blend)
+    except RuntimeError as exc:
+        print(f"ERROR: {exc}")
+        return 1
+    ensure_safe_output_path(out / kn5_name)
     (out / "blender_stdout.txt").write_text(proc.stdout + proc.stderr, encoding="utf-8")
     if proc.returncode != 0:
         print(

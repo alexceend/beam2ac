@@ -11,7 +11,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-import physics_translator_diy as legacy
+from tools import physics_translator_diy as legacy
 from src.safe_paths import DEFAULT_OUTPUT_DIR, PROJECT_ROOT, ProtectedPathError
 
 JBEAM = PROJECT_ROOT / legacy.DEFAULT_JBEAM

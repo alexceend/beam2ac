@@ -56,6 +56,9 @@ NEW_200409 = {
     "rpm_omega_one_concept",
 }
 V40340 = {
+    "agus_1_nrt_1",
+    "eagle_inca_p395_dale_earnhardt_edition",
+    "turbot_aster",
     "autist_cuanto",
     "hyacinth_sage",
     "quail_mirabilis",
@@ -982,7 +985,9 @@ class TestTractionRuleOnCorpus(unittest.TestCase):
                     "autist_cuanto"
                 ):  # G2.30: AWD camsoEngine, regla propia
                     self.assertEqual(r.rule, "dt.traction_awd_40340@1")
-                elif label.endswith("agus_1_nrt_1"):  # AWD con diferenciales viscosos (2026-11-22)
+                elif label.endswith(
+                    "agus_1_nrt_1"
+                ):  # AWD con diferenciales viscosos (2026-11-22)
                     self.assertEqual(r.rule, "dt.traction_awd_viscous_40340@1")
                 else:
                     self.assertNotEqual(r.source, "rule")

@@ -57,16 +57,24 @@ class TestClones(unittest.TestCase):
             and "_lockc_40340" not in p.name
             and "_openmode_40340" not in p.name
             and "_openmode_lsdc_40340" not in p.name  # central lsd (2026-11-17)
-            and "_viscous_40340" not in p.name  # AWD viscoso (agus, 2026-11-22): prueba propia
-            and "_dct_40340" not in p.name  # DCT (vendeta_romaigna, 2026-11-22): la 200409 es dt.*_dct
-            and "_viscc_40340" not in p.name  # ejes con central viscoso (autist_quantic, 2026-11-22)
+            and "_viscous_40340"
+            not in p.name  # AWD viscoso (agus, 2026-11-22): prueba propia
+            and "_dct_40340"
+            not in p.name  # DCT (vendeta_romaigna, 2026-11-22): la 200409 es dt.*_dct
+            and "_viscc_40340"
+            not in p.name  # ejes con central viscoso (autist_quantic, 2026-11-22)
         )
         self.assertGreaterEqual(len(clones), 60)
         for p in clones:
             c = json.loads(p.read_text("utf-8"))
             # la regla de origen vigente puede no ser la @1 (p. ej. damp_*@2)
             stem = p.name.replace("_40340", "_200409").rsplit("@", 1)[0]
-            src = max(RULES.glob(f"{stem}@*.json"))
+            origins = list(RULES.glob(f"{stem}@*.json"))
+            if (
+                not origins
+            ):  # regla 40340 sin gemela 200409 (p. ej. *_coupled, *_viscc): no es clon
+                continue
+            src = max(origins)
             s = json.loads(src.read_text("utf-8"))
             # G2.29: la aplicabilidad de app.tyres.* es de AC [C] y conserva su estado
             expected = s["status"] if c["id"].startswith("app.") else "provisional"
@@ -134,7 +142,9 @@ class TestClones(unittest.TestCase):
         r = resolved(IBIZA)
         self.assertFalse([t for t, x in r.items() if x.rule and "_40340" in x.rule])
         # G2.39: el 38022 recibe su propia regla (decisión D-INV-GBI)
-        self.assertEqual(r["ac:drivetrain.ini/GEARBOX/INERTIA"].rule, "dt.gearbox_inertia_38022@1")
+        self.assertEqual(
+            r["ac:drivetrain.ini/GEARBOX/INERTIA"].rule, "dt.gearbox_inertia_38022@1"
+        )
 
 
 if __name__ == "__main__":

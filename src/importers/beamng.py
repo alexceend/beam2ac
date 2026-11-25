@@ -3341,12 +3341,15 @@ def _import_tyre_estimate(ir: VehicleIR, pv: Any) -> bool:
             if isinstance(t.friction_raw.get(k), (int, float))
         }
         extra.update(structure(names[0]))
-        extra["tireWidth"] = t.width or 0.0
-        extra["pressurePSI"] = t.pressure_psi or 0.0
+        # ausente => no se inyecta un 0: tyre_estimate usa su valor por defecto y avisa
+        if t.width:
+            extra["tireWidth"] = t.width
+        if t.pressure_psi:
+            extra["pressurePSI"] = t.pressure_psi
         try:
             results[pos] = estimate_axle(
                 {**{k: float(v) for k, v in wp.items()}, **extra}, fz0, t.radius, t.hub_radius,
-                t.pressure_psi, t.width or 0.0, rotating,
+                t.pressure_psi or None, t.width or None, rotating,
             )  # fmt: skip
         except (TyreEstimateError, KeyError):
             return False

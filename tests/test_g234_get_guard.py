@@ -66,9 +66,7 @@ class TestDesktopGet(_Http, unittest.TestCase):
     def test_foreign_host_and_origin_blocked_everywhere(self):
         for path in ("/", "/static/desktop.js", "/api/workspace", "/api/environment"):
             self.assertEqual(self.get(path, host="evil.example")[0], 403, path)
-            self.assertEqual(
-                self.get(path, Origin="http://evil.example")[0], 403, path
-            )
+            self.assertEqual(self.get(path, Origin="http://evil.example")[0], 403, path)
 
 
 class TestReviewGet(_Http, unittest.TestCase):

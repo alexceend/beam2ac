@@ -138,7 +138,9 @@ class TestRule(unittest.TestCase):
         # G2.45: con piloto manda car.explicit_inertia_200409_driver (inercia mayor)
         r0 = resolved(PROTHEAN, 0.0)[TARGET]
         r = resolved(PROTHEAN, 70.0)[TARGET]
-        self.assertEqual((r.status, r.rule), ("inferred", "car.explicit_inertia_200409_driver@1"))
+        self.assertEqual(
+            (r.status, r.rule), ("inferred", "car.explicit_inertia_200409_driver@1")
+        )
         self.assertTrue(all(0 < b - a < 25 for a, b in zip(r0.value, r.value)))
 
 

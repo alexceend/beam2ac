@@ -21,8 +21,12 @@ from src.audio.plan import DATA, template
 from src.safe_paths import ensure_safe_output_path
 
 ROOT = Path(__file__).resolve().parents[2]
-SDK_LOCAL = ROOT / "docs/references/assetto-corsa/audio/ac_fmod_sdk_1_9"  # copia de desarrollo (no se redistribuye)
-SDK_IN_AC = Path("sdk") / "audio" / "ac_fmod_sdk_1_9"  # dentro de la instalación de AC del usuario
+SDK_LOCAL = (
+    ROOT / "docs/references/assetto-corsa/audio/ac_fmod_sdk_1_9"
+)  # copia de desarrollo (no se redistribuye)
+SDK_IN_AC = (
+    Path("sdk") / "audio" / "ac_fmod_sdk_1_9"
+)  # dentro de la instalación de AC del usuario
 FSPRO = "ac_fmod_sdk_1_9.fspro"
 TIMEOUT_S = 1800
 

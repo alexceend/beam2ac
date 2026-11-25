@@ -1,7 +1,6 @@
 """El diccionario inglés de la interfaz está generado y es coherente con sus plantillas."""
 
 import json
-import re
 import unittest
 from pathlib import Path
 
@@ -14,7 +13,9 @@ class TestI18n(unittest.TestCase):
     def test_generated_file_in_sync(self) -> None:
         table = {}
         for es, en in gen_i18n.PAIRS:
-            table.setdefault(" ".join(es.split()) if "\n" in es else es.strip(), en.strip())
+            table.setdefault(
+                " ".join(es.split()) if "\n" in es else es.strip(), en.strip()
+            )
         text = (STATIC / "i18n_en.js").read_text(encoding="utf-8")
         got = json.loads(text[text.index("{") : text.rindex("}") + 1])
         self.assertEqual(got, table, "ejecute python tools/gen_i18n.py")

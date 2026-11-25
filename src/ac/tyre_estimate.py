@@ -171,14 +171,23 @@ def estimate_sctm(wheel: dict[str, float], fz0: float) -> dict[str, float]:
 
 def estimate_axle(
     wheel: dict[str, float], fz0: float, radius: float, hub_radius: float,
-    pressure_psi: float | None, width: float, rotating_mass: float,
+    pressure_psi: float | None, width: float | None, rotating_mass: float,
 ) -> dict[str, Any]:  # fmt: skip
     """Todos los campos que el banco daba por eje (reference_load lo calcula el llamante)."""
     cal = coefficients()
     aux = cal["aux"]
     # huella de contacto neumática: Fz = p·w·2·√(2·r·δ) ⇒ k = dFz/dδ = 4·r·p²·w²/Fz;
     # un solo factor ajustado (RATE medido ≈ 0,79·k; error 14 % dejando un coche fuera)
-    p_pa = (pressure_psi or 0.0) * 6894.76
+    missing = [
+        f"{n} no disponible: se usa el valor por defecto {OPTIONAL_KEYS[k]}"
+        for n, k, v in (
+            ("tireWidth", "tireWidth", width),
+            ("pressurePSI", "pressurePSI", pressure_psi),
+        )
+        if not v
+    ]
+    width = width or OPTIONAL_KEYS["tireWidth"]
+    p_pa = (pressure_psi or OPTIONAL_KEYS["pressurePSI"]) * 6894.76
     stiffness = (
         aux["vertical_stiffness"]["scale"] * 4 * radius * p_pa**2 * width**2 / fz0
     )
@@ -189,6 +198,7 @@ def estimate_axle(
         "rotational_inertia": aux["inertia_factor"] * rotating_mass * radius**2,
         "rolling_resistance": aux["rolling_resistance"],
         "warnings": range_warnings(wheel, fz0)
+        + missing
         + [
             f"{k} no disponible: se usa la mediana de la calibración"
             for k in STRUCT_KEYS

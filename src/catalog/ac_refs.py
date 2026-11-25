@@ -63,7 +63,9 @@ PHYSICS_INIS = (
 # Clase de origen de un coche de AC cuyo ui_car.json declara Automation. NO es la
 # familia automation_export (procedencia de una exportación a BeamNG, catálogo).
 AC_UI_DECLARES_AUTOMATION = "ac_ui_declares_automation"
-_AC_DETECTED = find_game("assettocorsa")  # biblioteca de Steam del usuario, no una ruta fija
+_AC_DETECTED = find_game(
+    "assettocorsa"
+)  # biblioteca de Steam del usuario, no una ruta fija
 DEFAULT_AC_CARS = (_AC_DETECTED or Path("assettocorsa")) / "content" / "cars"
 
 

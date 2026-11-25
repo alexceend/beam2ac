@@ -528,7 +528,9 @@ class TestRealConverter(unittest.TestCase):
                     # G2.43 (D-G211-TC b): solo las reglas _atc_200409, con la aproximación declarada
                     if r.source == "rule":
                         self.assertIn("_atc_200409", r.rule)
-                        self.assertTrue(any("APROXIMACIÓN" in a for a in r.assumptions), r.rule)
+                        self.assertTrue(
+                            any("APROXIMACIÓN" in a for a in r.assumptions), r.rule
+                        )
         by = {r.target: r for r in s.results}
         self.assertEqual(by[GEARS + "/FINAL"].value, TC_CARS[name])
         self.assertEqual(by[GEARS + "/GEAR_9"].value, TC_RATIOS[-1])

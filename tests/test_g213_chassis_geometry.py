@@ -18,7 +18,7 @@ from pathlib import Path
 from src.attrs.store import REPO_CATALOG, Catalog
 from src.convert.service import ConversionSession
 from src.extract.mass_geometry import compute_mass_geometry
-from src.extract.nodes import NodeOverride, UnsupportedGeometry, collect_nodes
+from src.extract.nodes import NodeOverride, collect_nodes
 from src.importers.beamng import import_preview
 from src.ir.param import Param
 from src.jbeam import resolve

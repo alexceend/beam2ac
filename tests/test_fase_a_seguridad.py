@@ -313,7 +313,9 @@ class TestLoadRequirementsAsAC(unittest.TestCase):
         self.assertTrue(all(ok for _, ok, _ in V.load_requirements(inis)))
 
 
-@unittest.skipUnless(verify_originals.BASE.is_dir(), "scripts originales no versionados")
+@unittest.skipUnless(
+    verify_originals.BASE.is_dir(), "scripts originales no versionados"
+)
 class TestPreservedAndSealed(unittest.TestCase):
     def test_original_scripts_intact(self):
         self.assertEqual(verify_originals.verify(), [])

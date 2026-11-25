@@ -293,9 +293,7 @@ class TestTyresGearsAero(unittest.TestCase):
         self.assertEqual(res["ac:drivetrain.ini/GEARS/GEAR_9"].status, "not_applicable")
         _, ir, res = resolved(PORTLAND)
         self.assertEqual(ir.get("drivetrain.gearbox.forward_count").value, 9)
-        self.assertEqual(
-            res["ac:drivetrain.ini/GEARS/GEAR_9"].status, "inferred"
-        )
+        self.assertEqual(res["ac:drivetrain.ini/GEARS/GEAR_9"].status, "inferred")
 
     def test_aero_ir_and_rules(self):
         _, ir, res = resolved(LEGION)
@@ -317,7 +315,9 @@ class TestTyresGearsAero(unittest.TestCase):
         # G2.45: con piloto el CG lo da la regla *_driver y las posiciones se resuelven
         _, _, res = resolved(LEGION, 70.0)
         self.assertIn(res["ac:aero.ini/WING_1/POSITION"].status, ("known", "inferred"))
-        _, _, res = resolved(ATACAMA)  # G2.44: el eje rígido (AXLE) ya tiene CG_LOCATION
+        _, _, res = resolved(
+            ATACAMA
+        )  # G2.44: el eje rígido (AXLE) ya tiene CG_LOCATION
         self.assertIn(res["ac:aero.ini/WING_0/POSITION"].status, ("known", "inferred"))
 
     def test_modified_source_has_no_measurement(self):

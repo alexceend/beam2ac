@@ -28,7 +28,7 @@ HEADER = (
     "[HEADER]\nEDIT_MODE=0\nINTENSITY=24.0\nEDIT_BIG=1\nEDIT_STATE=2\n"
     "BURN_FUEL_MULT=4\nFLASH_THRESHOLD=1.5\n"
 )
-# FLASH_THRESHOLD (acs.exe, manejador de ``evOnBackfireTriggered`` 0x140100070): con el combustible acumulado del escape
+# FLASH_THRESHOLD (ingeniería inversa de acs.exe, nivel de confianza: medio; manejador del evento de disparo): con el combustible acumulado del escape
 # (1..10) <= umbral AC solo dibuja un DESTELLO breve; por encima, llama sostenida. Kunos usa 4-8 (casi todo destellos);
 # aquí 1,5 para que se vea llama. EDIT_STATE (solo en modo de edición: consola ``set observeFlames 1``): 2 = llama en bucle.
 
@@ -147,13 +147,13 @@ def render_flame_presets_ini() -> str:
 
 
 # ---------------------------------------------------------------- texturas de las llamas
-# ``Flames::loadTextures`` (acs.exe 0x140103620) lee ``content/cars/<coche>/texture/flames/*.dds``: prefijo ``f`` = destello
-# (TYPE 0 de los presets), prefijo ``l`` = cola (TYPE 2) y cualquier otro = llama principal (TYPE 1). ``checkTextures``
-# (0x140100c40) llama a ``ksGenerateCrash`` si un preset usa un TYPE sin texturas: SIN esta carpeta las llamas no
+# Según la ingeniería inversa de acs.exe (nivel de confianza: medio), la carga de texturas lee ``content/cars/<coche>/texture/flames/*.dds``: prefijo ``f`` = destello
+# (TYPE 0 de los presets), prefijo ``l`` = cola (TYPE 2) y cualquier otro = llama principal (TYPE 1). La comprobación
+# de texturas provoca un cierre forzado si un preset usa un TYPE sin texturas: SIN esta carpeta las llamas no
 # se dibujan bien (Eagle/Ibiza: solo se veía «humo»). Los DDS se GENERAN aquí (no se copian los de Kunos): blancos con
 # alfa, porque AC los tiñe con el RGB del preset y los mezcla con el alfa del cuadrado.
 TEX_PX = 64
-TEX_FRAMES = 4  # ``cycleTexture`` va rotando entre los fotogramas de cada tipo
+TEX_FRAMES = 4  # la animación va rotando entre los fotogramas de cada tipo
 
 
 def _dds_bgra(px: int, rows: list[bytes]) -> bytes:

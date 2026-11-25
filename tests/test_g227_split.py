@@ -27,7 +27,9 @@ class TestSplitTrack(unittest.TestCase):
         low = meshes["1LOWMU"]
         # un borde de la franja es la línea central de la recta: un lado del coche sobre cada superficie
         self.assertAlmostEqual(min(v[0] for v in low), track_g225.LANE_X)
-        self.assertAlmostEqual(max(v[0] for v in low), track_g225.LANE_X + track_g225.CELL)
+        self.assertAlmostEqual(
+            max(v[0] for v in low), track_g225.LANE_X + track_g225.CELL
+        )
         self.assertAlmostEqual(min(v[2] for v in low), track_split.STRIP_Z[0])
         self.assertAlmostEqual(max(v[2] for v in low), track_split.STRIP_Z[1])
         self.assertTrue(all(abs(v[1]) < 1e-6 for v in low))  # misma cota que el suelo

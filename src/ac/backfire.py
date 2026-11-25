@@ -1,11 +1,11 @@
 """``data/sounds.ini [BACKFIRE]``: condiciones con las que AC dispara las llamas del escape (G2.55).
 
-Fuente: ingeniería inversa de ``acs.exe`` (``BackfireParams::BackfireParams`` 0x1400cccb0 y ``checkBackfire`` 0x1400d26b0):
+Fuente: ingeniería inversa de ``acs.exe`` (nivel de confianza: medio; lectura de parámetros y condición de disparo):
 
-* ``BackfireParams`` lee ``MAXGAS`` (tope 0,3), ``MINRPM``, ``MAXRPM`` y ``TRIGGERGAS`` de ``data/sounds.ini [BACKFIRE]``.
+* La lectura de parámetros lee ``MAXGAS`` (tope 0,3), ``MINRPM``, ``MAXRPM`` y ``TRIGGERGAS`` de ``data/sounds.ini [BACKFIRE]``.
   Sin ``sounds.ini`` quedan los valores por defecto del código: ``MINRPM`` = 9750 rpm, ``MAXRPM`` = 24000, ``MAXGAS`` = 0,25,
   ``TRIGGERGAS`` = 0,8. Con casi cualquier motor de calle 9750 rpm no se alcanza nunca: no hay llamas (Eagle Inca).
-* ``checkBackfire``: el gas máximo pulsado ``g`` fija ``TRIGGERGAS·g`` y ``MAXGAS·g``. Se arma al bajar de ``TRIGGERGAS·g`` y
+* La comprobación de disparo: el gas máximo pulsado ``g`` fija ``TRIGGERGAS·g`` y ``MAXGAS·g``. Se arma al bajar de ``TRIGGERGAS·g`` y
   dispara con ``0 < gas < MAXGAS·g``, ``MINRPM < rpm ≤ MAXRPM`` y combustible en el escape > 1 (se acumula con el gas
   mantenido). **Con el gas a 0 NO dispara**: hay que levantar el pie solo en parte (≈ 5-20 %), no soltarlo de golpe.
 

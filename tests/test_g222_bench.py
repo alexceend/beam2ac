@@ -204,6 +204,8 @@ def _row(t_ms, seg, meas, lim_axle, clutch=1.0, dw=1.0):
 
 class TestAnalysis(unittest.TestCase):
     def test_blocks_by_segment_and_meas_window(self):
+        if "beam2ac_g221lsd_a1" not in A.BY_ID:
+            self.skipTest("variantes de G2.21 no disponibles (output/ local)")
         with tempfile.TemporaryDirectory() as d:
             d = Path(d)
             rows = []
@@ -240,6 +242,8 @@ class TestAnalysis(unittest.TestCase):
 
 class TestRunnerSynthetic(unittest.TestCase):
     def _runner(self, sim, items, tmp):
+        if "beam2ac_g221lsd_a1" not in A.BY_ID:
+            self.skipTest("variantes de G2.21 no disponibles (output/ local)")
         variant = A.BY_ID["beam2ac_g221lsd_a1"]
         return Runner(
             sim,

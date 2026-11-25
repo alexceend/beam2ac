@@ -434,9 +434,7 @@ class TestWorkspaceZipAndStates(unittest.TestCase):
         self.assertEqual(got, ["mismo.json"])
 
 
-COMMON = Path(
-    (default_beamng_root() / "content/vehicles/common.zip").as_posix()
-)
+COMMON = Path((default_beamng_root() / "content/vehicles/common.zip").as_posix())
 MODS = Path.home() / "AppData/Local/BeamNG/BeamNG.drive/current/mods"
 
 

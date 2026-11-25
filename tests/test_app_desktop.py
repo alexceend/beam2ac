@@ -106,8 +106,12 @@ class TestWorkspace(unittest.TestCase):
             self.ws.export("ibz", {})
         with self.assertRaisesRegex(WorkspaceError, "car_id"):
             self.ws.export("ibz", {"confirm": True, "car_id": "Mal Id"})
-        with self.assertRaisesRegex(WorkspaceError, "ruta de Assetto Corsa"):  # obligatoria: de ella sale el piloto
-            self.ws.export("ibz", {"confirm": True, "ac_root": str(self.tmp / "no_existe")})
+        with self.assertRaisesRegex(
+            WorkspaceError, "ruta de Assetto Corsa"
+        ):  # obligatoria: de ella sale el piloto
+            self.ws.export(
+                "ibz", {"confirm": True, "ac_root": str(self.tmp / "no_existe")}
+            )
         self.assertEqual(self.ws.exports("ibz"), [])  # nada se creó
 
     def test_files_confined_to_project(self) -> None:

@@ -111,7 +111,9 @@ class TestService(unittest.TestCase):
         with mock.patch.object(ar, "launch", once):
             service.run("aero", SAMPLE, label="aero_resume")
         self.assertEqual(calls, ["s2"])  # solo la que faltaba
-        self.assertTrue(list(work.glob("userpath_s2_parcial_*")))  # apartada, no borrada
+        self.assertTrue(
+            list(work.glob("userpath_s2_parcial_*"))
+        )  # apartada, no borrada
 
     def test_cancel_inside_a_session_leaves_no_measurement_and_no_lock(self) -> None:
         with mock.patch.object(ar, "launch", _fake_launch):
@@ -134,7 +136,9 @@ class TestService(unittest.TestCase):
         self.assertTrue(lock.exists())  # no se pisa el bloqueo de otro
         with mock.patch.object(service, "_pid_alive", return_value=False):
             with mock.patch.object(ar, "launch", _fake_launch):
-                service.run("aero", SAMPLE, label="aero_orphan_lock")  # huérfano: se retira
+                service.run(
+                    "aero", SAMPLE, label="aero_orphan_lock"
+                )  # huérfano: se retira
 
 
 class TestLaunchCancel(unittest.TestCase):
@@ -153,9 +157,11 @@ class TestLaunchCancel(unittest.TestCase):
                 raise subprocess.TimeoutExpired("x", timeout)
 
         ticks = []
-        with mock.patch.object(tr, "beamng_running", return_value=False), mock.patch.object(
-            tr.subprocess, "Popen", return_value=FakeProc()
-        ), mock.patch.object(tr, "_kill_tree") as kill:
+        with (
+            mock.patch.object(tr, "beamng_running", return_value=False),
+            mock.patch.object(tr.subprocess, "Popen", return_value=FakeProc()),
+            mock.patch.object(tr, "_kill_tree") as kill,
+        ):
             with self.assertRaises(tr.BenchCancelled):
                 tr.launch(tmp, "s1", tmp, cancel=lambda: True, tick=ticks.append)
         kill.assert_called_once()

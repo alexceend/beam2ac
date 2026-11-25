@@ -15,14 +15,31 @@ class TestRederive(unittest.TestCase):
     def test_driver_mass_change_supersedes_mass_decisions(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             ws = Workspace(Path(tmp))
-            ws.create({"name": "t_eagle", "kind": "dir", "path": str(EAGLE), "pc": "c27b2.pc",
-                       "driver_mass": 0, "mass_choice": "declared"})
+            ws.create(
+                {
+                    "name": "t_eagle",
+                    "kind": "dir",
+                    "path": str(EAGLE),
+                    "pc": "c27b2.pc",
+                    "driver_mass": 0,
+                    "mass_choice": "declared",
+                }
+            )
             root = Path(tmp) / "t_eagle"
+
             def total(cat):
-                ds = [d for d in cat.decisions if d.target == "ac:car.ini/BASIC/TOTALMASS"]
-                return ds, [d for d in ds if not any(x.supersedes == d.id for x in ds)][0]
+                ds = [
+                    d for d in cat.decisions if d.target == "ac:car.ini/BASIC/TOTALMASS"
+                ]
+                return (
+                    ds,
+                    [d for d in ds if not any(x.supersedes == d.id for x in ds)][0],
+                )
+
             ds0, act0 = total(Catalog.load(REPO_CATALOG, root))
-            ws.set_driver_mass("t_eagle", {"driver_mass": 70})  # antes: error «crea un proyecto nuevo»
+            ws.set_driver_mass(
+                "t_eagle", {"driver_mass": 70}
+            )  # antes: error «crea un proyecto nuevo»
             ds1, act1 = total(Catalog.load(REPO_CATALOG, root))
             self.assertEqual(len(ds1), len(ds0) + 1)
             self.assertEqual(act1.supersedes, act0.id)
@@ -33,12 +50,28 @@ class TestRederive(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             ws = Workspace(Path(tmp))
-            ws.create({"name": "t_eagle", "kind": "dir", "path": str(EAGLE), "pc": "c27b2.pc",
-                       "driver_mass": 0, "mass_choice": "measured"})
-            ts = [threading.Thread(target=ws.set_driver_mass, args=("t_eagle", {"driver_mass": m})) for m in (70, 80, 90)]
+            ws.create(
+                {
+                    "name": "t_eagle",
+                    "kind": "dir",
+                    "path": str(EAGLE),
+                    "pc": "c27b2.pc",
+                    "driver_mass": 0,
+                    "mass_choice": "measured",
+                }
+            )
+            ts = [
+                threading.Thread(
+                    target=ws.set_driver_mass, args=("t_eagle", {"driver_mass": m})
+                )
+                for m in (70, 80, 90)
+            ]
             [t.start() for t in ts]
             [t.join() for t in ts]
-            ids = [d.id for d in Catalog.load(REPO_CATALOG, Path(tmp) / "t_eagle").decisions]  # no lanza: ids únicos
+            ids = [
+                d.id
+                for d in Catalog.load(REPO_CATALOG, Path(tmp) / "t_eagle").decisions
+            ]  # no lanza: ids únicos
             self.assertEqual(len(ids), len(set(ids)))
 
 

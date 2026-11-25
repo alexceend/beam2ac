@@ -105,7 +105,9 @@ class TestInspect(unittest.TestCase):
         pat = D.inspect_vehicle(str(PROTHEAN_MOD.parent / "2020_rpm_patagonia_xt_v8"))
         self.assertTrue(pat["exportable_today"])
         self.assertEqual(pat["blockers"], [])
-        r = D.inspect_vehicle(str(IBIZA))  # FRONT_SHARE: lo resuelve su decisión de proyecto, no el catálogo
+        r = D.inspect_vehicle(
+            str(IBIZA)
+        )  # FRONT_SHARE: lo resuelve su decisión de proyecto, no el catálogo
         self.assertFalse(r["exportable_today"])
         b = {x["target"]: x for x in r["blockers"]}
         self.assertIn("ac:brakes.ini/DATA/FRONT_SHARE", b)

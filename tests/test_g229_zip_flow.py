@@ -59,7 +59,9 @@ class TestZip(unittest.TestCase):
         export = fake_export()
         with (
             mock.patch("src.project.export.default_ac_root", return_value=None),
-            mock.patch("src.app.workspace._require_ac_root", return_value=str(self.tmp)),
+            mock.patch(
+                "src.app.workspace._require_ac_root", return_value=str(self.tmp)
+            ),
             mock.patch("src.app.diagnostics.inspect_vehicle", return_value=OK),
             mock.patch("src.project.export.export_project", export),
         ):

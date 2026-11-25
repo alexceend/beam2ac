@@ -81,12 +81,16 @@ class TestSeat(unittest.TestCase):
 
     def test_headroom_lowers_never_raises(self):
         eyes = (0.3, 1.2, 0.0)
-        hi, _ = driver_seat.default_hips(eyes, lambda x, z: 2.5)  # techo alto: no cambia
+        hi, _ = driver_seat.default_hips(
+            eyes, lambda x, z: 2.5
+        )  # techo alto: no cambia
         lo, rep = driver_seat.default_hips(eyes, lambda x, z: 1.30)  # techo bajo: baja
         self.assertEqual(hi[1], round(1.2 - 0.624, 4))
         self.assertLess(lo[1], hi[1])
         self.assertAlmostEqual(
-            lo[1] + driver_seat.HEAD_BONE_ABOVE_HIPS + driver_seat.VALIDATED_ROOF_MINUS_HEAD,
+            lo[1]
+            + driver_seat.HEAD_BONE_ABOVE_HIPS
+            + driver_seat.VALIDATED_ROOF_MINUS_HEAD,
             1.30,
             places=3,
         )
@@ -95,7 +99,9 @@ class TestSeat(unittest.TestCase):
     def test_resolve_eyes_keeps_plausible_and_replaces_implausible(self):
         e, info = driver_seat.resolve_eyes(IBIZA_KN5, (0.355, 1.144, -0.344))
         self.assertEqual((e, info["source"]), ((0.355, 1.144, -0.344), "beamng"))
-        e2, info2 = driver_seat.resolve_eyes(IBIZA_KN5, (0.0, 0.23, 0.037))  # estilo Autist
+        e2, info2 = driver_seat.resolve_eyes(
+            IBIZA_KN5, (0.0, 0.23, 0.037)
+        )  # estilo Autist
         self.assertEqual(info2["source"], "default")
         self.assertGreater(e2[1], 1.0)
         e3, info3 = driver_seat.resolve_eyes(IBIZA_KN5, None)  # estilo 200409
@@ -103,7 +109,8 @@ class TestSeat(unittest.TestCase):
         self.assertAlmostEqual(e3[0], driver_seat.SEAT_X)
 
     @unittest.skipUnless(
-        (AC / "content/cars/ks_toyota_ae86/driver_base_pos.knh").is_file(), "sin AC local"
+        (AC / "content/cars/ks_toyota_ae86/driver_base_pos.knh").is_file(),
+        "sin AC local",
     )
     def test_hips_only_file_places_hips(self):
         from src.project.local_driver import hips_only_files
@@ -119,7 +126,16 @@ class TestApply(unittest.TestCase):
     def _cams(self):
         z = (0.0, 0.0, 0.0)
         return cameras.Cameras(
-            z, 26, (0, 0.5, 1), (0, 1.0, 1.1), (0, 0.575, 2), (0, 0.9, 1.8), 2.0, 1.0, 1.0, 0.2
+            z,
+            26,
+            (0, 0.5, 1),
+            (0, 1.0, 1.1),
+            (0, 0.575, 2),
+            (0, 0.9, 1.8),
+            2.0,
+            1.0,
+            1.0,
+            0.2,
         )
 
     def test_no_edits_keeps_cameras_but_dash_follows_eyes(self):
@@ -131,9 +147,13 @@ class TestApply(unittest.TestCase):
 
     def test_bonnet_edit_is_independent_and_converts_frame(self):
         c = self._cams()
-        out = _apply_camera_edits(c, (0, 0, 0), {"bonnet": [0.0, 1.2, 1.3]}, (0, -0.5, 0.1))
+        out = _apply_camera_edits(
+            c, (0, 0, 0), {"bonnet": [0.0, 1.2, 1.3]}, (0, -0.5, 0.1)
+        )
         self.assertEqual(out.bonnet_kn5, (0.0, 1.2, 1.3))
-        self.assertEqual(out.bonnet_body, (0.0, 0.7, 1.4))  # cuerpo = KN5 + GRAPHICS_OFFSET
+        self.assertEqual(
+            out.bonnet_body, (0.0, 0.7, 1.4)
+        )  # cuerpo = KN5 + GRAPHICS_OFFSET
         self.assertEqual(out.bumper_body, c.bumper_body)  # el otro no se toca
         self.assertTrue(dataclasses.is_dataclass(out))
 

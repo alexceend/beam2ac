@@ -204,5 +204,6 @@ class TestAdvAwdLuaIsKnown(unittest.TestCase):
             KNOWN_LUA["camso_advawd"],
         )
 
+
 if __name__ == "__main__":
     unittest.main()

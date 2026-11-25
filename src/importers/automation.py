@@ -53,15 +53,29 @@ ENGINE_LUA_VERSION: dict[str, str] = {
     "91392d703ac3d54a9c45dfa2fb6ba7ef1f87aa6df6c1e4e95f61a3763f8de8bb": "40340",
 }
 KNOWN_LUA: dict[str, frozenset[str]] = {
-    "camsoEngineThermals": frozenset({"d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b"}),
-    "camsoSupercharger": frozenset({"e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196"}),
-    "camsoTurbocharger": frozenset({"1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76"}),
-    "camso_activeDampers": frozenset({"20434a1912c026a600fa08dfabb22f00f4c0d4cf8fd814ad8fdbb688f327687a"}),
-    "camso_activeSwaybars": frozenset({"a7b6fd3ad2730aa89926ffc828c92aa89bb6e27cff8a106060072e7a80c509e9"}),
+    "camsoEngineThermals": frozenset(
+        {"d429fe2e656be631becb16b30fd778c47ba6b13b5adf87a0e1e26d990dd13b1b"}
+    ),
+    "camsoSupercharger": frozenset(
+        {"e87db29e228fd33cb4b270b125e4198ee7209c8097bb6d797155883b35d6c196"}
+    ),
+    "camsoTurbocharger": frozenset(
+        {"1d2180f20745b7e8d4ad282711e84c7d478fd5b8f911b4af11a2f8a3d55adc76"}
+    ),
+    "camso_activeDampers": frozenset(
+        {"20434a1912c026a600fa08dfabb22f00f4c0d4cf8fd814ad8fdbb688f327687a"}
+    ),
+    "camso_activeSwaybars": frozenset(
+        {"a7b6fd3ad2730aa89926ffc828c92aa89bb6e27cff8a106060072e7a80c509e9"}
+    ),
     # controlador del reparto del diferencial central (±maxBiasOffset alrededor de diffTorqueSplitA);
     # sin equivalente en AC: el conversor usa el reparto base del JBeam
-    "camso_advawd": frozenset({"9d20181f2ff32d8dc5f2f3544f5b318f8a0fa435df4367005cf714ffdeefa9a5"}),
-    "cefaero": frozenset({"ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb"}),
+    "camso_advawd": frozenset(
+        {"9d20181f2ff32d8dc5f2f3544f5b318f8a0fa435df4367005cf714ffdeefa9a5"}
+    ),
+    "cefaero": frozenset(
+        {"ffcfeed1d5fbdf008a2b1640f5f452ff7bbd7699bb072216b0ce2793886343eb"}
+    ),
 }
 
 
@@ -79,10 +93,18 @@ def equivalent_known_version(
     if declared in KNOWN_EXPORTER_VERSIONS:
         return declared, "declarada y conocida"
     # por RUTA, no por nombre: dos Lua con el mismo nombre en carpetas distintas cuentan los dos
-    lua = [(k.rsplit("/", 1)[-1].removesuffix(".lua"), v) for k, v in source.lua_sha256.items()]
-    if not lua:  # sin Lua propio: familia 200409, solo con motor combustionEngine (marcador positivo)
+    lua = [
+        (k.rsplit("/", 1)[-1].removesuffix(".lua"), v)
+        for k, v in source.lua_sha256.items()
+    ]
+    if (
+        not lua
+    ):  # sin Lua propio: familia 200409, solo con motor combustionEngine (marcador positivo)
         if combustion is True:
-            return "200409", "sin Lua de vehículo y motor combustionEngine (como 200409)"
+            return (
+                "200409",
+                "sin Lua de vehículo y motor combustionEngine (como 200409)",
+            )
         return None, "sin Lua de vehículo y sin motor combustionEngine confirmado"
     engines = [d for n, d in lua if n == "camsoEngine"]
     if not engines or any(d not in ENGINE_LUA_VERSION for d in engines):
@@ -134,7 +156,8 @@ def is_automation_info(model_info: Mapping[str, Any]) -> bool:
     """¿``info.json`` declara una exportación de Automation? (D-P1).
 
     Solo mira ``info.json``: un ``ExporterVersion`` desconocido da False aquí aunque
-    :func:`is_automation` (con el código del origen, G2.50) lo acepte por equivalencia."""
+    :func:`is_automation` (con el código del origen, G2.50) lo acepte por equivalencia.
+    """
     return provenance_of_info(model_info).is_automation
 
 
@@ -162,9 +185,11 @@ def enrich_metadata(ir: VehicleIR, source: Any, combustion: bool | None = None) 
                 "text",
                 "extracted",
                 [info_ref],
-                note=""
-                if effective == declared
-                else f"versión desconocida, no equivalente a ninguna conocida: {why}",
+                note=(
+                    ""
+                    if effective == declared
+                    else f"versión desconocida, no equivalente a ninguna conocida: {why}"
+                ),
                 source_key="ExporterVersion",
             )
         else:  # versión desconocida pero con el código de una conocida (G2.50)

@@ -160,10 +160,15 @@ def prepare(
 
 
 def beamng_running() -> bool:
-    out = subprocess.run(
-        ["tasklist", "/FI", "IMAGENAME eq BeamNG.drive.x64.exe"],
-        capture_output=True,
-    ).stdout  # bytes: tasklist usa la página de códigos OEM
+    try:
+        out = subprocess.run(
+            ["tasklist", "/FI", "IMAGENAME eq BeamNG.drive.x64.exe"],
+            capture_output=True,
+            timeout=30,
+        ).stdout
+    except subprocess.TimeoutExpired:
+        return True  # sin respuesta: suponer abierto (lo seguro)
+    # bytes: tasklist usa la página de códigos OEM
     return b"BeamNG.drive.x64.exe" in out
 
 
@@ -181,9 +186,15 @@ def _newer_count(root: Path, ref: float) -> int:
 
 def _kill_tree(p: subprocess.Popen) -> None:
     """Cierra el juego y sus procesos hijos (Windows: taskkill /T)."""
-    subprocess.run(
-        ["taskkill", "/F", "/T", "/PID", str(p.pid)], capture_output=True, check=False
-    )
+    try:
+        subprocess.run(
+            ["taskkill", "/F", "/T", "/PID", str(p.pid)],
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired:
+        pass  # se intenta p.kill() abajo
     try:
         p.wait(timeout=30)
     except subprocess.TimeoutExpired:

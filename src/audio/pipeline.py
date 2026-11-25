@@ -109,6 +109,7 @@ MAX_ZIP_MEMBER = (
     512 << 20
 )  # un WAV de motor pesa decenas de MiB; esto frena una bomba de compresión
 MAX_ZIP_AUDIO = 2 << 30
+MAX_ZIP_ENTRIES = 20000
 
 
 def extract_zip_audio(zip_path: Path | str, dest: Path) -> Path:
@@ -125,6 +126,8 @@ def extract_zip_audio(zip_path: Path | str, dest: Path) -> Path:
         return dest
     total = 0
     with zipfile.ZipFile(zip_path) as z:
+        if len(z.infolist()) > MAX_ZIP_ENTRIES:
+            raise ValueError(f"el zip tiene más de {MAX_ZIP_ENTRIES} entradas")
         for info in z.infolist():
             parts = Path(info.filename.replace("\\", "/")).parts
             low = [p.lower() for p in parts]

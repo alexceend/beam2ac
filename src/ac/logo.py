@@ -8,7 +8,11 @@ from __future__ import annotations
 import struct
 import zlib
 
-BG, FG, ACC = (30, 30, 46), (203, 166, 247), (148, 226, 213)  # colores de la app (logo.svg)
+BG, FG, ACC = (
+    (30, 30, 46),
+    (203, 166, 247),
+    (148, 226, 213),
+)  # colores de la app (logo.svg)
 # fuente 5x7 solo para las 4 letras del logo
 GLYPH = {
     "b": ["1....", "1....", "1111.", "1...1", "1...1", "1...1", "1111."],
@@ -20,7 +24,12 @@ GLYPH = {
 
 def _png(w: int, h: int, rows: list[bytes]) -> bytes:
     def chunk(tag: bytes, data: bytes) -> bytes:
-        return struct.pack(">I", len(data)) + tag + data + struct.pack(">I", zlib.crc32(tag + data))
+        return (
+            struct.pack(">I", len(data))
+            + tag
+            + data
+            + struct.pack(">I", zlib.crc32(tag + data))
+        )
 
     raw = b"".join(b"\x00" + r for r in rows)
     return (

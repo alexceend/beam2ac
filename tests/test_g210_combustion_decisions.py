@@ -268,9 +268,7 @@ class TestClutchInertia(unittest.TestCase):
         self.assertIn("no numérico", why)
 
     def test_table_matches_installed_lua(self) -> None:
-        lua = Path(
-            (default_beamng_root() / "lua/vehicle/powertrain").as_posix()
-        )
+        lua = Path((default_beamng_root() / "lua/vehicle/powertrain").as_posix())
         if not lua.exists():
             self.skipTest("BeamNG no instalado")
         for typ, where in CLUTCHLIKE_ADDITIONAL_INERTIA.items():

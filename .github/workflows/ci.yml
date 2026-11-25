@@ -1,0 +1,22 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Dependencias
+        run: python -m pip install -r requirements-dev.txt
+      - name: Lint (flake8, solo errores de código; el estilo lo fija black)
+        run: python -m flake8 src tests *.py --select=F,E9,W6
+      - name: Formato
+        run: python -m black --check src tests *.py
+      - name: Pruebas (sin corpus ni instalaciones de los juegos: lo que falte se omite)
+        run: python -m pytest -q -p no:cacheprovider

@@ -109,7 +109,10 @@ class TestCatalogIntegrity(unittest.TestCase):
         lsd = {
             k: r
             for k, r in cat.rules.items()
-            if "_lsd_" in k and k.startswith("dt.awd_") and "_lsd_40340@" not in k and "_viscc_40340@" not in k
+            if "_lsd_" in k
+            and k.startswith("dt.awd_")
+            and "_lsd_40340@" not in k
+            and "_viscc_40340@" not in k
         }  # (G2.30: las derivadas para 40340 + camsoEngine tienen su prueba en test_g230_rear_fitted)
         self.assertEqual(sorted(lsd), sorted(LSD_RULES.values()))
         self.assertEqual({r.target: r.key for r in lsd.values()}, LSD_RULES)
@@ -164,7 +167,12 @@ class TestCatalogIntegrity(unittest.TestCase):
         names = {p.name for p in (REPO_CATALOG / "rules").glob("dt.preload@*.json")}
         self.assertEqual(
             names,
-            {"dt.preload@1.json", "dt.preload@2.json", "dt.preload@3.json", "dt.preload@4.json"},  # @4: G2.39
+            {
+                "dt.preload@1.json",
+                "dt.preload@2.json",
+                "dt.preload@3.json",
+                "dt.preload@4.json",
+            },  # @4: G2.39
         )
         for key in LSD_RULES.values():
             self.assertTrue(

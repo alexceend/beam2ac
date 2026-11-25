@@ -175,7 +175,8 @@ def choice_from_justification(text: str) -> dict[str, Any] | None:
 
 def rederive(project_root: Any, source: Any, driver_mass: float) -> list[S.Decision]:
     """Decisiones de masa del proyecto recalculadas para otra masa del piloto: misma elección del usuario, valores
-    nuevos, cada una sustituye (``supersedes``) a la vigente de su clave. Lista vacía si el proyecto no tiene."""
+    nuevos, cada una sustituye (``supersedes``) a la vigente de su clave. Lista vacía si el proyecto no tiene.
+    """
     from src.attrs.store import REPO_CATALOG, Catalog
 
     from . import diagnostics
@@ -190,13 +191,17 @@ def rederive(project_root: Any, source: Any, driver_mass: float) -> list[S.Decis
         return []
     choice = choice_from_justification(next(iter(old.values())).justification)
     if choice is None:
-        raise WorkspaceError("no se pudo leer la elección de masa guardada en el proyecto")
+        raise WorkspaceError(
+            "no se pudo leer la elección de masa guardada en el proyecto"
+        )
     r = diagnostics.inspect_vehicle(
         source.path,
         source.pc,
         driver_mass,
         source.common_zip,
-        mass_choice=str(choice.get("kg")) if choice["mode"] == "manual" else choice["mode"],
+        mass_choice=(
+            str(choice.get("kg")) if choice["mode"] == "manual" else choice["mode"]
+        ),
     )
     out = []
     for d in map(lambda x: S.from_dict(x), r["mass_decisions"]):
