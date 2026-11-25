@@ -662,6 +662,10 @@ def collect(
         _apply_adjustable_turbo(
             options, files, data_texts, issues, stage_dirs.get("attributes"), ctx
         )
+        _apply_gearbox_template(
+            files, data_texts, issues, stage_dirs.get("attributes"), ctx, trace["keys"]
+        )
+        _add_usage_notes(issues, ctx, stage_dirs.get("attributes"))
         _apply_setup_items(options, files, data_texts, issues)
         _apply_supports_shifter(options, files, data_texts, issues)
         sctm = sctm_targets(trace["keys"])
@@ -669,6 +673,8 @@ def collect(
             if b["kind"] in ("archivo", "validación"):
                 continue  # validate_package los vuelve a comprobar en el paquete real
             sev = _blocker_severity(b, attrs, sctm)
+            if b.get("target") in ctx.get("template_filled", ()):
+                sev = "warning"  # rellenado por la plantilla de caja (heurística, ver gearbox.plantilla)
             why = ZERO_IS_WRONG_KEYS.get(b.get("target", ""))
             issues.append(
                 Issue(
@@ -789,6 +795,52 @@ def collect(
                     mprov,
                 )
             )
+        for anim in sorted((model_dir / "animations").glob("*.ksanim")):
+            files.append(
+                PackageFile(
+                    f"animations/{anim.name}",
+                    anim.read_bytes(),
+                    {
+                        **mprov,
+                        "heuristic": "animación de pieza configurada por el usuario, sin probar en AC",
+                    },
+                )
+            )
+        if (model_dir / "flames.ini").is_file():
+            files.append(
+                PackageFile(
+                    "data/flames.ini",
+                    (model_dir / "flames.ini").read_bytes(),
+                    {
+                        **mprov,
+                        "heuristic": "salidas isExhaust, marco KN5 sin probar en AC",
+                    },
+                )
+            )
+            from src.ac.flames import flame_texture_files, render_flame_presets_ini
+
+            for rel, dds in flame_texture_files().items():
+                files.append(
+                    PackageFile(
+                        rel,
+                        dds,
+                        {
+                            "generator": "src.ac.flames",
+                            "heuristic": "sprites de llama generados; sin probar en AC",
+                        },
+                    )
+                )
+
+            files.append(
+                PackageFile(
+                    "data/flame_presets.ini",
+                    render_flame_presets_ini().encode("utf-8"),
+                    {
+                        "generator": "src.ac.flames",
+                        "heuristic": "aspecto de la llama, sin probar en AC",
+                    },
+                )
+            )
         if (model_dir / "lights.ini").is_file():
             files.append(
                 PackageFile(
@@ -904,6 +956,26 @@ def collect(
                     )
             except (ac_cameras.CameraError, ValueError) as exc:
                 issues.append(Issue("warning", "camaras", f"sin cámaras: {exc}"))
+        tank = ctx_items.get("fuel_tank")
+        if tank and "[FUELTANK]" in car_ini_text.upper():
+            issues.append(
+                Issue(
+                    "warning",
+                    "deposito.ya_definido",
+                    "car.ini ya trae [FUELTANK]: la posición del editor no se aplica",
+                )
+            )
+        elif tank:
+            car_ini_text, applied = _place_fuel_tank(car_ini_text, tank, issues)
+            if applied:
+                ctx.setdefault("cockpit_applied", set()).add("fuel_tank")
+                added.append(
+                    {
+                        "key": "[FUELTANK] POSITION",
+                        "stage": "cockpit_edits",
+                        "rule": "depósito colocado en el editor (marco KN5) + GRAPHICS_OFFSET",
+                    }
+                )
         files.append(
             PackageFile(
                 "data/car.ini",
@@ -919,6 +991,11 @@ def collect(
         for k in ("driver_eyes", "bonnet", "bumper")
         if k in ctx_items and k not in ctx.get("cockpit_applied", set())
     ]
+    if "fuel_tank" in ctx_items and "fuel_tank" not in ctx.get(
+        "cockpit_applied", set()
+    ):
+        # G2.33: un ajuste guardado que no llega al paquete se informa (aviso: ya hay uno más arriba)
+        ctx.setdefault("cockpit_unapplied", []).append("fuel_tank")
     if lost:
         issues.append(
             Issue(
@@ -936,6 +1013,11 @@ def collect(
             render_lods_ini(kn5_name).encode("utf-8"),
             {"generator": "src.ac.assemble.render_lods_ini", "references": kn5_name},
         )
+    )
+    _add_shadows(
+        files,
+        issues,
+        model_dir / "model.kn5" if model is not None and model_dir else None,
     )
     ctx["not_distributable"] = []
     if ctx.get("tyre_compounds_used"):
@@ -989,37 +1071,58 @@ def collect(
                     # el IK de los brazos y el ciclo de manos solo aceptan caderas en una región: si la del
                     # Ibiza no vale (otra forma de aro), se busca la más cercana que sí (±15 cm, y/z)
                     steps = [i * 0.025 for i in range(-6, 7)]
-                    cands = sorted(
-                        (
-                            ((0.0, 0.0),)
-                            if hips_edit
-                            else ((a, b) for a in steps for b in steps)
-                        ),
+                    grid = sorted(
+                        ((a, b) for a in steps for b in steps),
                         key=lambda ab: ab[0] ** 2 + ab[1] ** 2,
                     )
+                    # con caderas editadas se prueban tal cual y, si los brazos no llegan, se busca alrededor
+                    # de las del volante (antes se descartaban las manos sin buscar: Eagle Inca, exports 014/015)
+                    bases = [(h0, ((0.0, 0.0),) if hips_edit else grid)]
+                    if hips_edit:
+                        bases.append((hips_from_wheel(steer0), grid))
                     last_err: Exception | None = None
-                    for dy, dz in cands:
-                        h = (h0[0], round(h0[1] + dy, 4), round(h0[2] + dz, 4))
-                        try:
-                            driver_files, drep = local_driver_files(
-                                model_dir,
-                                model,
-                                Path(options["ac_root"]),
-                                h,
-                                generic=generic_profile(steer0),
-                                anim_edits=anim,
-                            )
+                    h = None
+                    used_fallback = False
+                    for bi, (hb, cands) in enumerate(bases):
+                        for dy, dz in cands:
+                            h = (hb[0], round(hb[1] + dy, 4), round(hb[2] + dz, 4))
+                            try:
+                                driver_files, drep = local_driver_files(
+                                    model_dir,
+                                    model,
+                                    Path(options["ac_root"]),
+                                    h,
+                                    generic=generic_profile(steer0),
+                                    anim_edits=anim,
+                                )
+                                break
+                            except (DriverPoseError, HandsError, SteerAnimError) as exc:
+                                last_err = exc
+                                h = None
+                        if h is not None:
+                            used_fallback = bi > 0
+                            h0 = hb
                             break
-                        except (DriverPoseError, HandsError, SteerAnimError) as exc:
-                            last_err = exc
-                    else:
-                        h = None
+                    if used_fallback:
+                        issues.append(
+                            Issue(
+                                "warning",
+                                "piloto_local.caderas_editadas_fuera_de_alcance",
+                                f"las caderas editadas {list(hips_edit)} quedan fuera del alcance de los brazos "
+                                f"para este volante: se usan {list(h)} (búsqueda alrededor de las del volante)",
+                            )
+                        )
                     if h is None:
                         issues.append(
                             Issue(
                                 "warning",
                                 "piloto_local.sin_manos",
-                                f"manos no generadas ({last_err}): el piloto sale sentado, sin manos animadas",
+                                f"manos no generadas ({last_err}): el piloto sale sentado, sin manos animadas"
+                                + (
+                                    "; probadas las caderas editadas y las del volante ±15 cm"
+                                    if hips_edit
+                                    else ""
+                                ),
                             )
                         )
                         driver_files, drep = hips_only_files(
@@ -1032,7 +1135,7 @@ def collect(
                         seat_rep = {
                             "rule": (
                                 "editado en la interfaz (G2.32)"
-                                if hips_edit
+                                if hips_edit and not used_fallback
                                 else "caderas = volante + relación del Ibiza (marco del volante)"
                             ),
                             "hips": list(h),
@@ -1081,6 +1184,7 @@ def collect(
                 "ajuste guardado de hips sin aplicar (solo se usa con --local-driver y --ac-root)",
             )
         )
+    lost += ctx.get("cockpit_unapplied", [])
     if ctx.get("cockpit_edits"):
         ctx["cockpit_edits"]["items"] = {
             k: v for k, v in ctx_items.items() if k not in lost
@@ -1327,6 +1431,7 @@ def collect(
         )
     )
     ctx["kn5"] = kn5_name
+    _apply_backfire(options, files, data_texts, issues)
     return files, issues, ctx
 
 
@@ -1714,6 +1819,7 @@ def write_export(
     md += [f"- `{i.code}` {i.target} {i.detail}".rstrip() for i in warnings] or [
         "- ninguna"
     ]
+    md += ctx.get("usage_notes_md", [])
     ensure_safe_output_path(attempt / "export_report.md").write_text(
         "\n".join(md) + "\n", encoding="utf-8"
     )
@@ -1906,6 +2012,277 @@ def _apply_setup_items(
         issues.append(Issue("warning", "setup.reglajes", n))
 
 
+def _add_usage_notes(
+    issues: list[Issue], ctx: dict[str, Any], att_dir: Path | None
+) -> None:
+    """Notas de uso en el informe y avisos automáticos (``src/project/usage_notes.py``)."""
+    from . import usage_notes as un
+
+    facts = _load_json(att_dir / "report.json").get("facts", {}) if att_dir else {}
+    ctx["usage_notes_md"] = un.report_lines(facts)
+    for w in un.auto_warnings(facts):
+        issues.append(Issue("warning", "uso.nota", w))
+    sc = (facts.get("ir.engine.supercharger_type") or {}).get("value")
+    if sc:
+        issues.append(
+            Issue(
+                "warning",
+                "compresor.tipo",
+                f"compresor '{sc}' (JBeam del exportador): BeamNG solo lo usa para el sonido; el boost sale del "
+                "mapa de presión (en power.lut, o como [TURBO_n] sin lag con la casilla de turbo ajustable). "
+                "AC no tiene sección de compresor: tipo sin reflejar y sin probar en AC",
+            )
+        )
+
+
+def _apply_backfire(
+    options: dict[str, Any],
+    files: list[PackageFile],
+    data_texts: dict[str, str],
+    issues: list[Issue],
+) -> None:
+    """``data/sounds.ini [BACKFIRE]`` (src/ac/backfire.py): sin él AC usa MINRPM = 9750 y no hay llamas.
+
+    Solo con ``data/flames.ini`` en el paquete y ``options['backfire']`` no desactivado; ``options['backfire_params']``
+    (``min_rpm``, ``max_rpm``, ``max_gas``) los sobrescribe."""
+    from src.ac import backfire as bf
+    from src.ac import gearbox_templates as gt
+
+    if options.get("backfire") is False or not any(
+        f.rel == "data/flames.ini" for f in files
+    ):
+        return
+    limiter = gt.read_ini(data_texts.get("engine.ini", "")).get(
+        ("ENGINE_DATA", "LIMITER")
+    )
+    try:
+        vals = bf.backfire_values(
+            float(limiter), **(options.get("backfire_params") or {})
+        )
+    except (TypeError, ValueError, OverflowError) as exc:
+        issues.append(Issue("warning", "llamas.backfire", f"sin [BACKFIRE]: {exc}"))
+        return
+    old = next((f for f in files if f.rel == "data/sounds.ini"), None)
+    base = old.data.decode("utf-8") if old is not None else ""
+    if "[BACKFIRE]" in base.upper():
+        return  # ya definido (banco de audio propio)
+    text = gt.set_ini_keys(base, bf.SECTION, vals)
+    prov = {
+        **(old.provenance if old is not None else {}),
+        "heuristic": "[BACKFIRE] de las llamas, sin probar en AC",
+    }
+    files[:] = [f for f in files if f.rel != "data/sounds.ini"]
+    files.append(PackageFile("data/sounds.ini", text.encode("utf-8"), prov))
+    issues.append(
+        Issue(
+            "warning",
+            "llamas.backfire",
+            f"[BACKFIRE] en data/sounds.ini: MINRPM={vals['MINRPM']} MAXRPM={vals['MAXRPM']} "
+            f"MAXGAS={vals['MAXGAS']}; las llamas salen levantando el gas solo en parte "
+            "(0 < gas < MAXGAS·gas máx.), no soltándolo del todo"
+            + (
+                ""
+                if old is not None
+                else "; sin banco de audio: sounds.ini solo con [BACKFIRE] (probar que el coche carga)"
+            ),
+        )
+    )
+
+
+def _add_shadows(
+    files: list[PackageFile], issues: list[Issue], kn5: Path | None
+) -> None:
+    """Sombras falsas de AC (``src/ac/shadows.py``): PNG generados y ``ambient_shadows.ini``; batalla del KN5."""
+    from src.ac import shadows
+    from src.ac.kn5_inspect import read_kn5
+
+    if kn5 is None or not kn5.is_file():
+        return
+    zs: dict[str, float] = {}
+    for n in read_kn5(kn5, keep_vertices=False).nodes:
+        if n.name.startswith("WHEEL_") and n.type == 1:
+            zs[n.name[-2:]] = n.translation[2]
+    front = [zs[k] for k in ("LF", "RF") if k in zs]
+    rear = [zs[k] for k in ("LR", "RR") if k in zs]
+    if not front or not rear:
+        issues.append(
+            Issue("warning", "sombras", "sin nulos WHEEL_xx: no se generan las sombras")
+        )
+        return
+    wheelbase = sum(front) / len(front) - sum(rear) / len(rear)
+    have = {f.rel for f in files}
+    for rel, data in shadows.shadow_files(abs(wheelbase)).items():
+        if rel not in have:
+            files.append(
+                PackageFile(
+                    rel,
+                    data,
+                    {
+                        "generator": "src.ac.shadows",
+                        "heuristic": "tamaños de Kunos observados; sin probar en AC",
+                    },
+                )
+            )
+    issues.append(
+        Issue(
+            "warning",
+            "sombras.generadas",
+            f"sombras de contacto generadas (WIDTH=1.0, LENGTH={abs(wheelbase) + 0.4:.2f}; heurística, sin probar en AC)",
+        )
+    )
+
+
+def _place_fuel_tank(
+    car_ini_text: str, tank: list[float], issues: list[Issue]
+) -> tuple[str, bool]:
+    """``[FUELTANK] POSITION`` va en el marco FÍSICO (origen en el CdG; Celica ST185: 0,-0.15,-1.45);
+    el editor trabaja en el marco del KN5: físico = KN5 + GRAPHICS_OFFSET (src/ac/graphics_offset.py).
+    """
+    from src.ac.gearbox_templates import set_ini_keys
+
+    go_txt = _ini_get(car_ini_text, "BASIC", "GRAPHICS_OFFSET")
+    pitch_txt = _ini_get(car_ini_text, "BASIC", "GRAPHICS_PITCH_ROTATION")
+    try:
+        go = tuple(float(v) for v in (go_txt or "").split(","))
+        ok = len(go) == 3 and float(pitch_txt or 0) == 0.0
+    except ValueError:
+        ok = False
+    if not ok:
+        issues.append(
+            Issue(
+                "warning",
+                "deposito.sin_graphics_offset",
+                "depósito colocado en el editor sin aplicar: falta GRAPHICS_OFFSET (o hay inclinación) "
+                "para pasar de marco KN5 a marco físico",
+            )
+        )
+        return car_ini_text, False
+    phys = ",".join(f"{c + o:.3f}" for c, o in zip(tank, go))
+    return set_ini_keys(car_ini_text, "FUELTANK", {"POSITION": phys}), True
+
+
+def _apply_gearbox_template(
+    files: list[PackageFile],
+    data_texts: dict[str, str],
+    issues: list[Issue],
+    att_dir: Path | None,
+    ctx: dict[str, Any],
+    trace_keys: list[dict[str, Any]],
+) -> None:
+    """Plantilla de caja del colaborador (heurística, ``src/ac/gearbox_templates.py``); tras el ajuste de turbo.
+
+    Una clave de ``drivetrain.ini`` con decisión del usuario no se toca; el resto se sustituye y los valores
+    anteriores quedan en la procedencia (``gearbox_template_overrides``)."""
+    from src.ac import gearbox_templates as gt
+
+    if "drivetrain.ini" not in data_texts or att_dir is None:
+        return
+    facts = _load_json(att_dir / "report.json").get("facts", {})
+    kind = (facts.get("ir.drivetrain.gearbox.kind") or {}).get("value")
+    if kind not in gt.KIND_TO_TYPE:
+        if kind:  # p. ej. cvtGearbox: sin plantilla
+            issues.append(
+                Issue("warning", "gearbox.plantilla", f"caja '{kind}': sin plantilla")
+            )
+        return
+    # par máximo CON boost (la interfaz de AC lo muestra así); sin turbo ajustable es power.lut
+    lut = ctx.get("ui_power_lut") or data_texts.get("power.lut", "")
+    eng = gt.engine_inputs(data_texts.get("engine.ini", ""), lut)
+    if eng is None:
+        issues.append(
+            Issue(
+                "warning",
+                "gearbox.plantilla",
+                "sin ralentí, corte o par máximo: no se aplica la plantilla de caja",
+            )
+        )
+        return
+    ai_prev = data_texts.get("ai.ini")
+    protected = frozenset(
+        (m.group(1).upper(), m.group(2).upper())
+        for k in trace_keys
+        if k.get("decision")
+        and (m := re.match(r"ac:drivetrain\.ini/([^/]+)/([^/]+)$", k.get("target", "")))
+    )
+    old = gt.read_ini(data_texts["drivetrain.ini"])
+    old_ai = gt.read_ini(ai_prev or "")
+    dt, ai = gt.apply_gearbox(
+        data_texts["drivetrain.ini"], ai_prev, kind, eng, protected
+    )
+    new = gt.read_ini(dt)
+    overrides = {
+        f"{s}/{k}": old[(s, k)]
+        for (s, k), v in new.items()
+        if (s, k) in old and old[(s, k)] != v
+    }
+    added_keys = sorted(f"{s}/{k}" for (s, k) in new if (s, k) not in old)
+    ai_over = {
+        f"{s}/{k}": old_ai[(s, k)]
+        for (s, k), v in gt.read_ini(ai).items()
+        if (s, k) in old_ai and old_ai[(s, k)] != v
+    }
+    kept = sorted("/".join(p) for p in protected)
+    meta = {
+        "gearbox_template": gt.KIND_TO_TYPE[kind],
+        "gearbox_template_overrides": overrides,
+        "gearbox_template_added": added_keys,
+        "gearbox_template_kept_decisions": kept,
+    }
+    _replace_data(files, data_texts, "drivetrain.ini", dt, meta, keep_prov=True)
+    _replace_data(
+        files,
+        data_texts,
+        "ai.ini",
+        ai,
+        {
+            "gearbox_template": meta["gearbox_template"],
+            "gearbox_template_overrides": ai_over,
+        },
+        keep_prov=True,
+    )
+    # claves que la plantilla rellena y que resolved_ini daba por no resueltas: se informan como aviso
+    ctx["template_filled"] = {
+        f"ac:drivetrain.ini/{k}"
+        for k in added_keys
+        if k.startswith(("CLUTCH/", "GEARBOX/"))
+    }
+    final = gt.read_ini(
+        dt
+    )  # valores que quedan en el archivo (con decisiones respetadas)
+    mt = final.get(("CLUTCH", "MAX_TORQUE"), "?")
+    up = float(final.get(("AUTO_SHIFTER", "UP"), eng.limiter_rpm - gt.UP_MARGIN_RPM))
+    down = float(
+        final.get(("AUTO_SHIFTER", "DOWN"), gt.DOWN_FRACTION * eng.limiter_rpm)
+    )
+    issues.append(
+        Issue(
+            "warning",
+            "gearbox.plantilla",
+            f"plantilla de caja '{meta['gearbox_template']}' (heurística del colaborador, sin medir en AC): "
+            f"MAX_TORQUE={mt} N·m, AUTO_SHIFTER UP={up:.0f} DOWN={down:.0f} rpm"
+            + (f"; sustituye {sorted(overrides)}" if overrides else "")
+            + (f"; claves nuevas {added_keys}" if added_keys else "")
+            + (f"; respeta decisiones {kept}" if kept else "")
+            + (
+                f"; DOWN acotado (0,55·limitador = {gt.DOWN_FRACTION * eng.limiter_rpm:.0f}) para no oscilar tras subir"
+                if "AUTO_SHIFTER/DOWN" not in kept
+                and abs(down - gt.DOWN_FRACTION * eng.limiter_rpm) > 1
+                else ""
+            ),
+        )
+    )
+    hunt = gt.shift_hunting(dt, up, down)
+    if hunt:
+        issues.append(
+            Issue(
+                "warning",
+                "gearbox.oscilacion",
+                f"subir de la marcha {hunt} a la siguiente en UP={up:.0f} rpm deja el motor por debajo de "
+                f"DOWN={down:.0f}: AC podría bajar de inmediato y oscilar (revisar UP/DOWN)",
+            )
+        )
+
+
 def _apply_supports_shifter(
     options: dict[str, Any],
     files: list[PackageFile],
@@ -2013,10 +2390,20 @@ def _replace_data(
     name: str,
     text: str,
     extra_prov: dict[str, Any] | None = None,
+    keep_prov: bool = False,
 ):
+    """``keep_prov``: conserva la procedencia del archivo sustituido (decisiones, reglas) y añade la marca."""
     prov = {"stage": "options", "stage_key": "", "keys": [], "thermal_template": True}
     if extra_prov:
         prov = {k: v for k, v in prov.items() if k != "thermal_template"} | extra_prov
+    old = next((f for f in files if f.rel == f"data/{name}"), None)
+    if keep_prov and old is not None:
+        prov = {
+            **old.provenance,
+            **{
+                k: v for k, v in prov.items() if k not in ("stage", "stage_key", "keys")
+            },
+        }
     files[:] = [f for f in files if f.rel != f"data/{name}"]
     files.append(PackageFile(f"data/{name}", text.encode("utf-8"), prov))
     data_texts[name] = text
@@ -2036,14 +2423,14 @@ def _apply_thermal(
     if kind and "tyres.ini" in data_texts:
         new = tt.apply_tyres(data_texts["tyres.ini"], kind)
         if new != data_texts["tyres.ini"]:
-            _replace_data(files, data_texts, "tyres.ini", new)
+            _replace_data(files, data_texts, "tyres.ini", new, keep_prov=True)
             for name, body in tt.tyre_files(kind).items():
                 _replace_data(files, data_texts, name, body)
             issues.append(
                 Issue(
                     "warning",
                     "termica.neumaticos",
-                    f"plantilla de diseño '{kind}' (Kunos), sin calibrar",
+                    f"plantilla de diseño '{kind}' ({'valores del colaborador' if kind == 'colab' else 'Kunos'}), sin calibrar",
                 )
             )
     if pad and "brakes.ini" in data_texts:
@@ -2062,7 +2449,7 @@ def _apply_thermal(
                 kw["pad"] = pad
             new = tt.apply_brakes(data_texts["brakes.ini"], **kw)
             if new != data_texts["brakes.ini"]:
-                _replace_data(files, data_texts, "brakes.ini", new)
+                _replace_data(files, data_texts, "brakes.ini", new, keep_prov=True)
                 issues.append(
                     Issue(
                         "warning",
@@ -2092,6 +2479,8 @@ def export_project(
     setup_brake_bias: bool = False,
     setup_tyre_pressure: bool = True,  # obligatorio: se ignora False
     supports_shifter: bool | None = None,
+    backfire: bool = True,
+    backfire_params: dict[str, float] | None = None,
 ) -> ExportResult:
     """Ejecuta (o reutiliza de la caché) las etapas y escribe un intento nuevo.
 
@@ -2144,10 +2533,17 @@ def export_project(
         supports_shifter is not None
     ):  # None = no se escribe (cajas que no son manuales/secuenciales)
         options["supports_shifter"] = bool(supports_shifter)
-    if thermal_tyres:
-        options["thermal_tyres"] = thermal_tyres
-    if thermal_brakes:
-        options["thermal_brakes"] = thermal_brakes
+    if not backfire:
+        options["backfire"] = False
+    if backfire_params:
+        options["backfire_params"] = {
+            k: float(v) for k, v in backfire_params.items() if v is not None
+        }
+    from src.ac.thermal_templates import DEFAULT_BRAKES, DEFAULT_TYRES
+
+    # térmica siempre activa (decisión del usuario, 2026-11-24); el CLI solo elige la variante
+    options["thermal_tyres"] = thermal_tyres or DEFAULT_TYRES
+    options["thermal_brakes"] = thermal_brakes or DEFAULT_BRAKES
     files, issues, ctx = collect(project, dirs, failures, car_id, options)
     keys = {n: r.key[:16] for n, r in sorted(results.items()) if r.key}
     res = write_export(

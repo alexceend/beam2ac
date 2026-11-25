@@ -161,6 +161,23 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                     p == "/api/steering"
                 ):  # materiales del KN5 y volante detectado (solo lectura)
                     return self._json(200, ws.steering_info(q.get("project", "")))
+                if (
+                    p == "/api/model_parts"
+                ):  # piezas del KN5 que se pueden animar (solo lectura)
+                    return self._json(200, ws.model_parts(q.get("project", "")))
+                if p == "/api/model_options":
+                    return self._json(200, ws.model_options_info(q.get("project", "")))
+                if (
+                    p == "/api/parts_geometry"
+                ):  # mallas del KN5 como piezas (editor de animaciones)
+                    blob = ws.parts_geometry(q.get("project", ""))
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/octet-stream")
+                    self.send_header("Content-Length", str(len(blob)))
+                    self.send_header("Cache-Control", "no-store")
+                    self.end_headers()
+                    self.wfile.write(blob)
+                    return
                 if p == "/api/details":  # detalles del coche guardados (solo lectura)
                     return self._json(200, ws.details_info(q.get("project", "")))
                 if (
@@ -247,6 +264,10 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                 if p == "/api/steering":
                     return self._json(
                         200, ws.steering_save(body.get("project", ""), body)
+                    )
+                if p == "/api/model_options":
+                    return self._json(
+                        200, ws.model_options_save(body.get("project", ""), body)
                     )
                 if p == "/api/details":
                     return self._json(

@@ -21,6 +21,7 @@ import datetime as _dt
 import functools
 import itertools
 import json
+import math
 import os
 import re
 import shutil
@@ -59,6 +60,19 @@ def _mesh_blob(k: Any, keep: Callable[[Any], bool]) -> bytes:
         fl.byteswap()
         ui.byteswap()
     return struct.pack("<II", len(pos) // 3, len(idx)) + fl.tobytes() + ui.tobytes()
+
+
+def _default_fuel_tank(wheels: dict[str, list[float]]) -> list[float]:
+    """Posición PROVISIONAL del depósito (no medida): eje, y = 0,3 m y entre ejes, a 35 % de la distancia desde el trasero.
+    El depósito se coloca de forma manual (nota de uso); BeamNG no tiene nodos del depósito.
+    """
+    zs = {n[-2:]: w[2] for n, w in wheels.items()}
+    front = [zs[k] for k in ("LF", "RF") if k in zs]
+    rear = [zs[k] for k in ("LR", "RR") if k in zs]
+    if not front or not rear:
+        return [0.0, 0.3, 0.0]
+    zf, zr = sum(front) / len(front), sum(rear) / len(rear)
+    return [0.0, 0.3, round(zr + 0.35 * (zf - zr), 3)]
 
 
 class WorkspaceError(ValueError):
@@ -150,6 +164,85 @@ def _parse_flags(extras: Any) -> dict[str, bool]:
         if v:
             out[kwarg] = True
     return out
+
+
+def _num(v: Any) -> bool:
+    """Número JSON finito (no bool)."""
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
+def _parse_backfire(extras: Any) -> dict[str, Any]:
+    """``extras.backfire`` (bool, por defecto sí) y ``backfire_min_rpm/max_rpm/max_gas`` → kwargs de ``export_project``."""
+    if not isinstance(extras, dict):
+        return {}
+    out: dict[str, Any] = {}
+    if extras.get("backfire") is False:
+        out["backfire"] = False
+    params = {}
+    for key, name in (
+        ("backfire_min_rpm", "min_rpm"),
+        ("backfire_max_rpm", "max_rpm"),
+        ("backfire_max_gas", "max_gas"),
+    ):
+        v = extras.get(key)
+        if v in (None, ""):
+            continue
+        if not _num(v) or v <= 0:
+            raise WorkspaceError(f"{key}: se esperaba un número positivo")
+        params[name] = float(v)
+    if params:
+        out["backfire_params"] = params
+    return out
+
+
+def _parse_model_options(extras: Any) -> dict[str, Any] | None:
+    """Opciones del MODELO (``normal_maps``, ``part_animations``) → ``None`` si ``extras`` no las menciona
+    (se conserva ``model_options.json``). Cada animación: ``{kind, node, pivot[3], axis[3], angle_deg}``.
+    """
+    from src.ac.part_anim import KINDS
+
+    if not isinstance(extras, dict) or not (
+        "normal_maps" in extras or "part_animations" in extras
+    ):
+        return None
+    nm = extras.get("normal_maps", False)
+    if not isinstance(nm, bool):
+        raise WorkspaceError("normal_maps: se esperaba true o false")
+    anims = extras.get("part_animations") or []
+    if not isinstance(anims, list):
+        raise WorkspaceError("part_animations: se esperaba una lista")
+    for a in anims:
+        if (
+            not isinstance(a, dict)
+            or a.get("kind") not in KINDS
+            or not isinstance(a.get("node"), str)
+            or not a["node"]
+        ):
+            raise WorkspaceError(
+                f"part_animations: cada entrada necesita kind ({sorted(KINDS)}) y node"
+            )
+        if (
+            "hinge" in a
+        ):  # forma simple de la interfaz: lado de la pieza y eje por nombre
+            from src.ac.part_anim import AXES, HINGES
+
+            if a["hinge"] not in HINGES:
+                raise WorkspaceError(f"part_animations: hinge en {list(HINGES)}")
+            if a.get("axis_name") not in (None, *AXES):
+                raise WorkspaceError(f"part_animations: axis_name en {sorted(AXES)}")
+        else:
+            for key, n in (("pivot", 3), ("axis", 3)):
+                v = a.get(key)
+                if (
+                    not isinstance(v, list)
+                    or len(v) != n
+                    or not all(_num(c) for c in v)
+                    or (key == "axis" and not any(v))
+                ):
+                    raise WorkspaceError(f"part_animations: {key} = 3 números finitos")
+        if not _num(a.get("angle_deg")) or not -180 <= a["angle_deg"] <= 180:
+            raise WorkspaceError("part_animations: angle_deg entre -180 y 180")
+    return {"normal_maps": nm, "part_animations": anims}
 
 
 def _parse_shifter(extras: Any) -> dict[str, bool]:
@@ -419,6 +512,24 @@ class Workspace:
         from src.project.model import wheel_override_of
 
         info["steering_enabled"] = wheel_override_of(self._project(pid)) is not None
+        from src.project.model import model_options_of
+
+        info["model_options"] = model_options_of(self._project(pid))
+        eng = sorted(
+            (self._dir(pid) / "stages" / "resolved_ini").glob("*/data/engine.ini"),
+            key=lambda p: p.stat().st_mtime,
+        )
+        info["engine_limiter"] = None
+        if eng:
+            from src.ac.gearbox_templates import read_ini
+
+            lim = read_ini(eng[-1].read_text(encoding="utf-8")).get(
+                ("ENGINE_DATA", "LIMITER")
+            )
+            try:
+                info["engine_limiter"] = float(lim) if lim else None
+            except ValueError:
+                pass
         info["has_boost"] = self._has_boost(d, run)
         info["has_manual_gearbox"] = self._has_manual_gearbox(d, run)
         info["has_model"] = any(
@@ -436,6 +547,8 @@ class Workspace:
         o = _read_json(found[-1]).get("options") or {}
         da = o.get("driver_aids") or {}
         return {
+            **({"backfire": False} if o.get("backfire") is False else {}),
+            **{f"backfire_{k}": v for k, v in (o.get("backfire_params") or {}).items()},
             "abs": da.get("abs") == "on",
             "abs_levels": da.get("abs_levels", 0),
             "tc": da.get("tc") == "on",
@@ -735,7 +848,8 @@ class Workspace:
         ):  # guardar cámaras: se repiten los extras del último intento
             extras = self._last_extras(project)
         driver_aids, tyre_compounds = _parse_extras(extras)
-        flags = _parse_flags(extras) | _parse_shifter(extras)
+        flags = _parse_flags(extras) | _parse_shifter(extras) | _parse_backfire(extras)
+        model_opts = _parse_model_options(extras)
         # G2.28: con errores bloqueantes conocidos no se exporta desde la interfaz
         # (el CLI `python -m src.project export` sigue dando el intento «bloqueado»)
         blocking = self.precheck(pid).get("errors") or []
@@ -753,6 +867,17 @@ class Workspace:
             self._idle(pid, "exportar")
             _write_wheel(
                 ensure_safe_output_path(project.root / WHEEL_FILE), None, keep=True
+            )
+
+        if (
+            model_opts is not None
+        ):  # cambia la clave de la etapa del modelo: se reconstruye en esta exportación
+            from src.project.model import MODEL_OPTIONS_FILE
+
+            self._idle(pid, "exportar")
+            ensure_safe_output_path(project.root / MODEL_OPTIONS_FILE).write_text(
+                json.dumps(model_opts, indent=1, ensure_ascii=False) + "\n",
+                encoding="utf-8",
             )
 
         # casilla «Instalar en Assetto Corsa y sobrescribir…»: usa la ruta del formulario o la de Ajustes
@@ -1054,6 +1179,116 @@ class Workspace:
             "el proyecto no tiene modelo 3D todavía: ejecuta «con modelo» (o exporta) una vez "
             "para poder elegir el volante"
         )
+
+    _PARTS_CACHE: dict[str, Any] = {}
+
+    def model_parts(self, pid: str) -> dict[str, Any]:
+        """Piezas (nodos con nombre único) del último KN5 del proyecto, para elegir qué animar. Solo lectura."""
+        from src.ac.kn5_inspect import read_kn5
+
+        kn5s = sorted(
+            (self._dir(pid) / "stages" / "model").glob("*/model.kn5"),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )
+        if not kn5s:
+            return {"built": False, "parts": []}
+        key = f"{kn5s[0]}:{kn5s[0].stat().st_mtime_ns}"
+        if key not in self._PARTS_CACHE:
+            kn = read_kn5(kn5s[0], keep_vertices=False)
+            counts: dict[str, int] = {}
+            for n in kn.nodes:
+                counts[n.name] = counts.get(n.name, 0) + 1
+            skip = ("WHEEL_", "SUSP_", "STEER_", "COCKPIT_", "BlenderFile", "B2AC_")
+            parts = sorted(
+                n.name
+                for n in kn.nodes
+                if counts[n.name] == 1 and not n.name.startswith(skip)
+            )
+            self._PARTS_CACHE.clear()
+            self._PARTS_CACHE[key] = parts
+        return {"built": True, "parts": self._PARTS_CACHE[key]}
+
+    _GEO_CACHE: dict[str, Any] = {}
+
+    def parts_geometry(self, pid: str) -> bytes:
+        """Todas las mallas del KN5 más reciente como piezas separables, para el editor de animaciones.
+
+        Binario: ``u32 n`` (bytes del JSON) + JSON ``{pieces:[{ref,name,material,tris,nv,ni}]}`` + por pieza
+        ``f32[nv*3]`` (marco del KN5) y ``u32[ni]`` (índices locales), en el orden de ``pieces``.
+        """
+        from src.ac.kn5_inspect import read_kn5
+        from src.ac.part_anim import node_refs
+
+        kn5s = sorted(
+            (self._dir(pid) / "stages" / "model").glob("*/model.kn5"),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )
+        if not kn5s:
+            raise WorkspaceError(
+                "el proyecto no tiene modelo 3D todavía: ejecuta la conversión con el modelo primero"
+            )
+        key = f"{kn5s[0]}:{kn5s[0].stat().st_mtime_ns}"
+        if key in self._GEO_CACHE:
+            return self._GEO_CACHE[key]
+        kn = read_kn5(kn5s[0])
+        refs = node_refs(kn)
+        pieces, chunks = [], []
+        skip = ("WHEEL_", "SUSP_", "COCKPIT_", "B2AC_LIGHT")
+        for n, ref in zip(kn.nodes, refs):
+            if n.type != 2 or not n.indices or n.name.upper().startswith("DRIVER"):
+                continue
+            pos = array.array("f", [c for p in kn.mesh_world_vertices(n) for c in p])
+            idx = array.array("I", n.indices)
+            if sys.byteorder == "big":
+                pos.byteswap()
+                idx.byteswap()
+            pieces.append(
+                {
+                    "ref": ref,
+                    "name": n.name,
+                    "material": (
+                        kn.materials[n.material][0] if n.material is not None else ""
+                    ),
+                    "tris": len(n.indices) // 3,
+                    "nv": len(pos) // 3,
+                    "ni": len(idx),
+                    "wheel": n.name.startswith(skip),
+                }
+            )
+            chunks.append(pos.tobytes() + idx.tobytes())
+        head = json.dumps({"pieces": pieces}, ensure_ascii=False).encode("utf-8")
+        head += b" " * (
+            -len(head) % 4
+        )  # alinea a 4 bytes: el cliente crea Float32Array/Uint32Array sobre el búfer
+        blob = struct.pack("<I", len(head)) + head + b"".join(chunks)
+        self._GEO_CACHE.clear()
+        self._GEO_CACHE[key] = blob
+        return blob
+
+    def model_options_info(self, pid: str) -> dict[str, Any]:
+        from src.project.model import model_options_of
+
+        return model_options_of(self._project(pid))
+
+    def model_options_save(self, pid: str, body: dict[str, Any]) -> dict[str, Any]:
+        """Guarda ``part_animations`` en ``model_options.json`` (conserva ``normal_maps``)."""
+        from src.project.model import MODEL_OPTIONS_FILE, model_options_of
+
+        project = self._project(pid)
+        cur = model_options_of(project)
+        new = _parse_model_options(
+            {
+                "normal_maps": cur["normal_maps"],
+                "part_animations": body.get("part_animations"),
+            }
+        )
+        self._idle(pid, "guardar las animaciones")
+        ensure_safe_output_path(project.root / MODEL_OPTIONS_FILE).write_text(
+            json.dumps(new, indent=1, ensure_ascii=False) + chr(10), encoding="utf-8"
+        )
+        return new
 
     def steering_info(self, pid: str) -> dict[str, Any]:
         """Materiales del KN5 (los más cercanos a los ojos primero), la elección guardada y lo que detecta
@@ -1596,6 +1831,7 @@ class Workspace:
                 "bonnet": list(cams.bonnet_kn5),
                 "bumper": list(cams.bumper_kn5),
                 "hips": list(hips),
+                "fuel_tank": _default_fuel_tank(wheels),
             },
             "hips_rule": rule,
             "eyes_note": einfo.get("reason")

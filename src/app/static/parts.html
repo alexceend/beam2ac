@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data: blob:">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/static/icon.svg">
+<title>beam2ac · animaciones de piezas</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1e1e2e; color: #cdd6f4; font: 13px system-ui, sans-serif; overflow: hidden; }
+  #wrap { display: flex; height: 100%; } #side { width: 400px; display: flex; flex-direction: column; background: #181825; border-right: 1px solid #45475a; min-width: 0; overflow: auto; }
+  #view { flex: 1; position: relative; min-width: 0; } canvas { display: block; }
+  #top { padding: 10px 12px 6px; } #top h3 { margin: 0 0 4px; font-size: 14px; } .muted { color: #a6adc8; font-size: 12px; }
+  #list { flex: none; height: 240px; overflow: auto; border-top: 1px solid #313244; border-bottom: 1px solid #313244; }
+  .piece { display: flex; gap: 8px; align-items: center; padding: 4px 12px; cursor: pointer; border-left: 3px solid transparent; }
+  .piece:hover { background: #1e1e2e; } .piece.sel { background: #313244; border-left-color: #cba6f7; }
+  .sw { width: 12px; height: 12px; border-radius: 3px; flex: none; } .piece .t { min-width: 0; } .piece .n { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #ctl { padding: 8px 12px; } #ctl label { display: block; margin: 5px 0 2px; color: #a6adc8; }
+  select, input[type=number], input[type=search] { width: 100%; box-sizing: border-box; background: #1e1e2e; color: inherit; border: 1px solid #45475a; padding: 4px 6px; border-radius: 4px; }
+  input[type=range] { width: 100%; } button { background: #cba6f7; color: #11111b; border: 0; border-radius: 5px; padding: 6px 12px; cursor: pointer; margin: 6px 6px 0 0; }
+  button.secondary { background: #313244; color: #cdd6f4; } #added div { display: flex; gap: 6px; align-items: center; padding: 2px 0; } #msg { min-height: 2.6em; margin-top: 6px; } .ok { color: #a6e3a1; } .warn { color: #f9e2af; }
+  #legend { position: absolute; left: 10px; bottom: 8px; background: #181825cc; padding: 4px 8px; border-radius: 5px; color: #a6adc8; font-size: 12px; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "/static/vendor/three-0.160.0/three.module.js", "three/addons/": "/static/vendor/three-0.160.0/addons/" } }
+</script>
+</head>
+<body>
+<div id="wrap"><div id="side"><div id="top">cargando…</div></div><div id="view"><div id="legend">Arrastra para girar · rueda para acercar · clic en una pieza para elegirla</div></div></div>
+<script type="module" src="/static/parts.js"></script>
+</body>
+</html>

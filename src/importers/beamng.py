@@ -436,6 +436,14 @@ def import_preview(pv: Any, driver_mass_kg: float | None = None) -> VehicleIR:
                 else "supercharger" if e.raw.supercharger_section_name else "turbo"
             )
             put("engine.boost_kind", kind, "enum", "computed", boost_refs)
+            if e.raw.supercharger_type:
+                put(
+                    "engine.supercharger_type",
+                    e.raw.supercharger_type,
+                    "enum",
+                    "extracted",
+                    _code(ec, "read_raw_engine: supercharger.type"),
+                )
             put(
                 "engine.boost_pressure_curve",
                 [
@@ -950,6 +958,8 @@ def _explain_missing(ir: VehicleIR, pv: Any, is_automation: bool) -> None:
             )
         elif path.endswith(".viscous_torque") and "differential" in path:
             why = "viscousTorque solo se interpreta en un diferencial viscous de un AWD con central"
+        elif path == "engine.supercharger_type":
+            why = "solo un compresor (supercharger) del JBeam de camsoEngine lleva tipo"
         elif path.startswith("engine.boost_"):
             why = "turbo/compresor con boost: solo camsoEngine con presión > 1 en el mapa de par"
         elif path.startswith("engine.reference_"):

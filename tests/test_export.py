@@ -226,6 +226,10 @@ class TestIbizaExport(unittest.TestCase):
                     continue  # turbo con lag (src/ac/adjustable_turbo.py): sale de resolved_ini + transformación
                 if rel == "data/setup.ini" and meta["provenance"].get("setup_items"):
                     continue  # presión de neumáticos (siempre) y reparto de frenada: plantilla de opciones sobre resolved_ini
+                if meta["provenance"].get("thermal_template") or meta["provenance"].get(
+                    "gearbox_template"
+                ):
+                    continue  # térmica y plantilla de caja: siempre activas (heurísticas etiquetadas, 2026-11-24)
                 self.assertEqual(meta["provenance"]["stage"], "resolved_ini", rel)
         car = read_ini_ac(res.car_dir / "data" / "car.ini")
         self.assertEqual(car.sections["BASIC"]["TOTALMASS"], "1119.57029")

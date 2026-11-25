@@ -254,7 +254,8 @@ def run_attributes(ctx: RunContext, out: Path) -> dict[str, Any]:
 
 def _write_cvt_script(vctx: Any, out: Path) -> str | None:
     """``cvt_script.lua`` junto al informe si el vehículo tiene una CVT (2026-11-19).
-    Devuelve ``None`` sin CVT, ``"ok"`` o el motivo si faltan datos (nunca se rellena)."""
+    Devuelve ``None`` sin CVT, ``"ok"`` o el motivo si faltan datos (nunca se rellena).
+    """
     from src.ac.cvt_script import CvtScriptError, params_from_facts, render_cvt_script
 
     try:
@@ -822,6 +823,7 @@ def run_model(ctx: RunContext, out: Path) -> dict[str, Any]:
         out,
         blender,
         M.wheel_override_of(ctx.project),
+        M.model_options_of(ctx.project),
     )
     return {
         "verification_ok": rep["verification"]["ok"],
@@ -856,6 +858,9 @@ MODEL_STAGE = Stage(
         "src/ac/kn5_write.py",
         "src/ac/steer_wheel.py",
         "src/ac/lights.py",
+        "src/ac/flames.py",
+        "src/ac/double_sided.py",
+        "src/ac/part_anim.py",
         "src/ac/collider_profile.py",
         "src/ac/cockpit_config.py",
     ),

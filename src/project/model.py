@@ -40,6 +40,7 @@ from src.safe_paths import ensure_safe_output_path
 # ellos un zip salía sin texturas o sin pintura y la misma carpeta sí las tenía
 EXTRACT_SUFFIXES = (".dae", ".json", ".dds", ".png", ".cs", ".meta", ".pc")
 MODEL_KN5 = "model.kn5"
+MODEL_OPTIONS_FILE = "model_options.json"  # opciones del modelo elegidas en el exportador (mapas normales, animaciones)
 WHEEL_FILE = "steering_wheel.json"  # elección del usuario (material del aro); ver la ventana «Volante»
 MAX_EXTRACT_BYTES = 4 << 30  # tope de lo que se extrae de un zip (bomba de compresión)
 
@@ -64,6 +65,29 @@ def wheel_override_of(project: Any) -> dict[str, Any] | None:
     return data if data.get("enabled", bool(data.get("rim_material"))) else None
 
 
+def model_options_of(project: Any) -> dict[str, Any]:
+    """``<proyecto>/model_options.json``: ``normal_maps`` (bool) y ``part_animations`` (lista de
+    ``{kind, node, pivot, axis, angle_deg}``, ver ``src/ac/part_anim.py``). Sin archivo o con un archivo
+    mal formado: todo desactivado (nunca falla)."""
+    off: dict[str, Any] = {"normal_maps": False, "part_animations": []}
+    f = Path(project.root) / MODEL_OPTIONS_FILE
+    if not f.is_file():
+        return off
+    try:
+        data = json.loads(f.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return off
+    if not isinstance(data, dict):
+        return off
+    anims = data.get("part_animations")
+    return {
+        "normal_maps": data.get("normal_maps") is True,
+        "part_animations": (
+            [a for a in anims if isinstance(a, dict)] if isinstance(anims, list) else []
+        ),
+    }
+
+
 def tool_inputs(_project: Any = None) -> dict[str, Any]:
     """Huella de herramientas y perfiles (entra en la clave de la etapa).
 
@@ -72,8 +96,11 @@ def tool_inputs(_project: Any = None) -> dict[str, Any]:
     """
     exe = blender_path()
     info: dict[str, Any] = {"blender": None, "addon": None}
-    if _project is not None:  # la elección del volante cambia el modelo: entra en la clave
+    if (
+        _project is not None
+    ):  # la elección del volante cambia el modelo: entra en la clave
         info["steering_wheel_override"] = wheel_override_of(_project)
+        info["model_options"] = model_options_of(_project)
     if exe:
         p = Path(exe)
         st = p.stat() if p.is_file() else None
@@ -207,6 +234,7 @@ def build_model(
     out: Path,
     blender: str,
     wheel_override: dict[str, Any] | None = None,
+    options: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Construye el modelo en ``out`` (carpeta de la etapa). Ver el docstring."""
     from src.ac import cockpit_config
@@ -319,8 +347,18 @@ def build_model(
                         "pintura no se interpreta (mezcla de capas sin verificar): "
                         f"{sorted(upper)[:6]}"
                     )
+                try:
+                    light_mats = set(light_functions(resolved))
+                except LightsError:
+                    light_mats = set()
                 sources = diffuse_sources(
-                    names, mj, vehicle_dir, paint_rgb, dae_materials
+                    names,
+                    mj,
+                    vehicle_dir,
+                    paint_rgb,
+                    dae_materials,
+                    opaque_materials=light_mats,
+                    normal_maps=bool((options or {}).get("normal_maps")),
                 )
                 dst = ensure_safe_output_path(out / "_stages" / f"textured_{MODEL_KN5}")
                 current = write_with_diffuse(current, dst, sources)
@@ -358,7 +396,9 @@ def build_model(
             warn("sin volante: la casilla «Volante» del proyecto no está marcada")
         else:
             report["steering_wheel"] = None
-            chosen = wheel_override.get("rim_material")  # elección del usuario (vacío: detección automática)
+            chosen = wheel_override.get(
+                "rim_material"
+            )  # elección del usuario (vacío: detección automática)
             try:
                 wheel = detect_steering_wheel(
                     current,
@@ -370,33 +410,66 @@ def build_model(
                 report["steering_wheel"]["rim_material"] = wheel["rim_material_token"]
                 current = dst
                 warn(
-                    ("volante elegido por el usuario: " if chosen else
-                     "volante detectado por geometría (sin perfil del vehículo): ")
+                    (
+                        "volante elegido por el usuario: "
+                        if chosen
+                        else "volante detectado por geometría (sin perfil del vehículo): "
+                    )
                     + f"{wheel['rim_material_token']}; sentido de giro sin probar en AC"
                 )
-            except (ValueError, SteerWheelError, cockpit_config.CockpitConfigError) as exc:
+            except (
+                ValueError,
+                SteerWheelError,
+                cockpit_config.CockpitConfigError,
+            ) as exc:
                 warn(f"volante sin montar bajo STEER_HR (sin perfil; detección: {exc})")
         lights_res = None
-        if profile and profile.get("lights") and mj is not None:
+        lights_profile = (profile or {}).get("lights")
+        generic_lights = False
+        glowmap_failed = False
+        if not lights_profile and mj is not None:
+            # sin perfil del vehículo: luces desde el glowMap con un perfil GENERADO (sin atenuar testigos
+            # interiores ni comprobar el nombre de las mallas). Experimental, sin probar en AC.
+            try:
+                funcs = light_functions(resolved)
+            except LightsError as exc:
+                funcs = {}
+                glowmap_failed = True
+                warn(f"luces sin generar (glowMap): {exc}")
+            if funcs:
+                lights_profile = {
+                    "expected_count": len(funcs),
+                    "source_mesh_name": None,
+                    "interior_z": [1e9, -1e9],
+                }
+                generic_lights = True
+        if lights_profile and mj is not None:
             try:
                 lights_res = apply_lights(
                     current.read_bytes(),
                     light_functions(resolved),
                     load_materials(mj),
-                    profile["lights"],
+                    lights_profile,
                 )
             except LightsError as exc:
-                raise ModelError(f"luces: {exc}") from None
+                if not generic_lights:
+                    raise ModelError(f"luces: {exc}") from None
+                warn(f"luces sin generar (perfil generado): {exc}")
+        if lights_res is not None:
             dst = ensure_safe_output_path(out / "_stages" / f"lights_{MODEL_KN5}")
             dst.write_bytes(lights_res.kn5)
             current = dst
             ensure_safe_output_path(out / "lights.ini").write_text(
                 lights_res.lights_ini, encoding="utf-8"
             )
-            report["lights"] = {"count": len(lights_res.lights)}
+            report["lights"] = {
+                "count": len(lights_res.lights),
+                "generated_profile": generic_lights,
+            }
         else:
             report["lights"] = None
-            warn("sin luces (sin perfil del vehículo o sin materials.json)")
+            if not generic_lights and lights_profile is None and not glowmap_failed:
+                warn("sin luces (sin perfil del vehículo o sin materials.json)")
         final = ensure_safe_output_path(out / MODEL_KN5)
         shutil.copyfile(current, final)
         report["kn5_sha256"] = _sha(final)
@@ -424,12 +497,76 @@ def build_model(
             if double:
                 ext = cockpit_config.render_ext_config(double, mj.name)
             report["double_sided_materials"] = len(double)
+            # alerón y piezas aerodinámicas finas: caras traseras reales (sin CSP la hoja desaparece desde un lado)
+            from src.ac.double_sided import add_back_faces
+
+            new_kn5, back = add_back_faces(final.read_bytes(), set(double))
+            if back:
+                ensure_safe_output_path(final).write_bytes(new_kn5)
+                report["kn5_sha256"] = _sha(final)
+                report["double_sided_geometry"] = sorted(set(back))
         if lights_res is not None:
             ext += lights_res.csp_emissive
         if ext:
             ensure_safe_output_path(out / "ext_config.ini").write_text(
                 ext, encoding="utf-8"
             )
+
+        # 5a. animaciones de piezas configuradas por el usuario (src/ac/part_anim.py)
+        report["part_animations"] = None
+        items = (options or {}).get("part_animations") or []
+        if items:
+            from src.ac import part_anim
+
+            try:
+                anim_files = part_anim.build_files(final, items)
+                adir = out / "animations"
+                for name, data in anim_files.items():
+                    ensure_safe_output_path(adir / name).parent.mkdir(
+                        parents=True, exist_ok=True
+                    )
+                    ensure_safe_output_path(adir / name).write_bytes(data)
+                report["part_animations"] = sorted(anim_files)
+            except part_anim.PartAnimError as exc:
+                warn(f"animaciones de piezas sin generar: {exc}")
+
+        # 5b. llamas del escape: salidas de las vigas isExhaust (src/ac/flames.py), marco del KN5 (hip)
+        try:
+            from src.ac import flames as fl
+            from src.ac.kn5_inspect import read_kn5
+            from src.extract.components import collect_beams
+            from src.extract.nodes import collect_nodes
+            from src.extract.wheels import collect_wheels
+
+            nodes = collect_nodes(resolved)
+            outlets = fl.exhaust_outlets(
+                {n.id: n.pos for n in nodes},
+                [
+                    (b.nodes[0], b.nodes[1])
+                    for b in collect_beams(resolved)
+                    if b.props.get("isExhaust")
+                ],
+            )
+            kn5w = {
+                n.name[-2:]: tuple(n.translation)
+                for n in read_kn5(final, keep_vertices=False).nodes
+                if n.name.startswith("WHEEL_") and n.type == 1
+            }
+            dy = fl.vertical_shift(
+                kn5w, {w.name: tuple(w.center) for w in collect_wheels(resolved, nodes)}
+            )
+            if outlets and dy is not None:
+                text, info = fl.render_flames_ini(outlets, dy)
+                ensure_safe_output_path(out / "flames.ini").write_text(
+                    text, encoding="utf-8"
+                )
+                report["flames"] = {"count": len(info), "outlets": info}
+            else:
+                report["flames"] = None
+                warn("sin llamas: no hay vigas isExhaust o ruedas para situarlas")
+        except Exception as exc:  # las llamas son opcionales: nunca rompen el modelo
+            report["flames"] = None
+            warn(f"sin llamas ({type(exc).__name__}: {exc})")
 
         # 6. ojos del piloto (cámara de cabina de BeamNG, marco del KN5)
         try:

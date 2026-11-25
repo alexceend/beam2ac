@@ -16,7 +16,9 @@ from __future__ import annotations
 import math
 from typing import Any
 
-TYRE_KINDS = ("street", "slick")
+TYRE_KINDS = ("street", "slick", "colab")
+DEFAULT_TYRES = "colab"  # siempre activa (decisión del usuario, 2026-11-24)
+DEFAULT_BRAKES = "auto"
 
 _THERMAL = {
     "street": dict(
@@ -29,16 +31,27 @@ _THERMAL = {
         INTERNAL_CORE_TRANSFER=0.00307, FRICTION_K=0.07936, ROLLING_K=0.18,
         COOL_FACTOR=2.05, SURFACE_ROLLING_K=0.6364,
     ),
+    # heurística del colaborador (2026-11-24): valores propios, no de Kunos; sin medir en AC
+    "colab": dict(
+        SURFACE_TRANSFER=0.015, PATCH_TRANSFER=0.00027, CORE_TRANSFER=0.00022,
+        INTERNAL_CORE_TRANSFER=0.0038, FRICTION_K=0.0671553, ROLLING_K=0.22,
+        COOL_FACTOR=2, SURFACE_ROLLING_K=1.2379851, GRAIN_GAIN=0.4, BLISTER_GAIN=0.4,
+    ),
 }  # fmt: skip
 _COMMON = dict(GRAIN_GAMMA=1, GRAIN_GAIN=0.5, BLISTER_GAMMA=1, BLISTER_GAIN=0.5)
 _TCURVE = {
     "street": "0|0.80 20|0.97 40|0.98 60|0.995 75|1.0 85|1.0 100|0.98 110|0.97 "
     "140|0.97 160|0.95 220|0.90 250|0.60",
+    # el original repetía x=60 (60|0.95 y 60|0.995): el primero pasa a 50 [hip, confirmar]
+    "colab": "0|0.75 20|0.90 40|0.92 50|0.95 60|0.995 75|1.0 85|1.0 100|0.98 140|0.95 "
+    "160|0.90 200|0.80 220|0.70 250|0.60",
     "slick": "0|0.70 20|0.80 45|0.90 60|0.98 70|1.0 85|1.0 100|0.97 140|0.95 "
     "180|0.95 240|0.80 300|0.60",
 }
 _WEAR = {  # x = km virtuales, y = % de agarre
     "street": "0|100 0.75|100 1.25|99.5 2.5|99 3.75|98.5 10|98 25|95 35|90 50|80",
+    "colab": "0|100 0.25|100 0.5|100 0.75|100 1.25|99.75 2.5|99.5 3.75|99 10|98.5 "
+    "25|97 35|92 50|85",
     "slick": "0|99.5 0.48|100 0.96|100 4.8|98 12|94 19.2|90 28.8|88",
 }
 # Coeficientes de pastilla de BeamNG (wheels.lua l.79-87): (w1x1, w2x1, b1, b2, a) [obs]
@@ -103,7 +116,7 @@ def apply_tyres(text: str, kind: str) -> str:
         out.append(f"WEAR_CURVE=thermal_{kind}_wear.lut")
     for axle in ("FRONT", "REAR"):
         out += ["", f"[THERMAL_{axle}]"]
-        out += [f"{k}={v}" for k, v in {**_THERMAL[kind], **_COMMON}.items()]
+        out += [f"{k}={v}" for k, v in {**_COMMON, **_THERMAL[kind]}.items()]
         out.append(f"PERFORMANCE_CURVE=thermal_{kind}_tcurve.lut")
     return "\n".join(out) + "\n"
 

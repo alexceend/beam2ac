@@ -66,6 +66,19 @@
         <p class="muted small">Orden recomendado: guardar rutas en Ajustes → elegir el coche → ejecutar etapas (con el modelo 3D) → resolver decisiones → ajustar cámaras en Vista 3D → exportar.
           «Exportable» no significa probado: hay que conducirlo en Assetto Corsa para validarlo.</p>
         </div>
+      <div class="panel" id="usage-notes">
+        <h2>Notas de uso</h2>
+        <p class="muted small">Qué tener en cuenta al diseñar el coche en Automation y qué queda manual. Las mismas notas, con los avisos de tu coche, van en <code>export_report.md</code>.</p>
+        <ul class="small">
+          <li>No uses eje rígido delantero.</li>
+          <li>No uses diferencial bloqueable.</li>
+          <li>No uses ruedas de competición.</li>
+          <li>Calidad para un agarre óptimo en Automation: de +6 a +8.</li>
+          <li>Las revoluciones de cambio de marcha (caja automática) pueden fallar: tendrás que cambiar de forma manual.</li>
+          <li>Algunas animaciones se generan con scripts de Automation y otras hay que hacerlas en Assetto Corsa.</li>
+          <li>El depósito de combustible (editor de Vista 3D; posición inicial provisional), el collider (el export escribe un <code>collider.kn5</code> por defecto) y la caja de inercia (el export ya escribe <code>[EXPLICIT_INERTIA]</code> medido) se colocan de forma manual.</li>
+        </ul>
+      </div>
       <div class="panel">
         <h2>Convertir un coche</h2>
         <p class="muted small">Carpeta de una exportación de Automation a BeamNG (la que contiene los <code>.pc</code>, o la raíz del mod).

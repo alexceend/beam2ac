@@ -33,7 +33,7 @@ from __future__ import annotations
 
 import re
 import struct
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Iterable
 
@@ -153,8 +153,8 @@ def build_kn5(parts: Kn5Parts) -> bytes:
     return out + parts.nodes
 
 
-def solid_dds(rgb: tuple[int, int, int], size: int = 4) -> bytes:
-    """DDS sin comprimir A8R8G8B8 (sin mipmaps) de un color sólido opaco."""
+def solid_dds(rgb: tuple[int, int, int], size: int = 4, alpha: int = 255) -> bytes:
+    """DDS sin comprimir A8R8G8B8 (sin mipmaps) de un color sólido (opaco salvo ``alpha``)."""
     if not all(0 <= c <= 255 for c in rgb):
         raise ValueError(f"color fuera de rango {rgb}")
     flags = 0x1 | 0x2 | 0x4 | 0x8 | 0x1000  # CAPS|HEIGHT|WIDTH|PITCH|PIXELFORMAT
@@ -163,7 +163,7 @@ def solid_dds(rgb: tuple[int, int, int], size: int = 4) -> bytes:
         "<8I", 32, 0x41, 0, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000
     )  # DDPF_RGB | DDPF_ALPHAPIXELS
     caps = struct.pack("<5I", 0x1000, 0, 0, 0, 0)
-    pixel = bytes([rgb[2], rgb[1], rgb[0], 255])  # BGRA
+    pixel = bytes([rgb[2], rgb[1], rgb[0], alpha])  # BGRA
     return b"DDS " + header + pixfmt + caps + pixel * (size * size)
 
 
@@ -179,6 +179,16 @@ class DiffuseSource:
     texture_name: str | None  # None = el material se deja como estaba
     data: bytes
     note: str = ""
+    # transparencia de BeamNG (material.translucent / alphaTest) → alphaBlendMode / alphaTested de AC
+    # (Kunos: cristales = alphaBlendMode 1, alphaTested 0). 0 = no cambia lo que trae el KN5.
+    blend: int = 0
+    alpha_tested: int = 0
+    # reflejos/especular heurísticos desde roughness/metallic/clearCoat de BeamNG (G2.55; sin probar en AC)
+    shader: str = ""
+    props: tuple[tuple[str, float], ...] = ()
+    # mapa normal de BeamNG (opcional, ``normal_maps``): textura embebida y ligada a ``txNormal`` (slot 1)
+    normal_name: str = ""
+    normal_data: bytes = b""
 
 
 # G2.24: texturas de ``vehicles/common`` (common.zip de BeamNG, no incluidas en la
@@ -190,6 +200,65 @@ class DiffuseSource:
 NEUTRAL_COMMON_TEXTURES: dict[str, str] = {
     "vehicles/common/null.dds": "blanco opaco 32×32 DXT5 (common.zip, G2.24)",
 }
+
+
+def specular_look(
+    stage: dict, glossy_lens: bool = False
+) -> tuple[str, tuple[tuple[str, float], ...]]:
+    """(shader, props) de AC para un material de BeamNG según ``roughnessFactor``, ``metallicFactor`` y
+    ``clearCoatFactor`` (+ ``instanceDiffuse`` = pintura con laca). Valores en la escala de los materiales de
+    Kunos (``EXT_body`` ksSpecular 0,5, EXP 50, fresnelMaxLevel 0,5; ``EXT_glass`` EXP 550). Heurística:
+    reflectante = laca > 0,3, o metal con rugosidad ≤ 0,7, o rugosidad < 0,3 (cristal, cromo).
+    Los vidrios de luz no se tocan (``glossy_lens``)."""
+    if glossy_lens:
+        return "", ()
+    clamp = lambda v, lo, hi: max(lo, min(hi, v))  # noqa: E731
+    rough = float(stage.get("roughnessFactor", 1.0))
+    metal = float(stage.get("metallicFactor", 0.0))
+    coat = float(stage.get("clearCoatFactor", 0.0))
+    if stage.get("instanceDiffuse") and coat == 0:
+        coat = 1.0
+    gloss = 1.0 - clamp(rough, 0.0, 1.0)
+    if coat > 0.3 or (metal >= 0.5 and rough <= 0.7) or rough < 0.3:
+        spec = 1.0 if coat > 0.3 else clamp(1.2 * gloss + 0.2 * metal, 0.2, 1.0)
+        exp = 150.0 if coat > 0.3 else 8.0 + 450.0 * gloss * gloss
+        fres = (
+            0.6
+            if coat > 0.3
+            else clamp(0.1 + 0.5 * metal * gloss + 0.3 * gloss, 0.05, 0.8)
+        )
+        return "ksPerPixelReflection", (
+            ("ksSpecular", round(spec, 3)),
+            ("ksSpecularEXP", round(exp, 1)),
+            ("fresnelC", 0.1),
+            ("fresnelEXP", 3.5),
+            ("fresnelMaxLevel", round(fres, 3)),
+            ("isAdditive", 0.0),
+        )
+    return "", (
+        ("ksSpecular", round(clamp(0.3 * gloss, 0.02, 0.3), 3)),
+        ("ksSpecularEXP", round(8.0 + 60.0 * gloss, 1)),
+    )
+
+
+_VIRTUAL_COLOUR = re.compile(r"_col_0x[0-9a-fA-F]{8}\.dds$")
+
+
+def _normal_map(stage: dict, vehicle_dir: Path) -> tuple[str, bytes]:
+    """(nombre, bytes) del ``normalMap`` real del material o ``("", b"")``: se omiten los colores virtuales de
+    Automation (``camso_col_0xff8080ff.dds`` = normal plana), los de ``vehicles/common`` y los ausentes o no DDS.
+    Convención de la normal (BeamNG DirectX vs AC) SIN verificar en AC."""
+    ref = str(stage.get("normalMap") or "")
+    if not ref or _VIRTUAL_COLOUR.search(ref) or ref.startswith("vehicles/common"):
+        return "", b""
+    fname = ref.replace(chr(92), "/").split("/")[
+        -1
+    ]  # solo el nombre: sin rutas con ".." ni de otra unidad
+    path = Path(vehicle_dir) / fname
+    if not fname or not path.is_file():
+        return "", b""
+    data = path.read_bytes()
+    return (path.name, data) if data[:4] == b"DDS " else ("", b"")
 
 
 def load_materials(path: Path) -> dict:
@@ -248,6 +317,10 @@ def diffuse_sources(
     vehicle_dir: Path,
     paint_rgb: tuple[float, float, float] | None,
     dae_materials: Iterable[str] | None = None,
+    opaque_materials: Iterable[str] = (),
+    translucent_glass: bool = False,
+    specular: bool = True,
+    normal_maps: bool = False,
 ) -> list[DiffuseSource]:
     """Fuente de color difuso de cada material del KN5.
 
@@ -256,7 +329,10 @@ def diffuse_sources(
     ``materials_json`` puede ser también ``materials.cs`` (:func:`load_materials`).
     """
     bm = load_materials(materials_json)
-    out = []
+    opaque = set(
+        opaque_materials
+    )  # p. ej. vidrios de luz del glowMap: su emisión no debe atenuarse con el alfa
+    out: list[DiffuseSource] = []
     for name in kn5_material_names:
         base = material_key(name, bm, dae_materials)
         if base is None:
@@ -264,10 +340,28 @@ def diffuse_sources(
         stages = bm[base].get("Stages") or [{}]
         st = stages[0]
         colour = list(st.get("diffuseColor", [1, 1, 1, 1]))[:3]
+        # vidrios de luz: los del glowMap y, por nombre, los ``fixtureglass`` de Automation (también si el
+        # glowMap no se pudo leer o en la ruta de ``assemble``): su emisión no debe atenuarse con el alfa
+        is_lens = base in opaque or "fixtureglass" in base.lower()
+        # DESACTIVADO por defecto (2026-11-25): el cristal de BeamNG tiene alfa 0,10 (``carwindows_transparent``) y
+        # en AC deja el habitáculo «completamente transparente»; opaco oscuro se veía bien (prueba del usuario)
+        translucent = (
+            translucent_glass and bool(bm[base].get("translucent")) and not is_lens
+        )
+        blend = 1 if translucent else 0
+        # alphaTest NO se traslada: el exportador de Automation lo pone en true en casi todos los materiales
+        # (alphaRef 84/255) aunque sean opacos, y con la alfa del DDS (a veces brillo) abriría agujeros
+        alpha_tested = 0
+        # opacidad de un material translúcido de color plano: alfa de diffuseColor (o opacityFactor)
+        a_src = st.get(
+            "opacityFactor", (st.get("diffuseColor") or [1, 1, 1, 1])[3:4] or [1]
+        )
+        a_src = a_src if isinstance(a_src, (int, float)) else a_src[0]
+        alpha8 = to_byte(a_src) if translucent else 255
         if str(st.get("diffuseMap", "")) in NEUTRAL_COMMON_TEXTURES:
             st = {k: v for k, v in st.items() if k != "diffuseMap"}
         if "diffuseMap" in st:
-            fname = str(st["diffuseMap"]).split("/")[-1]
+            fname = str(st["diffuseMap"]).replace(chr(92), "/").split("/")[-1]
             path = vehicle_dir / fname
             if not path.is_file():
                 # textura virtual de BeamNG (``<base>_lerpto_0xAARRGGBB_<%>.dds``: la genera el
@@ -279,7 +373,9 @@ def diffuse_sources(
                 if int(m[2]) == 100:  # 100 %: el color destino, sin depender de la base
                     argb = int(m[1], 16)
                     rgb = ((argb >> 16) & 255, (argb >> 8) & 255, argb & 255)
-                    why = f"textura virtual {fname} (lerp 100 %): color plano del destino"
+                    why = (
+                        f"textura virtual {fname} (lerp 100 %): color plano del destino"
+                    )
                 else:  # la base no se conoce: el color del material
                     rgb = tuple(to_byte(c) for c in colour)
                     why = f"textura virtual {fname} (lerp parcial): color plano del material"
@@ -291,6 +387,8 @@ def diffuse_sources(
                         "beam2ac_col_%02x%02x%02x.dds" % rgb,
                         solid_dds(rgb),  # type: ignore[arg-type]
                         why,
+                        blend,
+                        alpha_tested,
                     )
                 )
                 continue
@@ -302,7 +400,11 @@ def diffuse_sources(
                 if all(abs(c - 1) < 1e-6 for c in colour)
                 else (f"diffuseColor {colour} no aplicado sobre la textura")
             )
-            out.append(DiffuseSource(name, base, "diffuseMap", fname, data, note))
+            out.append(
+                DiffuseSource(
+                    name, base, "diffuseMap", fname, data, note, blend, alpha_tested
+                )
+            )
             continue
         if st.get("instanceDiffuse"):
             if paint_rgb is None:
@@ -323,8 +425,30 @@ def diffuse_sources(
             rgb = tuple(to_byte(c) for c in colour)
             kind = "diffuseColor"
         tex = "beam2ac_col_%02x%02x%02x.dds" % rgb
-        dds = solid_dds(rgb)  # type: ignore[arg-type]
-        out.append(DiffuseSource(name, base, kind, tex, dds))
+        if alpha8 != 255:
+            tex = tex[:-4] + "_a%02x.dds" % alpha8
+        dds = solid_dds(rgb, alpha=alpha8)  # type: ignore[arg-type]
+        out.append(DiffuseSource(name, base, kind, tex, dds, "", blend, alpha_tested))
+    if specular:
+        for i, d in enumerate(out):
+            if d.texture_name is None:
+                continue
+            st0 = (bm[d.beamng_material].get("Stages") or [{}])[0]
+            lens = (
+                d.beamng_material in opaque
+                or "fixtureglass" in d.beamng_material.lower()
+            )
+            shader, props = specular_look(st0, glossy_lens=lens)
+            nn, nd = "", b""
+            # ``ksPerPixelReflection`` (Kunos) no usa txNormal: solo materiales sin reflejo propio
+            if normal_maps and shader != "ksPerPixelReflection" and not lens:
+                nn, nd = _normal_map(st0, vehicle_dir)
+                if nn:
+                    shader = "ksPerPixelNM"
+                    props = props + (("nmObjectSpace", 0.0),)
+            out[i] = replace(
+                d, shader=shader, props=props, normal_name=nn, normal_data=nd
+            )
     return out
 
 
@@ -369,9 +493,34 @@ def apply_diffuse(parts: Kn5Parts, sources: list[DiffuseSource]) -> Kn5Parts:
         slots = [x for x in m.slots if x[0] != "txDiffuse"] + [
             ("txDiffuse", 0, s.texture_name)
         ]
+        if s.normal_name:
+            if s.normal_name in known and known[s.normal_name] != s.normal_data:
+                raise Kn5FormatError(
+                    f"dos texturas distintas con el nombre {s.normal_name}"
+                )
+            if s.normal_name not in known:
+                textures.append(Kn5Texture(s.normal_name, s.normal_data))
+                known[s.normal_name] = s.normal_data
+            slots = [x for x in slots if x[0] != "txNormal"] + [
+                ("txNormal", 1, s.normal_name)
+            ]
+        props = list(m.props)
+        for pname, value in s.props:  # sustituye o añade (las demás se conservan)
+            props = [p for p in props if p[0] != pname]
+            props.append((pname, (float(value),) + (0.0,) * 9))
+        if s.shader and s.shader == "ksPerPixelReflection":
+            for pname, value in (("ksAlphaRef", 0.0), ("ksEmissive", 0.0)):
+                if not any(p[0] == pname for p in props):
+                    props.append((pname, (value,) + (0.0,) * 9))
         materials.append(
             Kn5Material(
-                m.name, m.shader, m.blend, m.alpha_tested, m.depth, list(m.props), slots
+                m.name,
+                s.shader or m.shader,
+                s.blend or m.blend,
+                s.alpha_tested or m.alpha_tested,
+                m.depth,
+                props,
+                slots,
             )
         )
     return Kn5Parts(parts.version, parts.extra, textures, materials, parts.nodes)

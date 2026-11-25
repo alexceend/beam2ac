@@ -119,6 +119,7 @@ class Engine:
     # a gas a fondo (fila 99) por rpm, boost manométrico máximo y rpm de boost completo. Alimentan el turbo
     # ajustable opcional (src/ac/adjustable_turbo.py); no cambian la curva convertida.
     boost_kind: Param = _p("enum")
+    supercharger_type: Param = _p("enum")
     boost_pressure_curve: Param = _p("table:rpm->bar")
     boost_max: Param = _p("bar")
     boost_full_rpm: Param = _p("rpm")

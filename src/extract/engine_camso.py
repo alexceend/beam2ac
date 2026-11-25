@@ -124,6 +124,9 @@ class RawEngine:
     # efecto sobre el par no está analizado (``status``).
     supercharger_section_name: str | None = None
     nitrous_section_name: str | None = None
+    # tipo del compresor según el JBeam del exportador (EngineDefinitions.lua l. 453): roots|centrifugal|screws.
+    # camsoSupercharger.lua no lo lee (solo cambia el sonido whine); el mapa de presión ya lo refleja.
+    supercharger_type: str | None = None
 
 
 @dataclass
@@ -276,6 +279,10 @@ def read_raw_engine(resolved: ResolvedConfig) -> RawEngine:
                 turbo[key] = value
     supercharger_name = _existing_section(resolved, ev("supercharger", False))
     nitrous_name = _existing_section(resolved, ev("nitrousOxideInjection", False))
+    supercharger_type = None
+    if supercharger_name:
+        sc_type = merge_section(resolved, supercharger_name).values.get("type")
+        supercharger_type = sc_type if isinstance(sc_type, str) else None
     limiter_candidates = [
         (c.part, c.value) for c in merged.conflicts.get("hasRevLimiter", [])
     ]
@@ -307,6 +314,7 @@ def read_raw_engine(resolved: ResolvedConfig) -> RawEngine:
         other_keys=sorted(k for k in merged.values if k not in USED_KEYS),
         supercharger_section_name=supercharger_name,
         nitrous_section_name=nitrous_name,
+        supercharger_type=supercharger_type,
     )
 
 

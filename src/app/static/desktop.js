@@ -932,6 +932,12 @@ function extrasBlock() {
     el("section", { class: "xsec" }, el("h4", {}, "Neumáticos de Assetto Corsa"),
       hint("Marca los tipos de neumático del juego original que quieres tener además del convertido (que se llamará «Exported»). Se leen de tu instalación de AC y hacen que el coche solo sirva para tu equipo."),
       box),
+    el("section", { class: "xsec" }, el("h4", {}, "Llamas del escape y modelo 3D"),
+      hint("Las llamas solo salen levantando el gas EN PARTE (no soltándolo del todo) con las revoluciones dentro del rango. Sin esta sección AC usa 9750 rpm y casi nunca salen. Los mapas normales y las animaciones de piezas cambian el modelo 3D: la exportación lo reconstruye."),
+      ...backfireBlock(),
+      el("label", { class: "opt" }, el("input", { type: "checkbox", name: "x_normals", checked: !!(DETAIL && DETAIL.model_options && DETAIL.model_options.normal_maps) }), " Mapas normales",
+        el("span", { class: "opt-help" }, "Marcado: se añaden los mapas normales reales de BeamNG a los materiales sin reflejo propio (la pintura y los cristales no los usan). Sin probar en AC: el convenio de la normal puede estar invertido.")),
+      animEditor()),
     el("section", { class: "xsec" }, el("h4", {}, "ABS, Control de tracción, Frenada y Tipo de cambio"),
       ...withLevels("ABS en el setup", "x_abs", "Marcado: podrás ajustar el ABS (el sistema que evita que las ruedas se bloqueen al frenar) en boxes, con tantos niveles como indiques. Desmarcado: el coche no lleva ABS regulable. Es una plantilla de diseño, no una copia medida del coche original.", "x_abs_levels", "Niveles de ABS "),
       ...withLevels("Control de tracción en el setup", "x_tc", "Marcado: podrás ajustar el control de tracción (evita que las ruedas motrices patinen al acelerar) en boxes. Desmarcado: sin control de tracción regulable. También es una plantilla de diseño.", "x_tc_levels", "Niveles de control de tracción "),
@@ -946,6 +952,83 @@ function extrasBlock() {
           el("span", { class: "opt-help" }, "Marcado: el turbo se puede regular desde la cabina y arranca al 100 %. Desmarcado: el turbo funciona siempre igual que en el coche original. Es una aproximación sin medir en el juego."))
         : null));
 }
+// Llamas del escape: ayuda, valores recomendados por perfil y rango automático del coche (src/ac/backfire.py).
+function backfireBlock() {
+  const lim = DETAIL && DETAIL.engine_limiter ? Number(DETAIL.engine_limiter) : 0;
+  const autoMin = lim ? Math.round(0.65 * lim) : null, autoMax = lim ? Math.max(12000, lim + 2000) : null;
+  const num = (name, ph, extra = {}) => el("input", { type: "number", name, placeholder: ph, style: "width:90px", ...extra });
+  const min = num("x_bf_min", autoMin ? `auto (${autoMin})` : "auto", { min: "1", step: "any" });
+  const max = num("x_bf_max", autoMax ? `auto (${autoMax})` : "auto", { min: "1", step: "any" });
+  const gas = num("x_bf_gas", "auto (0,28)", { min: "0.01", max: "0.3", step: "any", style: "width:110px" });
+  const profiles = [
+    ["Equilibrado (recomendado)", null, null, null],
+    ["Más llamas (salen con menos revoluciones y sin levantar tanto el pie)", lim && 0.4 * lim, null, 0.3],
+    ["Solo cerca del corte (altas revoluciones)", lim && 0.85 * lim, lim || null, 0.2],
+    ["Personalizado", undefined, undefined, undefined],
+  ];
+  const sel = el("select", { name: "x_bf_profile", onchange: (e) => {
+    const p = profiles[e.target.selectedIndex];
+    if (p[1] === undefined) return;  // personalizado: no toca los campos
+    min.value = p[1] ? Math.round(p[1] / 50) * 50 : ""; max.value = p[2] ? Math.round(p[2]) : ""; gas.value = p[3] || "";
+  } }, ...profiles.map((p) => el("option", {}, p[0])));
+  for (const x of [min, max, gas]) x.addEventListener("input", () => { sel.selectedIndex = 3; });
+  return [
+    el("label", { class: "opt" }, el("input", { type: "checkbox", name: "x_backfire", checked: true }), " Llamas del escape (backfire)",
+      el("span", { class: "opt-help" }, "Marcado: el coche saca llamas al levantar el pie, con los valores de abajo. Desmarcado: AC usa los suyos por defecto y las llamas casi nunca salen.")),
+    el("details", { class: "help" }, el("summary", {}, "¿Cómo funcionan las llamas? (léelo antes de probar)"),
+      el("ol", { class: "small" },
+        el("li", {}, el("strong", {}, "Carga: "), "acelera a fondo durante más de 1 segundo con el motor dentro del rango de revoluciones. Así se acumula combustible sin quemar en el escape."),
+        el("li", {}, el("strong", {}, "Suelta solo en parte: "), "levanta el pie hasta dejar el pedal por debajo de «gas máx.» de lo que pisabas (con 0,28 y a fondo, por debajo del 28 %), pero ", el("strong", {}, "sin llegar a 0"), ": con el pedal a cero no sale ninguna llama (AC lo ignora)."),
+        el("li", {}, el("strong", {}, "Rango: "), "la llama solo salta si el motor está entre «rpm mín.» y «rpm máx.» en ese momento. Sale una por levantada; para otra hay que volver a acelerar a fondo."),
+        el("li", {}, el("strong", {}, "Si no ves nada: "), "en Assetto Corsa pulsa HOME (consola) y escribe ", el("code", {}, "set observeFlames 1"), ": las llamas quedan siempre visibles y se recargan al editar flames.ini. Si así las ves, la posición y los sprites están bien y falla la forma de dispararlas (revoluciones, pedal); si tampoco las ves, avísame."),
+        el("li", {}, el("strong", {}, "Al corte: "), "con el limitador el pedal suele estar a fondo (100 %), y con el pedal tan pisado AC no dispara. Para ver llamas «al corte», llega al limitador y levanta el pie casi del todo sin soltarlo del todo. Según el análisis de AC, el limitador por sí solo no las dispara."),
+      ),
+      el("table", { class: "small" },
+        el("tr", {}, el("th", {}, "Valor"), el("th", {}, "Qué hace"), el("th", {}, "Qué poner")),
+        el("tr", {}, el("td", {}, "rpm mín."), el("td", {}, "Por debajo de estas revoluciones no hay llamas."), el("td", {}, "Vacío = 65 % del corte. Más bajo: salen a medio régimen. Más alto (90 % del corte): solo cerca del corte.")),
+        el("tr", {}, el("td", {}, "rpm máx."), el("td", {}, "Por encima no hay llamas."), el("td", {}, "Vacío = el mayor entre 12000 y corte + 2000 (siempre cubre el corte). Pon el corte exacto para que no salgan por encima.")),
+        el("tr", {}, el("td", {}, "gas máx."), el("td", {}, "Qué tanto hay que levantar el pie. AC lo limita a 0,3."), el("td", {}, "0,28 (vacío) = levantar por debajo del 28 %. 0,10 exige casi soltar el pedal. 0,30 es el máximo (llamas con levantadas suaves).")),
+      ),
+      el("p", { class: "small muted" }, "Los valores son una estimación basada en los coches de Kunos y sin probar en el juego: ajústalos en Assetto Corsa y repite la exportación. Si el motor tiene turbo, el corte que usa es el de «engine.ini»."),
+    ),
+    el("div", { class: "actions" }, el("label", {}, "Perfil ", sel)),
+    el("div", { class: "muted small" }, lim ? `Este coche corta a ${Math.round(lim)} rpm: en automático, mín. ${autoMin} y máx. ${autoMax} rpm.` : "Los valores automáticos se calculan al exportar a partir del corte del motor."),
+    el("div", { class: "actions" },
+      el("label", {}, "rpm mín. ", min), el("label", {}, " rpm máx. ", max), el("label", {}, " gas máx. (≤ 0,3) ", gas)),
+  ];
+}
+// Animaciones de piezas: el editor 3D (parts.html) las guarda en el proyecto; aquí se ven resumidas y se abre el editor.
+let SAVED_ANIMS = [];
+const EDITOR_ANIMS_ENABLED = false;  // bloqueado a petición: puede retirarse en el futuro (parts.html/js siguen en el repositorio)
+const ANIM_NAMES = { door_L: "Puerta izquierda", door_R: "Puerta derecha", wiper: "Limpiaparabrisas", shift: "Palanca de cambios" };
+function animEditor() {
+  SAVED_ANIMS = JSON.parse(JSON.stringify((DETAIL && DETAIL.model_options && DETAIL.model_options.part_animations) || []));
+  const info = el("div", { class: "muted small" });
+  const refresh = () => {
+    info.textContent = SAVED_ANIMS.length
+      ? "Animaciones guardadas: " + SAVED_ANIMS.map((a) => `${ANIM_NAMES[a.kind] || a.kind} (${a.node}, ${a.angle_deg}°)`).join(" · ")
+      : "Sin animaciones de piezas. Abre el editor para ver el modelo con cada pieza de un color y elegir cuáles se mueven.";
+  };
+  refresh();
+  window.__refreshAnims = refresh;
+  const open = () => {
+    if (!CURRENT) return;
+    const dlg = el("dialog", { class: "parts-dialog", style: "width:96vw;height:92vh;padding:0;border:1px solid #45475a;border-radius:8px;background:#1e1e2e" },
+      el("iframe", { title: "Animaciones de piezas", src: `/static/parts.html?project=${encodeURIComponent(CURRENT)}`, style: "width:100%;height:calc(100% - 38px);border:0;display:block" }),
+      el("div", { style: "text-align:right;padding:4px 8px;height:30px" }, el("button", { type: "button", class: "secondary", onclick: () => { dlg.close(); dlg.remove(); } }, "Cerrar")));
+    document.body.append(dlg); dlg.showModal();
+  };
+  return el("div", {}, el("label", {}, "Animaciones de piezas (puertas, limpiaparabrisas, palanca)"),
+    el("div", { class: "muted small" }, "Se eligen sobre una vista 3D del coche, con cada pieza de un color y una barra para ver cómo se mueve. Automation no separa las puertas ni los limpias del resto de la carrocería: solo se pueden animar las piezas que ya existen por separado."),
+    info, el("div", { class: "actions" }, el("button", { type: "button", class: "secondary", disabled: !EDITOR_ANIMS_ENABLED, title: "Desactivado de momento", onclick: open }, "Abrir el editor de animaciones"),
+      EDITOR_ANIMS_ENABLED ? null : el("span", { class: "muted small" }, "Desactivado de momento: el editor puede cambiar o desaparecer.")));
+}
+window.addEventListener("message", (e) => {
+  if (e.origin !== location.origin || !e.data || e.data.type !== "parts-saved") return;
+  SAVED_ANIMS = e.data.animations || [];
+  if (DETAIL && DETAIL.model_options) DETAIL.model_options.part_animations = SAVED_ANIMS;
+  if (window.__refreshAnims) window.__refreshAnims();
+});
 async function startExport(f) {
   try {  // la masa del piloto va con la exportación: se guarda antes si cambió
     if (Number(f.driver_mass.value) !== Number(DETAIL.driver_mass_kg)) await api("/api/driver_mass", { project: CURRENT, driver_mass: f.driver_mass.value });
@@ -956,7 +1039,12 @@ async function startExport(f) {
     tyre_compounds: [...f.querySelectorAll("input[name=compound]:checked")].map((c) => c.value),
     ...(f.x_shifter ? { shifter: f.x_shifter.checked } : {}),
     turbo: !!(f.x_turbo && f.x_turbo.checked), setup_brake_bias: f.x_bias.checked,
+    backfire: f.x_backfire.checked,
+    backfire_min_rpm: Number(f.x_bf_min.value) || null, backfire_max_rpm: Number(f.x_bf_max.value) || null,
+    backfire_max_gas: Number(f.x_bf_gas.value) || null,
+    normal_maps: f.x_normals.checked,
   };
+  extras.part_animations = SAVED_ANIMS;
   const body = { project: CURRENT, confirm: f.confirm.checked, extras, car_id: f.car_id.value.trim() || null,
     ac_root: acRoot(),
     install_overwrite: f.install_overwrite.checked };

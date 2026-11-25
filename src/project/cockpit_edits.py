@@ -6,7 +6,8 @@ nunca se guardan encima: son lo que calcula el exportador; «restaurar» añade 
 
 Ítems (marco del KN5, ejes AC: +X izquierda, +Y arriba, +Z adelante, metros):
 ``driver_eyes`` (DRIVEREYES y POS de dash_cam.ini), ``bonnet``, ``bumper`` y ``hips`` (caderas del
-piloto, independientes de los ojos). AC solo lee posiciones de estas cámaras: no hay orientación.
+piloto, independientes de los ojos) y ``fuel_tank`` (``[FUELTANK] POSITION`` de car.ini, mismo marco que
+DRIVEREYES; nota de uso: el depósito se coloca de forma manual). AC solo lee posiciones de estas cámaras: no hay orientación.
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ from typing import Any
 from src.safe_paths import DEFAULT_OUTPUT_DIR, ensure_safe_output_path
 
 ROOT = DEFAULT_OUTPUT_DIR / "cockpit_edits"
-ITEMS = ("driver_eyes", "bonnet", "bumper", "hips")
+ITEMS = ("driver_eyes", "bonnet", "bumper", "hips", "fuel_tank")
 LIMIT_M = 6.0
 _KEY = re.compile(r"^[0-9a-f]{16}_[A-Za-z0-9_.-]{1,64}$")
 

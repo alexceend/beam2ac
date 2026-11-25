@@ -277,7 +277,9 @@ def apply_lights(
     comprobaciones que ``tools/variants/build_v15li.py`` (variante validada).
     """
     expected = int(profile["expected_count"])
-    source = str(profile["source_mesh_name"])
+    # sin perfil del vehículo (generado): source_mesh_name = None no comprueba el nombre de origen
+    source = profile["source_mesh_name"]
+    source = None if source is None else str(source)
     interior = tuple(float(v) for v in profile["interior_z"])
     if len(functions) != expected:
         raise LightsError(
@@ -300,7 +302,7 @@ def apply_lights(
     )
     if not same_tree:
         raise LightsError("el KN5 cambió en algo más que los nombres de las mallas")
-    wrong = [old for old, _ in renamed if old != source]
+    wrong = [] if source is None else [old for old, _ in renamed if old != source]
     if len(renamed) != expected or wrong:
         raise LightsError(
             f"mallas de luz renombradas: {len(renamed)} (perfil: {expected}); nombres "

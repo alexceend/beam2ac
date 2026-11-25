@@ -12,6 +12,7 @@ const ITEMS = [
   ["bonnet", "Cámara capó (BONNET_CAMERA_POS)", 0x5fc47d],
   ["bumper", "Cámara parachoques (BUMPER_CAMERA_POS)", 0xff7b72],
   ["hips", "Caderas del piloto (driver_base_pos.knh)", 0x6cb6ff],
+  ["fuel_tank", "Depósito de combustible ([FUELTANK] POSITION; posición provisional, colócalo)", 0xd2a8ff],
 ];
 const el = (t, p = {}, ...k) => { const n = Object.assign(document.createElement(t), p); n.append(...k); return n; };
 const api = async (u, body) => {

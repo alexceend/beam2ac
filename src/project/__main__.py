@@ -90,7 +90,7 @@ def main(argv: list[str] | None = None) -> int:
     e.add_argument("--tc-levels", type=int, default=0, help="0 = solo on/off; 2-20")
     e.add_argument(
         "--thermal-tyres",
-        choices=["street", "slick"],
+        choices=["street", "slick", "colab"],
         help="plantilla térmica de neumáticos (diseño, g254)",
     )
     e.add_argument(
@@ -105,6 +105,16 @@ def main(argv: list[str] | None = None) -> int:
             "carbon-ceramic",
         ],
         help="[TEMPS_*] de frenos (hip, g254); auto = pastilla y discos del JBeam",
+    )
+    e.add_argument(
+        "--no-backfire",
+        action="store_true",
+        help="no escribe [BACKFIRE] en sounds.ini (sin él AC usa MINRPM=9750 y no hay llamas)",
+    )
+    e.add_argument("--backfire-min-rpm", type=float, help="MINRPM de [BACKFIRE]")
+    e.add_argument("--backfire-max-rpm", type=float, help="MAXRPM de [BACKFIRE]")
+    e.add_argument(
+        "--backfire-max-gas", type=float, help="MAXGAS de [BACKFIRE] (≤ 0,3)"
     )
     e.add_argument(
         "--audio-build",
@@ -216,6 +226,12 @@ def main(argv: list[str] | None = None) -> int:
                         else None
                     ),
                     thermal_tyres=args.thermal_tyres,
+                    backfire=not args.no_backfire,
+                    backfire_params={
+                        "min_rpm": args.backfire_min_rpm,
+                        "max_rpm": args.backfire_max_rpm,
+                        "max_gas": args.backfire_max_gas,
+                    },
                     thermal_brakes=args.thermal_brakes,
                     allow_installed_car_id=args.allow_installed_car_id,
                     # Fase A: sin --ac-root, la colisión de car_id se comprueba contra

@@ -12,6 +12,22 @@ import json
 from pathlib import Path
 
 PAIRS: list[tuple[str, str]] = [
+    ("Llamas del escape y modelo 3D", "Exhaust flames and 3D model"),
+    (" Llamas del escape (backfire)", " Exhaust flames (backfire)"),
+    (" Mapas normales", " Normal maps"),
+    # notas de uso (G2.55)
+    ("Notas de uso", "Usage notes"),
+    ("Qué tener en cuenta al diseñar el coche en Automation y qué queda manual. Las mismas notas, con los avisos de tu coche, van en", "What to keep in mind when designing the car in Automation and what stays manual. The same notes, with the warnings for your car, go in"),
+    ("No uses eje rígido delantero.", "Do not use a front rigid axle."),
+    ("No uses diferencial bloqueable.", "Do not use a lockable differential."),
+    ("No uses ruedas de competición.", "Do not use race wheels."),
+    ("Calidad para un agarre óptimo en Automation: de +6 a +8.", "Quality for optimal grip in Automation: +6 to +8."),
+    ("Las revoluciones de cambio de marcha (caja automática) pueden fallar: tendrás que cambiar de forma manual.", "Shift rpm (automatic gearbox) can misbehave: you will have to shift manually."),
+    ("Algunas animaciones se generan con scripts de Automation y otras hay que hacerlas en Assetto Corsa.", "Some animations can be generated with Automation scripts and others must be made in Assetto Corsa."),
+    ("El depósito de combustible (editor de Vista 3D; posición inicial provisional), el collider (el export escribe un", "The fuel tank (3D view editor; provisional initial position), the collider (the export writes a"),
+    ("por defecto) y la caja de inercia (el export ya escribe", "by default) and the inertial box (the export already writes"),
+    ("medido) se colocan de forma manual.", "measured) are set manually."),
+    ("Depósito de combustible ([FUELTANK] POSITION; posición provisional, colócalo)", "Fuel tank ([FUELTANK] POSITION; provisional position, place it)"),
     ("Conversión", "Conversion"),
     (" Volante", " Steering wheel"),
     ("Monta el volante (STEER_HR). Sin marcar, el coche no lleva volante ni piloto. Con volante puedes añadir además el piloto y sus manos.", "Fits the steering wheel (STEER_HR). Unchecked, the car has no wheel and no driver. With a wheel you can also add the driver and hands."),
