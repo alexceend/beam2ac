@@ -318,6 +318,8 @@ def read_wav_mono16(path: Path) -> tuple[int, bytes]:
         raise ValueError(f"{path}: WAV sin fmt/data")
     tag, ch, rate, _, _, bits = fmt
     width = bits // 8
+    if width == 0 or ch == 0:
+        raise ValueError(f"{path}: WAV con {bits} bits y {ch} canales no admitido")
     n = len(data) // width
     data = data[: n * width]
     if tag == 1 and bits == 8:

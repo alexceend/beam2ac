@@ -302,12 +302,15 @@ def run(
             report["prebuilt"] = str(_python_build(plan["spec"], out, car_id))
             project = bank = py_done = True
             report["note"] = "banco generado sin FMOD (src.audio.engine_gen)"
-        except (ValueError, OSError) as exc:
+        except (
+            Exception
+        ) as exc:  # noqa: BLE001 - cualquier fallo del generador se informa o se respalda
             if (
                 builder_mode() == "python"
             ):  # elegido a propósito: el error es el resultado
-                report["error"] = str(exc)
+                report["error"] = f"{type(exc).__name__}: {exc}"
                 py_done = True
+                shutil.rmtree(out, ignore_errors=True)
             else:  # auto: el generador no puede; se prepara el proyecto de FMOD como antes
                 report["warnings"] = [
                     *report["warnings"],

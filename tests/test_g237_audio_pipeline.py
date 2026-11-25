@@ -160,6 +160,21 @@ class TestPipelineNoFmod(unittest.TestCase):
             self.assertTrue(any("generador sin FMOD" in w for w in r["warnings"]))
             self.assertTrue((Path(r["out"]) / "LEEME.md").is_file())
 
+    def test_generator_crash_on_odd_wav_falls_back(self):
+        """Un WAV con cabecera rara (bits=4) no debe romper el flujo: respaldo al proyecto de FMOD."""
+        with (
+            tempfile.TemporaryDirectory() as d,
+            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "auto"}),
+        ):
+            veh = make_mod(Path(d) / "mod")
+            odd = Path(d) / "mod/art/sound/engine/H1/EXH_2000_P.wav"
+            hdr = b"WAVEfmt " + struct.pack("<IHHIIHH", 16, 1, 1, 44100, 22050, 1, 4)
+            hdr += b"data" + struct.pack("<I", 64) + bytes(64)
+            odd.write_bytes(b"RIFF" + struct.pack("<I", len(hdr)) + hdr)
+            r = pipeline.run(veh, "beam2ac_t", Path(d) / "out", fmod_path=Path(d) / "x")
+            self.assertIsNone(r["error"])
+            self.assertEqual(r["state"], "proyecto_generado")
+
     def test_python_mode_reports_generator_error(self):
         with (
             tempfile.TemporaryDirectory() as d,
