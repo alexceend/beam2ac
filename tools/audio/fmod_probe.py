@@ -15,6 +15,12 @@ AC = default_ac_root() or Path("assettocorsa")
 os.add_dll_directory(str(AC))
 fm = C.CDLL(str(AC / "fmod64.dll"))
 st = C.CDLL(str(AC / "fmodstudio64.dll"))
+PLUGIN_DIRS = [
+    Path(os.environ.get("ProgramFiles", "C:/Program Files"))
+    / "FMOD SoundSystem"
+    / "FMOD Studio 1.08.12"
+    / "plugins"
+]
 HEADER = 0x00010812  # FMOD 1.08.18 (AC: 'version 67602')
 
 
@@ -51,6 +57,21 @@ def run(banks, event_guid, params, out_wav, seconds=4.0, version=HEADER):
         ),
         "Initialize",
     )
+    # efectos de plugin que usan los bancos de Kunos (AC los registra por su cuenta); solo si hay FMOD Studio
+    for name in ("fmod_gain", "fmod_distance_filter"):
+        for d in PLUGIN_DIRS:
+            f = Path(d) / f"{name}.dll"
+            if f.is_file():
+                h = C.c_uint()
+                r = fm.FMOD_System_LoadPlugin(
+                    low, C.c_char_p(str(f).encode()), C.byref(h), C.c_uint(0)
+                )
+                (
+                    print("plugin", name, "resultado", r)
+                    if os.environ.get("FMOD_PROBE_DEBUG")
+                    else None
+                )
+                break
     loaded = []
     for b in banks:
         bk = C.c_void_p()
