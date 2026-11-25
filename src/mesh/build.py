@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import shutil
 import subprocess
 import sys
@@ -254,19 +255,34 @@ def build_kn5(
     kn5_name: str,
     blender: str,
     save_blend: bool = False,
+    builder: str | None = None,
 ) -> tuple[Path, Verification]:
     """Escribe el plan, ejecuta Blender y verifica el KN5 (sin Blender).
 
-    Lanza RuntimeError si Blender falla. Escribe en ``out_dir``: scene_plan.json,
-    build_log.json, blender_stdout.txt, verification.json y el KN5.
+    ``builder="pure"`` (SPIKE, opt-in) usa :mod:`src.mesh.pure_kn5` en vez de Blender
+    (``blender`` puede ir vacío; por omisión decide ``BEAM2AC_KN5_BUILDER``).
+    Lanza RuntimeError si Blender falla. Escribe en
+    ``out_dir``: scene_plan.json, build_log.json, blender_stdout.txt,
+    verification.json y el KN5.
     """
+    builder = builder or os.environ.get("BEAM2AC_KN5_BUILDER", "blender")
+    if builder not in ("blender", "pure"):
+        raise ValueError(f"builder desconocido: {builder!r}")
     out = ensure_safe_output_path(out_dir)
     plan_path = write_plan(plan, out / "scene_plan.json")
-    proc = run_blender(blender, plan_path, out, kn5_name, save_blend)
-    log = ensure_safe_output_path(out / "blender_stdout.txt")
-    log.write_text(proc.stdout + proc.stderr, encoding="utf-8")
-    if proc.returncode != 0:
-        raise RuntimeError(f"Blender terminó con código {proc.returncode}; ver {out}")
+    if builder == "pure":
+        from .pure_kn5 import build_kn5_pure
+
+        check_kn5_name(kn5_name)
+        build_kn5_pure(plan, ensure_safe_output_path(out / kn5_name))
+    else:
+        proc = run_blender(blender, plan_path, out, kn5_name, save_blend)
+        log = ensure_safe_output_path(out / "blender_stdout.txt")
+        log.write_text(proc.stdout + proc.stderr, encoding="utf-8")
+        if proc.returncode != 0:
+            raise RuntimeError(
+                f"Blender terminó con código {proc.returncode}; ver {out}"
+            )
     kn5_path = ensure_safe_output_path(out / kn5_name)
     result = verify_kn5(read_kn5(kn5_path), plan)
     target = ensure_safe_output_path(out / "verification.json")

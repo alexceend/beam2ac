@@ -97,6 +97,8 @@ def tool_inputs(_project: Any = None) -> dict[str, Any]:
     """
     exe = blender_path()
     info: dict[str, Any] = {"blender": None, "addon": None}
+    if os.environ.get("BEAM2AC_KN5_BUILDER"):  # solo si se elige: no cambia las claves
+        info["kn5_builder"] = os.environ["BEAM2AC_KN5_BUILDER"]
     if (
         _project is not None
     ):  # la elección del volante cambia el modelo: entra en la clave

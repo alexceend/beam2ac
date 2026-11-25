@@ -19,6 +19,7 @@ El borrador de ``draft`` NO es un paquete instalable (sin KN5, interfaz ni skins
 from __future__ import annotations
 
 import json
+import os
 import shutil
 from collections import Counter
 from pathlib import Path, PurePosixPath
@@ -811,7 +812,7 @@ def run_model(ctx: RunContext, out: Path) -> dict[str, Any]:
     from . import model as M
 
     blender = M.blender_path()
-    if not blender:
+    if not blender and os.environ.get("BEAM2AC_KN5_BUILDER") != "pure":
         raise M.ModelError(
             "Blender no disponible (PATH o BEAM2AC_BLENDER): KN5 no generado"
         )
@@ -823,7 +824,7 @@ def run_model(ctx: RunContext, out: Path) -> dict[str, Any]:
         pv.resolved,
         ctx.project.source,
         out,
-        blender,
+        blender or "",
         M.wheel_override_of(ctx.project),
         M.model_options_of(ctx.project),
     )
@@ -851,6 +852,7 @@ MODEL_STAGE = Stage(
         "src/project/model.py",
         "src/mesh/build.py",
         "src/mesh/blender_build.py",
+        "src/mesh/pure_kn5.py",
         "src/mesh/plan.py",
         "src/mesh/dae.py",
         "src/mesh/flexbody.py",

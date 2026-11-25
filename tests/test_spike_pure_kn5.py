@@ -242,5 +242,57 @@ class ReferenceTests(unittest.TestCase):
                 self.assertLess(dev, 1e-5, n.name)
 
 
+class BuilderSwitchTests(unittest.TestCase):
+    def test_env_selects_pure_and_rejects_bogus(self) -> None:
+        import os
+        from unittest import mock
+
+        from src.mesh import build
+
+        with (
+            tempfile.TemporaryDirectory() as tmp,
+            mock.patch.object(
+                build, "run_blender", side_effect=RuntimeError("blender")
+            ),
+            mock.patch.object(build, "write_plan"),
+            mock.patch.object(
+                build, "ensure_safe_output_path", side_effect=lambda p: Path(p)
+            ),
+        ):
+            with mock.patch.dict(os.environ, {"BEAM2AC_KN5_BUILDER": "bogus"}):
+                with self.assertRaises(ValueError):
+                    build.build_kn5(None, tmp, "x.kn5", "")
+            with mock.patch.dict(os.environ, {"BEAM2AC_KN5_BUILDER": "pure"}):
+                with mock.patch("src.mesh.pure_kn5.build_kn5_pure") as pure:
+                    with (
+                        mock.patch.object(build, "read_kn5"),
+                        mock.patch.object(
+                            build, "verify_kn5", return_value=build.Verification(True)
+                        ),
+                    ):
+                        build.build_kn5(None, tmp, "x.kn5", "")
+                    self.assertTrue(pure.called)
+
+
+@unittest.skipUnless((IBIZA / "35b84_mesh.dae").exists(), "falta la muestra del Ibiza")
+class ProductionPlanTests(unittest.TestCase):
+    def test_cli_plan_has_cockpit_nulls_and_verify_catches_their_absence(self) -> None:
+        from src.mesh.build import plan_for_vehicle, verify_kn5
+
+        raw = plan_for_vehicle(IBIZA.parent, IBIZA.parent / "35b84.pc")
+        prod = pure_kn5.production_plan(raw)
+        with tempfile.TemporaryDirectory() as tmp:
+            good, bad = Path(tmp) / "g.kn5", Path(tmp) / "b.kn5"
+            pure_kn5.build_kn5_pure(prod, good)
+            pure_kn5.build_kn5_pure(raw, bad)
+            self.assertTrue(verify_kn5(read_kn5(good), prod).ok)
+            names = {n.name for n in read_kn5(good).nodes}
+            self.assertTrue(
+                {"COCKPIT_HR", "COCKPIT_LR", "STEER_HR", "STEER_LR"} <= names
+            )
+            res = verify_kn5(read_kn5(bad), prod)  # sin nulos ni origen Kunos
+            self.assertFalse(res.ok)
+
+
 if __name__ == "__main__":
     unittest.main()

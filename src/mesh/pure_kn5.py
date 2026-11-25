@@ -591,6 +591,19 @@ def build_kn5_pure(
     return stats
 
 
+def production_plan(plan: ScenePlan) -> ScenePlan:
+    """El plan que construye producción (origen Kunos + nulos COCKPIT/STEER vacíos)."""
+    from .plan import (
+        add_cockpit_lr_nulls,
+        add_steer_hr_diagnostic_nulls,
+        kunos_origin_offset,
+        translate_plan,
+    )
+
+    moved = translate_plan(plan, kunos_origin_offset(plan))
+    return add_steer_hr_diagnostic_nulls(add_cockpit_lr_nulls(moved))
+
+
 def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
@@ -608,7 +621,7 @@ def main(argv: list[str] | None = None) -> int:
     from src.ac.kn5_inspect import read_kn5
 
     out = ensure_safe_output_path(args.out)
-    plan = plan_for_vehicle(args.vehicle_dir, args.pc)
+    plan = production_plan(plan_for_vehicle(args.vehicle_dir, args.pc))
     kn5 = out / (args.kn5 or f"{Path(args.vehicle_dir).name}.kn5")
     stats = build_kn5_pure(plan, kn5)
     print(
