@@ -24,7 +24,6 @@ import hashlib
 import struct
 import sys
 import uuid
-import wave
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -295,20 +294,55 @@ def bank_fsb(bank: Bank) -> SndChunk:
 
 
 def read_wav_mono16(path: Path) -> tuple[int, bytes]:
-    """Lee un WAV PCM16 (mono, o estéreo mezclado a mono). Devuelve (Hz, PCM16)."""
-    with wave.open(str(path), "rb") as w:
-        if w.getsampwidth() != 2:
-            raise ValueError(f"{path}: solo PCM16")
-        ch, rate, raw = w.getnchannels(), w.getframerate(), w.readframes(w.getnframes())
-    a = array.array("h")
-    a.frombytes(raw)
-    if sys.byteorder == "big":
-        a.byteswap()
+    """Lee un WAV (PCM 8/16/24/32 o float32/64; varios canales se promedian a mono).
+
+    Devuelve (Hz, PCM16). float -> PCM16 con ``trunc(v * 32767)``: medido contra el PCM que
+    FMOD Studio escribe en un banco desde el mismo WAV float32 (11 de 98 070 muestras
+    difieren en 1 por redondeo de coma flotante).
+    """
+    raw = Path(path).read_bytes()
+    if raw[:4] != b"RIFF" or raw[8:12] != b"WAVE":
+        raise ValueError(f"{path}: no es un WAV")
+    pos, fmt, data = 12, None, None
+    while pos + 8 <= len(raw):
+        cid, size = raw[pos : pos + 4], struct.unpack_from("<I", raw, pos + 4)[0]
+        body = raw[pos + 8 : pos + 8 + size]
+        if cid == b"fmt ":
+            fmt = struct.unpack_from("<HHIIHH", body, 0)
+            if fmt[0] == 0xFFFE and size >= 26:  # WAVE_FORMAT_EXTENSIBLE
+                fmt = (struct.unpack_from("<H", body, 24)[0],) + fmt[1:]
+        elif cid == b"data":
+            data = body
+        pos += 8 + size + (size & 1)
+    if fmt is None or data is None:
+        raise ValueError(f"{path}: WAV sin fmt/data")
+    tag, ch, rate, _, _, bits = fmt
+    width = bits // 8
+    n = len(data) // width
+    data = data[: n * width]
+    if tag == 1 and bits == 8:
+        vals = [(b - 128) * 256 for b in data]
+    elif tag == 1 and bits == 16:
+        a = array.array("h")
+        a.frombytes(data)
+        if sys.byteorder == "big":
+            a.byteswap()
+        vals = list(a)
+    elif tag == 1 and bits == 24:
+        vals = [
+            int.from_bytes(data[i : i + 3], "little", signed=True) >> 8
+            for i in range(0, len(data), 3)
+        ]
+    elif tag == 1 and bits == 32:
+        vals = [v >> 16 for v in struct.unpack(f"<{n}i", data)]
+    elif tag == 3 and bits in (32, 64):
+        f = struct.unpack(f"<{n}{'f' if bits == 32 else 'd'}", data)
+        vals = [max(-32768, min(32767, int(v * 32767.0))) for v in f]
+    else:
+        raise ValueError(f"{path}: formato WAV {tag}/{bits} bits no admitido")
     if ch > 1:
-        a = array.array("h", [sum(a[i : i + ch]) // ch for i in range(0, len(a), ch)])
-    if sys.byteorder == "big":
-        a.byteswap()
-    return rate, a.tobytes()
+        vals = [sum(vals[i : i + ch]) // ch for i in range(0, len(vals) - ch + 1, ch)]
+    return rate, struct.pack(f"<{len(vals)}h", *vals)
 
 
 def resample_linear(pcm: bytes, src: int, dst: int) -> bytes:
