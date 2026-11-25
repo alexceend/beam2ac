@@ -21,7 +21,7 @@ usados como texto (más oscuros) y los grises de texto secundario.
 
 ## Marcas y obras de terceros
 Automation – The Car Company Tycoon Game, BeamNG.drive y Assetto Corsa (Kunos Simulazioni) son marcas y obras de sus
-titulares; este proyecto no está afiliado a ellos y no incluye ningún archivo suyo. Las exportaciones con piloto o manos
+titulares; este proyecto no está afiliado a ellos y no incluye ningún archivo suyo, salvo el esqueleto de banco silencioso descrito arriba (derivado de la plantilla pública del SDK de audio de AC). Las exportaciones con piloto o manos
 (`--local-driver`) contienen material derivado de Kunos y no se deben distribuir.
 
 - `src/audio/data/skeleton_engine.bank`: banco de plantilla del SDK de audio de Assetto Corsa 1.9 (Kunos Simulazioni) construido con FMOD Studio 1.08.12 (Firelight Technologies), con audio sintético en silencio y sin muestras de terceros; solo es el molde de `src/audio/engine_gen.py`. Procedencia y huellas: `src/audio/data/skeleton_provenance.json`; se regenera con `python -m tools.audio.make_skeleton`.
