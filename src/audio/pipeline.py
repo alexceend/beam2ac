@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 from pathlib import Path
 from typing import Any
@@ -203,6 +204,66 @@ def _staged_build(
     )
 
 
+def use_python_builder(build: bool, fmod: dict[str, Any]) -> bool:
+    """``BEAM2AC_AUDIO_BUILDER``: ``python`` (sin FMOD), ``fmod`` o ``auto`` (por defecto:
+    FMOD compatible si lo hay y, si no, el generador propio)."""
+    mode = builder_mode()
+    if not build or mode == "fmod":
+        return False
+    return mode == "python" or not fmod["compatible"]
+
+
+def builder_mode() -> str:
+    mode = os.environ.get("BEAM2AC_AUDIO_BUILDER", "auto").strip().lower()
+    if mode not in ("auto", "fmod", "python"):
+        raise ValueError(
+            f"BEAM2AC_AUDIO_BUILDER={mode!r} no es válido (auto, fmod o python)"
+        )
+    return mode
+
+
+def _python_build(spec: dict[str, Any], out: Path, car_id: str) -> Path:
+    """Banco sin FMOD (``engine_gen`` sobre el esqueleto versionado) en ``out/prebuilt``."""
+    from src.ac.audio import AudioInputError, load_prebuilt
+    from src.audio import bank_graph, engine_gen
+    from src.audio.bank_patch import read_wav_mono16
+
+    raw, guids = engine_gen.generate_from_skeleton(
+        spec, lambda f: read_wav_mono16(Path(f))
+    )
+    problems = bank_graph.check_consistency(raw)
+    if problems:
+        raise ValueError(f"banco generado incoherente: {problems[:3]}")
+    dst = out / "prebuilt"
+    dst.mkdir(exist_ok=False)
+    (dst / f"{car_id}.bank").write_bytes(raw)
+    (dst / "GUIDs.txt").write_text(guids, encoding="utf-8")
+    try:
+        audio = load_prebuilt(dst, car_id)
+    except AudioInputError as exc:
+        raise ValueError(f"banco inválido: {exc}") from exc
+    expected = set(spec["secondary"]) | set(spec["engine"])
+    if set(audio.events) != expected:
+        raise ValueError("los eventos del banco no coinciden con el spec")
+    (out / "spec.json").write_text(json.dumps(spec, indent=1), encoding="utf-8")
+    (dst / BUILD_META).write_text(
+        json.dumps(
+            {
+                "generator": "src.audio.engine_gen (sin FMOD)",
+                "car_id": car_id,
+                "skeleton": json.loads(
+                    (engine_gen.DATA / "skeleton_provenance.json").read_text("utf-8")
+                ),
+                "bank_sha256": hashlib.sha256(raw).hexdigest(),
+                "reuse_key": None,
+            },
+            indent=1,
+        ),
+        encoding="utf-8",
+    )
+    return dst
+
+
 def run(
     vehicle_dir: Path | str,
     car_id: str,
@@ -232,7 +293,31 @@ def run(
     }
     project = bank = False
     out = Path(out)
-    if plan["status"] in ("listo", "listo_con_fallback"):
+    out0, py_done = out, False
+    if plan["status"] in ("listo", "listo_con_fallback") and use_python_builder(
+        build, fmod
+    ):
+        out = new_output_dir(out)
+        try:
+            report["prebuilt"] = str(_python_build(plan["spec"], out, car_id))
+            project = bank = py_done = True
+            report["note"] = "banco generado sin FMOD (src.audio.engine_gen)"
+        except (ValueError, OSError) as exc:
+            if (
+                builder_mode() == "python"
+            ):  # elegido a propósito: el error es el resultado
+                report["error"] = str(exc)
+                py_done = True
+            else:  # auto: el generador no puede; se prepara el proyecto de FMOD como antes
+                report["warnings"] = [
+                    *report["warnings"],
+                    f"el generador sin FMOD no pudo construir el banco: {exc}",
+                ]
+                shutil.rmtree(out, ignore_errors=True)
+                out = out0
+    if py_done:
+        pass
+    elif plan["status"] in ("listo", "listo_con_fallback"):
         spec = plan["spec"]
         key = (
             reuse_key(spec, plan, fmod["version"])

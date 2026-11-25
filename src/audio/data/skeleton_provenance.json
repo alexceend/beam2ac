@@ -1,0 +1,12 @@
+{
+ "generator": "tools/audio/make_skeleton.py",
+ "created": "2026-11-25T22:58:48+00:00",
+ "car_id": "beam2ac_skeleton",
+ "fmod_studio": "1.08.12",
+ "sdk_tree_sha256": "32b0eeb8cf86b706dda0b2bde6681d4e106ad910c3fcc5c310a41d83a9c6e70f",
+ "template_spec_sha256": "7c1a12ff88396c2ab31243d6d8f93323a5da76d3a6717f81de41e3bf18d31faf",
+ "build_events_template_sha256": "d085a34690346f61d4da55b653a30b257894d136fcef2100636cbffd25402355",
+ "bank_sha256": "2796ad7e384a8b429391317438cb95449f31ad17a2f73d8466eff6606f05f9d0",
+ "guids_sha256": "9648856c3a74d0218e92f87c19c7bdc034ade518b489b16047b3de8cadf3dbec",
+ "contents": "Banco de plantilla del SDK de audio de Assetto Corsa 1.9 (buses, efectos y eventos secundarios sin muestras) con 2 ranuras de motor por papel de AUDIO SINTETICO EN SILENCIO; ningun audio de Kunos ni de terceros. Se usa solo como molde de src.audio.engine_gen."
+}

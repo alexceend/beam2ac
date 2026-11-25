@@ -292,7 +292,10 @@ class TestPipeline(unittest.TestCase):
         )
 
     def test_fmod_absent_prepares_but_does_not_claim_bank(self):
-        with self.patched():
+        with (
+            self.patched(),
+            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "fmod"}),
+        ):
             r = self.run_pipe(1, fmod=self.tmp / "no_existe" / "FMOD Studio 1.08.12")
         self.assertTrue(r["stages"]["proyecto_generado"])
         self.assertFalse(r["stages"]["banco_construido"])

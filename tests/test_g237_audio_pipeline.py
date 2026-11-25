@@ -1,10 +1,12 @@
 """G2.37: pipeline WAV → plan → proyecto FMOD. Sin FMOD ni juegos (WAV sintéticos)."""
 
 import json
+import os
 import struct
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from src.audio import pipeline
 from src.audio.plan import build_plan, placement
@@ -129,8 +131,55 @@ class TestPlan(unittest.TestCase):
 
 
 class TestPipelineNoFmod(unittest.TestCase):
+    def test_python_builder_is_the_fallback_without_fmod(self):
+        """Sin FMOD el generador propio construye el banco (esqueleto versionado)."""
+        with (
+            tempfile.TemporaryDirectory() as d,
+            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "auto"}),
+        ):
+            veh = make_mod(Path(d) / "mod")
+            out = Path(d) / "out"
+            r = pipeline.run(veh, "beam2ac_t", out, fmod_path=Path(d) / "no_fmod")
+            self.assertIsNone(r["error"])
+            self.assertTrue(r["stages"]["banco_construido"])
+            self.assertIn("sin FMOD", r["note"])
+            self.assertTrue((Path(r["prebuilt"]) / "beam2ac_t.bank").is_file())
+            self.assertFalse(r["stages"]["escuchado"])
+
+    def test_auto_falls_back_to_fmod_project_when_generator_cannot(self):
+        """Con 1 muestra por papel el generador no puede: se prepara el proyecto de FMOD como antes."""
+        with (
+            tempfile.TemporaryDirectory() as d,
+            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "auto"}),
+        ):
+            veh = make_mod(Path(d) / "mod", load=(1000,), coast=(1000,))
+            out = Path(d) / "out"
+            r = pipeline.run(veh, "beam2ac_t", out, fmod_path=Path(d) / "no_fmod")
+            self.assertIsNone(r["error"])
+            self.assertEqual(r["state"], "proyecto_generado")
+            self.assertTrue(any("generador sin FMOD" in w for w in r["warnings"]))
+            self.assertTrue((Path(r["out"]) / "LEEME.md").is_file())
+
+    def test_python_mode_reports_generator_error(self):
+        with (
+            tempfile.TemporaryDirectory() as d,
+            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "python"}),
+        ):
+            veh = make_mod(Path(d) / "mod", load=(1000,), coast=(1000,))
+            r = pipeline.run(veh, "beam2ac_t", Path(d) / "out", fmod_path=Path(d) / "x")
+            self.assertIn("al menos 2 ranuras", r["error"])
+            self.assertFalse(r["stages"]["banco_construido"])
+
+    def test_unknown_builder_is_an_error(self):
+        with mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "bogus"}):
+            with self.assertRaises(ValueError):
+                pipeline.builder_mode()
+
     def test_project_prepared_not_built(self):
-        with tempfile.TemporaryDirectory() as d:
+        with (
+            tempfile.TemporaryDirectory() as d,
+            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "fmod"}),
+        ):
             veh = make_mod(Path(d) / "mod")
             out = Path(d) / "out"
             r = pipeline.run(veh, "beam2ac_t", out, fmod_path=Path(d) / "no_fmod")

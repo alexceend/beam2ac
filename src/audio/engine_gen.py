@@ -13,6 +13,7 @@ Sigue haciendo falta el molde (el esqueleto de buses, efectos y eventos secundar
 from __future__ import annotations
 
 import uuid
+from pathlib import Path
 from typing import Any, Callable
 
 from . import bank_graph as bg
@@ -154,3 +155,30 @@ def generate(
         n2 = n.strip().replace(f"/{donor_id}", f"/{car}")
         out.append(f"{{{mapping.get(gg, gg)}}} {n2}\n")
     return raw, "".join(out)
+
+
+# --------------------------------------------------------------------------- esqueleto versionado
+DATA = Path(__file__).parent / "data"
+SKELETON_ID = "beam2ac_skeleton"
+
+
+def skeleton() -> tuple[bytes, str, str]:
+    """(banco, GUIDs.txt, id) del esqueleto versionado (``tools/audio/make_skeleton.py``).
+
+    Banco de plantilla del SDK de AC sin audio de nadie (2 ranuras de silencio por papel):
+    el molde que permite generar bancos de coche sin FMOD ni bancos construidos antes.
+    """
+    return (
+        (DATA / "skeleton_engine.bank").read_bytes(),
+        (DATA / "skeleton_engine_guids.txt").read_text(encoding="utf-8"),
+        SKELETON_ID,
+    )
+
+
+def generate_from_skeleton(
+    spec: dict[str, Any],
+    audio: Callable[[str], tuple[int, bytes]] | None = None,
+) -> tuple[bytes, str]:
+    """Banco y GUIDs.txt del coche ``spec['car']`` sin FMOD (molde = esqueleto versionado)."""
+    raw, guids, sid = skeleton()
+    return generate(raw, guids, sid, spec, audio)

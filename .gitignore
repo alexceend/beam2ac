@@ -50,6 +50,8 @@ __pycache__/
 *.dds
 *.dll
 *.exe
+# Excepcion (decision del autor 2026-11-25): esqueleto de banco de motor, sin audio de terceros (ver tools/audio/make_skeleton.py)
+!/src/audio/data/skeleton_engine.bank
 *.i64
 *.idb
 *.rar

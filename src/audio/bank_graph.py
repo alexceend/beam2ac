@@ -292,9 +292,12 @@ class EngineBank:
         assert want_in or want_out, "una ranura sin fundidos no está soportada"
         curv = self._curv()
         ctrls = {bytes(c.data[:16]): c for c in self._items(b"CTRS", b"CTRL")}
-        donors: dict[str, bytes] = {}
-        for c in ctrls.values():
-            donors.setdefault(self._kind(bytes(c.data[:16])), bytes(c.data[:16]))
+        donors: dict[str, bytes] = (
+            {}
+        )  # solo fundidos de sonidos (no curvas de otros usos)
+        for w in self._wait_lists():
+            for cid in self._wait_ctrls(w):
+                donors.setdefault(self._kind(cid), cid)
         for w in slot.waits:
             waib = bytes(self.wait_parts(w)[0].data[:16])
             have = {self._kind(i): i for i in self._wait_ctrls(w)}
@@ -306,7 +309,7 @@ class EngineBank:
                     new = _new_guid()
                     m = {donors[kind]: new}
                     nc = _clone(ctrls[donors[kind]], m)
-                    nc.data = nc.data[:16] + waib + nc.data[32:]
+                    nc.data = nc.data[:16] + waib + self._module_of(waib) + nc.data[48:]
                     nv = _clone(curv[donors[kind]], m)
                     self.lists[b"CTRS"].children.append(nc)
                     self.lists[b"CRVS"].children.append(nv)
@@ -325,6 +328,19 @@ class EngineBank:
             prop.data = head + b"".join(ids) + d[-2:]
         for f in (b"CTRS", b"CRVS"):
             self._count(f)
+
+    def _module_of(self, waib: bytes) -> bytes:
+        """Id (``PMLB``) del módulo de sonidos que lista a ese ``WAIB``."""
+        for _, pmlb, _ in self._module_lists():
+            d = pmlb.data
+            if len(d) <= PMLB_ARR + 4:
+                continue
+            n = (struct.unpack_from("<H", d, PMLB_ARR)[0] - 1) // 2
+            for k in range(n):
+                o = PMLB_ARR + 4 + k * ENTRY
+                if bytes(d[o : o + 16]) == waib:
+                    return bytes(d[:16])
+        raise ValueError("WAIB sin módulo")
 
     def _ctro_add(self, waib: bytes, ctrl_id: bytes) -> None:
         """Añade el CTRL al CTRO del módulo que lista a ese WAIB."""

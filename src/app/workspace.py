@@ -801,14 +801,10 @@ class Workspace:
 
     @staticmethod
     def _auto_audio(body: dict[str, Any]) -> bool:
-        """El banco de sonido se genera solo si hay FMOD compatible y no se da un banco hecho."""
+        """El banco de sonido se genera solo si no se da un banco hecho (sin FMOD: generador propio)."""
         if "audio_build" in body:
             return bool(body["audio_build"])
-        if body.get("audio_bank"):
-            return False
-        from src.pipeline.contracts import detect_fmod
-
-        return bool(detect_fmod().get("compatible"))
+        return not body.get("audio_bank")
 
     def run(self, pid: str, with_model: bool = False) -> dict[str, Any]:
         from src.project.orchestrator import run_project
