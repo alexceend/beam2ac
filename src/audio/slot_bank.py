@@ -82,10 +82,7 @@ def fill_bank(
         s.samples = len(pcm) // 2
         s.data = pcm + bytes(32 + bp._pad(len(pcm), 32))
     bp.rehash(snd.fsb)
-    c = bank.find(b"SND ")
-    assert c is not None
-    c.data = bp.build_snd(snd)
-    bp.update_sndh(bank, len(bp.build_fsb5(snd.fsb)))
+    bp.finalize_snd(bank, snd)
     return bp.rebuild_bank(bank), notes
 
 

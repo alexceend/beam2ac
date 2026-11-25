@@ -105,5 +105,51 @@ class TestEngineGen(unittest.TestCase):
             self.assertIn(float(self.b["spec"]["engine"][ev]["rpms_max"]), found)
 
 
+def _probe():
+    try:
+        from tools.audio import fmod_probe
+
+        if not (fmod_probe.AC / "fmodstudio64.dll").is_file():
+            return None
+        return fmod_probe
+    except Exception:  # noqa: BLE001 - sin AC o sin DLL
+        return None
+
+
+@unittest.skipUnless(
+    all((d / "spec.json").exists() and (d / "prebuilt").exists() for d in DIRS.values())
+    and _probe() is not None,
+    "faltan bancos de referencia o el runtime FMOD de AC",
+)
+class TestPlays(unittest.TestCase):
+    """Regresión del ``SNDH``: con otro número de ranuras el banco cargaba pero no sonaba."""
+
+    def test_generated_bank_makes_sound(self) -> None:
+        import tempfile
+
+        fp = _probe()
+        a, b = _pair(DIRS["agus"]), _pair(DIRS["autist"])
+        raw, gtxt = eg.generate(a["bank"], a["guids"], a["car"], b["spec"])
+        gid = next(
+            g.strip("{}")
+            for g, n in (ln.split(None, 1) for ln in gtxt.splitlines())
+            if n.strip() == f"event:/cars/{b['car']}/engine_ext"
+        )
+        from src.safe_paths import ensure_safe_output_path
+
+        with tempfile.TemporaryDirectory() as tmp:
+            d = ensure_safe_output_path(Path(tmp))
+            bank = d / f"{b['car']}.bank"
+            bank.write_bytes(raw)
+            out = d / "o.wav"
+            fp.run(
+                [fp.AC / "content/sfx/common.bank", bank],
+                gid,
+                {"rpms": 3000.0, "throttle": 1.0},
+                out,
+            )
+            self.assertGreater(fp.peak(out)[0], 0.01)
+
+
 if __name__ == "__main__":
     unittest.main()

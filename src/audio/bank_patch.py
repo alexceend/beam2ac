@@ -415,16 +415,44 @@ def patch_bank(buf: bytes, wavs: dict[int, Path]) -> bytes:
     bank = parse_bank(buf)
     snd = bank_fsb(bank)
     patch_samples(snd, wavs)
-    c = bank.find(b"SND ")
-    assert c is not None
-    c.data = build_snd(snd)
-    update_sndh(bank, len(build_fsb5(snd.fsb)))
+    finalize_snd(bank, snd)
     return rebuild_bank(bank)
 
 
 def find_leaf(chunks: list[Chunk], cid: bytes) -> list[Chunk]:
     """Todos los trozos hoja ``cid`` del árbol (en orden de aparición)."""
     return [c for _, c in iter_chunks(chunks) if c.cid == cid and c.form is None]
+
+
+def finalize_snd(bank: Bank, snd: SndChunk) -> None:
+    """Escribe ``SND `` y deja ``SNDH`` coherente con la nueva disposición del archivo.
+
+    Regla medida en 67 bancos (FMOD y Kunos): el FSB5 empieza alineado a 32 bytes del ARCHIVO,
+    ``SND `` lleva delante ``(-inicio_de_datos) % 32`` bytes de relleno y ``SNDH`` guarda
+    ``(0x80003, desplazamiento absoluto del FSB5, tamaño del FSB5)``. Si el tamaño de ``PROJ``
+    cambia (ranuras añadidas o quitadas) el desplazamiento y el relleno cambian: con el
+    desplazamiento viejo FMOD no encuentra el audio y el evento se detiene en silencio.
+    """
+    snd.prefix = b""
+    pos = 12
+    for c in bank.chunks:
+        if _t_of(c) == b"SND ":
+            break
+        pos += len(_emit(c))
+    data_start = pos + 8
+    snd.prefix = bytes((-data_start) % 32)
+    c = bank.find(b"SND ")
+    assert c is not None
+    c.data = build_snd(snd)
+    (h,) = find_leaf(bank.chunks, b"SNDH")
+    tag, _, _ = struct.unpack("<III", h.data)
+    h.data = struct.pack(
+        "<III", tag, data_start + len(snd.prefix), len(build_fsb5(snd.fsb))
+    )
+
+
+def _t_of(c: Chunk) -> bytes:
+    return c.cid
 
 
 def update_sndh(bank: Bank, fsb_size: int) -> None:

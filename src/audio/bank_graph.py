@@ -421,10 +421,7 @@ class EngineBank:
 
     # ------------------------------------------------------------------ salida
     def to_bytes(self) -> bytes:
-        c = self.bank.find(b"SND ")
-        assert c is not None
-        c.data = bp.build_snd(self.snd)
-        bp.update_sndh(self.bank, len(bp.build_fsb5(self.snd.fsb)))
+        bp.finalize_snd(self.bank, self.snd)
         return bp.rebuild_bank(self.bank)
 
 
@@ -432,6 +429,18 @@ def check_consistency(raw: bytes) -> list[str]:
     """Comprobaciones estructurales de un banco de motor (lista de problemas)."""
     eb = EngineBank(raw)
     issues: list[str] = []
+    pos = 12
+    for c in eb.bank.chunks:
+        if _t(c) == b"SND ":
+            break
+        pos += len(bp._emit(c))
+    start = pos + 8 + len(eb.snd.prefix)
+    (sndh,) = bp.find_leaf(eb.bank.chunks, b"SNDH")
+    _, off, size = struct.unpack("<III", sndh.data)
+    if start % 32 or off != start or size != len(bp.build_fsb5(eb.snd.fsb)):
+        issues.append(
+            f"SNDH: desplazamiento {off} != FSB5 en {start} (o sin alinear a 32)"
+        )
     for f in (b"WAVS", b"WAIS", b"CTRS", b"CRVS"):
         lst = eb.lists[f]
         n = sum(1 for c in lst.children if _t(c) != b"LCNT")
