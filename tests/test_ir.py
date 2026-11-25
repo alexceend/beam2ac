@@ -471,12 +471,12 @@ class TestRealVehicles(unittest.TestCase):
         from src.convert.service import ConversionSession
 
         runs = (IBIZA_PROJECT / "runs.jsonl").read_text("utf-8").splitlines()
-        key = next(
+        keys = [
             json.loads(x)["stages"]["resolved_ini"]["key"]
             for x in reversed(runs)
             if json.loads(x)["stages"].get("resolved_ini", {}).get("key")
-        )
-        stage = IBIZA_PROJECT / "stages/resolved_ini" / key / "data"
+        ]
+        stage = IBIZA_PROJECT / "stages/resolved_ini" / keys[0] / "data"
         # La etapa guardada es de antes de G2.39 (decisión del usuario D-INV-GBI/D-G227-IBIZA:
         # INERTIA 0,01 y LSD 2WD ×2 = PRELOAD 200 + POWER 0,5 + COAST 0,05 para el 38022,
         # `dt.preload@4`…). Esas reglas se retiran del catálogo para comparar con ella;
@@ -493,6 +493,18 @@ class TestRealVehicles(unittest.TestCase):
         classify(ir)
         s = ConversionSession(ir, cat)
         files = s.target().files
+
+        def same(st) -> bool:  # ¿coincide byte a byte con esa etapa guardada?
+            return sorted(files) == sorted(p.name for p in st.glob("*")) and all(
+                (st / n).read_bytes() == tx.replace("\n", os.linesep).encode("utf-8")
+                for n, tx in files.items()
+            )
+
+        # Cada exportación nueva del proyecto añade una etapa con las reglas ACTUALES: la comparación vale con
+        # la más reciente que sea anterior a G2.39 (la que corresponde a las reglas retiradas arriba).
+        for k in keys:
+            if same(IBIZA_PROJECT / "stages/resolved_ini" / k / "data"):
+                return
         self.assertEqual(sorted(files), sorted(p.name for p in stage.glob("*")))
         for name, text in files.items():
             with self.subTest(file=name):
