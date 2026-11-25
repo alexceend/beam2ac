@@ -377,9 +377,23 @@ def patch_samples(snd: SndChunk, wavs: dict[int, Path]) -> None:
             raise ValueError(f"muestra {idx} no es mono")
         rate, pcm = read_wav_mono16(path)
         pcm = resample_linear(pcm, rate, s.rate)
-        s.samples = len(pcm) // 2
-        s.data = pcm + bytes(32 + _pad(len(pcm), 32))  # FMOD: >= 32 bytes, a 32
+        set_audio(s, pcm)  # FMOD: >= 32 bytes de datos, a 32
     rehash(snd.fsb)
+
+
+def set_audio(s: Fsb5Sample, pcm: bytes) -> None:
+    """Datos nuevos de una muestra mono PCM16 y su nivel de pico (extra tipo 13, float).
+
+    Medido: FMOD guarda en ese extra el pico del audio de origen (0,02377 para un WAV de pico
+    0,02374 en PCM16); aquí se calcula del PCM (|v|/32767, error < 0,2 %).
+    """
+    s.samples = len(pcm) // 2
+    s.data = pcm + bytes(32 + _pad(len(pcm), 32))
+    peak = max((abs(v) for v in array.array("h", pcm)), default=0) / 32767.0
+    s.extras = [
+        (t, struct.pack("<f", peak) if t == 13 and len(d) == 4 else d)
+        for t, d in s.extras
+    ]
 
 
 def rehash(f: Fsb5) -> None:

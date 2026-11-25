@@ -77,10 +77,21 @@ def retarget(
     per: dict[str, dict[str, dict[float, dict]]] = {}
     for ev, d in spec["engine"].items():
         for tr in d["tracks"]:
-            per.setdefault(ev, {}).setdefault(_role(tr["name"]), {}).update(
-                {float(s["rpm"]): s for s in tr["sounds"]}
-            )
+            role = _role(tr["name"])
+            rpms = [float(s["rpm"]) for s in tr["sounds"]]
+            if len(set(rpms)) != len(rpms):
+                raise ValueError(f"{ev}/{role}: rpm repetidas en las muestras")
+            if role in per.get(ev, {}):
+                raise ValueError(f"{ev}: más de una pista de {role}")
+            per.setdefault(ev, {})[role] = {float(s["rpm"]): s for s in tr["sounds"]}
     ext = per["engine_ext"]
+    for ev in per:
+        for role in ("load", "coast"):
+            if sorted(per[ev].get(role, {})) != sorted(ext[role]):
+                raise ValueError(
+                    f"{ev}/{role}: las rpm no coinciden con las de engine_ext "
+                    "(el molde comparte cada muestra entre exterior e interior)"
+                )
     for role in ("load", "coast"):
         rpms = sorted(ext[role])
         if len(rpms) < 2:
@@ -112,8 +123,7 @@ def retarget(
             if audio is not None:
                 rate, pcm = audio(ext[role][r]["file"])
                 pcm = bp.resample_linear(pcm, rate, sm.rate)
-                sm.samples = len(pcm) // 2
-                sm.data = pcm + bytes(32 + bp._pad(len(pcm), 32))
+                bp.set_audio(sm, pcm)
     for ev, d in spec["engine"].items():
         eb.set_rpms_max(ev, float(d["rpms_max"]))
 
