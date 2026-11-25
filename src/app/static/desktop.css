@@ -205,6 +205,8 @@ dialog.massdlg[id^=dlg-] { max-width: 760px; }
 
 /* extras del coche: título→contenido 5 px, última opción→título siguiente 10 px */
 .extras .xsec { margin: 0 0 10px; }
+.extras details.xsec > summary { cursor: pointer; font-weight: 600; margin: 0 0 6px; }
+.extras details.xsec { border-bottom: 1px solid var(--border, #45475a); padding-bottom: 6px; }
 .extras .xsec h4 { margin: 0 0 5px; }
 .extras .xsec > :last-child, .extras .xsec > :last-child .opt-help { margin-bottom: 0; }
 .extras .xsec .hint { margin: 0 0 5px; }

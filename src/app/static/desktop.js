@@ -922,7 +922,7 @@ function extrasBlock() {
     return [el("label", { class: "opt" }, cb, ` ${label}`, el("span", { class: "opt-help" }, help)), lab];
   };
   const hint = (t) => el("p", { class: "muted small hint" }, t);
-  return el("fieldset", { class: "extras" }, el("legend", {}, "Extras del coche (opcionales)"),
+  const fs = el("fieldset", { class: "extras" }, el("legend", {}, "Extras del coche (opcionales)"),
     hint("Todo lo de este bloque es opcional. Lo que marques se añade al coche y a la pantalla de ajustes («setup») de boxes de Assetto Corsa; lo que no marques no se incluye."),
     el("section", { class: "xsec" }, el("h4", {}, "Volante"),
       el("div", { class: "actions" },
@@ -951,6 +951,19 @@ function extrasBlock() {
         ? el("label", { class: "opt" }, el("input", { type: "checkbox", name: "x_turbo" }), " Turbo ajustable del 0 al 100 %",
           el("span", { class: "opt-help" }, "Marcado: el turbo se puede regular desde la cabina y arranca al 100 %. Desmarcado: el turbo funciona siempre igual que en el coche original. Es una aproximación sin medir en el juego."))
         : null));
+  collapseSections(fs);
+  return fs;
+}
+// Cada bloque de extras se pliega bajo su título (solo el primero queda abierto): el formulario es largo y casi todo es opcional.
+function collapseSections(fs) {
+  [...fs.querySelectorAll("section.xsec")].forEach((s, i) => {
+    const h = s.querySelector("h4");
+    const d = el("details", { class: "xsec" }); if (i === 0) d.open = true;
+    d.append(el("summary", {}, h ? h.textContent : "Opciones"));
+    if (h) h.remove();
+    d.append(...s.childNodes);
+    s.replaceWith(d);
+  });
 }
 // Llamas del escape: ayuda, valores recomendados por perfil y rango automático del coche (src/ac/backfire.py).
 function backfireBlock() {

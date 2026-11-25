@@ -815,3 +815,30 @@ def test_texturas_de_llamas_generadas():
         assert len(d) == 128 + F.TEX_PX * F.TEX_PX * 4
         alphas = d[128 + 3 :: 4]
         assert max(alphas) > 200 and alphas[0] == 0  # centro opaco, borde transparente
+
+
+def test_bc5_se_convierte_a_normal_completa(tmp_path):
+    import struct
+
+    from src.ac import kn5_materials as km
+
+    # bloque BC4 de valor constante 255 (r0=r1=255, índices 0) y 0 (r0=r1=0): x=+1, y=-1 → z=0
+    blk = bytes([255, 255, 0, 0, 0, 0, 0, 0]) + bytes([0, 0, 0, 0, 0, 0, 0, 0])
+    assert km._bc4_block(blk[:8]) == [255] * 16 and km._bc4_block(blk[8:]) == [0] * 16
+    flags = 0x1 | 0x2 | 0x4 | 0x1000
+    head = struct.pack("<7I", 124, flags, 4, 4, 16, 0, 1) + bytes(44)
+    pf = struct.pack("<II4s5I", 32, 4, b"ATI2", 0, 0, 0, 0, 0)
+    dds = b"DDS " + head + pf + struct.pack("<5I", 0x1000, 0, 0, 0, 0) + blk
+    out = km.bc5_to_rgba_dds(dds)
+    assert len(out) == 128 + 4 * 4 * 4 and out[84:88] != b"ATI2"
+    b, g, r, a = out[128:132]
+    assert (r, g, a) == (255, 0, 255) and b == 128  # z = 0 → 0,5
+    # índice 2 de la paleta (r0 > r1): (6·r0 + 1·r1) // 7
+    assert (
+        km._bc4_block(bytes([200, 100, 0b010, 0, 0, 0, 0, 0]))[0]
+        == (6 * 200 + 100) // 7
+    )
+    # _normal_map convierte BC5 al leerlo
+    (tmp_path / "n.dds").write_bytes(dds)
+    name, data = km._normal_map({"normalMap": "n.dds"}, tmp_path)
+    assert name == "n.dds" and data[84:88] != b"ATI2" and len(data) == len(out)

@@ -244,6 +244,60 @@ def specular_look(
 _VIRTUAL_COLOUR = re.compile(r"_col_0x[0-9a-fA-F]{8}\.dds$")
 
 
+MAX_NORMAL_PX = 1024  # los mapas mayores se reducen (se toma 1 de cada 2, 4… píxeles) para acotar KN5 y tiempo
+
+
+def _bc4_block(b: bytes) -> list[int]:
+    """16 valores 0-255 de un bloque BC4 (8 bytes), orden de filas."""
+    r0, r1 = b[0], b[1]
+    if r0 > r1:
+        pal = [r0, r1] + [((7 - i) * r0 + i * r1) // 7 for i in range(1, 7)]
+    else:
+        pal = [r0, r1] + [((5 - i) * r0 + i * r1) // 5 for i in range(1, 5)] + [0, 255]
+    bits = int.from_bytes(b[2:8], "little")
+    return [pal[(bits >> (3 * k)) & 7] for k in range(16)]
+
+
+def bc5_to_rgba_dds(data: bytes) -> bytes:
+    """DDS BC5 (``ATI2``) → DDS A8R8G8B8 sin comprimir con la normal completa: x = R, y = G, z = √(1 − x² − y²).
+    Solo el nivel 0; se reduce hasta ``MAX_NORMAL_PX``. Comprobado por bloques frente a la definición de BC4 (tests).
+    """
+    h, w = struct.unpack_from("<II", data, 12)
+    bw, bh = (w + 3) // 4, (h + 3) // 4
+    step = 1
+    while max(w, h) // step > MAX_NORMAL_PX:
+        step *= 2
+    ow, oh = w // step, h // step
+    pix = [bytearray(ow * 4) for _ in range(oh)]
+    for by in range(bh):
+        for bx in range(bw):
+            off = 128 + (by * bw + bx) * 16
+            r = _bc4_block(data[off : off + 8])
+            g = _bc4_block(data[off + 8 : off + 16])
+            for k in range(16):
+                px, py = bx * 4 + k % 4, by * 4 + k // 4
+                if px % step or py % step or px // step >= ow or py // step >= oh:
+                    continue
+                x, y = r[k] / 127.5 - 1.0, g[k] / 127.5 - 1.0
+                z = max(0.0, 1.0 - x * x - y * y) ** 0.5
+                o = (px // step) * 4
+                pix[py // step][o : o + 4] = bytes(
+                    (round((z + 1) * 127.5), g[k], r[k], 255)
+                )  # BGRA
+    flags = 0x1 | 0x2 | 0x4 | 0x8 | 0x1000
+    head = struct.pack("<7I", 124, flags, oh, ow, ow * 4, 0, 0) + bytes(44)
+    pf = struct.pack(
+        "<8I", 32, 0x41, 0, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000
+    )
+    return (
+        b"DDS "
+        + head
+        + pf
+        + struct.pack("<5I", 0x1000, 0, 0, 0, 0)
+        + b"".join(bytes(r) for r in pix)
+    )
+
+
 def _normal_map(stage: dict, vehicle_dir: Path) -> tuple[str, bytes]:
     """(nombre, bytes) del ``normalMap`` real del material o ``("", b"")``: se omiten los colores virtuales de
     Automation (``camso_col_0xff8080ff.dds`` = normal plana), los de ``vehicles/common`` y los ausentes o no DDS.
@@ -258,7 +312,14 @@ def _normal_map(stage: dict, vehicle_dir: Path) -> tuple[str, bytes]:
     if not fname or not path.is_file():
         return "", b""
     data = path.read_bytes()
-    return (path.name, data) if data[:4] == b"DDS " else ("", b"")
+    if data[:4] != b"DDS ":
+        return "", b""
+    if data[84:88] in (
+        b"ATI2",
+        b"BC5U",
+    ):  # BC5: dos canales, sin B: ``ksPerPixelNM`` lee xyz (Kunos usa DXT5/DXT1/RGB)
+        data = bc5_to_rgba_dds(data)
+    return path.name, data
 
 
 def load_materials(path: Path) -> dict:

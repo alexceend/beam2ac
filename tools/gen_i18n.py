@@ -12,6 +12,8 @@ import json
 from pathlib import Path
 
 PAIRS: list[tuple[str, str]] = [
+    ("Probar el coche en Assetto Corsa", "Test the car in Assetto Corsa"),
+    ("Lista rápida para comprobar una exportación. Nada de esto se prueba solo: «exportable» no significa «funciona en el juego».", "Quick checklist to verify an export. None of this is tested automatically: \"exportable\" does not mean \"works in the game\"."),
     ("Llamas del escape y modelo 3D", "Exhaust flames and 3D model"),
     (" Llamas del escape (backfire)", " Exhaust flames (backfire)"),
     (" Mapas normales", " Normal maps"),
