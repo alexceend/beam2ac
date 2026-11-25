@@ -15,6 +15,7 @@ from src.safe_paths import ensure_safe_output_path
 
 FILE = "car_details.json"
 COVER = "cover.jpg"
+LOGO = "logo.png"  # logo de la marca subido por el usuario (``ui/badge.png``); sin él, el b2ac por defecto
 TEXT = {"name": 80, "description": 4000, "class": 40, "brand": 60, "country": 60, "author": 80}
 CLASSES = ("street", "race", "drift", "semislicks", "openwheel", "special", "tuned", "kart")
 
@@ -62,13 +63,22 @@ def load(project: Any) -> dict[str, Any]:
 
 
 def save(
-    project: Any, raw: dict[str, Any], cover: bytes | None = None, clear_cover: bool = False
+    project: Any,
+    raw: dict[str, Any],
+    cover: bytes | None = None,
+    clear_cover: bool = False,
+    logo: bytes | None = None,
+    clear_logo: bool = False,
 ) -> dict[str, Any]:
+    from src.ac.logo import png_size
+
     from .cover import to_jpeg
 
     d = clean(raw)
     root = Path(project.root)
     new_cover = to_jpeg(cover) if cover else None  # valida la imagen antes de escribir nada
+    if logo and (png_size(logo) is None or max(png_size(logo)) > 512):
+        raise DetailsError("logo: debe ser un PNG de hasta 512 px")
     ensure_safe_output_path(root / FILE).write_text(
         json.dumps(d, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
     )
@@ -77,7 +87,17 @@ def save(
         cf.unlink()
     if new_cover:
         cf.write_bytes(new_cover)
+    lf = ensure_safe_output_path(root / LOGO)
+    if (clear_logo or logo) and lf.is_file():
+        lf.unlink()
+    if logo:
+        lf.write_bytes(logo)
     return d
+
+
+def logo_bytes(project: Any) -> bytes | None:
+    f = Path(project.root) / LOGO
+    return f.read_bytes() if f.is_file() else None
 
 
 def cover_bytes(project: Any) -> bytes | None:

@@ -32,10 +32,16 @@
 > **No se incluye ningún archivo de los juegos.** Necesitas tus propias copias de Automation, BeamNG.drive y Assetto Corsa;
 > el programa solo lee los archivos que ya tienes. Ver [Uso legal](#uso-legal).
 
-> [!WARNING]
-> **Estado:** que un coche se exporte sin errores no significa que funcione en el juego. Solo algunos coches del corpus se
-> han probado en Assetto Corsa; el resto son conversiones sin probar. Cada exportación lleva un informe con lo que quedó
-> bloqueado o sin validar.
+> [!NOTE]
+> **Comentario del autor**
+>
+> Siento que es importante este comentario antes de explicar el proyecto así que lo pongo arrriba en el readme :)
+>
+> Hola, soy alex, no sé si debería considerarme AUTOR del proyecto ya que, en gran medida, esto ha sido posible gracias a la ayuda de herramientas de IA. Mi labor en este proyecto ha sido mayoritariamente de diseño y de ingeniería inversa para poder obtener la formaque tiene cada motor (BeamNG y Kunos) de entender las físicas para poder relacionarlas y transformarlas. Mis conocimientos en físicay mécanica son básicos por lo que la labor de TRANSFORMACIÓN de físicas y archivos no debería atribuirse a mi autoría. Sin embargo en el proyecto no he estado solo. Agradezco enormemente la ayuda de amigos con conocimientos en mecánica y a Salva por haberme ayudado a detectar fallos y elementos a refinar.
+>
+> Dicho esto, si teneis interés en más proyectos míos podeis visitar [mi GitHub](https://github.com/alexceend) y si alguien quiere apoyarlos os dejo el link a mi Ko-Fi. Muchas gracias por leer este tostón!
+>
+> [![Ko-fi](https://img.shields.io/badge/Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/alexceend)
 
 ## Características
 

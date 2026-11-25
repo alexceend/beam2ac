@@ -254,6 +254,19 @@ async function steeringDialog() {
   } catch (e) { say("Vista 3D no disponible: " + e.message, "warn"); }
 }
 // Detalles del coche en AC (ui_car.json) y portada (skins/<skin>/preview.jpg); src/project/details.py
+function logoFromFile(file) {  // cuadrado 128×128 PNG en el navegador (recorte centrado)
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const S = 128, c = document.createElement("canvas"); c.width = S; c.height = S;
+      const s = Math.max(S / img.width, S / img.height), w = img.width * s, h = img.height * s;
+      c.getContext("2d").drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
+      resolve(c.toDataURL("image/png"));
+    };
+    img.onerror = () => reject(new Error("no se puede leer la imagen"));
+    img.src = URL.createObjectURL(file);
+  });
+}
 function coverFromFile(file) {  // recorte centrado 16:9 y 1024×576 en el navegador (el servidor limita el cuerpo a 1 MB)
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -305,7 +318,12 @@ function detailsBlock(pid) {
       try { const r = await (PREVIEW_BUSY[pid] ||= api(`/api/details_preview?project=${encodeURIComponent(pid)}`).finally(() => { delete PREVIEW_BUSY[pid]; })); COVER_CACHE[pid] = r.cover; showPreview(r.cover, "Vista previa automática: es la que llevará el coche si no subes una imagen."); }
       catch (e) { showPreview(null, `Sin vista previa: ${e.message}`, true); }
     };
-    let cover = null, clear = false;
+    let cover = null, clear = false, logo = null, clearLogo = false;
+    const logoPrev = el("img", { class: "coverprev", alt: "Logo", style: "width:64px;height:64px", src: info.logo || "/static/logo-b2ac.png" });
+    const logoFile = el("input", { type: "file", accept: "image/*", onchange: async () => {
+      if (!logoFile.files[0]) return;
+      try { logo = await logoFromFile(logoFile.files[0]); clearLogo = false; logoPrev.src = logo; msg.textContent = ""; }
+      catch (e) { msg.textContent = e.message; msg.className = "small warn"; } } });
     if (info.cover) showPreview(info.cover, "Imagen subida por ti.");
     else {
       showPreview(null, "Generando la vista previa automática (unos segundos)…");
@@ -317,9 +335,9 @@ function detailsBlock(pid) {
       try { cover = await coverFromFile(file.files[0]); clear = false; showPreview(cover, "Imagen elegida (se aplica al guardar)."); msg.textContent = ""; }
       catch (e) { msg.textContent = e.message; msg.className = "small warn"; } } });
     const save = async () => {
-      const body = { project: pid, cover, clear_cover: clear, description: desc.value, class: cls.value, tags: tags.value };
+      const body = { project: pid, cover, clear_cover: clear, logo, clear_logo: clearLogo, description: desc.value, class: cls.value, tags: tags.value };
       for (const n of ["name", "brand", "country", "year", "author"]) body[n] = box.querySelector(`[name=car_${n}]`).value;
-      try { await api("/api/details", body); cover = null; msg.textContent = "Guardado: se aplica en la próxima exportación."; msg.className = "small ok"; }
+      try { await api("/api/details", body); cover = null; logo = null; msg.textContent = "Guardado: se aplica en la próxima exportación."; msg.className = "small ok"; }
       catch (e) { msg.textContent = e.message; msg.className = "small warn"; }
     };
     box.replaceChildren(
@@ -332,6 +350,9 @@ function detailsBlock(pid) {
       el("div", { class: "row" }, f("author", "Autor", {}, "Quién figura como creador del coche."), el("div", {}, el("label", {}, "Etiquetas (separadas por comas)"), tags, el("div", { class: "muted small" }, "Palabras clave para buscar el coche (por ejemplo: turbo, deportivo)."))),
       el("div", {}, el("label", {}, "Imagen de portada"), file, skel, preview, prevNote,
         el("p", { class: "muted small" }, "Es la imagen del coche en el menú del juego. Si no subes ninguna, se genera sola una vista del coche desde arriba en diagonal, recortada a 16:9.")),
+      el("div", {}, el("label", {}, "Logo de la marca"), logoFile, logoPrev,
+        el("p", { class: "muted small" }, "Icono cuadrado que Assetto Corsa muestra junto al nombre del coche (y como icono de la pintura). Si no subes ninguno, se usa el logo b2ac."),
+        el("button", { class: "secondary", type: "button", onclick: () => { logo = null; clearLogo = true; logoFile.value = ""; logoPrev.src = "/static/logo-b2ac.png"; msg.textContent = "Se quitará el logo subido al guardar."; msg.className = "small"; } }, "Quitar el logo subido")),
       msg,
       el("div", { class: "actions" },
         el("button", { class: "primary", type: "button", title: "Guarda estos datos en el proyecto; se aplican en la próxima exportación", onclick: save }, "Guardar"),

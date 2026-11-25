@@ -1084,8 +1084,10 @@ class Workspace:
             last = _read_json(a)
             break
         cover = D.cover_bytes(proj)
+        logo = D.logo_bytes(proj)
         return {
             "project": pid,
+            "logo": "data:image/png;base64," + base64.b64encode(logo).decode() if logo else None,
             "saved": D.load(proj),
             "last_export": {
                 k: last.get(k)
@@ -1154,9 +1156,22 @@ class Workspace:
                 raise WorkspaceError("la imagen de portada no es válida") from None
             if len(cover) > 8 << 20:
                 raise WorkspaceError("la imagen de portada pesa más de 8 MB")
+        logo = None
+        if body.get("logo"):
+            try:
+                logo = base64.b64decode(str(body["logo"]).split(",", 1)[-1], validate=True)
+            except ValueError:
+                raise WorkspaceError("el logo no es válido") from None
+            if len(logo) > 1 << 20:
+                raise WorkspaceError("el logo pesa más de 1 MB")
         try:
             saved = D.save(
-                self._project(pid), body, cover, bool(body.get("clear_cover"))
+                self._project(pid),
+                body,
+                cover,
+                bool(body.get("clear_cover")),
+                logo,
+                bool(body.get("clear_logo")),
             )
         except (D.DetailsError, CoverError) as exc:
             raise WorkspaceError(str(exc)) from None

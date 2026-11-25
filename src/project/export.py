@@ -1423,6 +1423,21 @@ def collect(
         files.append(
             PackageFile(f"skins/{skin}/preview.jpg", cover, {"source": cover_src})
         )
+    # Content Manager avisa sin ``ui/badge.png`` (marca, 128 px) ni ``livery.png`` (icono de la pintura, 64 px)
+    from src.ac.logo import default_logo_png
+
+    logo = car_details.logo_bytes(project)
+    logo_src = "logo subido por el usuario"
+    if logo is None:
+        logo, logo_src = default_logo_png(128), "logo b2ac por defecto"
+    files.append(PackageFile("ui/badge.png", logo, {"source": logo_src}))
+    files.append(
+        PackageFile(
+            f"skins/{skin}/livery.png",
+            default_logo_png(64) if "defecto" in logo_src else _livery_from(logo),
+            {"source": logo_src},
+        )
+    )
     files.append(
         PackageFile(
             f"skins/{skin}/ui_skin.json",
@@ -1433,6 +1448,21 @@ def collect(
     ctx["kn5"] = kn5_name
     _apply_backfire(options, files, data_texts, issues)
     return files, issues, ctx
+
+
+def _livery_from(logo: bytes) -> bytes:
+    """Icono de la pintura (64 px) a partir del logo del usuario; sin Pillow se reutiliza el PNG tal cual."""
+    try:
+        import io
+
+        from PIL import Image
+
+        im = Image.open(io.BytesIO(logo)).convert("RGBA").resize((64, 64))
+        out = io.BytesIO()
+        im.save(out, "PNG")
+        return out.getvalue()
+    except Exception:  # noqa: BLE001 - es solo un icono
+        return logo
 
 
 # ------------------------------------------------------------------- validación
