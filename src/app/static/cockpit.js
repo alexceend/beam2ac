@@ -92,7 +92,9 @@ async function main() {
         pv.bones.forEach((b, k) => { if (b.parent >= 0) seg.push(...p[b.parent], ...p[k]); });
         skelLine.geometry.setAttribute("position", new THREE.Float32BufferAttribute(seg, 3));
         skelPts.geometry.setAttribute("position", new THREE.Float32BufferAttribute(p.flat(), 3));
-        skelLine.visible = skelPts.visible = true; ui.skelNote.textContent = "";
+        skelLine.visible = skelPts.visible = true;
+        ui.skelNote.textContent = pv.reachable === false ? "Las manos no alcanzan el volante con estas caderas (el brazo se dibuja estirado): acércalas al volante o abre «Animación de manos y piloto» y pulsa «Ajustar caderas al alcance». Si no, al exportar el conversor las moverá a la posición alcanzable más cercana (con aviso)." : "";
+        ui.skelNote.className = pv.reachable === false ? "warn" : "muted";
         lastPose = pv.bones.map((b, k) => [b.name, p[k]]); checkView();
       } catch (e) {
         if (my !== skelSeq) return;

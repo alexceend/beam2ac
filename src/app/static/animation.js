@@ -4,6 +4,7 @@
 // y caderas (altura del piloto). Guardar: POST /api/anim (versiones) y /api/cockpit (caderas).
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { TransformControls } from "three/addons/controls/TransformControls.js";
 
 const PROJECT = new URLSearchParams(location.search).get("project");
 const side = document.getElementById("side"), view = document.getElementById("view");
@@ -19,7 +20,7 @@ const loadFov = () => { try { const v = parseFloat(localStorage.getItem("beam2ac
 const storeFov = (v) => { try { localStorage.setItem("beam2ac.anim.fov", String(v)); } catch { /* sin almacenamiento: vale la sesión */ } };
 const START = new URLSearchParams(location.search);  // ?steer=40&cam=orbit (pruebas)
 
-let A, C, edits = {}, hips, dirty = false, pv = null, steer = +(START.get("steer") || 0), playing = false, camMode = START.get("cam") || "pilot", seq = 0;
+let A, C, edits = {}, hips, dirty = false, pv = null, steer = +(START.get("steer") || 0), playing = false, camMode = START.get("cam") || "orbit", seq = 0;
 
 const cyc = () => ({
   left: edits.left || A.defaults.left, right: edits.right || A.defaults.right,
@@ -47,6 +48,17 @@ async function main() {
   const sun = new THREE.DirectionalLight(0xffffff, 1.2); sun.position.set(2, 5, -3); scene.add(sun);
   scene.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x8895a3, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false })));
   const orbit = new OrbitControls(camera, renderer.domElement);
+  // Gizmos (solo en vista de órbita): caderas = flechas de traslación; manos = bola sobre el aro que se arrastra
+  // por el aro (fija a_min, el ángulo donde empieza el agarre de cada mano)
+  const tc = new TransformControls(camera, renderer.domElement); tc.setMode("translate"); tc.setSize(0.7); scene.add(tc);
+  tc.addEventListener("dragging-changed", (e) => { orbit.enabled = !e.value; });
+  const hipsMark = new THREE.Mesh(new THREE.SphereGeometry(0.035, 16, 12), new THREE.MeshBasicMaterial({ color: 0x6cb6ff, depthTest: false }));
+  hipsMark.renderOrder = 5; scene.add(hipsMark); tc.attach(hipsMark);
+  const handMark = {};
+  for (const [s, c] of [["L", 0xf38ba8], ["R", 0x89dceb]]) {
+    handMark[s] = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 12), new THREE.MeshBasicMaterial({ color: c, depthTest: false }));
+    handMark[s].renderOrder = 5; handMark[s].userData.side = s; scene.add(handMark[s]);
+  }
 
   // volante: aro con el radio de las manos, en el plano del aro y girado con el ángulo del volante
   const ring = new THREE.Group(); scene.add(ring);
@@ -75,7 +87,45 @@ async function main() {
     const g = new THREE.Group(); g.add(torus);
     g.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), wheelAxis); g.position.copy(wheelCentre);
     ring.add(g); ring.userData.torus = torus;
+    placeMarks();
   }
+  // base del plano del aro, igual que hand_over_hand.rim_basis: arriba = +Y proyectado, x = arriba × eje
+  function rimBasis() {
+    const up = new THREE.Vector3(0, 1, 0).addScaledVector(wheelAxis, -wheelAxis.y).normalize();
+    return { up, x: new THREE.Vector3().crossVectors(up, wheelAxis) };
+  }
+  function placeMarks() {
+    hipsMark.position.set(...hips);
+    if (!pv || !wheelCentre) { handMark.L.visible = handMark.R.visible = false; return; }
+    const { up, x } = rimBasis(), r = pv.wheel.hand_radius_m, e = cyc();
+    for (const [s, a] of [["L", e.left[0]], ["R", e.right[0]]]) {
+      const t = THREE.MathUtils.degToRad(a);
+      handMark[s].position.copy(wheelCentre).addScaledVector(x, r * Math.cos(t)).addScaledVector(up, r * Math.sin(t));
+    }
+  }
+  tc.addEventListener("objectChange", () => { hips = hipsMark.position.toArray().map((v) => +v.toFixed(4)); syncInputs(); later(); });
+  // arrastre de las bolas de las manos por el aro (plano del volante)
+  const ray = new THREE.Raycaster(); let drag = null;
+  const ndc = (ev) => { const r = renderer.domElement.getBoundingClientRect(); return new THREE.Vector2(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1); };
+  renderer.domElement.addEventListener("pointerdown", (ev) => {
+    if (camMode !== "orbit" || tc.dragging || !wheelCentre) return;
+    ray.setFromCamera(ndc(ev), camera);
+    const hit = ray.intersectObjects([handMark.L, handMark.R])[0];
+    if (hit) { drag = hit.object.userData.side; orbit.enabled = false; renderer.domElement.setPointerCapture(ev.pointerId); }
+  });
+  renderer.domElement.addEventListener("pointermove", (ev) => {
+    if (!drag) return;
+    ray.setFromCamera(ndc(ev), camera);
+    const p = new THREE.Vector3();
+    if (!ray.ray.intersectPlane(new THREE.Plane().setFromNormalAndCoplanarPoint(wheelAxis, wheelCentre), p)) return;
+    const { up, x } = rimBasis(), d = p.sub(wheelCentre);
+    const a = Math.round(THREE.MathUtils.radToDeg(Math.atan2(d.dot(up), d.dot(x))));
+    const e = cyc(), L = [...e.left], R = [...e.right];
+    ({ L, R })[drag][0] = a; edits.left = L; edits.right = R;
+    placeMarks(); syncInputs(); later();
+  });
+  const endDrag = () => { if (drag) { drag = null; orbit.enabled = camMode === "orbit"; } };
+  renderer.domElement.addEventListener("pointerup", endDrag); renderer.domElement.addEventListener("pointercancel", endDrag);
 
   function frameAt(deg) {
     const n = pv.frames.length, P = pv.period_deg;
@@ -102,12 +152,13 @@ async function main() {
   let orbitReady = false;
   function camera_update() {
     head.visible = camMode !== "pilot";  // desde los ojos, el casco taparía la vista
+    tc.visible = tc.enabled = hipsMark.visible = camMode === "orbit"; handMark.L.visible = handMark.R.visible = camMode === "orbit" && !!pv;
     if (camMode === "pilot" && eyes && wheelCentre) {
       orbit.enabled = false; camera.position.copy(eyes);
       camera.lookAt(wheelCentre.x, wheelCentre.y - 0.05, wheelCentre.z);
     } else {
       if (!orbitReady) { orbitReady = true; camera.position.set(1.8, 1.3, 0.3); orbit.target.set(0.34, 0.8, 0.1); }
-      orbit.enabled = true; orbit.update();
+      orbit.enabled = !tc.dragging && !drag; orbit.update();  // el bucle no debe reactivar la órbita mientras se arrastra un gizmo
     }
   }
 
@@ -120,17 +171,21 @@ async function main() {
       const r = await api("/api/anim_preview", { project: PROJECT, edits, hips, frames: 48 });
       if (my !== seq) return; pv = r; buildRing(); pose();
       const m = r.reach_margin_m;
-      ui.reach.textContent = `holgura de alcance del brazo: ${(m * 100).toFixed(1)} cm · periodo ${r.period_deg}° · ángulos base L ${r.base_angles_deg.L}° R ${r.base_angles_deg.R}°`;
-      ui.reach.className = m < 0.02 ? "warn" : "muted";
-      say(m < 0.02 ? "Brazo casi extendido: baja las caderas o acerca el volante." : "", "warn");
+      ui.reach.textContent = `${m < 0 ? "faltan" : "holgura de alcance del brazo:"} ${(Math.abs(m) * 100).toFixed(1)} cm · periodo ${r.period_deg}° · ángulos base L ${r.base_angles_deg.L}° R ${r.base_angles_deg.R}°`;
+      ui.reach.className = !r.reachable ? "bad" : m < 0.02 ? "warn" : "muted";
+      ui.fit.hidden = r.reachable;
+      if (!r.reachable) say("La mano no alcanza el volante con estas caderas (se dibuja con el brazo estirado). Mueve las caderas con el gizmo azul o pulsa «Ajustar caderas al alcance»; si no, al exportar el conversor las moverá solo a la posición alcanzable más cercana (con aviso).", "bad");
+      else say(m < 0.02 ? "Brazo casi extendido: baja las caderas o acerca el volante." : "", "warn");
     } catch (e) { if (my === seq) say(e.message, "warn"); }
   }
   const later = () => { dirty = true; ui.state.textContent = "cambios sin guardar"; clearTimeout(timer); timer = setTimeout(refresh, 250); };
   function num(label, get, set, lo, hi, step) {
     const n = el("input", { type: "number", step, min: lo, max: hi, value: (+get()).toFixed(3) });
-    n.addEventListener("change", () => { const v = parseFloat(n.value); if (!isFinite(v) || v < lo || v > hi) { n.value = (+get()).toFixed(3); return; } set(v); later(); });
-    ui[label] = n; return [el("span", {}, label), n];
+    n.addEventListener("change", () => { const v = parseFloat(n.value); if (!isFinite(v) || v < lo || v > hi) { n.value = (+get()).toFixed(3); return; } set(v); placeMarks(); later(); });
+    ui[label] = n; numRows.push([n, get]); return [el("span", {}, label), n];
   }
+  const numRows = [];
+  const syncInputs = () => { for (const [n, get] of numRows) n.value = (+get()).toFixed(3); };
   const setCycle = (k, idx, v) => { const e = cyc(); const L = [...e.left], R = [...e.right]; ({ left: L, right: R })[k][idx] = v; edits.left = L; edits.right = R; };
   const setPeriod = (idx, v) => { const e = cyc(); const L = [...e.left], R = [...e.right]; L[idx] = R[idx] = v; edits.left = L; edits.right = R; };
   const rows = [
@@ -156,7 +211,13 @@ async function main() {
   // la rueda acerca/aleja también en la vista del piloto (en órbita la usa OrbitControls para el dolly)
   renderer.domElement.addEventListener("wheel", (e) => { if (camMode === "pilot") { e.preventDefault(); setFov(fov + Math.sign(e.deltaY) * 3); } }, { passive: false });
   const playBtn = el("button", { type: "button", className: "secondary", onclick: () => { playing = !playing; playBtn.textContent = playing ? "⏸ Pausa" : "▶ Reproducir"; } }, "▶ Reproducir");
-  const camBtn = el("button", { type: "button", className: "secondary", onclick: () => { camMode = camMode === "pilot" ? "orbit" : "pilot"; camBtn.textContent = camMode === "pilot" ? "Vista: piloto" : "Vista: órbita"; } }, "Vista: piloto");
+  const camBtn = el("button", { type: "button", className: "secondary", onclick: () => { camMode = camMode === "pilot" ? "orbit" : "pilot"; camBtn.textContent = camMode === "pilot" ? "Vista: piloto" : "Vista: órbita"; } }, camMode === "pilot" ? "Vista: piloto" : "Vista: órbita");
+  ui.fit = el("button", { type: "button", hidden: true, onclick: async () => {
+    try {
+      const r = await api("/api/anim_preview", { project: PROJECT, edits, hips, frames: 48, fit_hips: true });
+      hips = [...r.hips_fitted]; placeMarks(); syncInputs(); later(); say("Caderas ajustadas a la posición alcanzable más cercana.", "ok");
+    } catch (e) { say(e.message, "bad"); }
+  } }, "Ajustar caderas al alcance");
   const save = async (reset) => {
     try {
       const r = await api("/api/anim", { project: PROJECT, key: A.key, base_version: A.version, reset: !!reset, edits: reset ? {} : edits, note: "editor de animación" });
@@ -166,7 +227,7 @@ async function main() {
         const c = await api("/api/cockpit", { project: PROJECT, key: C.key, base_version: C.version, items: { ...C.items, hips }, note: "editor de animación" });
         C.items = c.items; C.version = c.version;
       }
-      if (reset) { hips = [...A.hips]; }
+      if (reset) { hips = [...A.hips]; placeMarks(); syncInputs(); }
       dirty = false; ui.state.textContent = `guardado: versión ${A.version}`; say("Guardado. Se aplica al exportar con piloto local.", "ok"); refresh();
     } catch (e) { say(e.message, "warn"); }
   };
@@ -178,11 +239,13 @@ async function main() {
     el("div", { className: "row" }, el("span", {}, "Zoom / FOV "), fovTxt), fovIn,
     el("div", { className: "muted" }, "Rueda del ratón en la vista del piloto = zoom. El FOV es el mismo para todos los coches y no se exporta a AC."),
     el("div", {}, el("button", { className: "secondary", type: "button", onclick: () => setFov(FOV_DEFAULT) }, `FOV ${FOV_DEFAULT}° (por defecto)`)),
-    el("h3", {}, "Manos y piloto"), el("div", { className: "row" }, ...rows),
+    el("h3", {}, "Manos y piloto"),
+    el("div", { className: "muted" }, "Vista de órbita: arrastra el gizmo azul (caderas) y las bolas rosa/celeste sobre el aro (donde empieza el agarre de cada mano). En la vista del piloto no hay gizmos."),
+    el("div", { className: "row" }, ...rows),
     el("div", { className: "muted" }, "a_min = ángulo del aro (0° izquierda, 90° arriba) donde empieza el agarre. Manos Z: + empuja las manos hacia el salpicadero, − las acerca al piloto. Caderas: altura y posición del piloto. Verde = agarrando, naranja = trasladando."),
     el("div", {}, el("button", { type: "button", onclick: () => save(false) }, "Guardar"),
       el("button", { className: "secondary", type: "button", onclick: () => { if (confirm("¿Restaurar los valores del perfil?")) save(true); } }, "Restaurar")),
-    ui.state, ui.reach, ui.msg,
+    el("div", {}, ui.fit), ui.state, ui.reach, ui.msg,
     el("div", { className: "muted" }, "Vista previa: esqueleto con la misma pose e IK que se escribe en steer.ksanim; no es la malla con piel del piloto. Sin probar en AC."));
 
   const resize = () => { const w = view.clientWidth, h = view.clientHeight; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); };
@@ -193,6 +256,7 @@ async function main() {
     if (playing) { steer = Math.sin(t / 1600) * 450; slider.value = steer; angle.textContent = `${steer.toFixed(0)}°`; pose(); }
     camera_update(); renderer.render(scene, camera); requestAnimationFrame(loop);
   })(last);
+  placeMarks();
   await refresh();
   window.__anim = { ready: true, get preview() { return pv; }, setSteer: (d) => { steer = d; pose(); },
     snapshot: () => { renderer.render(scene, camera); return renderer.domElement.toDataURL("image/png"); } };

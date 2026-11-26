@@ -1079,15 +1079,47 @@ def collect(
                     )
                     # con caderas editadas se prueban tal cual y, si los brazos no llegan, se busca alrededor
                     # de las del volante (antes se descartaban las manos sin buscar: Eagle Inca, exports 014/015)
-                    bases = [(h0, ((0.0, 0.0),) if hips_edit else grid)]
-                    if hips_edit:
-                        bases.append((hips_from_wheel(steer0), grid))
+                    # La cabeza no puede salir por el techo (holgura validada del Ibiza): solo se aceptan caderas con
+                    # holgura. Si con ellas las manos no alcanzan el aro, el piloto sale sentado SIN manos (mejor
+                    # que un piloto que atraviesa el techo con las manos puestas).
+                    roof_at = driver_seat.roof_function(model_dir / "model.kn5")
+
+                    def clear(p):
+                        r = roof_at(p[0], p[2])
+                        return r is None or (
+                            r
+                            - driver_seat.VALIDATED_ROOF_MINUS_HEAD
+                            - driver_seat.HEAD_BONE_ABOVE_HIPS
+                            - p[1]
+                            >= 0
+                        )
+
+                    wide = sorted(
+                        (
+                            (i * 0.025, j * 0.025)
+                            for i in range(-12, 13)
+                            for j in range(-12, 13)
+                        ),
+                        key=lambda ab: ab[0] ** 2 + ab[1] ** 2,
+                    )
+                    wheel_h = hips_from_wheel(steer0)
+                    # (caderas base, desplazamientos, exigir holgura bajo el techo)
+                    bases = [(h0, ((0.0, 0.0),), False)] if hips_edit else []
+                    if (
+                        hips_edit
+                    ):  # lo más cerca posible de lo que eligió el usuario (±30 cm)
+                        bases.append((h0, wide, True))
+                    bases += [(wheel_h, grid, True)]
                     last_err: Exception | None = None
+                    fallback_bi = 0
                     h = None
                     used_fallback = False
-                    for bi, (hb, cands) in enumerate(bases):
+                    for bi, (hb, cands, need_clear) in enumerate(bases):
                         for dy, dz in cands:
                             h = (hb[0], round(hb[1] + dy, 4), round(hb[2] + dz, 4))
+                            if need_clear and not clear(h):
+                                h = None
+                                continue
                             try:
                                 driver_files, drep = local_driver_files(
                                     model_dir,
@@ -1102,7 +1134,8 @@ def collect(
                                 last_err = exc
                                 h = None
                         if h is not None:
-                            used_fallback = bi > 0
+                            used_fallback = bool(hips_edit) and bi > 0
+                            fallback_bi = bi
                             h0 = hb
                             break
                     if used_fallback:
@@ -1111,7 +1144,13 @@ def collect(
                                 "warning",
                                 "piloto_local.caderas_editadas_fuera_de_alcance",
                                 f"las caderas editadas {list(hips_edit)} quedan fuera del alcance de los brazos "
-                                f"para este volante: se usan {list(h)} (búsqueda alrededor de las del volante)",
+                                f"para este volante: se usan {list(h)} ("
+                                + (
+                                    "las más cercanas a las editadas con la cabeza bajo el techo"
+                                    if fallback_bi == 1
+                                    else "búsqueda alrededor de las del volante"
+                                )
+                                + ")",
                             )
                         )
                     if h is None:
@@ -1121,7 +1160,7 @@ def collect(
                                 "piloto_local.sin_manos",
                                 f"manos no generadas ({last_err}): el piloto sale sentado, sin manos animadas"
                                 + (
-                                    "; probadas las caderas editadas y las del volante ±15 cm"
+                                    "; probadas las caderas editadas, las más cercanas a ellas y las del volante, siempre con la cabeza bajo el techo: acerca o baja el volante, o mueve las caderas"
                                     if hips_edit
                                     else ""
                                 ),

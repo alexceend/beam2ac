@@ -158,8 +158,8 @@ def preview(
 ) -> dict[str, Any]:
     """Pose del piloto en ``frames`` ángulos de volante equiespaciados de un periodo del ciclo.
 
-    ``profile`` ya lleva los ajustes (``apply_override``). Lanza los errores del IK
-    (``DriverPoseError``, ``SteerAnimError``) si las caderas o el aro no son alcanzables.
+    ``profile`` ya lleva los ajustes (``apply_override``). Con caderas o aro fuera de alcance NO lanza
+    error: dibuja el brazo estirado y devuelve ``reachable: False`` (el exportador sí es estricto).
     """
     from src.ac import hands as ac_hands
     from src.ac.driver_pose import Knh, build_driver_pose
@@ -194,13 +194,14 @@ def preview(
     )
     with tempfile.TemporaryDirectory(prefix="beam2ac_anim_") as tmp:
         out = Path(tmp) / "driver_base_pos.knh"
-        build_driver_pose(
+        seat = build_driver_pose(
             src,
             out,
             tuple(hips),
             tuple(round(t, nd) for t in steer["rim_centre"]),
             tuple(round(t, nd) for t in steer["rim_axis"]),
             float(drv["knuckle_target_m"]),
+            strict=False,
         )
         knh = Knh(out.read_bytes())
     w0 = knh.worlds()
@@ -223,7 +224,7 @@ def preview(
     seq, margin, grips = [], math.inf, []
     for k in range(frames):
         deg = period * k / frames
-        local, info = pose_locals(knh, params, deg, centre, axis)
+        local, info = pose_locals(knh, params, deg, centre, axis, strict=False)
         w = knh.worlds(local)
         seq.append([[round(c, 4) for c in w[n][3][:3]] for n in names])
         margin = min(margin, info["L"]["margin"], info["R"]["margin"])
@@ -244,6 +245,10 @@ def preview(
         },
         "hips": list(hips),
         "reach_margin_m": round(margin, 4),
+        # < 0: con estas caderas/volante la mano no llega (la vista previa deja el brazo extendido);
+        # el exportador se niega a exportarlo así
+        "reachable": margin > 0
+        and all(seat["hands"][k]["unreachable_m"] == 0 for k in "LR"),
         "base_angles_deg": {k: round(v, 2) for k, v in base.items()},
         "applied": {
             "left": left,

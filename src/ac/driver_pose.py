@@ -231,7 +231,11 @@ def hands_to_rim(
     rim_centre: tuple[float, float, float],
     rim_axis: tuple[float, float, float],
     knuckle_target_m: float,
+    strict: bool = True,
 ) -> tuple[bytes, dict]:
+    """``strict=False`` (solo la vista previa): si el objetivo no se alcanza, la mano queda lo más
+    cerca posible con el brazo extendido y ``report[side]["unreachable_m"]`` dice cuánto falta.
+    """
     knh = Knh(raw)
     local = {k: [row[:] for row in v] for k, v in knh.local.items()}
 
@@ -266,8 +270,14 @@ def hands_to_rim(
         s, e, wr = pos(w, arm), pos(w, fore), pos(w, hand)
         t = _add(wr, delta)
         l1, l2, dd = _nrm(_sub(e, s)), _nrm(_sub(wr, e)), _nrm(_sub(t, s))
+        short = 0.0
         if not abs(l1 - l2) < dd < l1 + l2:
-            raise DriverPoseError(f"{side}: objetivo inalcanzable")
+            if strict:
+                raise DriverPoseError(f"{side}: objetivo inalcanzable")
+            dd2 = max(abs(l1 - l2) + 1e-4, min(l1 + l2 - 1e-4, dd))
+            short = abs(dd - dd2)
+            t = _add(s, _scl(_sub(t, s), dd2 / dd))
+            dd = dd2
         u = _scl(_sub(t, s), 1 / dd)
         v = _sub(_sub(e, s), _scl(u, _dot(_sub(e, s), u)))
         v = _scl(v, 1 / _nrm(v))
@@ -287,6 +297,7 @@ def hands_to_rim(
         local[fore] = _mm(wfore, _inv(warm))
         local[hand] = _mm(whand, _inv(wend))
         report[side] = {
+            "unreachable_m": short,
             "knuckles_axial_before": mcp,
             "knuckles_axial_after": mcp - d,
             "shift_m": d,
@@ -309,11 +320,13 @@ def hands_to_rim(
             knh.off[n],
             *[local[n][i][j] for i in range(4) for j in range(4)],
         )
-    _check_hands(bytes(raw), bytes(out), changed, report)
+    _check_hands(bytes(raw), bytes(out), changed, report, strict)
     return bytes(out), report
 
 
-def _check_hands(src: bytes, dst: bytes, changed: list[str], report: dict) -> None:
+def _check_hands(
+    src: bytes, dst: bytes, changed: list[str], report: dict, strict: bool = True
+) -> None:
     a, b = Knh(src), Knh(dst)
     wa, wb = a.worlds(), b.worlds()
 
@@ -371,7 +384,7 @@ def _check_hands(src: bytes, dst: bytes, changed: list[str], report: dict) -> No
             for n in (arm, fore, hand)
         )
     report["checks"] = ok
-    if not all(ok.values()):
+    if strict and not all(ok.values()):
         raise DriverPoseError(
             "comprobación fallida: " + ", ".join(k for k, v in ok.items() if not v)
         )
@@ -385,10 +398,13 @@ def build_driver_pose(
     rim_centre: tuple[float, float, float],
     rim_axis: tuple[float, float, float],
     knuckle_target_m: float,
+    strict: bool = True,
 ) -> dict[str, Any]:
     raw = Path(source_knh).read_bytes()
     seated, seat = place_hips(raw, hips_target)
-    final, hands = hands_to_rim(seated, rim_centre, rim_axis, knuckle_target_m)
+    final, hands = hands_to_rim(
+        seated, rim_centre, rim_axis, knuckle_target_m, strict=strict
+    )
     target = ensure_safe_output_path(dst)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(final)

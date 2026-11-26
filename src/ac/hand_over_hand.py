@@ -139,7 +139,9 @@ def swivel_deg(angle: float, spec: tuple[float, float, float]) -> float:
     return psi * x * x * (3 - 2 * x)
 
 
-def _solve_arm(knh: Knh, w0, local, side, hand_target, clave_max_deg, swivel=0.0):
+def _solve_arm(
+    knh: Knh, w0, local, side, hand_target, clave_max_deg, swivel=0.0, strict=True
+):
     """Coloca clavícula, brazo, antebrazo y mano para que la mano quede en
     ``hand_target`` (mundo 4×4). Devuelve datos para las comprobaciones."""
     clave, arm, fore, end, hand = (
@@ -173,7 +175,13 @@ def _solve_arm(knh: Knh, w0, local, side, hand_target, clave_max_deg, swivel=0.0
     dd = _nrm(_sub(t, s2))
     margin = min(dd - abs(l1 - l2), l1 + l2 - dd)
     if margin <= 0:
-        raise SteerAnimError(f"{side}: mano inalcanzable")
+        if strict:
+            raise SteerAnimError(f"{side}: mano inalcanzable")
+        # vista previa: brazo extendido hacia el objetivo (la mano se queda corta; margin < 0 lo dice)
+        dd2 = max(abs(l1 - l2) + 1e-4, min(l1 + l2 - 1e-4, dd))
+        t = _add(s2, _scl(_sub(t, s2), dd2 / dd))
+        hand_target = [*hand_target[:3], t + [1.0]]
+        dd = dd2
     u = _scl(_sub(t, s2), 1 / dd)
     v = _sub(_sub(e1, s2), _scl(u, _dot(_sub(e1, s2), u)))
     if _nrm(v) < 1e-9:
@@ -219,7 +227,9 @@ def hand_target(w0, side, angle_abs, lift, centre, axis, base_angle, lift_m):
     return [m[0], m[1], m[2], _add(m[3][:3], off) + [1.0]]
 
 
-def pose_locals(knh: Knh, params: HohParams, deg: float, centre, axis, sign: int = 1):
+def pose_locals(
+    knh: Knh, params: HohParams, deg: float, centre, axis, sign: int = 1, strict=True
+):
     """Locales de todos los nodos para un ángulo de volante, más datos de control."""
     w0 = knh.worlds()
     local = {k: [row[:] for row in v] for k, v in knh.local.items()}
@@ -239,6 +249,7 @@ def pose_locals(knh: Knh, params: HohParams, deg: float, centre, axis, sign: int
                 tgt,
                 params.clave_max_deg,
                 swivel_deg(a, params.swivel_l if side == "L" else params.swivel_r),
+                strict,
             ),
         }
     return local, info

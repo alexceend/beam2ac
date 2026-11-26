@@ -95,6 +95,24 @@ class TestPreview(unittest.TestCase):
         with self.assertRaises(AP.AnimError):
             AP.preview(d, model, prof, AC, hips, 3)
 
+    def test_unreachable_hips_still_preview(self) -> None:
+        """Con unas caderas fuera de alcance la vista previa dibuja el brazo estirado y lo dice
+        (``reachable`` falso) en vez de lanzar el error: así el editor puede mostrarlo y moverlo.
+        """
+        from src.safe_paths import PROJECT_ROOT
+
+        d = _ibiza()
+        model = json.loads((d / "model.json").read_text(encoding="utf-8"))
+        prof = json.loads(
+            (PROJECT_ROOT / model["profile"]["path"]).read_text(encoding="utf-8")
+        )
+        hips = tuple(prof["driver"]["hips_target"])
+        far = (hips[0], hips[1] + 0.3, hips[2] - 0.4)
+        r = AP.preview(d, model, prof, AC, far, 8)
+        self.assertFalse(r["reachable"])
+        self.assertLess(r["reach_margin_m"], 0)
+        self.assertTrue(AP.preview(d, model, prof, AC, hips, 8)["reachable"])
+
     def test_exporter_applies_the_edits(self) -> None:
         from src.project.local_driver import local_driver_files
 
