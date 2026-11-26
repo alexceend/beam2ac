@@ -21,5 +21,5 @@ a = Analysis(
     excludes=["pytest", "black", "flake8"],
 )
 pyz = PYZ(a.pure)
-exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name="beam2ac", console=sys.platform != "win32")
+exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name="beam2ac", console=sys.platform != "win32", icon=str(root / "src" / "app" / "static" / "icon.ico") if sys.platform == "win32" else None)
 coll = COLLECT(exe, a.binaries, a.datas, name="beam2ac")

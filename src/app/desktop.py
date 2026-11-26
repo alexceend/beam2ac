@@ -265,6 +265,11 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                     return self._json(
                         200, ws.set_driver_mass(body.get("project", ""), body)
                     )
+                if p == "/api/startup_popup":
+                    from . import settings
+
+                    settings.set_show_popup_on_open(bool(body.get("show")))
+                    return self._json(200, settings.status())
                 if p == "/api/settings":
                     from . import settings
 

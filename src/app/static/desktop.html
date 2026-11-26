@@ -65,7 +65,7 @@
         <ul class="small">
           <li>Eje rígido delantero: puede fallar, ya que Assetto Corsa no lo implementa.</li>
           <li>Diferencial bloqueable: puede fallar, ya que Assetto Corsa no lo implementa.</li>
-          <li>Ruedas de competición: pueden fallar, ya que Assetto Corsa no las implementa.</li>
+          <li>Ruedas de competición: pueden fallar.</li>
         </ul>
       </div>
       <div class="panel">
@@ -105,6 +105,17 @@
     </section>
   </main>
 </div>
+<dialog id="dlg-welcome" class="massdlg" aria-label="Bienvenido a beam2ac">
+  <div class="dlg-head"><h2>Bienvenido a beam2ac</h2><button class="icon-btn" type="button" data-close aria-label="Cerrar" title="Cerrar">✕</button></div>
+  <p>Antes de empezar, abre los Ajustes (el engranaje de arriba) y configura las rutas de Assetto Corsa, Steam y BeamNG.</p>
+  <p class="small"><strong>Ruta por defecto de las exportaciones:</strong> <code id="welcome-path"></code><br>
+  <span class="muted">Cada exportación se guarda en &lt;proyectos&gt;/&lt;proyecto&gt;/exports/&lt;NNN&gt;/&lt;car_id&gt;. Puedes cambiar la carpeta de proyectos en Ajustes.</span></p>
+  <label class="small"><input type="checkbox" id="welcome-never"> No volver a mostrar</label>
+  <div style="display:flex;gap:8px;margin-top:12px">
+    <button id="welcome-open" type="button">Abrir Ajustes</button>
+    <button id="welcome-ok" class="secondary" type="button" data-close>Entendido</button>
+  </div>
+</dialog>
 <dialog id="dlg-settings" class="massdlg" aria-label="Ajustes">
   <div class="dlg-head"><h2>Ajustes</h2><button class="icon-btn" type="button" data-close aria-label="Cerrar" title="Cerrar">✕</button></div>
   <div id="settings" class="small"></div>

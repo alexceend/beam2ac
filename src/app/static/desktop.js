@@ -665,6 +665,16 @@ async function loadSettings() {
   renderSettings();
   if (CURRENT && DETAIL) renderAsistente();  // los botones dependen de la ruta de AC
 }
+// Aviso de bienvenida: se muestra salvo SHOW_POPUP_ON_OPEN=0 en beam2ac_config.txt (raíz de beam2ac)
+function maybeWelcome() {
+  if (SOLO || SETTINGS.show_popup_on_open === false) return;
+  $("welcome-path").textContent = SETTINGS.default_projects_root || "";
+  $("dlg-welcome").showModal();
+}
+$("dlg-welcome").addEventListener("close", async () => {
+  try { await api("/api/startup_popup", { show: !$("welcome-never").checked }); } catch (e) { toast(e.message, "warn"); }
+});
+$("welcome-open").addEventListener("click", () => { $("dlg-welcome").close(); $("dlg-settings").showModal(); });
 // Aviso naranja en Inicio: rutas de Ajustes sin guardar y qué dejaría de funcionar sin ellas
 const SETUP_NEEDS = [
   ["ac_root", "Assetto Corsa", "Sin esta ruta no se puede tomar el piloto sentado ni sus manos, ni comprobar si el car_id ya está instalado: los botones «Comenzar la conversión» y «Exportar» quedan desactivados."],
@@ -1259,7 +1269,7 @@ window.addEventListener("pywebviewready", () => {
   z.addEventListener("click", async () => { const p = await window.pywebview.api.pick_zip(); if (p) { $("an-path").value = p; importSource(p); } });
 });
 if (!SOLO) loadEnvironment();  // en una ventana de panel el título y el entorno son los de la principal
-loadSettings();
+loadSettings().then(maybeWelcome);
 if (SOLO) {
   document.body.classList.add("solo");
   document.querySelector(`.pane[data-pane=${SOLO}]`).classList.add("solo-pane");

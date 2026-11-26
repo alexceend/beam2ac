@@ -52,6 +52,48 @@ _applied: dict[str, str] = {}  # variable → valor que puso apply()
 _orig: dict[str, str | None] = {}  # variable → valor previo del usuario
 
 
+def _program_dir() -> Path:
+    """Raíz de beam2ac: la carpeta del ejecutable (PyInstaller) o la del repositorio."""
+    import sys
+
+    return (
+        Path(sys.executable).parent if getattr(sys, "frozen", False) else PROJECT_ROOT
+    )
+
+
+def startup_file() -> Path:
+    return Path(
+        os.environ.get("BEAM2AC_STARTUP_FILE") or _program_dir() / "beam2ac_config.txt"
+    )
+
+
+def show_popup_on_open() -> bool:
+    """``SHOW_POPUP_ON_OPEN`` del .txt de la raíz; 1 (mostrar) si falta o no se entiende."""
+    try:
+        for line in startup_file().read_text("utf-8").splitlines():
+            k, _, v = line.partition("=")
+            if k.strip() == "SHOW_POPUP_ON_OPEN":
+                return v.strip() != "0"
+    except OSError:
+        pass
+    return True
+
+
+def set_show_popup_on_open(show: bool) -> None:
+    f = startup_file()
+    try:
+        f.write_text(f"SHOW_POPUP_ON_OPEN={int(show)}\n", encoding="utf-8")
+    except OSError as exc:  # carpeta de solo lectura: no se puede recordar la elección
+        raise ValueError(f"no se pudo escribir {f.name}: {exc}") from exc
+
+
+def default_projects_root() -> Path:
+    """Carpeta de proyectos que se usa de verdad (la elegida o la de por defecto)."""
+    from .workspace import PROJECTS_ROOT
+
+    return projects_dir() or PROJECTS_ROOT
+
+
 def load(path: Path | None = None) -> dict[str, Any]:
     path = path or SETTINGS_FILE
     try:
@@ -197,6 +239,8 @@ def status(data: dict[str, Any] | None = None) -> dict[str, Any]:
 
     bng = default_beamng_root()
     return {
+        "show_popup_on_open": show_popup_on_open(),
+        "default_projects_root": str(default_projects_root()),
         "saved": data,
         "effective": {
             "ac_root": str(ac) if ac else None,

@@ -35,9 +35,22 @@ PAIRS: list[tuple[str, str]] = [
         "Lockable differential: it may fail, since Assetto Corsa does not implement it.",
     ),
     (
-        "Ruedas de competición: pueden fallar, ya que Assetto Corsa no las implementa.",
-        "Race wheels: they may fail, since Assetto Corsa does not implement them.",
+        "Ruedas de competición: pueden fallar.",
+        "Race wheels: they may fail.",
     ),
+    ("Bienvenido a beam2ac", "Welcome to beam2ac"),
+    (
+        "Antes de empezar, abre los Ajustes (el engranaje de arriba) y configura las rutas de Assetto Corsa, Steam y BeamNG.",
+        "Before you start, open Settings (the gear icon at the top) and set the Assetto Corsa, Steam and BeamNG paths.",
+    ),
+    ("Ruta por defecto de las exportaciones:", "Default export location:"),
+    (
+        "Cada exportación se guarda en <proyectos>/<proyecto>/exports/<NNN>/<car_id>. Puedes cambiar la carpeta de proyectos en Ajustes.",
+        "Each export is saved to <projects>/<project>/exports/<NNN>/<car_id>. You can change the projects folder in Settings.",
+    ),
+    ("No volver a mostrar", "Don't show again"),
+    ("Abrir Ajustes", "Open Settings"),
+    ("Entendido", "Got it"),
     ("Notas del autor", "Author's notes"),
     (
         "Conversión: resumen, diagnóstico, resultados y el Pipeline (etapas, decisiones pendientes y exportación).",
