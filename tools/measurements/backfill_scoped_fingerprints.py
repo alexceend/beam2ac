@@ -20,11 +20,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from src.steam_paths import find_game  # noqa: E402
 from src.importers import measurements as M  # noqa: E402
 from src.pipeline.physics_preview import load_vehicle_dir, load_vehicle_zip  # noqa: E402
 from src.safe_paths import ensure_safe_output_path  # noqa: E402
 
-COMMON = Path("G:/SteamLibrary/steamapps/common/BeamNG.drive/content/vehicles/common.zip")
+COMMON = (find_game("BeamNG.drive") or Path("BeamNG.drive")) / "content" / "vehicles" / "common.zip"
 
 
 def candidate_sources():

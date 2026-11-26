@@ -20,6 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 WORK = ROOT / "output/seat_ibiza_acfr/sound_work_2026-10-25"
 sys.path.insert(0, str(ROOT))
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import read_ini, validate_references, validate_structure  # noqa: E402
 from src.ac.ingame_package import existing_car_ids, sha256, tree_hashes  # noqa: E402
 from _common import new_output_dir, parse  # noqa: E402
@@ -30,7 +31,7 @@ ARGS = parse(__doc__)
 IC, OUT_IC = ARGS.base_root, ARGS.out_root  # beam2ac fase A: raíces por argumento
 BASE_MAN = IC / "pkg_v15li_lights/manifest.json"
 OUT = OUT_IC / "pkg_v16sn_sound"
-AC = Path(r"G:\SteamLibrary\steamapps\common\assettocorsa")
+AC = (find_game("assettocorsa") or Path("assettocorsa"))
 PRJ = WORK / "fmod_project" / "ac_fmod_sdk_1_9"
 BANK_SRC = PRJ / "Build" / "Desktop" / f"{CAR}.bank"
 GUIDS_SRC = PRJ / "Build" / "GUIDs.txt"

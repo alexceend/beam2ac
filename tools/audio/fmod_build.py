@@ -11,6 +11,7 @@ propias excepciones: el código de salida de FMOD no prueba nada) + banco + ``GU
 
 from __future__ import annotations
 
+import os
 import hashlib
 import json
 import shutil
@@ -24,7 +25,7 @@ from src.safe_paths import ensure_safe_output_path
 ROOT = Path(__file__).resolve().parents[2]
 DATA = Path(__file__).parent / "data"  # build_events.template.js (solo para regenerar el esqueleto)
 FMOD_REQUIRED = "1.08.12"
-DEFAULT_FMOD = Path(r"C:\Program Files\FMOD SoundSystem\FMOD Studio 1.08.12")
+DEFAULT_FMOD = Path(os.environ.get("ProgramFiles", "Program Files")) / "FMOD SoundSystem" / "FMOD Studio 1.08.12"
 SDK_LOCAL = (
     ROOT / "docs/references/assetto-corsa/audio/ac_fmod_sdk_1_9"
 )  # copia de desarrollo (no se redistribuye)

@@ -21,13 +21,14 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from src.steam_paths import find_game  # noqa: E402
 from src.extract.engine_camso import build_engine_model  # noqa: E402
 from src.jbeam import PartIndex, load_pc, resolve  # noqa: E402
 from src.lab import drivetrain_lab as L  # noqa: E402
 from src.pipeline.physics_preview import load_vehicle_zip  # noqa: E402
 from src.safe_paths import ensure_safe_output_path, new_output_dir  # noqa: E402
 
-VEH = Path("G:/SteamLibrary/steamapps/common/BeamNG.drive/content/vehicles")
+VEH = (find_game("BeamNG.drive") or Path("BeamNG.drive")) / "content" / "vehicles"
 MODS = Path.home() / "AppData/Local/BeamNG/BeamNG.drive/current/mods"
 PADS = {  # wheel_props_flags.txt (props resueltas por rueda)
     "seat_ibiza_acfr/35b84": "semi-race",

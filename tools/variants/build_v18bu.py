@@ -16,6 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import (  # noqa: E402
     changed_protected,
     duplicate_keys,
@@ -33,7 +34,7 @@ IC, OUT_IC = ARGS.base_root, ARGS.out_root  # beam2ac fase A: raíces por argume
 BASE_MAN = IC / "pkg_v17cam/manifest.json"
 OUT = ensure_safe_output_path(OUT_IC / "pkg_v18bu")
 WORK = OUT_IC  # medición en --out-root
-AC = Path(r"G:\SteamLibrary\steamapps\common\assettocorsa")
+AC = (find_game("assettocorsa") or Path("assettocorsa"))
 CAR = "beam2ac_test16sn_seat_ibiza_acfr"
 NEW = ["data/car.ini"]
 

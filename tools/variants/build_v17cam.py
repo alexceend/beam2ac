@@ -17,6 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import (  # noqa: E402
     changed_protected,
     duplicate_keys,
@@ -35,7 +36,7 @@ BASE_PKG = IC / "pkg_v16sn_sound"
 BASE_MAN = BASE_PKG / "manifest.json"
 OUT = ensure_safe_output_path(OUT_IC / "pkg_v17cam")
 WORK = OUT_IC  # medición en --out-root
-AC = Path(r"G:\SteamLibrary\steamapps\common\assettocorsa")
+AC = (find_game("assettocorsa") or Path("assettocorsa"))
 CAR = "beam2ac_test16sn_seat_ibiza_acfr"
 NEW = ["data/car.ini", "data/dash_cam.ini"]
 EYES = [0.355, 1.144, -0.344]

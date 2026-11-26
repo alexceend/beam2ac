@@ -17,6 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import read_ini, validate_references, validate_structure  # noqa: E402
 from src.ac.driver_pose import FINGERS, Knh, _dot, _nrm, _sub  # noqa: E402
 from src.ac.hand_over_hand import AFFECTED, HandCycle, HohParams, hoh_clip, pose_locals, rim_angle  # noqa: E402
@@ -31,7 +32,7 @@ BASE_MAN = IC / "pkg_v14hc_hands_continuous/manifest.json"
 OTHERS = {k: IC / f"{k}/manifest.json" for k in ("pkg_v14hp_hands_pos", "pkg_v14as_animstatic")}
 OUT = OUT_IC / "pkg_v14ha_alternating_grip"
 NEW_ID = "beam2ac_test14ha_seat_ibiza_acfr"
-AC = Path(r"G:\SteamLibrary\steamapps\common\assettocorsa")
+AC = (find_game("assettocorsa") or Path("assettocorsa"))
 FRAMES = 600
 ANIM, DRV = "animations/steer.ksanim", "data/driver3d.ini"
 

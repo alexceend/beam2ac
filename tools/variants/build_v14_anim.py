@@ -17,6 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import read_ini, validate_references, validate_structure  # noqa: E402
 from src.ac.driver_pose import FINGERS, Knh  # noqa: E402
 from src.ac.ingame_package import existing_car_ids, sha256, tree_hashes  # noqa: E402
@@ -41,7 +42,7 @@ from _common import new_output_dir, parse  # noqa: E402
 ARGS = parse(__doc__)
 IC, OUT_IC = ARGS.base_root, ARGS.out_root  # beam2ac fase A: raíces por argumento
 BASE_MAN = IC / "pkg_v13vw_shiftwindow/manifest.json"
-AC = Path(r"G:\SteamLibrary\steamapps\common\assettocorsa")
+AC = (find_game("assettocorsa") or Path("assettocorsa"))
 DRIVER_KN5 = AC / "content/driver/driver.kn5"
 AE86_CLIP = AC / "content/cars/ks_toyota_ae86/animations/steer.ksanim"
 LOCK_STEER = 75.0  # ambas manos alcanzan −86°..+93° (barrido previo); margen

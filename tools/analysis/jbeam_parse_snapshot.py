@@ -19,11 +19,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from src.steam_paths import find_game  # noqa: E402
 from src.jbeam.lax_json import JBeamSyntaxError, loads  # noqa: E402
 from src.jbeam.sources import ZipSource  # noqa: E402
 from src.safe_paths import ensure_safe_output_path  # noqa: E402
 
-BNG = Path("G:/SteamLibrary/steamapps/common/BeamNG.drive/content/vehicles")
+BNG = (find_game("BeamNG.drive") or Path("BeamNG.drive")) / "content" / "vehicles"
 MODS = Path.home() / "AppData/Local/BeamNG/BeamNG.drive/current/mods"
 SAMPLE = ROOT / "sample_beamng"
 

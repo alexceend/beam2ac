@@ -1,6 +1,7 @@
 """Detección de bibliotecas de Steam (src/steam_paths.py): sin tocar el equipo, con carpetas sintéticas."""
 
 import tempfile
+import sys
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -19,6 +20,7 @@ VDF = (
 
 
 class TestSteamPaths(unittest.TestCase):
+    @unittest.skipUnless(sys.platform == "win32", "rutas de Windows: solo Windows")
     def test_parse_unescapes_backslashes(self) -> None:
         paths = sp.parse_library_folders(VDF.replace("{lib}", "D:" + BS * 2 + "Games"))
         self.assertEqual(

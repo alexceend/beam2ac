@@ -11,6 +11,7 @@ import json
 import math
 import re
 import tempfile
+import sys
 import unittest
 from pathlib import Path
 
@@ -355,6 +356,9 @@ class TestRepeatability(unittest.TestCase):
 
 
 class TestSessionLock(unittest.TestCase):
+    @unittest.skipUnless(
+        sys.platform == "win32", "el bloqueo de sesión usa msvcrt (solo Windows)"
+    )
     def test_second_session_refused(self):
         from tools.acbench.session import AcSession
 

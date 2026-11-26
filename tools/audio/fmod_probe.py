@@ -8,6 +8,7 @@ cargan pero no suenan (p. ej. ``SNDH`` con un desplazamiento viejo).
 Uso: ``python -m tools.audio.fmod_probe <banco> <GUIDs.txt> <evento> <rpm> [--out carpeta]``.
 """
 
+import os
 import ctypes as C, struct, sys, uuid, array, os
 from pathlib import Path
 from src.project.export import default_ac_root
@@ -31,7 +32,7 @@ def _libs():
 
 
 PLUGIN_DIRS = [
-    Path(os.environ.get("ProgramFiles", "C:/Program Files"))
+    Path(os.environ.get("ProgramFiles", "Program Files"))
     / "FMOD SoundSystem"
     / "FMOD Studio 1.08.12"
     / "plugins"

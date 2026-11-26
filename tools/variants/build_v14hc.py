@@ -19,6 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import read_ini, validate_references, validate_structure  # noqa: E402
 from src.ac.driver_pose import FINGERS, Knh  # noqa: E402
 from src.ac.ingame_package import existing_car_ids, sha256, tree_hashes  # noqa: E402
@@ -44,7 +45,7 @@ BASE_MAN = IC / "pkg_v14hp_hands_pos/manifest.json"
 AS_MAN = IC / "pkg_v14as_animstatic/manifest.json"
 OUT = OUT_IC / "pkg_v14hc_hands_continuous"
 NEW_ID = "beam2ac_test14hc_seat_ibiza_acfr"
-AC = Path(r"G:\SteamLibrary\steamapps\common\assettocorsa")
+AC = (find_game("assettocorsa") or Path("assettocorsa"))
 LOCK, FRAMES, FOLLOW, MAX_HAND, SIGN = 450.0, 600, 60.0, 75.0, 1
 STEER_LOCK_CAR = 423.0
 ANIM, DRV = "animations/steer.ksanim", "data/driver3d.ini"

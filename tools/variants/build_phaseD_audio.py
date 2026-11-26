@@ -3,7 +3,7 @@
     python tools/variants/build_phaseD_audio.py --out-root output/seat_ibiza_acfr/<carpeta nueva>
         [--source output/seat_ibiza_acfr/phaseD_2026-10-25/run2/seat_ibiza_acfr]
         [--audio-pkg output/seat_ibiza_acfr/ingame_cycle/pkg_v16sn_sound]
-        [--ac-root G:/SteamLibrary/steamapps/common/assettocorsa]
+        [--ac-root <carpeta de assettocorsa>]
 
 1. ``src.ac.ingame_package.prepare_test_package`` copia el ensamblado validado de la Fase D
    con el id ``beam2ac_test16sn_seat_ibiza_acfr`` (el del banco compilado), en una carpeta
@@ -32,6 +32,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import validate_references, validate_structure  # noqa: E402
 from src.ac.ingame_package import prepare_test_package, tree_hashes  # noqa: E402
 from src.safe_paths import ensure_safe_output_path, new_output_dir  # noqa: E402

@@ -20,6 +20,7 @@ Paso 3 (``--collect``): copia ``Build/Desktop/<id>.bank`` y ``Build/GUIDs.txt`` 
 
 from __future__ import annotations
 
+import os
 import argparse
 import hashlib
 import json
@@ -35,7 +36,7 @@ from src.safe_paths import ensure_safe_output_path, new_output_dir  # noqa: E402
 
 SDK = ROOT / "docs/references/assetto-corsa/audio/ac_fmod_sdk_1_9"
 WORK = ROOT / "output/seat_ibiza_acfr/sound_work_2026-10-25"
-FMOD = Path(r"C:\Program Files\FMOD SoundSystem\FMOD Studio 1.08.12\fmodstudiocl.exe")
+FMOD = Path(os.environ.get("ProgramFiles", "Program Files")) / "FMOD SoundSystem" / "FMOD Studio 1.08.12" / "fmodstudiocl.exe"
 
 
 def tree(root: Path) -> dict[str, str]:

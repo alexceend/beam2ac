@@ -23,13 +23,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from cam_geom import ROOT, body_triangles, f3, hood_rear_edge, profile, top_y, y_at  # noqa: E402
 
 sys.path.insert(0, str(ROOT))
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import read_ini  # noqa: E402
 from src.safe_paths import ensure_safe_output_path  # noqa: E402
 from _common import new_output_dir, parse  # noqa: E402
 
 ARGS = parse(__doc__)
 WORK = ARGS.out_root  # beam2ac fase A
-AC = Path(r"G:\SteamLibrary\steamapps\common\assettocorsa\content\cars")
+AC = (find_game("assettocorsa") or Path("assettocorsa")) / "content" / "cars"
 BASE = ARGS.base_root / "pkg_v16sn_sound/beam2ac_test16sn_seat_ibiza_acfr"
 REFS = {
     "ks_toyota_ae86": (ROOT / "sample_assetto_unpacked/ks_toyota_ae86", "toyota_ae86.kn5"),

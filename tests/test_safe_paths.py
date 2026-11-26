@@ -1,5 +1,6 @@
 import os
 import tempfile
+import sys
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -96,6 +97,9 @@ class TestAllowedRoots(unittest.TestCase):
 
 
 class TestGames(unittest.TestCase):
+    @unittest.skipUnless(
+        sys.platform == "win32", "rutas con letra de unidad: solo Windows"
+    )
     def test_game_installs_by_name(self):
         for p in (
             r"G:\SteamLibrary\steamapps\common\assettocorsa\content\cars\x\car.ini",

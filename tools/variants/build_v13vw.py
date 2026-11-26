@@ -6,6 +6,7 @@ import json, shutil, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import duplicate_keys, read_ini, validate_references, validate_structure
 from src.ac.ingame_package import existing_car_ids, sha256, tree_hashes
 from src.safe_paths import ensure_safe_output_path
@@ -17,7 +18,7 @@ SRC_MAN = IC / "pkg_v13_integrated/manifest.json"
 NEW_ID = "beam2ac_test13vw_seat_ibiza_acfr"
 OUT = ensure_safe_output_path(OUT_IC / "pkg_v13vw_shiftwindow")
 DST = ensure_safe_output_path(OUT / NEW_ID)
-AC = Path(r"G:\SteamLibrary\steamapps\common\assettocorsa")
+AC = (find_game("assettocorsa") or Path("assettocorsa"))
 REL = "data/drivetrain.ini"
 ADD = b"\r\n[GEARBOX]\r\nVALID_SHIFT_RPM_WINDOW=800\r\n"
 

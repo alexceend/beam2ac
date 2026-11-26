@@ -16,6 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import read_ini, validate_references, validate_structure  # noqa: E402
 from src.ac.ingame_package import existing_car_ids, sha256, tree_hashes  # noqa: E402
 from src.ac.kn5_materials import split_kn5  # noqa: E402
@@ -29,7 +30,7 @@ IC, OUT_IC = ARGS.base_root, ARGS.out_root  # beam2ac fase A: raíces por argume
 BASE_MAN = IC / "pkg_v14ha_alternating_grip/manifest.json"
 OUT = OUT_IC / "pkg_v15li_lights"
 NEW_ID = "beam2ac_test15li_seat_ibiza_acfr"
-AC = Path(r"G:\SteamLibrary\steamapps\common\assettocorsa")
+AC = (find_game("assettocorsa") or Path("assettocorsa"))
 V = ROOT / "sample_beamng/vehicles/seat_ibiza_acfr"
 KN5, LIGHTS, EXT = "seat_ibiza_acfr.kn5", "data/lights.ini", "extension/ext_config.ini"
 INTERIOR_Z = (-1.2, 1.0)  # habitáculo en z (marco KN5): faros > 1,2; pilotos < −1,6

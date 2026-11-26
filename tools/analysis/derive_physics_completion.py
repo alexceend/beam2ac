@@ -43,6 +43,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from src.steam_paths import find_game  # noqa: E402
 from src.ac.car_validate import read_ini  # noqa: E402
 from src.coords import beamng_to_ac  # noqa: E402
 from src.extract.components import collect_beams  # noqa: E402
@@ -54,7 +55,7 @@ from src.safe_paths import new_output_dir  # noqa: E402
 
 G = 9.806
 DRIVER_DROP = 0.55  # m bajo los ojos (aprox. antropométrica, propuesta del Ibiza §2)
-SDK_TYRES = Path(r"G:\SteamLibrary\steamapps\common\assettocorsa\sdk\dev\v1.5_tyres_ac")
+SDK_TYRES = (find_game("assettocorsa") or Path("assettocorsa")) / "sdk" / "dev" / "v1.5_tyres_ac"
 RIGID = 1000.0
 
 
