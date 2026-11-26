@@ -23,7 +23,7 @@ Esta carpeta explica beam2ac a dos tipos de lector: quien quiere usar la aplicac
 
 | 07 · Catálogo y motor de reglas | Desarrollador | Cómo se decide cada valor del coche de Assetto Corsa. |
 
-| 08 · Mallas, audio, seguridad y pruebas | Desarrollador | KN5 con Blender, banco de sonido, guardián de escritura y tests. |
+| 08 · Mallas, audio, seguridad y pruebas | Desarrollador | KN5 en Python, banco de sonido, guardián de escritura y tests. |
 
 # Glosario mínimo
 

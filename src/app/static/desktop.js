@@ -414,7 +414,7 @@ function analysisView(r, withCreate) {
           el("input", { name: "driver_mass", type: "number", min: "0", max: "150", step: "any", required: true, value: String(r.driver_mass), onchange: () => analyze(r.path, f.pc.value, f.driver_mass.value, f) }))),
       el("label", {}, "Carpeta de destino (opcional; cualquier carpeta que no sea de AC ni de BeamNG). Vacía: el paquete queda en exports/ del proyecto. Nunca se instala en el juego."),
       el("div", { class: "actions" },
-        el("input", { name: "dest", type: "text", value: (SETTINGS.saved || {}).export_dir || "", placeholder: "p. ej. D:/beam2ac/entregas", style: "flex:1;min-width:280px" }),
+        el("input", { name: "dest", type: "text", value: (SETTINGS.saved || {}).export_dir || "", placeholder: "carpeta de tu elección para las entregas", style: "flex:1;min-width:280px" }),
         window.pywebview ? el("button", { class: "secondary", type: "button", onclick: async () => { const p = await window.pywebview.api.pick_folder(); if (p) f.dest.value = p; } }, "Elegir destino…") : null),
       el("p", { class: "muted small" }, "La ruta de Assetto Corsa se toma de Ajustes: de ahí sale el piloto sentado y sus manos (solo se lee). El coche siempre lleva volante y piloto; como usa material del juego original, el paquete es solo para tu equipo: no se puede compartir ni publicar. Después puedes ajustar cámaras y piloto en «Vista 3D»."),
       acRoot() ? null : el("div", { class: "notice err" }, AC_MSG),
@@ -644,12 +644,12 @@ const AC_MSG = "Falta la ruta de Assetto Corsa (de ella se toma el piloto): ind�
 // Ajustes del usuario (rutas de AC, Steam y BeamNG, carpeta de entrega, piloto por defecto)
 let SETTINGS = { saved: {}, effective: {} };
 const SET_FIELDS = [
-  ["ac_root", "Assetto Corsa (carpeta de instalación)", "p. ej. D:/SteamLibrary/steamapps/common/assettocorsa"],
-  ["steam_root", "Steam (carpeta; sirve para encontrar AC y BeamNG si no se indican arriba)", "p. ej. D:/SteamLibrary"],
-  ["beamng_root", "BeamNG.drive (carpeta de instalación; sale de Steam si se deja vacío)", "p. ej. C:/Program Files (x86)/Steam/steamapps/common/BeamNG.drive"],
-  ["beamng_mods_dir", "Mods de BeamNG (carpeta con los .zip; por defecto la de usuario de BeamNG)", "p. ej. C:/Users/…/AppData/Local/BeamNG/BeamNG.drive/current/mods"],
-  ["projects_dir", "Carpeta de proyectos (se aplica al reiniciar la aplicación)", "p. ej. D:/beam2ac/proyectos"],
-  ["export_dir", "Carpeta de entrega por defecto (cualquier carpeta que no sea de AC ni de BeamNG)", "p. ej. D:/beam2ac/entregas"],
+  ["ac_root", "Assetto Corsa (carpeta de instalación)", "<carpeta de Steam>/steamapps/common/assettocorsa"],
+  ["steam_root", "Steam (carpeta; sirve para encontrar AC y BeamNG si no se indican arriba)", "carpeta de la biblioteca de Steam"],
+  ["beamng_root", "BeamNG.drive (carpeta de instalación; sale de Steam si se deja vacío)", "<carpeta de Steam>/steamapps/common/BeamNG.drive"],
+  ["beamng_mods_dir", "Mods de BeamNG (carpeta con los .zip; por defecto la de usuario de BeamNG)", "<carpeta de usuario de BeamNG>/current/mods"],
+  ["projects_dir", "Carpeta de proyectos (se aplica al reiniciar la aplicación)", "carpeta de tu elección para los proyectos"],
+  ["export_dir", "Carpeta de entrega por defecto (cualquier carpeta que no sea de AC ni de BeamNG)", "carpeta de tu elección para las entregas"],
 ];
 // Propósito e importancia de cada ruta (tooltip del icono ⓘ en Ajustes)
 const SET_HELP = {

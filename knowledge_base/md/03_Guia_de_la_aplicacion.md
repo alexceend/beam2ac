@@ -43,7 +43,7 @@ La aplicación es un servidor local con interfaz web. Con python -m src.app desk
 
 | Incluir el piloto sentado | Añade pose y manos del piloto leyendo tu instalación local de AC. El resultado no es distribuible. |
 
-| Generar el banco de sonido con FMOD | Solo aparece si el origen trae audio. Sin FMOD 1.08.12 solo prepara el proyecto de audio; no construye el banco. |
+| Generar el banco de sonido | Solo aparece si el origen trae audio. El banco se genera en Python (sin FMOD) a partir de las muestras del propio coche. |
 
 | Solo crear el proyecto | Crea el proyecto sin exportar, para trabajar por etapas. |
 
@@ -61,7 +61,7 @@ Cuando quieres decidir valores dudosos o repetir una exportación, usa la barra 
 
 | Diagnóstico | Vuelve a analizar el origen del proyecto. Aviso: se muestra «sin las decisiones del proyecto». |
 
-| Asistente | Ejecutar etapas, Ejecutar con modelo 3D (Blender) y el formulario Exportar (pide marcar «Confirmo: crear un intento de exportación nuevo»). |
+| Asistente | Ejecutar etapas, Ejecutar con modelo 3D y el formulario Exportar (pide marcar «Confirmo: crear un intento de exportación nuevo»). |
 
 | Atributos y decisiones | Editor donde se registran decisiones humanas (valor manual, elegir referencia, no hay correspondencia…). Exige unidades válidas y justificación. |
 
@@ -83,7 +83,7 @@ Desde «Vista 3D» → Editar cámaras y piloto se abre un editor con la geometr
 
 # Panel «Entorno»
 
-El botón Comprobar revisa (solo lectura) si hay instalación de Assetto Corsa, Steam, Blender y el catálogo. Úsalo antes de la primera conversión.
+El botón Comprobar revisa (solo lectura) si hay instalación de Assetto Corsa, Steam y el catálogo. Úsalo antes de la primera conversión.
 
 # Mensajes de error frecuentes
 

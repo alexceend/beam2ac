@@ -34,9 +34,9 @@ Antes de convertir, el programa comprueba que el origen declare ser de Automatio
 
 | Aerodinámica | Convierte a alas equivalentes cuando hay datos medidos o fórmula. | Si no hay datos, queda bloqueado. |
 
-| Malla y texturas | Blender coloca cada pieza, nombra los objetos como pide AC y exporta KN5. | Pinturas por capas se simplifican (se usa la capa base). |
+| Malla y texturas | El constructor de KN5 en Python coloca cada pieza, nombra los objetos como pide AC y escribe el KN5. | Pinturas por capas se simplifican (se usa la capa base). |
 
-| Sonido | Detecta el audio de origen y, opcionalmente, construye un banco FMOD. | Solo el motor; sin FMOD no se construye el banco. |
+| Sonido | Detecta el audio de origen y genera el banco de sonido en Python (sin FMOD). | Solo el motor; los demás eventos quedan silenciosos. |
 
 # Los veredictos
 
@@ -75,7 +75,7 @@ En Assetto Corsa, un parámetro ausente vale 0, y en muchos casos eso significa 
 
 - Piloto 3D local: usa archivos de tu instalación de AC; el paquete no se puede distribuir.
 
-- Banco de sonido: manual (--audio-bank) o generado (--audio-build, necesita FMOD).
+- Banco de sonido: manual (--audio-bank) o generado (--audio-build, en Python).
 
 - Masa del piloto: forma parte de la masa total; con piloto distinto de 0 algunas reglas del centro de gravedad dejan de aplicarse y el dato queda bloqueado.
 

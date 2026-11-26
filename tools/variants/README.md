@@ -4,6 +4,9 @@ Scripts que construyeron los paquetes de prueba del Seat Ibiza aprobados en el j
 adaptados para reconstruirlos en una carpeta nueva y aislada. **Ningún script de aquí escribe en los paquetes aprobados**:
 los `ingame_cycle/pkg_*` están sellados por su `manifest.json` (`src/safe_paths.py`).
 
+> Nota: estos scripts históricos (y sus originales inmutables) citan Blender y FMOD Studio porque así se construyeron
+> los paquetes aprobados; la aplicación actual ya no los usa (KN5 y banco en Python).
+
 ## Contenido
 
 | Ruta | Qué es |

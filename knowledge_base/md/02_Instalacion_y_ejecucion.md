@@ -11,11 +11,7 @@ Los comandos se ejecutan desde la raíz del proyecto (en este documento, <RAIZ_D
 
 | Python 3.11 o superior | Todo el programa | El código principal usa solo la biblioteca estándar: requirements.txt no tiene dependencias de ejecución. |
 
-| Blender (en el PATH o variable BEAM2AC_BLENDER) | Generar la malla .kn5 | Solo para la etapa de modelo 3D. El proyecto se ha usado con Blender 3.6; el código no comprueba la versión. Necesita además el complemento de exportación KN5 (assetto_corsa_tools). |
-
 | Entorno .venv-ui | Ventana nativa de la aplicación | Opcional: sin él, la aplicación se abre en el navegador. |
-
-| FMOD Studio 1.08.12 | Construir bancos de sonido | Opcional. Sin FMOD el programa prepara el proyecto de audio pero no construye el banco. |
 
 | Assetto Corsa instalado (solo lectura) | Referencias, piloto 3D local | Opcional. Nunca se escribe en su carpeta. |
 

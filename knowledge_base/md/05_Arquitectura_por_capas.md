@@ -23,9 +23,9 @@ beam2ac separa leer el origen, representarlo, decidir qué valores le tocan en A
 
 | src/ac | Escritura concreta de AC: INI, tablas, KN5, colliders, luces, cámaras, piloto, validadores del paquete. |
 
-| src/mesh | Plan de mallas y construcción del KN5 (lanza Blender en segundo plano). |
+| src/mesh | Plan de mallas y construcción del KN5 (KN5 en Python puro, sin Blender). |
 
-| src/audio | Pipeline WAV → proyecto FMOD → banco → paquete. |
+| src/audio | Pipeline WAV → plan → banco generado en Python (sobre un esqueleto versionado) → paquete. |
 
 | src/convert | ConversionSession: analiza un origen y resuelve (inspect) sin escribir física. |
 

@@ -4,11 +4,11 @@ Para desarrolladores: piezas de apoyo
 
 # Mallas 3D → KN5
 
-Las mallas de BeamNG vienen en .dae y se colocan según las entradas flexbodies del JBeam. src/mesh genera un plan y lanza Blender en segundo plano para construir el KN5.
+Las mallas de BeamNG vienen en .dae y se colocan según las entradas flexbodies del JBeam. src/mesh genera un plan y src/mesh/pure_kn5.py construye el KN5 en Python puro.
 
-- El plan (plan_for_zip o src.mesh.build --plan-only) no necesita Blender.
+- El plan (plan_for_zip o src.mesh.build --plan-only) se calcula antes de construir el KN5.
 
-- Blender importa los .dae, aplica la transformación de cada pieza, duplica la rueda por cada rueda, nombra los objetos como pide AC (WHEEL_LF, SUSP_LF, COCKPIT_HR…) y exporta con el complemento KN5.
+- El constructor lee los .dae, aplica la transformación de cada pieza, duplica la rueda por cada rueda, nombra los objetos como pide AC (WHEEL_LF, SUSP_LF, COCKPIT_HR…) y escribe el KN5 directamente.
 
 - AC no admite hijos de una malla: la jerarquía usa objetos vacíos (WHEEL_xx → llanta, neumático, disco).
 
@@ -16,11 +16,9 @@ Las mallas de BeamNG vienen en .dae y se colocan según las entradas flexbodies 
 
 - El collider usa la malla raíz de mayor caja; las texturas salen de materials.json o materials.cs.
 
-- Prueba con Blender: BEAM2AC_BLENDER_TESTS=1 python -m pytest tests/test_mesh_sample.py -k Blender.
-
 # Coordenadas
 
-BeamNG y AC usan ejes distintos. La conversión es una rotación pura (sin espejo) y vive en src/coords.py. Es el único sitio donde debe hacerse; el addon de exportación KN5 ya añade su propia conversión, así que no hay que sumar otra al preparar la escena de Blender.
+BeamNG y AC usan ejes distintos. La conversión es una rotación pura (sin espejo) y vive en src/coords.py. Es el único sitio donde debe hacerse; el constructor de KN5 aplica solo esa conversión.
 
 # Audio
 
@@ -35,7 +33,7 @@ src/audio convierte los WAV de origen en un banco de sonido de AC. Cada paso tie
 
 | plan.py | Valida y asigna cada WAV a su papel. |
 
-| fmod_build.py | Copia la plantilla del SDK, genera el script y lanza fmodstudiocl con reintentos. |
+| engine_gen.py, bank_graph.py, bank_patch.py | Generan el banco en Python a partir del esqueleto versionado (src/audio/data), sin FMOD. |
 
 | pipeline.py | Orquesta y calcula la escalera de estados. |
 
@@ -43,9 +41,7 @@ Escalera: detectado → validado → plan generado → proyecto generado → ban
 
 - python -m src.audio status <vehiculo> muestra el plan; python -m src.audio build … --out output/<nueva> [--no-build] genera el proyecto.
 
-- Sin FMOD 1.08.12 se prepara el proyecto y se escribe un LEEME.md con las órdenes manuales.
-
-- fmodstudiocl falla de forma intermitente: el éxito se juzga por el archivo GUARDADO, el banco y los GUID, no por el código de salida.
+- El esqueleto se regenera con python -m tools.audio.make_skeleton (herramienta de mantenimiento: necesita FMOD Studio y el SDK de AC; la aplicación no la usa).
 
 - Límites: solo motor, un banco no normalizado, sin zips.
 
@@ -80,7 +76,7 @@ python -m flake8 src tests *.py
 
 - Hay unos 140 archivos de prueba (unittest.TestCase y pytest) en tests/, con más de mil pruebas individuales.
 
-- Las pruebas que necesitan herramientas externas están desactivadas por defecto: BEAM2AC_BLENDER_TESTS=1 (Blender en el PATH) y BEAM2AC_WEBVIEW_TESTS=1 (.venv-ui).
+- Las pruebas que necesitan herramientas externas están desactivadas por defecto: BEAM2AC_WEBVIEW_TESTS=1 (.venv-ui).
 
 - La suite completa es larga y consume memoria; al tocar un módulo, lanza primero las pruebas dirigidas (por ejemplo tests/test_safe_paths.py).
 

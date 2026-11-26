@@ -44,6 +44,11 @@
 >
 > [![Ko-fi](https://img.shields.io/badge/Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/alexceend)
 
+> [!NOTE]
+> **Sin Blender ni FMOD.** Esta rama (`main`) no depende de Blender, de su complemento KN5 ni de FMOD Studio: el KN5 y el banco
+> de sonido se generan en Python puro. La versión anterior, que sí los usaba, se conserva en la rama
+> [`blender-and-fmod-dependencies`](https://github.com/alexceend/beam2ac/tree/blender-and-fmod-dependencies).
+
 ## Características
 
 ### Del coche de Automation al de Assetto Corsa
@@ -85,7 +90,7 @@ Se configuran en la pestaña **Ajustes** de la aplicación (o con variables `BEA
 1. Descarga `beam2ac-windows-x64.zip` de [Releases](https://github.com/alexceend/beam2ac/releases/latest).
 2. Descomprime **toda** la carpeta en un sitio con permiso de escritura. No hay instalador.
 3. Abre `beam2ac.exe`.
-4. En **Ajustes** indica las rutas de Assetto Corsa y BeamNG.
+4. En **Ajustes** indica las rutas de Assetto Corsa y BeamNG (al abrir, un aviso te lo recuerda; marca «No volver a mostrar» para ocultarlo: se guarda `SHOW_POPUP_ON_OPEN=0` en `beam2ac_config.txt`, junto al ejecutable).
 5. Crea un proyecto desde el `.zip` de Automation y ejecútalo.
 
 Requiere el *Microsoft Edge WebView2 Runtime*, que ya viene en Windows 11 y en Windows 10 actualizado.

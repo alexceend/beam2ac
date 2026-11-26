@@ -27,7 +27,7 @@ Un proyecto es una carpeta (por defecto bajo output/projects/<nombre>/) que apun
 
 | attributes | report.json y summary.md: resolución de atributos con el catálogo. | physics |
 
-| geometry | geometry.json: plan de mallas (sin Blender). | source |
+| geometry | geometry.json: plan de mallas. | source |
 
 | draft | Borrador de data/ y validación. Cabecera «BORRADOR NO INSTALABLE». | physics |
 
@@ -35,14 +35,14 @@ Un proyecto es una carpeta (por defecto bajo output/projects/<nombre>/) que apun
 
 | report | compatibility.json/.md. | source (los demás, opcionales) |
 
-| model (opcional) | KN5, collider y texturas con Blender. | physics, geometry |
+| model (opcional) | KN5, collider y texturas (Python puro). | physics, geometry |
 
 | Los textos de la etapa report («installable_package: False», «la exportación aislada aún no existe») están desactualizados respecto a la exportación real. El docstring de stages.py tampoco menciona resolved_ini ni model. El código manda. |
 |---|
 
 # Caché por huella
 
-orchestrator.py calcula para cada etapa una clave sha256 con: nombre y versión de la etapa, hash del código de sus módulos (cierre de importaciones calculado por AST en code_deps.py), huella del origen, masa del piloto, reglas del catálogo y decisiones del proyecto (si la etapa las usa), mediciones, las huellas de referencia y de herramientas externas (Blender, complemento y perfil, para model), el estado de las etapas opcionales y las claves de las etapas de las que depende.
+orchestrator.py calcula para cada etapa una clave sha256 con: nombre y versión de la etapa, hash del código de sus módulos (cierre de importaciones calculado por AST en code_deps.py), huella del origen, masa del piloto, reglas del catálogo y decisiones del proyecto (si la etapa las usa), mediciones, las huellas de referencia y de perfil (para model), el estado de las etapas opcionales y las claves de las etapas de las que depende.
 
 - Si existe stages/<etapa>/<clave16>/ válido, la etapa se marca cached y no se recalcula.
 

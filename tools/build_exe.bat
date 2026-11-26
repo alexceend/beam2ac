@@ -32,7 +32,7 @@ echo beam2ac - plug and play
 echo.
 echo 1. Descomprime TODA la carpeta en cualquier sitio con permiso de escritura ^(no hace falta instalar nada^).
 echo 2. Abre beam2ac.exe.
-echo 3. En Ajustes indica las rutas de Blender y de Assetto Corsa ^(no se incluyen^).
+echo 3. En Ajustes indica las rutas de Assetto Corsa y BeamNG ^(no se incluyen^).
 echo.
 echo Requisito de Windows: Microsoft Edge WebView2 Runtime ^(ya viene en Windows 11 y en Windows 10 actualizado^).
 echo Tus proyectos y ajustes se guardan en %%LOCALAPPDATA%%\beam2ac y %%APPDATA%%\beam2ac.
