@@ -1,4 +1,4 @@
-"""Plan de escena para Blender (fase 6): qué mallas, dónde y bajo qué nodo.
+"""Plan de escena (fase 6): qué mallas, dónde y bajo qué nodo.
 
 Todo en coordenadas BeamNG y metros. El addon de exportación convierte después
 con ``(x, z, −y)``, que es la transformación BeamNG→AC documentada (fase 2), así
@@ -47,17 +47,16 @@ class MeshPlanError(ValueError):
     """No se puede construir un plan de escena coherente."""
 
 
-# G2.18: Blender guarda los nombres de ID en 64 bytes con el nulo final (MAX_ID_NAME
-# − 2 = 63 de nombre en Blender 3.6) y recorta los más largos al importar o crear
-# objetos. Exportaciones del 200409 (prothean, portland, omega) tienen nodos DAE de
-# 65 caracteres: sin esto, blender_build no encontraba la malla importada.
-BLENDER_NAME_BYTES = 63
+# G2.18: los nombres de objeto y de material del KN5 caben en 63 bytes UTF-8 (convención de los
+# KN5 de referencia: 64 bytes con el nulo final) y los más largos se recortan. Exportaciones del
+# 200409 (prothean, portland, omega) tienen nodos DAE de 65 caracteres.
+NAME_BYTES_MAX = 63
 
 
-def blender_name(name: str, reserve: int = 0) -> str:
-    """``name`` recortado como lo recorta Blender (bytes UTF-8, sin partir un
+def trim_name(name: str, reserve: int = 0) -> str:
+    """``name`` recortado a 63 bytes UTF-8 (sin partir un
     carácter), dejando ``reserve`` bytes libres para un sufijo."""
-    limit = BLENDER_NAME_BYTES - reserve
+    limit = NAME_BYTES_MAX - reserve
     raw = name.encode("utf-8")
     if len(raw) <= limit:
         return name
@@ -216,7 +215,7 @@ def build_plan(resolved: ResolvedConfig, daes: dict[str, DaeFile]) -> ScenePlan:
         if geom.nonfinite:
             issues.append(
                 f"'{fb.mesh}': valores NaN/inf en {geom.nonfinite} (no posiciones); "
-                "blender_build repara normales no finitas si llegan a Blender y "
+                "el constructor de KN5 sustituye las normales no finitas por la de la cara y "
                 "verify_kn5 comprueba que el KN5 no tenga ninguna"
             )
         spinning = [w for w in ac_name if groups.get(w, set()) & set(fb.groups)]
@@ -244,14 +243,14 @@ def build_plan(resolved: ResolvedConfig, daes: dict[str, DaeFile]) -> ScenePlan:
         base = fb.mesh if parent is None else f"{fb.mesh}_{parent.split('_')[1]}"
         used[base] = used.get(base, 0) + 1
         suffix = "" if used[base] == 1 else f".{used[base]}"
-        name = blender_name(base, len(suffix)) + suffix
+        name = trim_name(base, len(suffix)) + suffix
         if name in final_names:
             raise MeshPlanError(f"nombre de objeto repetido tras el recorte: '{name}'")
         final_names.add(name)
         if name != base + suffix:
             issues.append(
-                f"'{base + suffix}': nombre de objeto recortado a '{name}' (Blender "
-                f"admite {BLENDER_NAME_BYTES} bytes)"
+                f"'{base + suffix}': nombre de objeto recortado a '{name}' (el KN5 "
+                f"admite {NAME_BYTES_MAX} bytes)"
             )
         objects.append(
             PlanObject(

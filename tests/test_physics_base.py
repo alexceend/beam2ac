@@ -226,7 +226,7 @@ class TestAssembleWithDeclaredBase(Tmp):
             "seat_ibiza_acfr",
             self.tmp / "unused",
             out,
-            blender=None,
+            with_kn5=False,
             physics_base=base_root,
         )
 

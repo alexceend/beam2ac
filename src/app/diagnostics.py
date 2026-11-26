@@ -200,11 +200,9 @@ def _audio(kind: str, vd: Any) -> dict[str, Any]:
     from src.audio.pipeline import ladder
     from src.audio.plan import build_plan
     from src.extract.audio_sources import scan_audio
-    from src.pipeline.contracts import detect_fmod
 
     scan = scan_audio(vd)
     plan = build_plan(scan, "beam2ac_x")
-    fmod = detect_fmod()
     series = [
         {k: v for k, v in s.items() if k != "points"}
         for b in scan["blends"]
@@ -219,7 +217,6 @@ def _audio(kind: str, vd: Any) -> dict[str, Any]:
         "rpm_range": plan.get("rpm_range"),
         "series_used": plan.get("series_used"),
         "dropped": plan.get("dropped", []),
-        "fmod": {"compatible": fmod["compatible"], "version": fmod["version"]},
         **ladder(plan["status"]),
     }
 
@@ -403,11 +400,9 @@ def inspect_vehicle(
 
 def environment() -> dict[str, Any]:
     """Estado del entorno (solo lectura): instalación de AC y lo que beam2ac tiene
-    dentro, Steam,
-    Blender y catálogo. No lanza ni modifica nada."""
+    dentro, Steam y catálogo. No lanza ni modifica nada."""
     from src.attrs.store import REPO_CATALOG, Catalog
     from src.project.export import default_ac_root
-    from src.project.model import blender_path
 
     out: dict[str, Any] = {}
     ac = default_ac_root()
@@ -428,11 +423,6 @@ def environment() -> dict[str, Any]:
         info["acs_exe"] = (ac / "acs.exe").is_file()
     out["assetto_corsa"] = info
     out["steam"] = _steam()
-    bp = blender_path()
-    out["blender"] = {"found": bool(bp), "path": bp}
-    from . import blender_addon
-
-    out["blender_addon"] = blender_addon.status()
     out["python_tools"] = {
         "black": bool(shutil.which("black")),
         "flake8": bool(shutil.which("flake8")),

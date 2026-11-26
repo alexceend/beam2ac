@@ -2,7 +2,6 @@
 
 import json
 import math
-import os
 import shutil
 import tempfile
 import unittest
@@ -250,7 +249,7 @@ class TestOrigin(unittest.TestCase):
         )  # original intacto
 
 
-class TestSampleAssemblyWithoutBlender(TmpDir):
+class TestSampleAssemblyWithoutKn5(TmpDir):
     def test_assemble_reuses_artifacts(self):
         resolved = resolve(PartIndex.from_directories(VEHICLE), load_pc(PC))
         art = self.tmp / "art"
@@ -258,7 +257,7 @@ class TestSampleAssemblyWithoutBlender(TmpDir):
         write_drivetrain_files(analyse_drivetrain(resolved), art / "drivetrain")
         ac_chassis.write_chassis_files(ac_chassis.analyse(resolved), art / "chassis")
         report = assemble(
-            VEHICLE, PC, "seat_ibiza_acfr", art, self.tmp / "out", blender=None
+            VEHICLE, PC, "seat_ibiza_acfr", art, self.tmp / "out", with_kn5=False
         )
         car = Path(report["car_dir"])
         ini = read_ini(car / "data" / "car.ini")
@@ -336,11 +335,7 @@ class TestSampleAssemblyWithoutBlender(TmpDir):
             )
 
 
-@unittest.skipUnless(
-    os.environ.get("BEAM2AC_BLENDER_TESTS") == "1" and shutil.which("blender"),
-    "construcción con Blender desactivada (BEAM2AC_BLENDER_TESTS=1 para activarla)",
-)
-class TestSampleAssemblyWithBlender(TmpDir):
+class TestSampleAssembly(TmpDir):
     def test_full_assembly(self):
         resolved = resolve(PartIndex.from_directories(VEHICLE), load_pc(PC))
         art = self.tmp / "art"
@@ -353,14 +348,16 @@ class TestSampleAssemblyWithBlender(TmpDir):
             "seat_ibiza_acfr",
             art,
             self.tmp / "out",
-            shutil.which("blender"),
+            True,
         )
         # La física de las fases 3–5 aún no escribe [REAR] TYPE ni aero.ini: el coche
         # no cargaría (ensamblado.md §9.4, §9.6) y el ensamblado no se da por bueno.
         errors = report["validation"]["errors"]
-        self.assertEqual(len(errors), 2, errors)
+        # y el generador antiguo tampoco escribe brakes.ini [DATA] MAX_TORQUE
+        self.assertEqual(len(errors), 3, errors)
         self.assertTrue(any(e.startswith(LOAD_AERO) for e in errors))
         self.assertTrue(any(e.startswith(LOAD_REAR_TYPE) for e in errors))
+        self.assertTrue(any("MAX_TORQUE" in e for e in errors))
         self.assertFalse(report["ok"])
         loading = [r for r in report["classification"] if r["group"] == "cargar"]
         missing = [r["item"] for r in loading if not r["present"]]

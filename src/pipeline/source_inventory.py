@@ -83,7 +83,7 @@ RULES: tuple[Rule, ...] = (
         ("*.dae",),
         "malla",
         "interpretado",
-        "src/mesh (flexbodies → Blender → KN5)",
+        "src/mesh (flexbodies → KN5)",
     ),
     Rule(("lua/",), "Lua del vehículo", "solo_huella", "no se ejecuta"),
     Rule(

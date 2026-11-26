@@ -6,6 +6,6 @@
 Resultado: `output/installer/dist/beam2ac/beam2ac.exe` (carpeta autónoma; se distribuye entera, p. ej. en un zip).
 
 - Instalado, lo que se escribe (proyectos, exportaciones, ajustes) va a `%LOCALAPPDATA%\beam2ac` (`BEAM2AC_DATA_DIR` lo cambia) y `%APPDATA%\beam2ac`; la carpeta del programa es de solo lectura.
-- No incluye Blender, FMOD Studio, Assetto Corsa ni BeamNG: el usuario indica sus rutas en Ajustes.
-- No incluye `docs/references` (SDK de FMOD, sin permiso de redistribución): sin él la generación del banco FMOD informa de que falta.
+- No incluye Assetto Corsa ni BeamNG: el usuario indica sus rutas en Ajustes.
+- No incluye `docs/references` (material de referencia de terceros, sin permiso de redistribución). El banco de sonido se genera con el esqueleto de `src/audio/data/`.
 - Prueba: `beam2ac.exe --selftest --out <carpeta nueva>` (con datos vacíos `ok` sale false porque no hay proyectos).

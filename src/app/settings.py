@@ -1,10 +1,10 @@
-"""Ajustes del usuario de la aplicación de escritorio (rutas de AC, Steam, Blender y FMOD, carpeta de
+"""Ajustes del usuario de la aplicación de escritorio (rutas de AC, Steam y BeamNG, carpeta de
 entrega y masa del piloto por defecto).
 
 Se guardan en la carpeta de usuario (``%APPDATA%/beam2ac/settings.json``; ``BEAM2AC_SETTINGS`` la
 cambia; si falta se lee el antiguo ``output/app_settings.json``) y se aplican como variables de entorno
-``BEAM2AC_*`` que el resto del código ya consulta (``default_ac_root``, ``blender_path``,
-``detect_fmod``, ``BEAM2AC_BEAMNG_ROOT``): no hay una segunda vía de configuración. Los ajustes
+``BEAM2AC_*`` que el resto del código ya consulta (``default_ac_root``,
+``BEAM2AC_BEAMNG_ROOT``): no hay una segunda vía de configuración. Los ajustes
 guardados mandan sobre el entorno; sin ajuste, nada cambia.
 """
 
@@ -33,8 +33,6 @@ PATH_KEYS = (
     "steam_root",
     "beamng_root",
     "beamng_mods_dir",
-    "blender_path",
-    "fmod_path",
     "projects_dir",
     "export_dir",
 )
@@ -45,8 +43,6 @@ ENV = {
     "beamng_root": "BEAM2AC_BEAMNG_ROOT",  # va tras steam_root: manda sobre el derivado
     "beamng_mods_dir": "BEAM2AC_BEAMNG_MODS",
     "projects_dir": "BEAM2AC_PROJECTS_DIR",
-    "blender_path": "BEAM2AC_BLENDER",
-    "fmod_path": "BEAM2AC_FMOD_STUDIO",
 }
 STEAM_ENV = {
     "BEAM2AC_AC_ROOT": "assettocorsa",
@@ -168,9 +164,6 @@ def apply(data: dict[str, Any] | None = None) -> None:
     for key, var in ENV.items():
         if data.get(key):
             want[var] = str(data[key])
-    bl = want.get("BEAM2AC_BLENDER")
-    if bl and Path(bl).is_dir():  # basta con la carpeta de Blender
-        want["BEAM2AC_BLENDER"] = str(Path(bl) / "blender.exe")
     _remember_originals(set(ENV.values()) | set(STEAM_ENV) | {OUTPUT_ROOTS_ENV})
     # carpetas de salida elegidas: se añaden a las del usuario (las protecciones de AC/BeamNG siguen)
     extra = [str(data[k]) for k in ("projects_dir", "export_dir") if data.get(k)]
@@ -196,28 +189,19 @@ def projects_dir() -> Path | None:
 
 def status(data: dict[str, Any] | None = None) -> dict[str, Any]:
     """Ajustes guardados + qué se está usando de verdad y si existe (solo lectura)."""
-    from src.pipeline.contracts import detect_fmod
     from src.project.export import default_ac_root
-    from src.project.model import blender_path
 
     data = load() if data is None else data
-    ac, bl, fm = default_ac_root(), blender_path(), detect_fmod()
+    ac = default_ac_root()
     from src.bench.service import default_beamng_root
 
     bng = default_beamng_root()
-    from . import blender_addon
-
     return {
         "saved": data,
-        "blender_addon": blender_addon.status(),
         "effective": {
             "ac_root": str(ac) if ac else None,
             "beamng_root": str(bng) if bng.is_dir() else None,
             "projects_dir": os.environ.get("BEAM2AC_PROJECTS_DIR"),
-            "blender_path": bl,
-            "fmod_path": fm.get("path"),
-            "fmod_compatible": bool(fm.get("compatible")),
-            "fmod_version": fm.get("version"),
             "export_dir_exists": bool(data.get("export_dir"))
             and Path(data["export_dir"]).is_dir(),
         },

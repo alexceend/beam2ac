@@ -6,4 +6,4 @@ beam2ac es una herramienta local: su servidor escucha solo en `127.0.0.1` y no e
 en lugar de abrir una incidencia pública. Incluye pasos para reproducirla y la versión afectada.
 
 Ámbito que interesa especialmente: lectura o escritura de archivos fuera de `output/`, peticiones entre sitios a la
-interfaz local, la descarga del complemento de Blender y el tratamiento de zips no confiables.
+interfaz local y el tratamiento de zips no confiables.

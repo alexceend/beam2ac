@@ -6,7 +6,7 @@ Reutiliza, sin cambiarlos, los pasos del ensamblador validados en el juego
 1. plan de mallas del origen (carpeta o zip) y origen de Kunos
    (``kunos_origin_offset``: ruedas en Y = 0, caja centrada en X/Z);
 2. nulos ``COCKPIT_LR``/``STEER_LR`` y ``STEER_HR`` vacíos (fase 7.1);
-3. KN5 con Blender (``src.mesh.build.build_kn5``) y verificación contra el plan;
+3. KN5 en Python puro (``src.mesh.build.build_kn5``) y verificación contra el plan;
 4. texturas difusas (``kn5_materials``, v7); la pintura por defecto de la
    configuración (``src/extract/paints.py``: reglas de BeamNG para
    ``defaultPaintName1..3``) solo se exige a los materiales ``instanceDiffuse``;
@@ -16,7 +16,7 @@ Reutiliza, sin cambiarlos, los pasos del ensamblador validados en el juego
 6. ``ext_config.ini`` de CSP para los materiales a doble cara (v8ic).
 
 Con un zip, los ``.dae``, ``*.materials.json`` y texturas del vehículo se extraen a
-una carpeta temporal (Blender solo importa archivos); el zip no se modifica.
+una carpeta temporal (el constructor de mallas lee archivos); el zip no se modifica.
 
 No hace: pose del piloto ni manos (derivan de archivos de Kunos: no distribuibles),
 sonido, retrovisores.
@@ -26,7 +26,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import shutil
 import tempfile
 import zipfile
@@ -35,7 +34,7 @@ from typing import Any
 
 from src.safe_paths import ensure_safe_output_path
 
-# extensiones que Blender o las texturas necesitan; el resto del zip no se extrae
+# extensiones que el modelo o las texturas necesitan; el resto del zip no se extrae
 # G2.29: + materials.cs (exportador 200409), paints.meta y la .pc (pintura elegida): sin
 # ellos un zip salía sin texturas o sin pintura y la misma carpeta sí las tenía
 EXTRACT_SUFFIXES = (".dae", ".json", ".dds", ".png", ".cs", ".meta", ".pc")
@@ -48,10 +47,6 @@ MAX_EXTRACT_BYTES = 4 << 30  # tope de lo que se extrae de un zip (bomba de comp
 
 class ModelError(RuntimeError):
     """No se puede construir el modelo 3D."""
-
-
-def blender_path() -> str | None:
-    return os.environ.get("BEAM2AC_BLENDER") or shutil.which("blender")
 
 
 def wheel_override_of(project: Any) -> dict[str, Any] | None:
@@ -92,41 +87,14 @@ def model_options_of(project: Any) -> dict[str, Any]:
 def tool_inputs(_project: Any = None) -> dict[str, Any]:
     """Huella de herramientas y perfiles (entra en la clave de la etapa).
 
-    Sin ejecutar nada: ruta, tamaño y fecha del ejecutable de Blender, sha256 del
-    complemento KN5 (Moppius) y de los perfiles de vehículo.
+    Sin ejecutar nada: sha256 de los perfiles de vehículo y las opciones del modelo.
     """
-    exe = blender_path()
-    info: dict[str, Any] = {"blender": None, "addon": None}
-    if os.environ.get("BEAM2AC_KN5_BUILDER"):  # solo si se elige: no cambia las claves
-        info["kn5_builder"] = os.environ["BEAM2AC_KN5_BUILDER"]
+    info: dict[str, Any] = {}
     if (
         _project is not None
     ):  # la elección del volante cambia el modelo: entra en la clave
         info["steering_wheel_override"] = wheel_override_of(_project)
         info["model_options"] = model_options_of(_project)
-    if exe:
-        p = Path(exe)
-        st = p.stat() if p.is_file() else None
-        info["blender"] = {
-            "path": str(p),
-            "size": st.st_size if st else None,
-            "mtime": int(st.st_mtime) if st else None,
-        }
-    addon = (
-        Path(os.environ.get("APPDATA", ""))
-        / "Blender Foundation"
-        / "Blender"
-        / "3.6"
-        / "scripts"
-        / "addons"
-        / "assetto_corsa_tools"
-    )
-    if addon.is_dir():
-        h = hashlib.sha256()
-        for f in sorted(addon.rglob("*.py")):
-            h.update(f.relative_to(addon).as_posix().encode())
-            h.update(f.read_bytes())
-        info["addon"] = h.hexdigest()
     from src.ac.assemble import PROFILE_DIR
 
     info["profiles"] = {
@@ -157,7 +125,7 @@ def extract_vehicle(
     root_name: str = "vehicle",
 ) -> Path:
     """Extrae los archivos del vehículo (sin tocar el zip). Por defecto solo los que
-    necesita Blender; ``suffixes=None`` extrae todos (G2.47: bancos de BeamNG). Nunca
+    necesita el modelo; ``suffixes=None`` extrae todos (G2.47: bancos de BeamNG). Nunca
     sobrescribe, rechaza enlaces simbólicos y miembros fuera de la carpeta."""
     root = dest / root_name
     total = 0
@@ -246,7 +214,6 @@ def build_model(
     resolved: Any,
     project_source: Any,
     out: Path,
-    blender: str,
     wheel_override: dict[str, Any] | None = None,
     options: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -300,7 +267,7 @@ def build_model(
         )
         report["origin"] = {"offset_beamng": offset, "offset_ac": offset_ac}
         report["plan_issues"] = list(plan.issues)
-        # G2.24: nombres de material del DAE (Blender recorta a 63 bytes; ver
+        # G2.24: nombres de material del DAE (se recortan a 63 bytes; ver
         # src.ac.kn5_materials.material_key)
         from src.mesh.dae import material_names
 
@@ -309,9 +276,9 @@ def build_model(
             if Path(dae_path).is_file():  # DAE de common.zip sin extraer: se omite
                 dae_materials |= material_names(dae_path)
 
-        # 1. KN5 base (Blender) y verificación contra el plan
+        # 1. KN5 base (Python puro) y verificación contra el plan
         build_dir = ensure_safe_output_path(out / "_build")
-        base_kn5, verification = build_kn5(tplan, build_dir, MODEL_KN5, blender)
+        base_kn5, verification = build_kn5(tplan, build_dir, MODEL_KN5)
         report["verification"] = {
             "ok": verification.ok,
             "errors": verification.errors,
@@ -399,11 +366,23 @@ def build_model(
         # 3. volante: del perfil del propio vehículo o, sin perfil, detectado por geometría
         # (steer_detect.py: aro delante de los ojos del piloto); luces: solo con perfil
         dst = ensure_safe_output_path(out / "_stages" / f"steer_{MODEL_KN5}")
+        profile_wheel_done = False
         if profile and profile.get("steering_wheel"):
-            report["steering_wheel"] = rig_steering_wheel(
-                current, dst, profile["steering_wheel"]
-            )
-            current = dst
+            try:
+                report["steering_wheel"] = rig_steering_wheel(
+                    current, dst, profile["steering_wheel"]
+                )
+                current = dst
+                profile_wheel_done = True
+            except SteerWheelError as exc:
+                # otra exportación del mismo coche (p. ej. sin la malla del volante activa): el perfil no encaja
+                report["steering_wheel"] = None
+                warn(
+                    f"el perfil del vehículo no encaja con este modelo (volante sin montar: {exc}); "
+                    "se intenta detectarlo por geometría"
+                )
+        if profile_wheel_done:
+            pass
         elif wheel_override is None:
             # defecto: sin volante (casilla «Volante» sin marcar) ⇒ sin STEER_HR, sin manos ni piloto
             report["steering_wheel"] = None

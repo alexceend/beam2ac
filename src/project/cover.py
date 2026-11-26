@@ -1,88 +1,34 @@
-"""Imagen de portada de un coche (``skins/<skin>/preview.jpg``): render con texturas desde arriba en diagonal.
+"""Imagen de portada de un coche (``skins/<skin>/preview.jpg``): vista desde arriba en diagonal.
 
-KN5 → OBJ con ``tools/kn5-obj-converter-main`` (texturas incluidas) → Blender (Workbench, color = textura), cámara
-delante-izquierda y arriba sobre fondo oscuro, 1024×576 como los coches de Kunos. Solo se usa si el usuario no ha
-subido su propia imagen (``details.py``). Es una vista previa, no un render fotorrealista.
+Se dibuja en Python con Pillow, sin programas externos: los triángulos del KN5 se proyectan en ortogonal
+desde delante-izquierda y arriba, se ordenan de lejos a cerca (algoritmo del pintor) y se sombrean planos con
+el color medio de la textura difusa de su material, sobre fondo oscuro, a 1024×576 como los coches de Kunos.
+Solo se usa si el usuario no ha subido su propia imagen (``details.py``). Es una vista previa esquemática,
+no un render fotorrealista.
 """
 
 from __future__ import annotations
 
 import io
-import shutil
-import subprocess
-import tempfile
+import math
 import threading
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-CONVERTER = ROOT / "tools" / "kn5-obj-converter-main" / "convert.py"
 SIZE = (1024, 576)
-
-BLENDER_SCRIPT = r"""
-import bpy, sys
-from mathutils import Vector
-obj_path, out = sys.argv[sys.argv.index("--") + 1:][-2:]
-W, H = 1024, 576
-bpy.ops.wm.read_factory_settings(use_empty=True)
-bpy.ops.wm.obj_import(filepath=obj_path)
-meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
-pts = [o.matrix_world @ Vector(c) for o in meshes for c in o.bound_box]
-lo = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
-hi = Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
-ctr = (lo + hi) / 2
-size = (hi - lo).length
-# El importador de OBJ enlaza las texturas de forma poco fiable con tantos materiales: se rehacen a mano desde el
-# .mtl (map_Kd) con un solo nodo de imagen activo, que es el que usa Workbench con color = textura.
-import os
-mtl = os.path.splitext(obj_path)[0] + ".mtl"
-kd, cur = {}, None
-for line in open(mtl, encoding="utf-8", errors="ignore"):
-    w = line.strip().split(None, 1)
-    if len(w) == 2 and w[0] == "newmtl":
-        cur = w[1]
-    elif len(w) == 2 and w[0] == "map_Kd" and cur:
-        kd[cur] = os.path.join(os.path.dirname(obj_path), w[1].replace("\\", os.sep))
-for mat in bpy.data.materials:
-    path = kd.get(mat.name)
-    mat.use_nodes = True
-    mat.node_tree.nodes.clear()
-    if path and os.path.isfile(path):
-        tex = mat.node_tree.nodes.new("ShaderNodeTexImage")
-        tex.image = bpy.data.images.load(path, check_existing=False)
-        mat.node_tree.nodes.active = tex
-    else:
-        mat.diffuse_color = (0.35, 0.35, 0.35, 1.0)
-scn = bpy.context.scene
-scn.render.engine = "BLENDER_WORKBENCH"
-sh = scn.display.shading
-sh.light = "STUDIO"; sh.color_type = "TEXTURE"; sh.show_shadows = True; sh.shadow_intensity = 0.4
-sh.show_specular_highlight = True
-scn.view_settings.view_transform = "Standard"
-scn.render.resolution_x, scn.render.resolution_y = W, H
-scn.render.image_settings.file_format = "JPEG"
-scn.render.image_settings.quality = 90
-scn.world = bpy.data.worlds.new("w"); scn.world.color = (0.012, 0.012, 0.016)
-cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); scn.collection.objects.link(cam); scn.camera = cam
-cam.data.lens = 45
-# KN5 (x izquierda, y arriba, z adelante) -> Blender (x, -z, y): el frente es -Y; camara delante-izquierda y arriba
-cam.location = ctr + Vector((0.85, -1.0, 0.55)).normalized() * size * 1.75
-t = bpy.data.objects.new("t", None); t.location = ctr + Vector((0, 0, -0.03 * size)); scn.collection.objects.link(t)
-c = cam.constraints.new("TRACK_TO"); c.target = t; c.track_axis = "TRACK_NEGATIVE_Z"; c.up_axis = "UP_Y"
-scn.render.filepath = out
-bpy.ops.render.render(write_still=True)
-"""
-
-
-class CoverError(RuntimeError):
-    pass
-
+SUPERSAMPLE = 2  # se dibuja al doble y se reduce (bordes menos dentados)
+# dirección HACIA la cámara en ejes del KN5 (x izquierda, y arriba, z adelante): delante-izquierda y arriba
+TO_CAMERA = (0.70, 0.48, 0.85)
+LIGHT = (0.35, 0.85, 0.45)
+GLASS = (26, 31, 38)
 
 _RENDER_LOCK = (
     threading.Lock()
-)  # un solo Blender a la vez (la interfaz y la exportación pueden pedir a la vez)
-_CACHE: dict[tuple, bytes] = (
-    {}
-)  # (ruta, mtime, tamaño) del KN5 → JPEG; el mismo modelo no se renderiza dos veces
+)  # una portada a la vez (la interfaz y la exportación pueden pedirla a la vez)
+_CACHE: dict[tuple[str, int, int], bytes] = {}
+
+
+class CoverError(RuntimeError):
+    """No se pudo generar la portada."""
 
 
 def to_jpeg(data: bytes) -> bytes:
@@ -114,66 +60,148 @@ def to_jpeg(data: bytes) -> bytes:
     return out.getvalue()
 
 
-WRAPPER = r"""
-import runpy, sys
-a = sys.argv[sys.argv.index("--") + 1:]
-converter, kn5dir, script = a[0], a[1], a[2]
-orig = sys.argv[:]
-sys.argv = [converter, kn5dir]
-runpy.run_path(converter, run_name="__main__")  # KN5 -> OBJ (necesita numpy: el Python de Blender lo trae)
-sys.argv = orig
-runpy.run_path(script, run_name="__main__")  # lee obj y png de sys.argv tras «--»
-"""
+def _unit(v: tuple[float, float, float]) -> tuple[float, float, float]:
+    n = math.sqrt(sum(c * c for c in v)) or 1.0
+    return (v[0] / n, v[1] / n, v[2] / n)
 
 
-def render_cover(kn5: Path, blender: str, timeout: int = 300) -> bytes:
-    """JPEG de portada renderizado desde ``kn5``. Todo corre dentro de Blender: su Python trae numpy, que el
-    conversor KN5 → OBJ necesita y que el Python de la aplicación puede no tener. Una petición a la vez; las que
-    esperan reciben el resultado de la primera si el KN5 es el mismo."""
+def _cross(a, b):
+    return (
+        a[1] * b[2] - a[2] * b[1],
+        a[2] * b[0] - a[0] * b[2],
+        a[0] * b[1] - a[1] * b[0],
+    )
+
+
+def _dot(a, b) -> float:
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
+
+def _material_colors(parts) -> list[tuple[int, int, int]]:
+    """Color medio (RGB) de la textura difusa de cada material; gris si no la tiene o no se lee."""
+    from PIL import Image
+
+    textures = {t.name: t.data for t in parts.textures}
+    cache: dict[str, tuple[int, int, int]] = {}
+    out = []
+    for m in parts.materials:
+        color = (140, 140, 140)
+        name = next((n for slot, _, n in m.slots if slot == "txDiffuse"), None)
+        if name in textures:
+            if name not in cache:
+                try:
+                    im = Image.open(io.BytesIO(textures[name])).convert("RGB")
+                    cache[name] = (
+                        im.reduce(max(1, min(im.size) // 8))
+                        .resize((1, 1), Image.BOX)
+                        .getpixel((0, 0))
+                    )
+                except Exception:  # noqa: BLE001 - textura ilegible: se usa el gris
+                    cache[name] = color
+            color = cache[name]
+        out.append(color)
+    return out
+
+
+def render_cover(kn5: Path) -> bytes:
+    """JPEG de portada dibujado desde ``kn5``. Una petición a la vez; las que esperan reciben el resultado
+    de la primera si el KN5 es el mismo."""
     st = Path(kn5).stat()
     key = (str(Path(kn5).resolve()), st.st_mtime_ns, st.st_size)
     with _RENDER_LOCK:
         if key not in _CACHE:
             if len(_CACHE) >= 8:
                 _CACHE.pop(next(iter(_CACHE)))
-            _CACHE[key] = _render(Path(kn5), blender, timeout)
+            _CACHE[key] = _render(Path(kn5))
         return _CACHE[key]
 
 
-def _render(kn5: Path, blender: str, timeout: int) -> bytes:
-    if not CONVERTER.is_file():
-        raise CoverError(f"falta {CONVERTER}")
-    with tempfile.TemporaryDirectory(prefix="beam2ac_cover_") as tmp:
-        t = Path(tmp)
-        (t / "kn5").mkdir()
-        shutil.copyfile(kn5, t / "kn5" / "car.kn5")
-        (t / "render.py").write_text(BLENDER_SCRIPT, encoding="utf-8")
-        (t / "wrapper.py").write_text(WRAPPER, encoding="utf-8")
-        obj, png = t / "kn5" / "output" / "car.obj", t / "cover.jpg"
-        try:
-            r = subprocess.run(
-                [
-                    blender,
-                    "--background",
-                    "--python",
-                    str(t / "wrapper.py"),
-                    "--",
-                    str(CONVERTER),
-                    str(t / "kn5"),
-                    str(t / "render.py"),
-                    str(obj),
-                    str(png),
-                ],
-                capture_output=True,
-                text=True,
-                timeout=timeout,
+def _render(kn5: Path) -> bytes:
+    try:
+        from PIL import Image, ImageDraw
+    except ImportError as exc:
+        raise CoverError("falta Pillow para dibujar la portada") from exc
+    from src.ac.kn5_inspect import Kn5Error, read_kn5
+    from src.ac.kn5_materials import Kn5FormatError, split_kn5
+
+    try:
+        parts = split_kn5(kn5.read_bytes())
+        model = read_kn5(kn5)
+    except (
+        Kn5Error,
+        Kn5FormatError,
+        OSError,
+        ValueError,
+        IndexError,
+    ) as exc:  # UnicodeDecodeError es ValueError
+        raise CoverError(f"no se puede leer el KN5: {exc}") from exc
+    colors = _material_colors(parts)
+    glass = {i for i, m in enumerate(model.materials) if m[1] == "ksPerPixelAlpha"}
+
+    # base de la cámara (ortogonal): derecha, arriba y hacia la cámara
+    d = _unit(TO_CAMERA)
+    right = _unit(_cross((0.0, 1.0, 0.0), d))
+    up = _cross(d, right)
+    light = _unit(LIGHT)
+    tris = []  # (profundidad, 3 puntos de pantalla, color)
+    for node in model.nodes:
+        if node.type != 2 or not node.vertices or not node.indices:
+            continue
+        if not node.flags.get("visible", 1) or node.flags.get("renderable") is False:
+            continue
+        pts = model.mesh_world_vertices(node)
+        proj = [(_dot(p, right), _dot(p, up), _dot(p, d)) for p in pts]
+        base = (
+            colors[node.material]
+            if node.material is not None and node.material < len(colors)
+            else (140, 140, 140)
+        )
+        is_glass = node.material in glass or node.flags.get("transparent")
+        idx = node.indices
+        for t in range(0, len(idx) - 2, 3):
+            a, b, c = idx[t], idx[t + 1], idx[t + 2]
+            if a >= len(pts) or b >= len(pts) or c >= len(pts):
+                continue
+            pa, pb, pc = pts[a], pts[b], pts[c]
+            n = _cross(
+                (pb[0] - pa[0], pb[1] - pa[1], pb[2] - pa[2]),
+                (pc[0] - pa[0], pc[1] - pa[1], pc[2] - pa[2]),
             )
-        except subprocess.TimeoutExpired:
-            raise CoverError(f"Blender tardó más de {timeout} s") from None
-        if not png.is_file():
-            raise CoverError(
-                f"Blender no generó la imagen: {(r.stderr or r.stdout)[-400:]}"
+            if _dot(n, d) < 0:  # normal hacia la cámara (la malla es de doble cara)
+                n = (-n[0], -n[1], -n[2])
+            k = 0.30 + 0.70 * max(0.0, _dot(_unit(n), light))
+            col = GLASS if is_glass else base
+            tris.append(
+                (
+                    (proj[a][2] + proj[b][2] + proj[c][2]) / 3.0,
+                    proj[a][:2],
+                    proj[b][:2],
+                    proj[c][:2],
+                    (int(col[0] * k), int(col[1] * k), int(col[2] * k)),
+                )
             )
-        return (
-            png.read_bytes()
-        )  # Blender ya lo escribe en JPEG 1024×576: no hace falta Pillow
+    if not tris:
+        raise CoverError("el KN5 no tiene mallas visibles")
+    xs = [p[0] for _, a, b, c, _ in tris for p in (a, b, c)]
+    ys = [p[1] for _, a, b, c, _ in tris for p in (a, b, c)]
+    w, h = SIZE[0] * SUPERSAMPLE, SIZE[1] * SUPERSAMPLE
+    scale = 0.86 * min(
+        w / ((max(xs) - min(xs)) or 1.0), h / ((max(ys) - min(ys)) or 1.0)
+    )
+    cx, cy = (max(xs) + min(xs)) / 2, (max(ys) + min(ys)) / 2
+
+    def to_px(p):
+        return (w / 2 + (p[0] - cx) * scale, h / 2 - (p[1] - cy) * scale)
+
+    img = Image.new("RGB", (w, h), (24, 27, 33))
+    draw = ImageDraw.Draw(img)
+    for y in range(h):  # degradado vertical sencillo
+        v = int(18 + 22 * y / h)
+        draw.line([(0, y), (w, y)], fill=(v, v + 3, v + 9))
+    tris.sort(key=lambda t: t[0])  # de lejos a cerca
+    for _, a, b, c, col in tris:
+        draw.polygon([to_px(a), to_px(b), to_px(c)], fill=col)
+    img = img.resize(SIZE, Image.LANCZOS)
+    out = io.BytesIO()
+    img.save(out, "JPEG", quality=90)
+    return out.getvalue()

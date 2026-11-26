@@ -2,6 +2,8 @@
 
 import re
 
+import pytest
+
 from src.ac import gearbox_templates as gt
 from src.ac import thermal_templates as tt
 
@@ -656,10 +658,11 @@ def test_caras_traseras_de_piezas_finas():
     assert not D.AERO_NODE.search("35b84_body0")
 
 
+@pytest.mark.skip(
+    reason="la aplicación ya no construye bancos con FMOD (_staged_build retirado de src.audio.pipeline)"
+)
 def test_fmod_reintenta_con_proyecto_nuevo_y_carpeta_corta(tmp_path, monkeypatch):
-    import pytest
-
-    from src.audio import fmod_build as FB
+    from tools.audio import fmod_build as FB
     from src.audio import pipeline as AP
 
     work_dirs = []

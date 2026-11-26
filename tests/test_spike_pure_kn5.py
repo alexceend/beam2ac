@@ -124,7 +124,7 @@ class SyntheticTests(unittest.TestCase):
         stats, out = self.build("WHEEL_LF")
         k = read_kn5(out)
         by = {n.name: n for n in k.nodes if n.type == 1}
-        self.assertEqual(k.nodes[0].name, "BlenderFile")
+        self.assertEqual(k.nodes[0].name, "root")
         # BeamNG (5,2,3) -> AC (5,3,-2); hijo = inversa del padre
         self.assertEqual(
             tuple(round(c, 5) for c in by["WHEEL_LF"].local[3][:3]), (5, 3, -2)
@@ -147,13 +147,13 @@ class SyntheticTests(unittest.TestCase):
         again = build_kn5(apply_diffuse(parts, srcs))  # el flujo de texturas lo acepta
         self.assertEqual(len(split_kn5(again).textures), 2)
 
-    def test_blender_material_names(self) -> None:
-        got = pure_kn5.blender_material_names([["a", "b", "a"], ["a", "c"], ["a"]])
+    def test_unique_material_names(self) -> None:
+        got = pure_kn5.unique_material_names([["a", "b", "a"], ["a", "c"], ["a"]])
         self.assertEqual(got[0], {"a": "a", "b": "b"})
         self.assertEqual(got[1], {"a": "a.001", "c": "c"})
         self.assertEqual(got[2], {"a": "a.002"})
         long = "x" * 70
-        n = pure_kn5.blender_material_names([[long], [long]])
+        n = pure_kn5.unique_material_names([[long], [long]])
         self.assertEqual(len(n[0][long].encode()), 63)
         self.assertTrue(n[1][long].endswith(".001"))
         self.assertLessEqual(len(n[1][long].encode()), 63)
@@ -206,7 +206,9 @@ class ReferenceTests(unittest.TestCase):
         return out
 
     def test_hierarchy_and_materials(self) -> None:
-        self.assertEqual(self._tree(self.a), self._tree(self.b))
+        # el nombre del nodo raíz del KN5 de referencia es otro; el resto del árbol es igual
+        strip = lambda t: [(p.split("/", 2)[-1], ty) for p, ty in t[1:]]  # noqa: E731
+        self.assertEqual(strip(self._tree(self.a)), strip(self._tree(self.b)))
         self.assertEqual(self.a.materials, self.b.materials)
         self.assertEqual(self.a.textures, self.b.textures)
 
@@ -242,36 +244,14 @@ class ReferenceTests(unittest.TestCase):
                 self.assertLess(dev, 1e-5, n.name)
 
 
-class BuilderSwitchTests(unittest.TestCase):
-    def test_env_selects_pure_and_rejects_bogus(self) -> None:
-        import os
-        from unittest import mock
-
+class BuildKn5Tests(unittest.TestCase):
+    def test_build_kn5_is_pure_python_and_validates_the_name(self) -> None:
         from src.mesh import build
 
-        with (
-            tempfile.TemporaryDirectory() as tmp,
-            mock.patch.object(
-                build, "run_blender", side_effect=RuntimeError("blender")
-            ),
-            mock.patch.object(build, "write_plan"),
-            mock.patch.object(
-                build, "ensure_safe_output_path", side_effect=lambda p: Path(p)
-            ),
-        ):
-            with mock.patch.dict(os.environ, {"BEAM2AC_KN5_BUILDER": "bogus"}):
-                with self.assertRaises(ValueError):
-                    build.build_kn5(None, tmp, "x.kn5", "")
-            with mock.patch.dict(os.environ, {"BEAM2AC_KN5_BUILDER": "pure"}):
-                with mock.patch("src.mesh.pure_kn5.build_kn5_pure") as pure:
-                    with (
-                        mock.patch.object(build, "read_kn5"),
-                        mock.patch.object(
-                            build, "verify_kn5", return_value=build.Verification(True)
-                        ),
-                    ):
-                        build.build_kn5(None, tmp, "x.kn5", "")
-                    self.assertTrue(pure.called)
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(RuntimeError):
+                build.build_kn5(None, tmp, "../x.kn5")  # type: ignore[arg-type]
+        self.assertFalse(hasattr(build, "run_blender"))
 
 
 @unittest.skipUnless((IBIZA / "35b84_mesh.dae").exists(), "falta la muestra del Ibiza")

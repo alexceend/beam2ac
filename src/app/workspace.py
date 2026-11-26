@@ -10,7 +10,7 @@ Lógica sin HTTP (la usa ``src/app/desktop.py``). Reglas de seguridad:
 * los orígenes de BeamNG y los coches de AC solo se LEEN;
 * nada destructivo: ejecutar etapas crea resultados nuevos con caché; exportar crea un
   intento nuevo y exige ``confirm: true``; no hay borrado ni instalación;
-* las tareas largas (etapas, Blender, exportación) van en un hilo, una por proyecto, con
+* las tareas largas (etapas, modelo 3D, exportación) van en un hilo, una por proyecto, con
   su registro; la interfaz consulta su estado.
 """
 
@@ -758,8 +758,8 @@ class Workspace:
         def log(line: str) -> None:
             # G2.29: las tareas solo llaman a ``log`` entre pasos (una etapa ya está
             # guardada entera con os.replace; el intento y la copia aún no existen):
-            # es el único punto donde cancelar no deja nada a medias. Blender no se
-            # interrumpe: la cancelación espera al final de la etapa en curso.
+            # es el único punto donde cancelar no deja nada a medias. Una etapa en curso no se
+            # interrumpe: la cancelación espera a que termine.
             job.log.append(line)
             if job.cancel.is_set():
                 raise Cancelled
@@ -801,7 +801,7 @@ class Workspace:
 
     @staticmethod
     def _auto_audio(body: dict[str, Any]) -> bool:
-        """El banco de sonido se genera solo si no se da un banco hecho (sin FMOD: generador propio)."""
+        """El banco de sonido se genera solo si no se da un banco hecho."""
         if "audio_build" in body:
             return bool(body["audio_build"])
         return not body.get("audio_bank")
@@ -1033,7 +1033,7 @@ class Workspace:
                 f"ajustes de cabina guardados: versión {ce['version']} "
                 f"({', '.join(ce['items']) or 'ninguno: valores calculados'})"
             )
-            log("3/4 etapas, modelo 3D (Blender) y exportación…")
+            log("3/4 etapas, modelo 3D y exportación…")
             extra = {"local_driver": True, "ac_root": str(ac_root)}
             if self._auto_audio(body):
                 extra = {**extra, "audio_build": True}
@@ -1111,13 +1111,12 @@ class Workspace:
         }
 
     def details_preview(self, pid: str) -> dict[str, Any]:
-        """Portada automática (render con texturas desde arriba en diagonal) del último modelo del proyecto,
-        para verla en la ventana de detalles antes de exportar. Tarda unos segundos (Blender).
+        """Portada automática (vista con texturas desde arriba en diagonal) del último modelo del proyecto,
+        para verla en la ventana de detalles antes de exportar. Tarda unos segundos.
         """
         import base64
 
         from src.project.cover import CoverError, render_cover
-        from src.project.model import blender_path
 
         kn5s = sorted(
             (self._dir(pid) / "stages" / "model").glob("*/model.kn5"),
@@ -1128,13 +1127,10 @@ class Workspace:
             raise WorkspaceError(
                 "el proyecto no tiene modelo 3D todavía: ejecuta «Ejecutar etapas (incluye el modelo 3D)» primero"
             )
-        exe = blender_path()
-        if not exe:
-            raise WorkspaceError("Blender no disponible: configura su ruta en Ajustes")
         try:
-            jpg = render_cover(kn5s[0], exe)
+            jpg = render_cover(kn5s[0])
         except CoverError as exc:
-            raise WorkspaceError(f"no se pudo renderizar la portada: {exc}") from None
+            raise WorkspaceError(f"no se pudo dibujar la portada: {exc}") from None
         return {"cover": "data:image/jpeg;base64," + base64.b64encode(jpg).decode()}
 
     def details_save(self, pid: str, body: dict[str, Any]) -> dict[str, Any]:
@@ -1216,7 +1212,15 @@ class Workspace:
             counts: dict[str, int] = {}
             for n in kn.nodes:
                 counts[n.name] = counts.get(n.name, 0) + 1
-            skip = ("WHEEL_", "SUSP_", "STEER_", "COCKPIT_", "BlenderFile", "B2AC_")
+            skip = (
+                "WHEEL_",
+                "SUSP_",
+                "STEER_",
+                "COCKPIT_",
+                "root",
+                "BlenderFile",
+                "B2AC_",
+            )
             parts = sorted(
                 n.name
                 for n in kn.nodes

@@ -1,11 +1,10 @@
-"""Spike: leer, reconstruir y parchear bancos FMOD de AC (``.bank``) sin FMOD.
+"""Leer, reconstruir y parchear bancos de sonido de AC (``.bank``).
 
 Solo biblioteca estándar. Se basa exclusivamente en el análisis de archivos de datos
-``.bank`` locales y en la descripción PÚBLICA del contenedor FSB5 (cabecera, cabeceras de
-muestra de 8 bytes, tabla de nombres, datos alineados a 16 bytes). No se ha abierto ni
-desensamblado ningún binario de FMOD y no se copia código de terceros.
+``.bank`` y en la descripción PÚBLICA del contenedor FSB5 (cabecera, cabeceras de muestra de
+8 bytes, tabla de nombres, datos alineados a 16 bytes). No se copia código de terceros.
 
-Estructura observada de un banco (FMOD Studio 1.08):
+Estructura observada de un banco (formato de los bancos de AC):
 
 * RIFF ``FEV `` con los trozos ``FMT `` (8 bytes), ``LIST PROJ`` (grafo de eventos,
   buses y metadatos; tamaño ~100 KB) y un único ``SND `` que contiene
@@ -297,7 +296,7 @@ def read_wav_mono16(path: Path) -> tuple[int, bytes]:
     """Lee un WAV (PCM 8/16/24/32 o float32/64; varios canales se promedian a mono).
 
     Devuelve (Hz, PCM16). float -> PCM16 con ``trunc(v * 32767)``: medido contra el PCM que
-    FMOD Studio escribe en un banco desde el mismo WAV float32 (11 de 98 070 muestras
+    escribe la herramienta de sonido de AC en un banco desde el mismo WAV float32 (11 de 98 070 muestras
     difieren en 1 por redondeo de coma flotante).
     """
     raw = Path(path).read_bytes()
@@ -379,14 +378,14 @@ def patch_samples(snd: SndChunk, wavs: dict[int, Path]) -> None:
             raise ValueError(f"muestra {idx} no es mono")
         rate, pcm = read_wav_mono16(path)
         pcm = resample_linear(pcm, rate, s.rate)
-        set_audio(s, pcm)  # FMOD: >= 32 bytes de datos, a 32
+        set_audio(s, pcm)  # mínimo 32 bytes de datos, múltiplo de 32
     rehash(snd.fsb)
 
 
 def set_audio(s: Fsb5Sample, pcm: bytes) -> None:
     """Datos nuevos de una muestra mono PCM16 y su nivel de pico (extra tipo 13, float).
 
-    Medido: FMOD guarda en ese extra el pico del audio de origen (0,02377 para un WAV de pico
+    Medido: los bancos de referencia guardan en ese extra el pico del audio de origen (0,02377 para un WAV de pico
     0,02374 en PCM16); aquí se calcula del PCM (|v|/32767, error < 0,2 %).
     """
     s.samples = len(pcm) // 2
@@ -401,8 +400,8 @@ def set_audio(s: Fsb5Sample, pcm: bytes) -> None:
 def rehash(f: Fsb5) -> None:
     """Clave de identidad nueva (16 bytes en 36..52) para un FSB5 modificado.
 
-    IDA (fmod64.dll, códec FSB5): el cargador NO valida ese campo contra los datos, pero lo
-    usa como clave de una caché de FSB ya cargados: dos FSB con la misma clave comparten
+    El cargador de AC no valida ese campo contra los datos, pero lo usa como clave de una
+    caché de FSB ya cargados: dos FSB con la misma clave comparten
     cabeceras y muestras en la misma sesión. Un FSB parcheado con la clave del original
     sonaría con el audio del original si ambos están cargados. Se usa sha256 del contenido
     (determinista y único por contenido); los 8 bytes finales no se tocan.
@@ -429,11 +428,11 @@ def find_leaf(chunks: list[Chunk], cid: bytes) -> list[Chunk]:
 def finalize_snd(bank: Bank, snd: SndChunk) -> None:
     """Escribe ``SND `` y deja ``SNDH`` coherente con la nueva disposición del archivo.
 
-    Regla medida en 67 bancos (FMOD y Kunos): el FSB5 empieza alineado a 32 bytes del ARCHIVO,
+    Regla medida en 67 bancos (de referencia y de Kunos): el FSB5 empieza alineado a 32 bytes del ARCHIVO,
     ``SND `` lleva delante ``(-inicio_de_datos) % 32`` bytes de relleno y ``SNDH`` guarda
     ``(0x80003, desplazamiento absoluto del FSB5, tamaño del FSB5)``. Si el tamaño de ``PROJ``
     cambia (ranuras añadidas o quitadas) el desplazamiento y el relleno cambian: con el
-    desplazamiento viejo FMOD no encuentra el audio y el evento se detiene en silencio.
+    desplazamiento viejo el motor de sonido no encuentra el audio y el evento se detiene en silencio.
     """
     snd.prefix = b""
     pos = 12

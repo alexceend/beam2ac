@@ -3,7 +3,7 @@
 Uso:
     python -m src.ac.assemble <carpeta_vehiculo> <archivo.pc>
         [--car-id ID] [--driver-mass 70] [--artifacts output/<id>]
-        [--out output/<id>/assembly] [--blender RUTA] [--ac-root RUTA_AC]
+        [--out output/<id>/assembly] [--no-kn5] [--ac-root RUTA_AC]
 
 Reutiliza (copia, sin modificarlos) los artefactos de las fases 3–5:
 ``<artifacts>/engine``, ``/drivetrain`` y ``/chassis``. Genera solo lo respaldado
@@ -65,7 +65,7 @@ sale de las fases 3–5 como antes.
 ``--experimental ffmult_1.95`` / ``steer_lock_423``: valores de AC sin respaldo en
 BeamNG, nunca por defecto (``cockpit_config.EXPERIMENTS``).
 
-No genera ``sfx``/``sounds.ini`` (el audio necesita FMOD: contrato en
+No genera ``sfx``/``sounds.ini`` (el audio lo genera ``src.audio.pipeline``: contrato en
 docs/research/audio_pipeline_contrato.md) ni retrovisores. Escribe ``<out>/<id>/``
 (carpeta del coche) y ``<out>/assembly_report.json``.
 """
@@ -528,7 +528,7 @@ def assemble(
     car_id: str,
     artifacts: Path,
     out: Path,
-    blender: str | None,
+    with_kn5: bool | None,
     driver_mass: float = DEFAULT_DRIVER_MASS,
     ac_root: Path | None = None,
     physics_base: Path | None = None,
@@ -654,8 +654,8 @@ def assemble(
     steer_report: dict[str, Any] | None = None
     lights_res = None
     skipped: dict[str, str] = {}
-    if blender:
-        base_kn5, verification = build_kn5(tplan, out / "_kn5_build", kn5_name, blender)
+    if with_kn5:
+        base_kn5, verification = build_kn5(tplan, out / "_kn5_build", kn5_name)
         kn5_report.update(
             {
                 "verification_ok": verification.ok,
@@ -705,10 +705,10 @@ def assemble(
             skipped["lights"] = "sin perfil del vehículo (lights)"
         _copy(current, car / kn5_name)
     else:
-        kn5_report["error"] = "Blender no disponible: KN5 no generado"
+        kn5_report["error"] = "KN5 no solicitado (--no-kn5): no generado"
         skipped.update(
             {
-                k: "sin KN5 (Blender no disponible)"
+                k: "sin KN5 (no solicitado)"
                 for k in (
                     "textures",
                     "steering_wheel",
@@ -1223,7 +1223,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--driver-mass", type=float, default=DEFAULT_DRIVER_MASS)
     parser.add_argument("--artifacts")
     parser.add_argument("--out")
-    parser.add_argument("--blender", default=shutil.which("blender"))
+    parser.add_argument("--no-kn5", action="store_true", help="no construye el KN5")
     parser.add_argument("--ac-root")
     parser.add_argument(
         "--physics-base",
@@ -1264,7 +1264,7 @@ def main(argv: list[str] | None = None) -> int:
         car_id,
         artifacts,
         out,
-        args.blender,
+        not args.no_kn5,
         args.driver_mass,
         Path(args.ac_root) if args.ac_root else None,
         physics_base=Path(args.physics_base) if args.physics_base else None,

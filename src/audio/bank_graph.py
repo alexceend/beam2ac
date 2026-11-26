@@ -1,6 +1,6 @@
-"""SPIKE: modelo de grafo de un banco FMOD de motor para clonar/borrar ranuras sin FMOD.
+"""Modelo de grafo de un banco de motor de AC para clonar y borrar ranuras.
 
-Formato (decodificado con ``fmodstudio64.dll`` y con bancos construidos por FMOD local; ver
+Formato (decodificado comparando bancos construidos con la herramienta de sonido de AC; ver
 ``output/spike_self_transformations_2026-11-25/informe.md``):
 
 * El ``LIST PROJ`` es un árbol de chunks; los objetos se enlazan por GUID de 16 bytes

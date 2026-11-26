@@ -32,7 +32,7 @@ from src.ac.ini_format import sanitize_ini_comments
 from src.coords import beamng_to_ac
 from src.jbeam import ResolvedConfig, evaluate, parse_table
 
-DUP_SUFFIX = re.compile(r"\.\d{3}$")  # duplicados de Blender: "nombre.001"
+DUP_SUFFIX = re.compile(r"\.\d{3}$")  # duplicados de nombre: "nombre.001"
 
 
 class CockpitConfigError(ValueError):
@@ -268,7 +268,7 @@ def double_sided_materials(
 ) -> list[str]:
     """Nombres del KN5 cuyo material de BeamNG tiene ``doubleSided: true``.
 
-    Los duplicados de Blender (``.001``) se resuelven a su material de origen.
+    Los duplicados de nombre (``.001``) se resuelven a su material de origen.
     """
     from src.ac.kn5_materials import load_materials, material_key
 

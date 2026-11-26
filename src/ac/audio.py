@@ -1,9 +1,9 @@
-"""Audio del coche: banco FMOD precompilado.
+"""Audio del coche: banco de sonido precompilado.
 
 Contrato: docs/research/audio_pipeline_contrato.md.
 
-Solo la vía ``prebuilt``: copia y valida un banco ya construido. NUNCA ejecuta FMOD
-(compilar un banco es un paso manual que prepara ``tools/audio/prepare_fmod_build.py``).
+Solo la vía ``prebuilt``: copia y valida un banco ya construido (el banco de motor lo genera
+``src.audio.pipeline``; también vale uno hecho a mano).
 
 Requisitos de AC (AC Audio Pipeline 1.9, p. 9-11; 466/466 coches instalados):
 
@@ -92,8 +92,8 @@ def load_prebuilt(
         raise AudioInputError(
             f"falta {bank_path.name} en {bank_dir} (hay {found}); indique el id "
             "para el "
-            "que se construyó el banco (source_id) o constrúyalo para este coche "
-            "(tools/audio/prepare_fmod_build.py)"
+            "que se construyó el banco (source_id) o genérelo para este coche "
+            "(src.audio.pipeline)"
         )
     if not guids_path.is_file():
         raise AudioInputError(f"falta GUIDs.txt en {bank_dir}")

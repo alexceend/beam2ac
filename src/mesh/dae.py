@@ -1,8 +1,8 @@
 """Lectura mínima de archivos COLLADA (.dae), solo biblioteca estándar.
 
-Lee lo necesario para validar transformaciones sin Blender: unidad, eje vertical,
+Lee lo necesario para validar transformaciones: unidad, eje vertical,
 nodos de escena (nombre → geometría, matriz) y posiciones de vértices de cada
-geometría. No lee normales, UV ni materiales (eso lo importa Blender).
+geometría. No lee normales, UV ni materiales (eso lo lee ``src.mesh.pure_kn5``).
 """
 
 from __future__ import annotations
@@ -173,8 +173,8 @@ def bounds(points: list[Vec3]) -> tuple[Vec3, Vec3]:
 
 
 def material_names(path: str | Path | ZipMember) -> frozenset[str]:
-    """Nombres (``name``, o ``id`` si falta) de ``library_materials``: los que Blender
-    da a los materiales importados, antes de recortarlos a 63 bytes (G2.24)."""
+    """Nombres (``name``, o ``id`` si falta) de ``library_materials``: los que se
+    dan a los materiales del KN5, antes de recortarlos a 63 bytes (G2.24)."""
     if isinstance(path, ZipMember):
         tree = ET.parse(io.BytesIO(path.read_bytes()))
     else:

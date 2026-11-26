@@ -21,7 +21,7 @@ from src.ac.car_validate import gears_problem
 from src.attrs import transforms
 from src.attrs.store import REPO_CATALOG, Catalog
 from src.mesh.dae import read_dae
-from src.mesh.plan import BLENDER_NAME_BYTES, blender_name
+from src.mesh.plan import NAME_BYTES_MAX, trim_name
 from src.project.export import ZERO_IS_WRONG_KEYS, _blocker_severity
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -192,13 +192,13 @@ DAE = """<?xml version="1.0"?>
 
 
 class TestMesh(unittest.TestCase):
-    def test_blender_name(self):
+    def test_trim_name(self):
         long = "x" * 65
-        self.assertEqual(len(blender_name(long)), BLENDER_NAME_BYTES)
-        self.assertEqual(len(blender_name(long, 2)), BLENDER_NAME_BYTES - 2)
-        self.assertEqual(blender_name("corto"), "corto")
+        self.assertEqual(len(trim_name(long)), NAME_BYTES_MAX)
+        self.assertEqual(len(trim_name(long, 2)), NAME_BYTES_MAX - 2)
+        self.assertEqual(trim_name("corto"), "corto")
         # no parte un carácter de varios bytes
-        self.assertTrue(blender_name("é" * 40).encode("utf-8").__len__() <= 63)
+        self.assertTrue(trim_name("é" * 40).encode("utf-8").__len__() <= 63)
 
     def test_face_vertices(self):
         with tempfile.TemporaryDirectory() as d:

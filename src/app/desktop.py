@@ -195,7 +195,7 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                 if (
                     p == "/api/details_preview"
                 ):  # render de la portada automática (tarda unos segundos)
-                    # lanza Blender: un GET entre sitios (p. ej. <img>) no debe poder dispararlo
+                    # genera la imagen: un GET entre sitios (p. ej. <img>) no debe poder dispararlo
                     if self.headers.get("Sec-Fetch-Site", "same-origin") not in (
                         "same-origin",
                         "none",
@@ -271,15 +271,6 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                     if body.get("projects_dir") or body.get("export_dir"):
                         _need_confirm(body, "cambiar las carpetas de salida")
                     return self._json(200, settings.status(settings.save(body)))
-                if p == "/api/blender_addon":  # descarga + instala (pide confirmación)
-                    from . import blender_addon
-
-                    if body.get("confirm") is not True:
-                        raise WorkspaceError("falta confirm: true")
-                    try:
-                        return self._json(200, blender_addon.install())
-                    except (blender_addon.AddonError, OSError) as exc:
-                        raise WorkspaceError(str(exc)) from exc
                 if p == "/api/bench_start":
                     _need_confirm(body, "el banco lanza BeamNG.drive")
                     return self._json(200, ws.bench_start(body))

@@ -1,7 +1,7 @@
-"""Del inventario de WAV (``scan_audio``) al ``spec`` que consume el script de FMOD.
+"""Del inventario de WAV (``scan_audio``) al ``spec`` que consume el generador de bancos.
 
 Detección (``src.extract.audio_sources``) → validación (``wavinfo``) → asignación de eventos
-(aquí) → generación/construcción (``fmod_build``). Sin FMOD: todo lo de este módulo es puro.
+(aquí) → generación del banco (``engine_gen``). Todo lo de este módulo es puro.
 
 Diseño del motor = el de los eventos ``engine_ext``/``engine_int`` del SDK de AC
 (``docs/research/audio_pipeline_for_future_cars.md``): dos pistas (carga / retención) con

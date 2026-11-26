@@ -24,14 +24,12 @@ from pathlib import Path
 
 from src.safe_paths import new_output_dir
 
-from .blender_addon import REPO_URL
 from .desktop import make_desktop_server
 from .workspace import PROJECTS_ROOT, Workspace
 
-DOWNLOAD_URLS = (
-    "https://www.blender.org/download/lts/3-6/",
-    "https://www.fmod.com/download",
-    REPO_URL,  # origen del complemento KN5 de Blender (fila de Ajustes)
+DOWNLOAD_URLS = (  # lista cerrada: las únicas páginas externas que la ventana abre
+    "https://github.com/alexceend/beam2ac",
+    "https://ko-fi.com/alexceend",
 )
 
 
@@ -45,7 +43,7 @@ def main(argv: list[str] | None = None) -> int:
     a = ap.parse_args(argv)
     from . import settings
 
-    settings.apply()  # rutas guardadas por el usuario (AC, Steam, Blender, FMOD)
+    settings.apply()  # rutas guardadas por el usuario (AC, Steam, BeamNG)
     server = make_desktop_server(
         Workspace(a.projects or settings.projects_dir() or PROJECTS_ROOT), 0
     )
@@ -58,17 +56,9 @@ def main(argv: list[str] | None = None) -> int:
             r = win.create_file_dialog(webview.FOLDER_DIALOG)
             return r[0] if r else None
 
-        def pick_exe(
-            self,
-        ) -> str | None:  # ejecutable (blender.exe) desde el explorador de archivos
-            r = win.create_file_dialog(
-                webview.OPEN_DIALOG, file_types=("Programa (*.exe)", "Todos (*.*)")
-            )
-            return r[0] if r else None
-
         def open_url(
             self, url: str
-        ) -> bool:  # solo las descargas fijas de Blender y FMOD
+        ) -> bool:  # solo las páginas fijas de la lista cerrada
             if url not in DOWNLOAD_URLS:
                 return False
             return webbrowser.open(url)

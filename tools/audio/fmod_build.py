@@ -1,4 +1,5 @@
-"""Proyecto FMOD (copia de la plantilla del SDK de AC) y construcción del banco.
+"""HERRAMIENTA DE MANTENIMIENTO (no la usa la aplicación): proyecto FMOD (copia de la plantilla del SDK de AC)
+y construcción de un banco, solo para regenerar el esqueleto de ``src/audio/data`` (``make_skeleton``).
 
 Nunca escribe bytes de banco: solo FMOD Studio 1.08.12 (``fmodstudiocl``) los produce. Los
 GUID los genera FMOD (``studio.project.create``); aquí no se escribe ninguno a mano.
@@ -17,10 +18,13 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-from src.audio.plan import DATA, template
+from src.audio.plan import template
 from src.safe_paths import ensure_safe_output_path
 
 ROOT = Path(__file__).resolve().parents[2]
+DATA = Path(__file__).parent / "data"  # build_events.template.js (solo para regenerar el esqueleto)
+FMOD_REQUIRED = "1.08.12"
+DEFAULT_FMOD = Path(r"C:\Program Files\FMOD SoundSystem\FMOD Studio 1.08.12")
 SDK_LOCAL = (
     ROOT / "docs/references/assetto-corsa/audio/ac_fmod_sdk_1_9"
 )  # copia de desarrollo (no se redistribuye)
@@ -185,3 +189,27 @@ def collect(out: Path, car_id: str, expected_events: set[str]) -> Path:
             f"eventos del banco {sorted(set(audio.events) ^ expected_events)} no coinciden con el spec"
         )
     return dst
+
+
+def detect_fmod(path: Path | None = None) -> dict[str, Any]:
+    """FMOD Studio por su carpeta (``BEAM2AC_FMOD_STUDIO`` o la de instalación por defecto). La versión
+    sale del NOMBRE de la carpeta (``FMOD Studio 1.08.12``); el ejecutable no se ejecuta."""
+    import os
+
+    root = Path(path or os.environ.get("BEAM2AC_FMOD_STUDIO") or DEFAULT_FMOD)
+    exes = {
+        name: (root / name).is_file()
+        for name in ("fmodstudiocl.exe", "FMOD Studio.exe")
+    }
+    version = (
+        root.name.removeprefix("FMOD Studio ").strip()
+        if root.name.startswith("FMOD Studio")
+        else ""
+    )
+    return {
+        "path": str(root),
+        "found": all(exes.values()),
+        "version": version or None,
+        "compatible": all(exes.values()) and version == FMOD_REQUIRED,
+        "required": FMOD_REQUIRED,
+    }

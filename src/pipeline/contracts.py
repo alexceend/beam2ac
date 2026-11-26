@@ -5,28 +5,20 @@ y formatos, salidas, dependencias externas, atributos que necesita, transformaci
 validaciones disponibles, limitaciones, y si se puede ejecutar de forma independiente y
 repetible (con la evidencia de esa repetibilidad).
 
-Detección de herramientas (:func:`tool_status`): SOLO comprueba rutas (``shutil.which``,
-``Path.exists``). Nunca ejecuta Blender, FMOD ni los juegos.
+Detección de herramientas (:func:`tool_status`): SOLO comprueba rutas (``Path.exists``).
+Nunca ejecuta los juegos. La aplicación no necesita programas externos para el modelo 3D ni para el sonido.
 
 Adaptadores aislados (no escriben nada, no modifican paquetes):
-* :func:`geometry_plan_summary`: plan de escena de mallas sin Blender
-(``src.mesh.build.plan_for_vehicle``).
-* :func:`detect_fmod` / :func:`audio_capabilities`: qué operaciones de audio están
-disponibles; sin FMOD
-  solo falla la compilación de bancos (``--audio build``), nunca el resto.
+* :func:`geometry_plan_summary`: plan de escena de mallas (``src.mesh.build.plan_for_vehicle``).
+* :func:`audio_capabilities`: qué operaciones de audio están disponibles.
 * ``src.pipeline.physics_preview``: física en memoria (fases 2–5 y 7).
 """
 
 from __future__ import annotations
 
-import os
-import shutil
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
-
-FMOD_REQUIRED = "1.08.12"
-DEFAULT_FMOD = Path(r"C:\Program Files\FMOD SoundSystem\FMOD Studio 1.08.12")
 
 
 @dataclass(frozen=True)
@@ -59,7 +51,6 @@ PIPELINES: tuple[PipelineSpec, ...] = (
             "src/mesh/dae.py",
             "src/mesh/flexbody.py",
             "src/mesh/plan.py",
-            "src/mesh/blender_build.py",
             "src/mesh/build.py",
         ),
         "python -m src.mesh.build <carpeta> <pc> --out … [--plan-only]",
@@ -71,11 +62,11 @@ PIPELINES: tuple[PipelineSpec, ...] = (
             "plan.json",
             "`<car>.kn5` (jerarquía WHEEL_xx/SUSP_xx/COCKPIT_HR con Empties)",
         ),
-        {"plan": (), "build_kn5": ("blender_3_6", "addon_assetto_corsa_tools")},
+        {"plan": (), "build_kn5": ()},
         ("ac:car.ini/BASIC/GRAPHICS_OFFSET (origen del KN5)",),
         (
             "flexbody: pos + Rx·Ry·Rz·diag(scale)·(unidad·v)",
-            "ejes: la escena va en ejes BeamNG; el addon convierte (x, z, −y)",
+            "ejes: la escena va en ejes BeamNG; el constructor de KN5 convierte (x, z, −y)",
         ),
         (
             "verify_kn5 (posiciones ±0,01 m frente al plan)",
@@ -342,7 +333,7 @@ PIPELINES: tuple[PipelineSpec, ...] = (
     ),
     PipelineSpec(
         "audio",
-        "Audio y bancos FMOD",
+        "Audio y bancos de sonido",
         (
             "tools/variants/build_v16sn.py",
             "tools/variants/build_phaseD_audio.py",
@@ -351,7 +342,7 @@ PIPELINES: tuple[PipelineSpec, ...] = (
         "--audio none|prebuilt|build (contrato; prebuilt implementado como variante)",
         ("banco precompilado + GUIDs.txt", "o muestras + plantilla del SDK (build)"),
         ("`sfx/<id>.bank`", "`sfx/GUIDs.txt`", "data/sounds.ini"),
-        {"none": (), "prebuilt": (), "build": ("fmod_studio_1_08_12",)},
+        {"none": (), "prebuilt": (), "build": ()},
         (),
         ("recorte de GUIDs.txt",),
         ("validate_references (banco = carpeta, bank:/<id>)",),
@@ -429,55 +420,15 @@ def spec(pipeline_id: str) -> PipelineSpec:
 # --- herramientas externas (solo rutas, nunca se ejecutan) ---------------------------
 
 
-def detect_fmod(path: Path | None = None) -> dict[str, Any]:
-    """FMOD Studio por su carpeta (contrato de audio §2). La versión sale del NOMBRE de
-    la carpeta
-    (``FMOD Studio 1.08.12``); el ejecutable no se ejecuta ni se lee."""
-    root = Path(path or os.environ.get("BEAM2AC_FMOD_STUDIO") or DEFAULT_FMOD)
-    exes = {
-        name: (root / name).is_file()
-        for name in ("fmodstudiocl.exe", "FMOD Studio.exe")
-    }
-    version = (
-        root.name.removeprefix("FMOD Studio ").strip()
-        if root.name.startswith("FMOD Studio")
-        else ""
-    )
-    ok = all(exes.values()) and version == FMOD_REQUIRED
-    return {
-        "path": str(root),
-        "found": all(exes.values()),
-        "executables": exes,
-        "version": version or None,
-        "version_source": "nombre de la carpeta",
-        "compatible": ok,
-        "required": FMOD_REQUIRED,
-    }
-
-
 def default_ac_root() -> Path | None:
     from src.project.export import default_ac_root as _d
 
     return _d()
 
 
-def tool_status(
-    fmod_path: Path | None = None, ac_root: Path | None = None
-) -> dict[str, dict[str, Any]]:
-    blender = shutil.which("blender")
-    addon = (
-        Path(os.environ.get("APPDATA", ""))
-        / "Blender Foundation/Blender/3.6/scripts/addons/assetto_corsa_tools"
-    )
-    fmod = detect_fmod(fmod_path)
+def tool_status(ac_root: Path | None = None) -> dict[str, dict[str, Any]]:
     ac = Path(ac_root) if ac_root else (default_ac_root() or Path(""))
     return {
-        "blender_3_6": {
-            "available": bool(blender) and "3.6" in str(blender),
-            "path": blender,
-        },
-        "addon_assetto_corsa_tools": {"available": addon.is_dir(), "path": str(addon)},
-        "fmod_studio_1_08_12": {"available": fmod["compatible"], **fmod},
         "ac_root": {
             "available": (ac / "content").is_dir(),
             "path": str(ac),
@@ -502,16 +453,12 @@ def audio_capabilities(
     tools = tools or tool_status()
     ops = available_operations(spec("audio"), tools)
     status = (
-        "FMOD Studio 1.08.12 detectado"
-        if ops["build"]["available"]
-        else "FMOD Studio 1.08.12 no encontrado: la compilación "
-        "de bancos no está disponible; el resto funciona"
+        "banco de sonido propio incluido; los bancos precompilados también se aceptan"
     )
     return {"operations": ops, "status": status}
 
 
-# --- adaptador de geometría sin Blender
-# -------------------------------------------------
+# --- adaptador de geometría
 
 
 def geometry_plan_summary(
@@ -519,7 +466,7 @@ def geometry_plan_summary(
     pc: Path | None = None,
     vehicle_zip: Path | None = None,
 ) -> dict[str, Any]:
-    """Plan de escena sin Blender ni escritura: objetos, Empties, unidades, avisos.
+    """Plan de escena sin escritura: objetos, Empties, unidades, avisos.
     Fuente: carpeta + ``.pc`` o ``vehicle_zip`` (leído en memoria, sin extraer)."""
     from src.mesh.build import plan_for_vehicle, plan_for_zip
 
@@ -544,7 +491,6 @@ __all__ = [
     "PipelineSpec",
     "audio_capabilities",
     "available_operations",
-    "detect_fmod",
     "geometry_plan_summary",
     "spec",
     "tool_status",

@@ -32,9 +32,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.ac.audio import trim_guids  # noqa: E402
-from src.audio import fmod_build  # noqa: E402
+from tools.audio import fmod_build  # noqa: E402
 from src.audio.plan import DATA, placement, template  # noqa: E402
-from src.pipeline.contracts import detect_fmod  # noqa: E402
 from src.safe_paths import ensure_safe_output_path  # noqa: E402
 
 CAR = "beam2ac_skeleton"
@@ -108,7 +107,7 @@ def main(argv: list[str] | None = None) -> int:
             "ERROR: ya existe el esqueleto (no se sobrescribe); use --out con otra carpeta"
         )
         return 1
-    fm = detect_fmod()
+    fm = fmod_build.detect_fmod()
     if not fm["compatible"]:
         print(f"ERROR: se necesita FMOD Studio {fm['required']}")
         return 1
@@ -141,7 +140,7 @@ def main(argv: list[str] | None = None) -> int:
                 (DATA / "template_spec.json").read_bytes()
             ).hexdigest(),
             "build_events_template_sha256": hashlib.sha256(
-                (DATA / "build_events.template.js").read_bytes()
+                (fmod_build.DATA / "build_events.template.js").read_bytes()
             ).hexdigest(),
             "bank_sha256": sha(targets[0]),
             "guids_sha256": sha(targets[1]),

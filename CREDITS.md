@@ -15,9 +15,7 @@ La interfaz aplica ajustes propios a la paleta para cumplir contraste 4,5:1: `--
 usados como texto (más oscuros) y los grises de texto secundario.
 
 ## Componentes de terceros que no se incluyen
-- **`assetto_corsa_tools`** (Moppius, GPL-3.0): complemento de Blender para exportar KN5. La aplicación lo descarga de su
-  origen solo si el usuario lo pide (Ajustes → Instalar complemento KN5; commit fijado, huella verificada). No se versiona.
-- **Blender 3.6**, **FMOD Studio** y el SDK de audio de Assetto Corsa: los aporta el usuario.
+- **Assetto Corsa** y **BeamNG.drive**: los aporta el usuario; solo se leen.
 
 ## Marcas y obras de terceros
 Automation – The Car Company Tycoon Game, BeamNG.drive y Assetto Corsa (Kunos Simulazioni) son marcas y obras de sus

@@ -4,7 +4,7 @@ Layout observado (ibiza_audio_reference.md): ``art/sound/engine/<hash>/*.wav`` y
 ``art/sound/blends/<hash>.sfxBlend2D.json`` con ``samples`` = series de ``[archivo, rpm]``
 (la serie de ``*_P.wav`` es carga; la otra, retención). Nada se convierte aquí: el
 resultado distingue *extraído* (WAV encontrados y coherentes con el blend) de lo que
-exige un banco FMOD (convertido/configurado/instalado/escuchado: no demostrados).
+exige un banco de sonido (convertido/configurado/instalado/escuchado: no demostrados).
 """
 
 from __future__ import annotations
@@ -91,7 +91,7 @@ def scan_audio(vehicle_dir: Path | str) -> dict[str, Any]:
 def audio_spec(
     scan: dict[str, Any], idle_rpm: float | None, limiter_rpm: float | None
 ) -> dict[str, Any]:
-    """Entrada de ``fmodstudiocl -script`` derivada del inventario y del motor resuelto.
+    """Entrada del generador de bancos derivada del inventario y del motor resuelto.
 
     Solo hechos: cobertura de rpm de las muestras frente a ralentí/limitador. No asigna
     sonidos a admisión/escape/transmisión (el origen solo trae el motor); esos eventos

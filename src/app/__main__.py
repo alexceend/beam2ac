@@ -62,7 +62,7 @@ def main(argv: list[str] | None = None) -> int:
         from .desktop import make_desktop_server
         from .workspace import PROJECTS_ROOT, Workspace
 
-        settings.apply()  # rutas guardadas por el usuario (AC, Steam, Blender, FMOD)
+        settings.apply()  # rutas guardadas por el usuario (AC, Steam, BeamNG)
         projects = args.projects or settings.projects_dir() or PROJECTS_ROOT
         server = make_desktop_server(Workspace(projects), args.port)
         host, port = server.server_address[:2]

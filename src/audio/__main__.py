@@ -23,20 +23,9 @@ def main(argv: list[str] | None = None) -> int:
     b.add_argument("--idle", type=float)
     b.add_argument("--limiter", type=float)
     b.add_argument("--no-build", action="store_true")
-    c = sub.add_parser("collect", help="recoge el banco de un build hecho a mano")
-    c.add_argument("out")
     s = sub.add_parser("status")
     s.add_argument("vehicle_dir")
     a = ap.parse_args(argv)
-    if a.cmd == "collect":
-        from pathlib import Path
-
-        from src.audio import fmod_build
-
-        spec = json.loads((Path(a.out) / "spec.json").read_text(encoding="utf-8"))
-        ev = set(spec["secondary"]) | set(spec["engine"])
-        print(fmod_build.collect(Path(a.out), spec["car"], ev))
-        return 0
     if a.cmd == "status":
         p = build_plan(scan_audio(a.vehicle_dir), "x")
         p.pop("spec", None)

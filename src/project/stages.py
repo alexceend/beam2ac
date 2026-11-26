@@ -7,7 +7,7 @@
   ``drafts/*.ini``/``*.lut``;
 * ``attributes``: ``attrs.report.resolve_vehicle`` + ``build_report`` (catálogo +
   decisiones del proyecto) → ``report.json``, ``summary.md``;
-* ``geometry``: ``mesh.build.plan_for_vehicle``/``plan_for_zip`` (sin Blender)
+* ``geometry``: ``mesh.build.plan_for_vehicle``/``plan_for_zip``
   → ``geometry.json``;
 * ``draft``: ``ac.car_validate`` sobre los borradores → ``data/``, ``validation.json``;
 * ``report``: agrega lo anterior → ``compatibility.json``, ``compatibility.md``.
@@ -19,7 +19,6 @@ El borrador de ``draft`` NO es un paquete instalable (sin KN5, interfaz ni skins
 from __future__ import annotations
 
 import json
-import os
 import shutil
 from collections import Counter
 from pathlib import Path, PurePosixPath
@@ -621,7 +620,7 @@ def run_report(ctx: RunContext, out: Path) -> dict[str, Any]:
         "installable_package": False,
         "why_not_installable": "la exportación aislada aún no existe: el ensamblador "
         "actual (src.ac.assemble) solo admite carpeta + perfil + "
-        "base física, y el KN5 requiere Blender",
+        "base física",
     }
     _write_json(out / "compatibility.json", data)
     md = [
@@ -769,7 +768,7 @@ STAGES: tuple[Stage, ...] = (
             "src/mesh/dae.py",
             "src/mesh/flexbody.py",
         ),
-        description="plan de mallas sin Blender",
+        description="plan de mallas",
     ),
     Stage(
         "draft",
@@ -805,17 +804,12 @@ STAGES: tuple[Stage, ...] = (
 )
 
 
-# --- etapa opcional del modelo 3D (Blender) ------------------------------------------
+# --- etapa del modelo 3D (KN5 en Python puro) ------------------------------------------
 
 
 def run_model(ctx: RunContext, out: Path) -> dict[str, Any]:
     from . import model as M
 
-    blender = M.blender_path()
-    if not blender and os.environ.get("BEAM2AC_KN5_BUILDER") != "pure":
-        raise M.ModelError(
-            "Blender no disponible (PATH o BEAM2AC_BLENDER): KN5 no generado"
-        )
     pv = _preview(ctx)
     if pv.resolved is None:
         raise M.ModelError("configuración sin resolver (etapa physics)")
@@ -824,7 +818,6 @@ def run_model(ctx: RunContext, out: Path) -> dict[str, Any]:
         pv.resolved,
         ctx.project.source,
         out,
-        blender or "",
         M.wheel_override_of(ctx.project),
         M.model_options_of(ctx.project),
     )
@@ -851,7 +844,6 @@ MODEL_STAGE = Stage(
     _code(
         "src/project/model.py",
         "src/mesh/build.py",
-        "src/mesh/blender_build.py",
         "src/mesh/pure_kn5.py",
         "src/mesh/plan.py",
         "src/mesh/dae.py",
@@ -868,7 +860,7 @@ MODEL_STAGE = Stage(
         "src/ac/collider_profile.py",
         "src/ac/cockpit_config.py",
     ),
-    description="KN5, collider y CSP con Blender (opcional; lo pide la exportación)",
+    description="KN5, collider y CSP (los pide la exportación)",
     extra_inputs=_model_tool_inputs,
 )
 

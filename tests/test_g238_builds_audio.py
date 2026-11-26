@@ -1,6 +1,5 @@
 """G2.38: promoción a builds/ y casos pendientes del audio. Sin FMOD, juegos ni suite completa."""
 
-import contextlib
 import hashlib
 import json
 import os
@@ -10,11 +9,12 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
 
-from src.audio import fmod_build, pipeline
+from src.audio import pipeline
+from tools.audio import fmod_build
 from src.extract.audio_sources import scan_audio
 from src.project import builds
 from src.project.export import SCHEMA, VERDICT_BLOCKED, VERDICT_COMPLETE
-from tests.test_g237_audio_pipeline import make_mod, write_wav
+from tests.test_g237_audio_pipeline import make_mod
 
 CAR = "beam2ac_demo"
 
@@ -237,114 +237,33 @@ class TestFmodRetries(unittest.TestCase):
 
 
 class TestPipeline(unittest.TestCase):
+    """El banco de sonido se genera en Python (sin programas externos)."""
+
     def setUp(self):
         self._d = tempfile.TemporaryDirectory()
         self.tmp = Path(self._d.name)
         self.veh = make_mod(self.tmp / "mod")
         self.audio = self.tmp / "audio"
         self.audio.mkdir()
-        self.built = 0
 
     def tearDown(self):
         self._d.cleanup()
 
-    def fake_fmod(self):
-        d = self.tmp / "FMOD Studio 1.08.12"
-        d.mkdir(exist_ok=True)
-        (d / "fmodstudiocl.exe").write_bytes(b"")
-        (d / "FMOD Studio.exe").write_bytes(b"")
-        return d
+    def run_pipe(self, n, **kw):
+        return pipeline.run(self.veh, CAR, self.audio / f"{n:03d}", 800, 6000, **kw)
 
-    def patched(self, sdk="sdkA"):
-        def prepare(spec, out, cl):
-            (out / "LEEME.md").write_text("órdenes")
+    def test_bank_is_generated_and_never_claims_listening(self):
+        r = self.run_pipe(1)
+        self.assertIsNone(r["error"])
+        self.assertTrue(r["stages"]["banco_construido"])
+        self.assertFalse(r["stages"]["escuchado"])
+        self.assertTrue((Path(r["prebuilt"]) / f"{CAR}.bank").is_file())
 
-        def collect(out, car, events):
-            self.built += 1
-            dst = out / "prebuilt"
-            dst.mkdir()
-            (dst / f"{car}.bank").write_bytes(b"BANK%d" % self.built)
-            (dst / "GUIDs.txt").write_text("g")
-            return dst
-
-        stack = contextlib.ExitStack()
-        stack.enter_context(mock.patch.object(fmod_build, "prepare_project", prepare))
-        stack.enter_context(mock.patch.object(fmod_build, "run_build", lambda *a: {}))
-        stack.enter_context(mock.patch.object(fmod_build, "collect", collect))
-        stack.enter_context(
-            mock.patch.object(fmod_build, "sdk_tree_sha256", lambda *a: sdk)
-        )
-        stack.enter_context(
-            mock.patch(
-                "src.ac.audio.load_prebuilt", lambda *a, **k: SimpleNamespace(events={})
-            )
-        )
-        return stack
-
-    def run_pipe(self, n, fmod=None):
-        return pipeline.run(
-            self.veh,
-            CAR,
-            self.audio / f"{n:03d}",
-            800,
-            6000,
-            fmod_path=fmod or self.fake_fmod(),
-        )
-
-    def test_fmod_absent_prepares_but_does_not_claim_bank(self):
-        with (
-            self.patched(),
-            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "fmod"}),
-        ):
-            r = self.run_pipe(1, fmod=self.tmp / "no_existe" / "FMOD Studio 1.08.12")
+    def test_no_build_keeps_only_the_plan(self):
+        r = self.run_pipe(1, build=False)
         self.assertTrue(r["stages"]["proyecto_generado"])
         self.assertFalse(r["stages"]["banco_construido"])
-        self.assertIn("NO construido", r["note"])
-        self.assertEqual(self.built, 0)
-        self.assertFalse((self.audio / "001" / "prebuilt").exists())
-        self.assertEqual(r["state"], "proyecto_generado")
-
-    def test_reuse_only_with_identical_inputs(self):
-        with self.patched():
-            r1 = self.run_pipe(1)
-            r2 = self.run_pipe(2)
-        self.assertTrue(r1["stages"]["banco_construido"])
-        self.assertEqual(self.built, 1)
-        self.assertIn("reused_from", r2)
-        self.assertTrue((self.audio / "002/prebuilt" / f"{CAR}.bank").is_file())
-        wav = next((self.tmp / "mod/art/sound/engine/H1").glob("EXH_1000_P.wav"))
-        write_wav(wav, "f", amp=0.9)  # un WAV distinto → reconstruye
-        with self.patched():
-            r3 = self.run_pipe(3)
-        self.assertNotIn("reused_from", r3)
-        self.assertEqual(self.built, 2)
-        with self.patched(sdk="sdkB"):  # otra plantilla del SDK → reconstruye
-            self.assertNotIn("reused_from", self.run_pipe(4))
-        for bank in self.audio.glob(
-            f"*/prebuilt/{CAR}.bank"
-        ):  # bancos manipulados → reconstruye
-            bank.write_bytes(b"corrupto")
-        with self.patched(sdk="sdkB"):
-            self.assertNotIn("reused_from", self.run_pipe(5))
-        self.assertEqual(self.built, 4)
-
-    def test_failed_build_leaves_previous_untouched(self):
-        with self.patched():
-            self.run_pipe(1)
-        bank = self.audio / "001/prebuilt" / f"{CAR}.bank"
-        before = bank.read_bytes()
-        with (
-            self.patched(sdk="sdkB"),
-            mock.patch.object(
-                fmod_build,
-                "run_build",
-                side_effect=fmod_build.AudioBuildError("FMOD murió"),
-            ),
-        ):
-            r = self.run_pipe(2)
-        self.assertIn("FMOD murió", r["error"])
-        self.assertFalse(r["stages"]["banco_construido"])
-        self.assertEqual(bank.read_bytes(), before)
+        self.assertTrue((Path(r["out"]) / "spec.json").is_file())
 
     def test_malformed_rpm_does_not_crash(self):
         bl = self.tmp / "mod/art/sound/blends/H1.sfxBlend2D.json"
@@ -355,8 +274,7 @@ class TestPipeline(unittest.TestCase):
         scan = scan_audio(self.veh)
         problems = [p for b in [scan] for p in b.get("problems", [])]
         self.assertGreaterEqual(len(problems), 2)
-        with self.patched():
-            self.run_pipe(1)  # no lanza
+        self.run_pipe(1)  # no lanza
 
     def test_ladder_never_marks_listening(self):
         for status in ("sin_fuente", "listo", "listo_con_fallback"):

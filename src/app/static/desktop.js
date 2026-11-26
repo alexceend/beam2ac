@@ -282,13 +282,13 @@ function coverFromFile(file) {  // recorte centrado 16:9 y 1024×576 en el naveg
 }
 // Bloque «Detalles del coche» dentro de Exportar. Se rellena al abrir la pestaña (load) y precarga la portada:
 // la subida o, si no hay, la vista previa automática (se guarda por proyecto para no repetir el render).
-const COVER_CACHE = {}, PREVIEW_BUSY = {};  // PREVIEW_BUSY: un solo render de Blender por proyecto a la vez
+const COVER_CACHE = {}, PREVIEW_BUSY = {};  // PREVIEW_BUSY: una sola portada por proyecto a la vez
 function detailsBlock(pid) {
   const box = el("div", { class: "card detailsbox" }, el("h4", {}, "Detalles del coche"),
     skeleton(6, "Cargando…"));
   // Intro dentro de un campo no debe enviar el formulario de exportación
   box.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.tagName !== "TEXTAREA") e.preventDefault(); });
-  // Los campos se cargan al crear el bloque (es solo JSON); el render de la portada (Blender, ~20 s) se pide con
+  // Los campos se cargan al crear el bloque (es solo JSON); la imagen de la portada (unos segundos) se pide con
   // box.load() cuando la pestaña está a la vista, para no gastarlo si el usuario no la abre.
   box.load = () => {};  // la portada ya se pide al cargar el proyecto
   const init = async () => {
@@ -417,14 +417,11 @@ function analysisView(r, withCreate) {
         el("input", { name: "dest", type: "text", value: (SETTINGS.saved || {}).export_dir || "", placeholder: "p. ej. D:/beam2ac/entregas", style: "flex:1;min-width:280px" }),
         window.pywebview ? el("button", { class: "secondary", type: "button", onclick: async () => { const p = await window.pywebview.api.pick_folder(); if (p) f.dest.value = p; } }, "Elegir destino…") : null),
       el("p", { class: "muted small" }, "La ruta de Assetto Corsa se toma de Ajustes: de ahí sale el piloto sentado y sus manos (solo se lee). El coche siempre lleva volante y piloto; como usa material del juego original, el paquete es solo para tu equipo: no se puede compartir ni publicar. Después puedes ajustar cámaras y piloto en «Vista 3D»."),
-      noBlender() ? el("div", { class: "notice err" }, BLENDER_MSG) : null,
-    !noBlender() && noAddon() ? el("div", { class: "notice err" }, ADDON_MSG) : null,
-      !noBlender() && noAddon() ? el("div", { class: "notice err" }, ADDON_MSG) : null,
       acRoot() ? null : el("div", { class: "notice err" }, AC_MSG),
-      r.audio && r.audio.present ? el("p", { class: "muted small" }, r.audio.fmod.compatible ? "Sonido: el motor sonará con el audio del coche; se genera solo (FMOD 1.08.12 detectado)." : "Sonido: FMOD 1.08.12 no está instalado, así que el coche saldrá sin sonido propio. Indica tu carpeta en Ajustes para incluirlo.") : null,
+      r.audio && r.audio.present ? el("p", { class: "muted small" }, "Sonido: el motor sonará con el audio del coche; el banco de sonido se genera solo.") : null,
       r.exportable_today ? null : el("div", { class: "notice err" }, "Conversión desactivada: el análisis encontró errores bloqueantes (ver «Claves críticas sin valor»). Puede crear el proyecto y resolverlos con decisiones."),
       el("div", { class: "actions" },
-        el("button", { class: "primary lockable", type: "submit", value: "convert", disabled: !r.exportable_today || noKn5() || !acRoot() }, "Comenzar la conversión"),
+        el("button", { class: "primary lockable", type: "submit", value: "convert", disabled: !r.exportable_today || !acRoot() }, "Comenzar la conversión"),
         el("button", { class: "secondary", type: "submit", value: "create" }, "Solo crear el proyecto"),
         el("span", { id: "an-msg", class: "small" })));
     const bv = r.exportable_today ? benchView(r, f) : null;
@@ -436,7 +433,7 @@ function analysisView(r, withCreate) {
   }
   return out;
 }
-// Al analizar un origen solo se conoce el estado de los WAV y del plan; el banco FMOD se genera al exportar
+// Al analizar un origen solo se conoce el estado de los WAV y del plan; el banco de sonido se genera al exportar
 const AUDIO_ES = { detectado: "WAV detectados", validado: "WAV validados", plan_generado: "Plan de audio generado" };
 function audioView(a) {
   if (!a || !a.stages) return el("p", { class: "muted small" }, "Audio: " + ((a && a.note) || "sin datos"));
@@ -444,7 +441,7 @@ function audioView(a) {
   return el("div", { class: "card" }, el("h4", {}, "Audio del motor"),
     el("p", { class: "small" }, a.present ? `Carga: ${loads.reduce((n, s) => n + s.samples, 0)} muestras · retención: ${coast.reduce((n, s) => n + s.samples, 0)} · rpm ${a.rpm_range ? a.rpm_range.map(Math.round).join("–") : "—"} · plan: ${a.status}` : "El origen no trae muestras de motor: se exporta sin sonido propio."),
     el("div", { class: "kpis" }, Object.entries(AUDIO_ES).map(([k, t]) => el("span", { class: `chip ${a.stages[k] ? "ok" : ""}` }, (a.stages[k] ? "✔ " : "✖ ") + t))),
-    el("p", { class: "muted small" }, "El banco de sonido de FMOD se genera al exportar (opción «Generar el banco de sonido con FMOD»); aquí solo se comprueban los WAV."),
+    el("p", { class: "muted small" }, "El banco de sonido del motor se genera al exportar; aquí solo se comprueban los WAV."),
     (a.warnings || []).length ? el("ul", { class: "small" }, a.warnings.map((w) => el("li", {}, w))) : null,
     (a.dropped || []).length ? el("details", {}, el("summary", {}, `Muestras descartadas (${a.dropped.length})`), table(["Archivo", "rpm", "Motivo"], a.dropped.map((x) => [x.file, x.rpm, x.reason]))) : null);
 }
@@ -471,10 +468,10 @@ async function startConvert(r, f) {
   catch (e) { box.replaceChildren(el("div", { class: "notice err" }, e.message)); return; }
   for (const b of f.querySelectorAll("button[type=submit]")) b.disabled = true;  // una conversión cada vez
   const release = externalBusy("Conversión iniciada");
-  const head = el("div", { class: "notice" }, "Conversión en curso… (el modelo 3D con Blender tarda minutos)");
+  const head = el("div", { class: "notice" }, "Conversión en curso… (el modelo 3D puede tardar un par de minutos)");
   const log = el("pre", { class: "log" });
   const res = el("div", {});
-  // G2.29: cancelar se atiende entre etapas (Blender no se interrumpe)
+  // G2.29: cancelar se atiende entre etapas
   const stop = el("button", { class: "secondary", type: "button", onclick: async () => {
     try { await api("/api/cancel", { job: job.id }); stop.disabled = true; stop.textContent = "Cancelando al terminar la etapa en curso…"; } catch (e) { toast(e.message, "warn"); } } }, "Cancelar conversión");
   box.replaceChildren(head, stop, el("details", {}, el("summary", {}, "Registro"), log), res);
@@ -642,25 +639,15 @@ async function createFromAnalysis(r, f) {
     await loadWorkspace(); openProject(p.id);
   } catch (e) { $("an-msg").textContent = e.message; $("an-msg").className = "small warn"; }
 }
-// Blender es obligatorio: sin el modelo 3D el coche no se puede jugar en Assetto Corsa
-const BLENDER_MSG = "Falta Blender 3.6: sin el modelo 3D el coche no se puede jugar. Indica tu ubicación en Ajustes.";
-const noBlender = () => !(SETTINGS.effective || {}).blender_path;
-const ADDON_MSG = "Falta el complemento KN5 de Blender (assetto_corsa_tools): sin él no se exporta el modelo 3D. Instálalo en Ajustes.";
-const noAddon = () => !!SETTINGS.blender_addon && !SETTINGS.blender_addon.installed;  // sin estado cargado no se bloquea
-const noKn5 = () => noBlender() || noAddon();
 const acRoot = () => (SETTINGS.effective || {}).ac_root || null;  // la ruta de AC se guarda solo en Ajustes
 const AC_MSG = "Falta la ruta de Assetto Corsa (de ella se toma el piloto): indícala en Ajustes (rueda de la barra superior).";
-// Ajustes del usuario (rutas de AC, Steam, Blender, FMOD, carpeta de entrega, piloto por defecto)
+// Ajustes del usuario (rutas de AC, Steam y BeamNG, carpeta de entrega, piloto por defecto)
 let SETTINGS = { saved: {}, effective: {} };
-const DOWNLOADS = { blender_path: ["Descargar Blender 3.6", "https://www.blender.org/download/lts/3-6/"],
-  fmod_path: ["Descargar FMOD Studio 1.08.12", "https://www.fmod.com/download"] };
 const SET_FIELDS = [
   ["ac_root", "Assetto Corsa (carpeta de instalación)", "p. ej. D:/SteamLibrary/steamapps/common/assettocorsa"],
   ["steam_root", "Steam (carpeta; sirve para encontrar AC y BeamNG si no se indican arriba)", "p. ej. D:/SteamLibrary"],
   ["beamng_root", "BeamNG.drive (carpeta de instalación; sale de Steam si se deja vacío)", "p. ej. C:/Program Files (x86)/Steam/steamapps/common/BeamNG.drive"],
   ["beamng_mods_dir", "Mods de BeamNG (carpeta con los .zip; por defecto la de usuario de BeamNG)", "p. ej. C:/Users/…/AppData/Local/BeamNG/BeamNG.drive/current/mods"],
-  ["blender_path", "Blender (blender.exe o su carpeta)", "p. ej. C:/Program Files/Blender Foundation/Blender 3.6"],
-  ["fmod_path", "FMOD Studio 1.08.12 (carpeta «FMOD Studio 1.08.12»)", "p. ej. C:/Program Files (x86)/FMOD SoundSystem/FMOD Studio 1.08.12"],
   ["projects_dir", "Carpeta de proyectos (se aplica al reiniciar la aplicación)", "p. ej. D:/beam2ac/proyectos"],
   ["export_dir", "Carpeta de entrega por defecto (cualquier carpeta que no sea de AC ni de BeamNG)", "p. ej. D:/beam2ac/entregas"],
 ];
@@ -670,46 +657,22 @@ const SET_HELP = {
   steam_root: "Para qué: autodetectar AC y BeamNG a partir de tu biblioteca de Steam. Importancia: baja; si ya indicas las rutas de AC y BeamNG, no hace falta.",
   beamng_root: "Para qué: solo para los bancos de medida (neumáticos y aerodinámica), que lanzan BeamNG con una carpeta de usuario aislada para medir el coche. Importancia: baja para convertir (la conversión NO lee la instalación de BeamNG: parte del zip/carpeta exportado desde Automation). Déjala vacía si no vas a usar esas medidas.",
   beamng_mods_dir: "Para qué: de aquí sale la lista de coches; ahí están los .zip que Automation exporta a BeamNG. Importancia: alta para elegir coches desde la lista. Si está vacía puedes usar «Convertir un coche» y elegir cualquier carpeta o zip.",
-  blender_path: "Para qué: construir el modelo 3D (.kn5) con Blender 3.6 en segundo plano. Importancia: obligatoria. Sin Blender el coche se exporta sin modelo y no se puede jugar en Assetto Corsa. Necesita además el complemento «assetto_corsa_tools» (exportador KN5, de terceros, GPL-3.0): se instala desde aquí con el botón «Instalar complemento KN5». El importador de Collada (.dae) ya viene con Blender 3.6.",
-  fmod_path: "Para qué: generar un banco de sonido propio del motor (FMOD Studio 1.08.12). Importancia: opcional. Sin él se reutiliza un sonido de coche de Kunos.",
   projects_dir: "Para qué: dónde se guardan tus proyectos (etapas, decisiones y resultados). Importancia: media; cámbiala para usar otro disco. Se aplica al reiniciar la aplicación.",
   export_dir: "Para qué: dónde se deja el paquete del coche exportado. Importancia: baja; vacía, el paquete queda en la carpeta exports/ del proyecto. No puede ser una carpeta de AC ni de BeamNG.",
 };
-// Complemento KN5 de Blender (assetto_corsa_tools, GPL-3): se descarga del origen solo al pulsar y confirmar
-const ADDON_HELP = "Para qué: exportar el modelo 3D a .kn5 desde Blender (de terceros: Moppius, GPL-3.0). Importancia: obligatoria; sin él la conversión y la exportación quedan desactivadas. «Instalar complemento KN5» lo descarga del repositorio original (commit fijado, huella verificada) y lo copia a la carpeta de complementos de Blender 3.6; nunca sobrescribe una instalación existente.";
-const openUrl = (u) => (window.pywebview ? window.pywebview.api.open_url(u) : window.open(u, "_blank", "noopener"));
-function addonRow() {
-  const a = SETTINGS.blender_addon;
-  if (!a) return null;  // los ajustes no cargaron: sin estado no hay fila
-  const state = a.installed ? (a.matches_pinned ? "instalado" : "instalado, distinto de la versión fijada") : "no instalado";
-  return el("div", {},
-    el("div", { class: "set-head" },
-      el("label", {}, "Complemento KN5 de Blender (assetto_corsa_tools)", el("span", { class: "info", tabindex: "0", title: ADDON_HELP, "aria-label": ADDON_HELP }, "ⓘ")),
-      el("span", { class: "inuse" + (a.installed ? "" : " missing") }, "En uso: " + state)),
-    el("div", { class: "actions" },
-      a.installed ? null : el("button", { class: "secondary", type: "button", onclick: async (e) => {
-        if (!confirm(`Se descargará assetto_corsa_tools (GPL-3.0, commit ${a.pinned_commit.slice(0, 7)}) de ${a.source} y se copiará a ${a.path}. ¿Continuar?`)) return;
-        e.target.disabled = true;
-        try { SETTINGS.blender_addon = await api("/api/blender_addon", { confirm: true }); toast("Complemento instalado", "ok"); renderSettings(); if (CURRENT && DETAIL) renderAsistente(); }
-        catch (err) { toast(err.message, "warn"); e.target.disabled = false; }
-      } }, "Instalar complemento KN5"),
-      el("button", { class: "secondary", type: "button", onclick: () => openUrl(a.source) }, "Ver el complemento en GitHub")));
-}
 async function loadSettings() {
   try { SETTINGS = await api("/api/settings"); } catch (e) { toast(e.message, "warn"); }
   renderSettings();
-  if (CURRENT && DETAIL) renderAsistente();  // los botones dependen de la ruta de AC y de Blender
+  if (CURRENT && DETAIL) renderAsistente();  // los botones dependen de la ruta de AC
 }
 // Aviso naranja en Inicio: rutas de Ajustes sin guardar y qué dejaría de funcionar sin ellas
 const SETUP_NEEDS = [
   ["ac_root", "Assetto Corsa", "Sin esta ruta no se puede tomar el piloto sentado ni sus manos, ni comprobar si el car_id ya está instalado: los botones «Comenzar la conversión» y «Exportar» quedan desactivados."],
-  ["blender_path", "Blender 3.6", "Sin Blender no se construye el modelo 3D (.kn5), así que el coche no se podría conducir en Assetto Corsa: la conversión y la exportación quedan desactivadas. Además de Blender hace falta el complemento KN5 (assetto_corsa_tools), que se instala desde Ajustes."],
-  ["fmod_path", "FMOD Studio 1.08.12", "Sin FMOD el coche sale sin el sonido propio de su motor."],
   ["beamng_root", "BeamNG.drive", "Solo se usa para medir neumáticos y aerodinámica con BeamNG; sin ella esas medidas no están disponibles. Convertir no la necesita."],
 ];
 function renderSetupWarn() {
   const box = $("setup-warn"), eff = SETTINGS.effective || {};
-  const missing = SETUP_NEEDS.filter(([k]) => !eff[k] || (k === "fmod_path" && eff.fmod_compatible === false));
+  const missing = SETUP_NEEDS.filter(([k]) => !eff[k]);
   if (!box) return;
   box.hidden = !missing.length;
   box.replaceChildren(...(missing.length ? [
@@ -721,8 +684,7 @@ function renderSettings() {
   renderSetupWarn();
   const box = $("settings");
   const s = SETTINGS.saved || {}, eff = SETTINGS.effective || {};
-  const inUse = { ac_root: eff.ac_root, beamng_root: eff.beamng_root, blender_path: eff.blender_path,
-    fmod_path: eff.fmod_path ? `${eff.fmod_path} (${eff.fmod_compatible ? "FMOD 1.08.12 correcto" : "no válido o no encontrado"})` : null };
+  const inUse = { ac_root: eff.ac_root, beamng_root: eff.beamng_root };
   const f = el("form", { onsubmit: async (e) => {
     e.preventDefault();
     const body = Object.fromEntries(new FormData(f).entries());
@@ -736,10 +698,8 @@ function renderSettings() {
         inUse[name] !== undefined ? el("span", { class: "inuse" + (inUse[name] ? "" : " missing") }, "En uso: " + (inUse[name] || "no encontrado")) : null),
       el("div", { class: "actions" },
         el("input", { name, type: "text", value: s[name] || "", placeholder: ph, style: "flex:1;min-width:260px" }),
-        DOWNLOADS[name] ? el("button", { class: "secondary", type: "button", onclick: () => (window.pywebview ? window.pywebview.api.open_url(DOWNLOADS[name][1]) : window.open(DOWNLOADS[name][1], "_blank", "noopener")) }, DOWNLOADS[name][0]) : null,
         window.pywebview ? [
-          name === "blender_path" ? el("button", { class: "secondary", type: "button", onclick: async () => { const p = await window.pywebview.api.pick_exe(); if (p) f[name].value = p; } }, "Elegir blender.exe…") : null,
-          el("button", { class: "secondary", type: "button", onclick: async () => { const p = await window.pywebview.api.pick_folder(); if (p) f[name].value = p; } }, "Elegir carpeta…")] : null)), name === "blender_path" ? addonRow() : null]),
+          el("button", { class: "secondary", type: "button", onclick: async () => { const p = await window.pywebview.api.pick_folder(); if (p) f[name].value = p; } }, "Elegir carpeta…")] : null))]),
     el("div", { class: "actions" }, el("button", { class: "primary", type: "submit" }, "Guardar ajustes"), el("span", { id: "set-msg", class: "small" })));
   box.replaceChildren(f);
 }
@@ -758,8 +718,6 @@ async function loadEnvironment() {
       ["Coches beam2ac instalados", ac.found ? (ac.beam2ac_cars.join(", ") || "ninguno") : "—"],
       ["Circuitos y apps beam2ac instalados", ac.found ? ([...ac.beam2ac_tracks, ...ac.beam2ac_apps].join(", ") || "ninguno") : "—"],
       ["Steam", e.steam.installed ? "instalado" : "no detectado"],
-      ["Blender (modelo 3D)", e.blender.found ? e.blender.path : "no encontrado: la exportación saldría sin KN5"],
-      ["Complemento KN5 de Blender", e.blender_addon ? (e.blender_addon.installed ? (e.blender_addon.matches_pinned ? "instalado" : "instalado, distinto de la versión fijada") : "no instalado: instálalo en Ajustes o el modelo 3D no se exporta") : "—"],
       ["Catálogo de reglas", e.catalog.ok ? `${e.catalog.rules} reglas, ${e.catalog.attributes} atributos` : `error: ${e.catalog.error}`],
     ]), el("p", { class: "muted small" }, "Esta aplicación no instala coches ni abre los juegos. La validación en el juego se hace aparte."));
   } catch (err) { box.textContent = err.message; }
@@ -891,23 +849,21 @@ function renderAsistente() {
     el("p", { class: "muted small" }, "El coche siempre lleva volante y piloto (sentado, con manos). Como el piloto sale del juego original, el paquete es solo para tu equipo: no se puede compartir ni publicar."),
     DETAILS_BLOCK,
     extrasBlock(),
-    el("p", { class: "muted small" }, (SETTINGS.effective || {}).fmod_compatible ? "Sonido: se genera solo con FMOD 1.08.12 a partir de los WAV del coche." : "Sonido: FMOD 1.08.12 no está instalado; el coche saldrá sin sonido propio."),
-    noBlender() ? el("div", { class: "notice err" }, BLENDER_MSG) : null,
-    !noBlender() && noAddon() ? el("div", { class: "notice err" }, ADDON_MSG) : null,
+    el("p", { class: "muted small" }, "Sonido: el banco de sonido del motor se genera solo a partir de los WAV del coche."),
     acRoot() ? null : el("div", { class: "notice err" }, AC_MSG),
     el("label", { class: "opt" }, el("input", { type: "checkbox", name: "confirm", required: true }), " Confirmo crear un intento nuevo *",
       el("span", { class: "opt-help" }, "Obligatoria. Marcada: se crea una carpeta nueva con el coche dentro del proyecto. Nunca se borra ni se sobrescribe una exportación anterior. Sin marcar, el botón Exportar no funciona.")),
     el("label", { class: "opt" }, el("input", { type: "checkbox", name: "install_overwrite" }), " Instalar en Assetto Corsa y sobrescribir si ya existe un coche con el mismo car_id",
       el("span", { class: "opt-help" }, "Marcado: además de exportar, el coche se copia a la carpeta de coches de tu Assetto Corsa y ya podrás conducirlo. Si ya había uno con el mismo car_id, el anterior se guarda en la papelera de beam2ac (recuperable). Desmarcado (lo normal): no se toca el juego y copiar el coche a mano lo haces tú. Un coche «bloqueado» nunca se instala.")),
-    el("div", { class: "actions" }, el("button", { class: "primary lockable", type: "submit", disabled: noKn5() || !acRoot() }, "Exportar"),
+    el("div", { class: "actions" }, el("button", { class: "primary lockable", type: "submit", disabled: !acRoot() }, "Exportar"),
       el("span", { class: "muted small" }, "Crea una exportación nueva con todo lo elegido arriba. Hace falta marcar la confirmación.")));
   pane.replaceChildren(
     el("h3", {}, "1 · Etapas del pipeline"),
     el("p", { class: "muted small" }, "Una etapa es un paso del análisis del coche (leer los archivos, calcular la física, construir el modelo 3D…). Cada una reutiliza su resultado si nada ha cambiado; si una falla, se conserva el error y no se borra nada."),
     stages,
     el("div", { class: "actions" },
-      el("button", { class: "secondary lockable", type: "button", disabled: noBlender(), onclick: () => startRun(true) }, "Ejecutar etapas (incluye el modelo 3D)"),
-      el("span", { class: "muted small" }, "Analiza el coche y construye su modelo 3D con Blender. Puede tardar varios minutos; lo que ya está calculado se reutiliza.")),
+      el("button", { class: "secondary lockable", type: "button", onclick: () => startRun(true) }, "Ejecutar etapas (incluye el modelo 3D)"),
+      el("span", { class: "muted small" }, "Analiza el coche y construye su modelo 3D. Puede tardar un par de minutos; lo que ya está calculado se reutiliza.")),
     el("h3", {}, "2 · Decisiones pendientes"),
     el("p", { class: "muted small" }, "Son los datos que el conversor no puede deducir solo del coche (por ejemplo, cómo se reparte la tracción). Hasta que los decidas, la exportación queda «bloqueada»: nunca se rellenan con ceros."),
     precheckView(d.precheck),

@@ -1,48 +1,43 @@
-"""SPIKE: KN5 de coche en Python puro (sin Blender, sin numpy, sin bpy).
+"""KN5 de coche en Python puro (sin numpy ni programas externos).
 
-Sustituye el paso ``blender_build.py`` + addon de KN5 para el caso de este proyecto:
-lee los DAE de BeamNG, triangula, aplica las matrices del plan
-(:mod:`src.mesh.plan`), construye el árbol de nodos y escribe el KN5 con los bloques
-de :mod:`src.ac.kn5_materials` y :mod:`src.ac.kn5_tree`. El formato binario se deriva
-SOLO de este repositorio y de los bytes de KN5 de referencia construidos con Blender.
+Lee los DAE de BeamNG, triangula, aplica las matrices del plan (:mod:`src.mesh.plan`),
+construye el árbol de nodos y escribe el KN5 con los bloques de :mod:`src.ac.kn5_materials` y
+:mod:`src.ac.kn5_tree`. El formato binario se deriva SOLO de este repositorio y de los KN5 de
+referencia construidos antes con otra herramienta.
 
 Uso: ``python -m src.mesh.pure_kn5 <carpeta_vehiculo> <archivo.pc> --out output/<n>``.
 
-Reglas medidas contra el KN5 que produce Blender (``docs`` del spike: informe del
-agente); lo que no se pudo reproducir está marcado como DIFERENCIA CONOCIDA:
+Reglas medidas contra los KN5 de referencia; lo que no se pudo reproducir está marcado como
+DIFERENCIA CONOCIDA:
 
-* Árbol: raíz ``BlenderFile`` (identidad) → un nodo (tipo 1) por objeto/Empty, hijos
-  ordenados por nombre. Un objeto sin padre lleva matriz identidad; con padre lleva la
-  inversa del mundo del padre (``matrix_parent_inverse`` de Blender) y sus vértices
-  quedan en coordenadas de mundo. Cada material del objeto es una malla (tipo 2)
-  homónima hija del nodo, en el orden de primera aparición en el DAE.
+* Árbol: raíz ``root`` (identidad) → un nodo (tipo 1) por objeto/Empty, hijos ordenados por
+  nombre. Un objeto sin padre lleva matriz identidad; con padre lleva la inversa del mundo del
+  padre y sus vértices quedan en coordenadas de mundo. Cada material del objeto es una malla
+  (tipo 2) homónima hija del nodo, en el orden de primera aparición en el DAE.
 * Ejes: ``AC(x, y, z) = (Bx, Bz, −By)`` sobre vértices, normales y matrices de Empty
   (rotación pura, sin cambio de sentido de las caras). Matrices en vector fila.
-* Vértice KN5 = posición, normal, UV, tangente (44 bytes). Tangente (0, 0, 0): es lo que
-  escribe el flujo Blender cuando el material no tiene textura.
-* UV: se toma el PRIMER ``TEXCOORD`` y se escribe ``(u, −v)`` (medido: el KN5 de Blender
-  trae −v respecto al DAE). Si la fuente UV trae NaN/inf, toda la malla va a (0, 0)
-  (el importador de Blender la rechaza y ``blender_build`` añade un mapa vacío).
+* Vértice KN5 = posición, normal, UV, tangente (44 bytes). Tangente (0, 0, 0): es lo que lleva
+  la referencia cuando el material no tiene textura (las texturas se añaden después).
+* UV: se toma el PRIMER ``TEXCOORD`` y se escribe ``(u, −v)`` (medido). Si la fuente UV trae
+  NaN/inf, toda la malla va a (0, 0).
 * Normales: las del DAE transformadas con la inversa traspuesta del plan; una normal no
-  finita se sustituye por la normal de su cara (como ``_repair_normals``). Sin
-  ``NORMAL`` en el DAE: normal de cara (Blender suavizaría; no medido).
+  finita se sustituye por la normal de su cara. Sin ``NORMAL`` en el DAE: normal de cara.
 * Triángulos: ``triangles`` tal cual; ``polylist``/``polygons`` en abanico (v0, vi, vi+1)
-  (Blender usa otra triangulación en polígonos cóncavos: no replicable aquí). Cada
-  triángulo (a, b, c) se escribe con índices rotados (b, c, a), como el KN5 de Blender.
-* Partición de vértices: un vértice KN5 por terna única (índice de posición, de normal,
-  de UV) dentro de cada malla de material. DIFERENCIA CONOCIDA, CAUSA NO DETERMINADA:
-  en el Ibiza Blender escribe 487199 vértices y este módulo 363675 (los registros de
-  Blender que difieren ~1e-5 en la normal no se deduplican). Tampoco se explica el 4,3 %
-  de esquinas cuya normal difiere > 1e-3 de la de Blender (1,5 % > 0,1; no se concentra
-  en caras planas). Se mantienen las normales del DAE (son el dato de origen).
-* Caras repetidas (mismo conjunto de vértices, cualquier orden): se descartan todas
-  menos la primera, como hace Blender (medido: 156 en body0 del Ibiza).
-* Orden de las mallas de un objeto: por primera aparición del símbolo de material en
-  todo el DAE (ranuras de Blender), no por el orden de las primitivas del objeto.
-* Materiales: solo los usados, ordenados por nombre; nombre de Blender (63 bytes, y
-  ``.001``, ``.002`` por cada DAE que repite el nombre, en orden de ruta); shader
-  ``ksPerPixel`` con ``ksDiffuse`` = ``ksAmbient`` = 0,4, sin texturas ni ranuras:
-  :func:`src.ac.kn5_materials.apply_diffuse` los acepta tal cual.
+  (en polígonos cóncavos la referencia triangula distinto). Cada triángulo (a, b, c) se
+  escribe con índices rotados (b, c, a), como la referencia.
+* Partición de vértices: un vértice KN5 por terna única (índice de posición, de normal, de UV)
+  dentro de cada malla de material. DIFERENCIA CONOCIDA: en el Ibiza la referencia escribe
+  487199 vértices y este módulo 363675 (la referencia no deduplica registros cuya normal
+  difiere ~1e-5). El 4,3 % de las esquinas tiene una normal que difiere > 1e-3 de la de la
+  referencia (1,5 % > 0,1). Se mantienen las normales del DAE (son el dato de origen).
+* Caras repetidas (mismo conjunto de vértices, cualquier orden): se descartan todas menos la
+  primera (medido: 156 en body0 del Ibiza).
+* Orden de las mallas de un objeto: por primera aparición del símbolo de material en todo el
+  DAE, no por el orden de las primitivas del objeto.
+* Materiales: solo los usados, ordenados por nombre (63 bytes, y ``.001``, ``.002`` por cada
+  DAE que repite el nombre, en orden de ruta); shader ``ksPerPixel`` con ``ksDiffuse`` =
+  ``ksAmbient`` = 0,4, sin texturas ni ranuras: :func:`src.ac.kn5_materials.apply_diffuse` los
+  acepta tal cual.
 """
 
 from __future__ import annotations
@@ -64,13 +59,13 @@ from src.ac.kn5_tree import serialize_tree
 from src.jbeam.sources import ZipMember
 from src.safe_paths import ensure_safe_output_path
 
-from .plan import ScenePlan, blender_name
+from .plan import ScenePlan, trim_name
 
 Vec3 = tuple[float, float, float]
-ROOT_NAME = "BlenderFile"  # nombre del nodo raíz del KN5 de Blender sin guardar
+ROOT_NAME = "root"  # nombre del nodo raíz del KN5
 MAX_VERTICES = 65535
 SHADER = "ksPerPixel"
-KS_DEFAULT = 0.4  # ksDiffuse y ksAmbient del flujo Blender
+KS_DEFAULT = 0.4  # ksDiffuse y ksAmbient de los KN5 de referencia
 _ZEROS9 = (0.0,) * 9
 # AC = C · BeamNG (rotación pura): (x, y, z) → (x, z, −y)
 _C = ((1.0, 0.0, 0.0), (0.0, 0.0, 1.0), (0.0, -1.0, 0.0))
@@ -217,7 +212,7 @@ def read_dae_meshes(
     path: str | Path | ZipMember, wanted: set[str]
 ) -> tuple[dict[str, MeshSource], list[str]]:
     """Mallas ``wanted`` (nombres de nodo) de un DAE y los nombres de TODOS los
-    materiales de ``library_materials`` (Blender los importa todos)."""
+    materiales de ``library_materials`` (todos cuentan para el sufijo de duplicados)."""
     if isinstance(path, ZipMember):
         root = ET.parse(io.BytesIO(path.read_bytes())).getroot()
     else:
@@ -299,7 +294,7 @@ def _unit(v: Vec3) -> Vec3 | None:
 @dataclass
 class BuiltMesh:
     name: str
-    material: str  # nombre de Blender
+    material: str  # nombre del material en el KN5
     vertices: list[tuple[float, ...]]  # 11 floats
     indices: list[int]
 
@@ -327,9 +322,7 @@ def build_object_meshes(
     if any(not math.isfinite(c) for p in pos for c in p):
         raise PureKn5Error(f"{name}: posiciones no finitas")
     if _det3([r[:3] for r in matrix[:3]]) < 0:
-        warnings.append(
-            f"{name}: matriz con reflexión (caras invertidas, como Blender)"
-        )
+        warnings.append(f"{name}: matriz con reflexión (caras invertidas)")
     nrm: list[Vec3 | None] = []
     if src.normals is not None:
         nm = _normal_matrix([r[:3] for r in matrix[:3]])
@@ -353,7 +346,7 @@ def build_object_meshes(
         for t in range(0, len(prim.corners), 3):
             tri = prim.corners[t : t + 3]
             ident = frozenset(c[0] for c in tri)
-            # Blender descarta las caras repetidas (mismos vértices, cualquier orden):
+            # las caras repetidas (mismos vértices, cualquier orden) se descartan:
             # medido en body0 del Ibiza, 156 triángulos (caras de doble cara del DAE).
             if len(ident) == 3 and ident in seen:
                 dropped += 1
@@ -364,7 +357,7 @@ def build_object_meshes(
         warnings.append(f"{name}: {dropped} triángulos repetidos descartados")
     out: list[BuiltMesh] = []
     repaired = 0
-    # Orden de las mallas de un objeto = ranuras de Blender: por primera aparición del
+    # Orden de las mallas de un objeto = ranuras de material: por primera aparición del
     # símbolo en todo el DAE (no por la primitiva de este objeto); medido en el Ibiza.
     first: dict[str, int] = {}
     for prim in src.primitives:
@@ -403,7 +396,11 @@ def build_object_meshes(
                     remap[key] = len(verts)
                     verts.append((*pos[pi], *n, *uv, 0.0, 0.0, 0.0))
                 ids.append(remap[key])
-            idx += [ids[1], ids[2], ids[0]]  # rotación (b, c, a) del KN5 de Blender
+            idx += [
+                ids[1],
+                ids[2],
+                ids[0],
+            ]  # rotación (b, c, a) de los KN5 de referencia
         out += _chunks(BuiltMesh(name, mat, verts, idx))
     if repaired:
         warnings.append(
@@ -466,12 +463,12 @@ def _null(name: str, matrix: list[list[float]]) -> Node:
 _IDENT = [[1.0 if i == j else 0.0 for j in range(4)] for i in range(4)]
 
 
-# ------------------------------------------------------------------ materiales Blender
-def blender_material_names(dae_materials: list[list[str]]) -> list[dict[str, str]]:
+# ------------------------------------------------------------------ nombres de material
+def unique_material_names(dae_materials: list[list[str]]) -> list[dict[str, str]]:
     """Nombre final de cada material por DAE (en orden de importación).
 
-    Blender crea todos los materiales de ``library_materials`` de cada DAE importado; si
-    el nombre ya existe añade ``.001``, ``.002``… y recorta a 63 bytes antes del sufijo.
+    Cada DAE aporta todos los materiales de su ``library_materials``; si el nombre ya existe
+    se añade ``.001``, ``.002``… y se recorta a 63 bytes antes del sufijo.
     """
     taken: set[str] = set()
     result = []
@@ -480,11 +477,11 @@ def blender_material_names(dae_materials: list[list[str]]) -> list[dict[str, str
         for raw in names:
             if raw in mapping:
                 continue
-            base = blender_name(raw)
+            base = trim_name(raw)
             final, n = base, 0
             while final in taken:
                 n += 1
-                final = blender_name(base, 4) + f".{n:03d}"
+                final = trim_name(base, 4) + f".{n:03d}"
             taken.add(final)
             mapping[raw] = final
         result.append(mapping)
@@ -501,7 +498,7 @@ def build_kn5_pure(
     out_path: str | Path,
     dae_dirs: list[Path] | None = None,
 ) -> dict[str, Any]:
-    """Escribe el KN5 del plan sin Blender y devuelve estadísticas y avisos.
+    """Escribe el KN5 del plan y devuelve estadísticas y avisos.
 
     ``dae_dirs``: carpetas donde buscar un DAE por nombre de archivo si la ruta del plan
     no existe (planes guardados en otro equipo).
@@ -525,7 +522,7 @@ def build_kn5_pure(
         wanted = {o["mesh"] for o in p["objects"] if o["dae"] == d}
         sources[d], names = read_dae_meshes(resolve(d), wanted)
         lib.append(names)
-    mat_maps = dict(zip(daes, blender_material_names(lib)))
+    mat_maps = dict(zip(daes, unique_material_names(lib)))
 
     empties = {e["name"]: e for e in p["empties"]}
     world = {n: _row_world_ac(e["matrix"]) for n, e in empties.items()}

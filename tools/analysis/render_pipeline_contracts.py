@@ -36,16 +36,15 @@ ejecutan. En esta máquina ({day}):
 
 {tools}
 
-El audio es el único pipeline opcional: sin FMOD 1.08.12 solo deja de estar
-disponible la operación `build` (compilar bancos). `none` y `prebuilt` (copiar un
-banco ya compilado) no lo necesitan, y ningún otro pipeline depende de FMOD
-(`audio_capabilities`, probado con FMOD simulado como ausente).
+El audio es el único pipeline opcional. Sus tres operaciones (`none`, `prebuilt`, que copia un
+banco ya compilado, y `build`, que genera el banco en Python) no necesitan programas externos
+(`audio_capabilities`).
 
 Adaptadores aislados, probados sin modificar paquetes:
 - `src/pipeline/physics_preview.py`: física en memoria;
-- `geometry_plan_summary`: plan de escena sin Blender (carpeta o zip);
+- `geometry_plan_summary`: plan de escena (carpeta o zip);
 - `src/extract/engine_combustion.py`: motor `combustionEngine` de solo lectura;
-- `detect_fmod`/`audio_capabilities`;
+- `audio_capabilities`;
 - `src/attrs/candidates_dwb.py`: puntos `DWB` candidatos.
 """
 

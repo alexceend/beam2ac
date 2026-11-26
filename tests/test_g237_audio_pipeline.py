@@ -1,12 +1,10 @@
 """G2.37: pipeline WAV → plan → proyecto FMOD. Sin FMOD ni juegos (WAV sintéticos)."""
 
 import json
-import os
 import struct
 import tempfile
 import unittest
 from pathlib import Path
-from unittest import mock
 
 from src.audio import pipeline
 from src.audio.plan import build_plan, placement
@@ -130,90 +128,52 @@ class TestPlan(unittest.TestCase):
             self.assertEqual(pipeline.ladder(p["status"])["state"], "sin_fuente")
 
 
-class TestPipelineNoFmod(unittest.TestCase):
-    def test_python_builder_is_the_fallback_without_fmod(self):
-        """Sin FMOD el generador propio construye el banco (esqueleto versionado)."""
-        with (
-            tempfile.TemporaryDirectory() as d,
-            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "auto"}),
-        ):
+class TestPipelineGeneration(unittest.TestCase):
+    """El banco se genera en Python (``src.audio.engine_gen``), sin programas externos."""
+
+    def test_bank_is_generated(self):
+        with tempfile.TemporaryDirectory() as d:
             veh = make_mod(Path(d) / "mod")
-            out = Path(d) / "out"
-            r = pipeline.run(veh, "beam2ac_t", out, fmod_path=Path(d) / "no_fmod")
+            r = pipeline.run(veh, "beam2ac_t", Path(d) / "out")
             self.assertIsNone(r["error"])
             self.assertTrue(r["stages"]["banco_construido"])
-            self.assertIn("sin FMOD", r["note"])
+            self.assertIn("banco generado", r["note"])
             self.assertTrue((Path(r["prebuilt"]) / "beam2ac_t.bank").is_file())
             self.assertFalse(r["stages"]["escuchado"])
 
-    def test_auto_falls_back_to_fmod_project_when_generator_cannot(self):
-        """Con 1 muestra por papel el generador no puede: se prepara el proyecto de FMOD como antes."""
-        with (
-            tempfile.TemporaryDirectory() as d,
-            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "auto"}),
-        ):
-            veh = make_mod(Path(d) / "mod", load=(1000,), coast=(1000,))
+    def test_no_build_only_keeps_the_plan(self):
+        with tempfile.TemporaryDirectory() as d:
+            veh = make_mod(Path(d) / "mod")
             out = Path(d) / "out"
-            r = pipeline.run(veh, "beam2ac_t", out, fmod_path=Path(d) / "no_fmod")
+            r = pipeline.run(veh, "beam2ac_t", out, build=False)
             self.assertIsNone(r["error"])
             self.assertEqual(r["state"], "proyecto_generado")
-            self.assertTrue(any("generador sin FMOD" in w for w in r["warnings"]))
-            self.assertTrue((Path(r["out"]) / "LEEME.md").is_file())
+            self.assertFalse(r["stages"]["banco_construido"])
+            spec = json.loads(
+                (Path(r["out"]) / "spec.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(spec["car"], "beam2ac_t")
 
-    def test_generator_crash_on_odd_wav_falls_back(self):
-        """Un WAV con cabecera rara (bits=4) no debe romper el flujo: respaldo al proyecto de FMOD."""
-        with (
-            tempfile.TemporaryDirectory() as d,
-            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "auto"}),
-        ):
+    def test_generator_limits_are_reported(self):
+        """Con 1 muestra por papel el generador no puede: el error se informa y no queda una carpeta vacía."""
+        with tempfile.TemporaryDirectory() as d:
+            veh = make_mod(Path(d) / "mod", load=(1000,), coast=(1000,))
+            out = Path(d) / "out"
+            r = pipeline.run(veh, "beam2ac_t", out)
+            self.assertIn("al menos 2 ranuras", r["error"])
+            self.assertFalse(r["stages"]["banco_construido"])
+            self.assertFalse(out.exists())
+
+    def test_odd_wav_header_is_an_error_not_a_crash(self):
+        with tempfile.TemporaryDirectory() as d:
             veh = make_mod(Path(d) / "mod")
             odd = Path(d) / "mod/art/sound/engine/H1/EXH_2000_P.wav"
             hdr = b"WAVEfmt " + struct.pack("<IHHIIHH", 16, 1, 1, 44100, 22050, 1, 4)
             hdr += b"data" + struct.pack("<I", 64) + bytes(64)
             odd.write_bytes(b"RIFF" + struct.pack("<I", len(hdr)) + hdr)
-            r = pipeline.run(veh, "beam2ac_t", Path(d) / "out", fmod_path=Path(d) / "x")
-            self.assertIsNone(r["error"])
-            self.assertEqual(r["state"], "proyecto_generado")
-
-    def test_python_mode_reports_generator_error(self):
-        with (
-            tempfile.TemporaryDirectory() as d,
-            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "python"}),
-        ):
-            veh = make_mod(Path(d) / "mod", load=(1000,), coast=(1000,))
-            r = pipeline.run(veh, "beam2ac_t", Path(d) / "out", fmod_path=Path(d) / "x")
-            self.assertIn("al menos 2 ranuras", r["error"])
+            r = pipeline.run(veh, "beam2ac_t", Path(d) / "out")
+            self.assertTrue(r["error"])
             self.assertFalse(r["stages"]["banco_construido"])
-
-    def test_unknown_builder_is_an_error(self):
-        with mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "bogus"}):
-            with self.assertRaises(ValueError):
-                pipeline.builder_mode()
-
-    def test_project_prepared_not_built(self):
-        with (
-            tempfile.TemporaryDirectory() as d,
-            mock.patch.dict(os.environ, {"BEAM2AC_AUDIO_BUILDER": "fmod"}),
-        ):
-            veh = make_mod(Path(d) / "mod")
-            out = Path(d) / "out"
-            r = pipeline.run(veh, "beam2ac_t", out, fmod_path=Path(d) / "no_fmod")
-            self.assertIsNone(r["error"])
-            self.assertEqual(r["state"], "proyecto_generado")
-            self.assertFalse(r["stages"]["banco_construido"])
-            self.assertIn("no disponible", r["note"])
-            self.assertTrue(
-                (out / "LEEME.md").is_file() and (out / "build_events.js").is_file()
-            )
-            spec = json.loads((out / "spec.json").read_text(encoding="utf-8"))
-            self.assertTrue(
-                all("/Assets/beam2ac_audio/" in f for f in spec["audio_files"])
-            )
-            self.assertEqual(r["stages"]["escuchado"], False)
-
-    def test_audio_stages_never_claim_listening(self):
-        st = pipeline.ladder("listo", project=True, bank=True, installed=True)["stages"]
-        self.assertFalse(st["escuchado"] or st["validado_en_ac"])
 
 
 BUILT = Path("output/g237_2026-11-13/atacama_build3/prebuilt")

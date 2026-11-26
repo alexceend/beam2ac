@@ -1,6 +1,6 @@
 """Escritor KN5 mínimo (v5) para mallas sin texturas, como ``collider.kn5``.
 
-Formato idéntico al que escribe el addon de Blender y al que lee
+Formato idéntico al del KN5 de coche (``src.mesh.pure_kn5``) y al que lee
 :mod:`src.ac.kn5_inspect`. Estructura replicada de los ``collider.kn5`` oficiales
 de Kunos (abarth500, ks_toyota_celica_st185, ks_audi_r8_lms):
 

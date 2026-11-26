@@ -2,7 +2,6 @@
 adaptadores aislados."""
 
 import subprocess
-import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -11,7 +10,6 @@ from src.pipeline.contracts import (
     PIPELINES,
     audio_capabilities,
     available_operations,
-    detect_fmod,
     geometry_plan_summary,
     spec,
     tool_status,
@@ -65,28 +63,14 @@ class TestToolsAreOptionalAndNeverExecuted(unittest.TestCase):
             ),
         ):
             status = tool_status()
-        self.assertEqual(
-            set(status),
-            {
-                "blender_3_6",
-                "addon_assetto_corsa_tools",
-                "fmod_studio_1_08_12",
-                "ac_root",
-            },
-        )
+        self.assertEqual(set(status), {"ac_root"})
 
-    def test_without_fmod_only_bank_build_is_unavailable(self):
-        tools = {
-            "blender_3_6": {"available": True},
-            "addon_assetto_corsa_tools": {"available": True},
-            "fmod_studio_1_08_12": {"available": False},
-            "ac_root": {"available": False},
-        }
+    def test_audio_needs_no_external_tools(self):
+        tools = {"ac_root": {"available": False}}
         audio = audio_capabilities(tools)
-        self.assertFalse(audio["operations"]["build"]["available"])
-        self.assertTrue(audio["operations"]["prebuilt"]["available"])
-        self.assertTrue(audio["operations"]["none"]["available"])
-        self.assertIn("el resto funciona", audio["status"])
+        for op in ("build", "prebuilt", "none"):
+            self.assertTrue(audio["operations"][op]["available"], op)
+        self.assertIn("banco de sonido propio", audio["status"])
         for p in PIPELINES:
             if p.id in ("audio", "driver", "assembly"):
                 continue
@@ -98,25 +82,12 @@ class TestToolsAreOptionalAndNeverExecuted(unittest.TestCase):
             available_operations(spec("driver"), tools)["pose"]["available"]
         )
 
-    def test_detect_fmod_version_and_files(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            wrong = Path(tmp) / "FMOD Studio 2.02.04"
-            wrong.mkdir()
-            for exe in ("fmodstudiocl.exe", "FMOD Studio.exe"):
-                (wrong / exe).write_bytes(b"")
-            info = detect_fmod(wrong)
-            self.assertTrue(info["found"])
-            self.assertFalse(info["compatible"])
-            good = Path(tmp) / "FMOD Studio 1.08.12"
-            good.mkdir()
-            self.assertFalse(detect_fmod(good)["found"])  # faltan los ejecutables
-
 
 @unittest.skipUnless(IBIZA.is_dir(), "muestra del Ibiza no disponible")
 class TestGeometryAdapter(unittest.TestCase):
-    def test_plan_without_blender(self):
+    def test_plan_without_subprocesses(self):
         with mock.patch.object(
-            subprocess, "run", side_effect=AssertionError("no se lanza Blender")
+            subprocess, "run", side_effect=AssertionError("no se lanza nada")
         ):
             g = geometry_plan_summary(IBIZA, IBIZA / "35b84.pc")
         self.assertEqual(g["wheels"], ["WHEEL_LF", "WHEEL_LR", "WHEEL_RF", "WHEEL_RR"])

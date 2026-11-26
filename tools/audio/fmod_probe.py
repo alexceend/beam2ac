@@ -1,7 +1,8 @@
-"""Prueba de reproducción de un banco con el runtime FMOD de la instalación de AC (ctypes).
+"""HERRAMIENTA DE MANTENIMIENTO (no la usa la aplicación): prueba de reproducción de un banco con
+la biblioteca de sonido de la instalación de AC (ctypes).
 
-Carga ``fmodstudio64.dll`` de AC (solo lectura, tal como la usa el juego), renderiza un evento a
-un WAV con la salida ``WAVWRITER_NRT`` (sin tarjeta de sonido) y mide el pico. Detecta bancos que
+Carga esa biblioteca (solo lectura, tal como la usa el juego), renderiza un evento a un WAV con
+la salida de escritura a archivo (sin tarjeta de sonido) y mide el pico. Detecta bancos que
 cargan pero no suenan (p. ej. ``SNDH`` con un desplazamiento viejo).
 
 Uso: ``python -m tools.audio.fmod_probe <banco> <GUIDs.txt> <evento> <rpm> [--out carpeta]``.
@@ -12,9 +13,23 @@ from pathlib import Path
 from src.project.export import default_ac_root
 
 AC = default_ac_root() or Path("assettocorsa")
-os.add_dll_directory(str(AC))
-fm = C.CDLL(str(AC / "fmod64.dll"))
-st = C.CDLL(str(AC / "fmodstudio64.dll"))
+_LIB_FILES = ("fmod64.dll", "fmodstudio64.dll")
+_LIBS: tuple | None = None
+
+
+def available() -> bool:
+    """¿Hay biblioteca de sonido en la instalación de AC?"""
+    return all((AC / n).is_file() for n in _LIB_FILES)
+
+
+def _libs():
+    global _LIBS
+    if _LIBS is None:
+        os.add_dll_directory(str(AC))
+        _LIBS = tuple(C.CDLL(str(AC / n)) for n in _LIB_FILES)
+    return _LIBS
+
+
 PLUGIN_DIRS = [
     Path(os.environ.get("ProgramFiles", "C:/Program Files"))
     / "FMOD SoundSystem"
@@ -46,6 +61,7 @@ def chk(r, what):
 
 
 def run(banks, event_guid, params, out_wav, seconds=4.0, version=HEADER):
+    fm, st = _libs()
     sysp = C.c_void_p()
     chk(st.FMOD_Studio_System_Create(C.byref(sysp), C.c_uint(version)), "Create")
     low = C.c_void_p()

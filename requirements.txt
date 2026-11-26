@@ -1,6 +1,5 @@
 # Dependencias de ejecución del conversor.
-# Pillow es opcional pero recomendado (portada JPEG e icono de la pintura); sin él esas
-# partes avisan en el informe. El resto solo usa la biblioteca estándar.
+# Pillow dibuja la portada del coche y convierte imágenes e iconos; sin él esas partes avisan en el
+# informe. El resto solo usa la biblioteca estándar.
 Pillow>=10
 # numpy / scipy se añadirán cuando una fase los necesite (ver docs/PLAN.md).
-# Blender (bpy) no se instala con pip: el pipeline usa `blender --background --python`.

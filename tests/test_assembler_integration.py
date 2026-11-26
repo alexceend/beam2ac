@@ -400,7 +400,7 @@ class TestProfileAndPhysicsBase(Tmp):
             "seat_ibiza_acfr",
             self.tmp / "unused",
             self.tmp / "out",
-            blender=None,
+            with_kn5=False,
             physics_base=base,
             experiments=("ffmult_1.95", "steer_lock_423"),
         )

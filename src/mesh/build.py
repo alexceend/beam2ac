@@ -1,13 +1,11 @@
-"""Flujo reproducible de la fase 6: plan → Blender → KN5 → verificación.
+"""Flujo reproducible de la fase 6: plan → KN5 (Python puro) → verificación.
 
 Uso:
-    python -m src.mesh.build <carpeta_vehiculo> <archivo.pc> --out output/<car>/mesh
-           [--blender RUTA] [--plan-only] [--save-blend]
+    python -m src.mesh.build <carpeta_vehiculo> <archivo.pc> --out output/<car>/mesh [--plan-only]
 
-* Siempre escribe ``scene_plan.json`` (sin Blender).
-* Sin ``--plan-only`` ejecuta ``blender --background --factory-startup`` con
-  ``src/mesh/blender_build.py`` y después verifica el KN5 con
-  :func:`verify_kn5` (sin Blender), dejando ``verification.json``.
+* Siempre escribe ``scene_plan.json``.
+* Sin ``--plan-only`` construye el KN5 con :mod:`src.mesh.pure_kn5` y después lo verifica con
+  :func:`verify_kn5`, dejando ``verification.json``. No necesita ningún programa externo.
 """
 
 from __future__ import annotations
@@ -15,9 +13,6 @@ from __future__ import annotations
 import argparse
 import json
 import math
-import os
-import shutil
-import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -31,7 +26,6 @@ from src.safe_paths import ensure_safe_output_path
 from .dae import read_dae
 from .plan import ScenePlan, build_plan, write_plan
 
-BLENDER_SCRIPT = Path(__file__).with_name("blender_build.py")
 POSITION_TOLERANCE = 0.01  # m (criterio de la fase 6)
 
 
@@ -194,9 +188,6 @@ def _local_extent(kn5: Kn5File, wheel: str, pts) -> dict[str, float]:
     return ext
 
 
-BLENDER_TIMEOUT_S = 1800  # tope generoso: un coche grande tarda minutos
-
-
 def check_kn5_name(kn5_name: str) -> str:
     """El nombre del KN5 debe ser un nombre de archivo simple (sin rutas) y acabar en .kn5."""
     ok = (
@@ -213,77 +204,20 @@ def check_kn5_name(kn5_name: str) -> str:
     return kn5_name
 
 
-def run_blender(
-    blender: str, plan_path: Path, out_dir: Path, kn5_name: str, save_blend: bool
-) -> subprocess.CompletedProcess:
-    check_kn5_name(kn5_name)
-    cmd = [
-        blender,
-        "--background",
-        "--factory-startup",
-        # G2.18: una excepción de Python dentro de Blender (p. ej. en el escritor de
-        # KN5) salía con código 0 y dejaba un KN5 truncado; así sale con 1
-        "--python-exit-code",
-        "1",
-        "--python",
-        str(BLENDER_SCRIPT),
-        "--",
-        str(plan_path),
-        str(out_dir),
-        "--kn5",
-        kn5_name,
-    ]
-    if save_blend:
-        cmd.append("--save-blend")
-    try:
-        return subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            errors="replace",
-            timeout=BLENDER_TIMEOUT_S,
-        )
-    except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(
-            f"Blender no terminó en {BLENDER_TIMEOUT_S} s y se interrumpió"
-        ) from exc
-
-
 def build_kn5(
-    plan: ScenePlan,
-    out_dir: str | Path,
-    kn5_name: str,
-    blender: str,
-    save_blend: bool = False,
-    builder: str | None = None,
+    plan: ScenePlan, out_dir: str | Path, kn5_name: str
 ) -> tuple[Path, Verification]:
-    """Escribe el plan, ejecuta Blender y verifica el KN5 (sin Blender).
+    """Escribe el plan, construye el KN5 en Python puro y lo verifica contra el plan.
 
-    ``builder="pure"`` (SPIKE, opt-in) usa :mod:`src.mesh.pure_kn5` en vez de Blender
-    (``blender`` puede ir vacío; por omisión decide ``BEAM2AC_KN5_BUILDER``).
-    Lanza RuntimeError si Blender falla. Escribe en
-    ``out_dir``: scene_plan.json, build_log.json, blender_stdout.txt,
-    verification.json y el KN5.
+    Escribe en ``out_dir``: scene_plan.json, verification.json y el KN5.
     """
-    builder = builder or os.environ.get("BEAM2AC_KN5_BUILDER", "blender")
-    if builder not in ("blender", "pure"):
-        raise ValueError(f"builder desconocido: {builder!r}")
-    out = ensure_safe_output_path(out_dir)
-    plan_path = write_plan(plan, out / "scene_plan.json")
-    if builder == "pure":
-        from .pure_kn5 import build_kn5_pure
+    from .pure_kn5 import build_kn5_pure
 
-        check_kn5_name(kn5_name)
-        build_kn5_pure(plan, ensure_safe_output_path(out / kn5_name))
-    else:
-        proc = run_blender(blender, plan_path, out, kn5_name, save_blend)
-        log = ensure_safe_output_path(out / "blender_stdout.txt")
-        log.write_text(proc.stdout + proc.stderr, encoding="utf-8")
-        if proc.returncode != 0:
-            raise RuntimeError(
-                f"Blender terminó con código {proc.returncode}; ver {out}"
-            )
+    out = ensure_safe_output_path(out_dir)
+    check_kn5_name(kn5_name)
+    write_plan(plan, out / "scene_plan.json")
     kn5_path = ensure_safe_output_path(out / kn5_name)
+    build_kn5_pure(plan, kn5_path)
     result = verify_kn5(read_kn5(kn5_path), plan)
     target = ensure_safe_output_path(out / "verification.json")
     target.write_text(
@@ -306,12 +240,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("vehicle_dir")
     parser.add_argument("pc")
     parser.add_argument("--out", required=True)
-    parser.add_argument("--blender", default=shutil.which("blender"))
     parser.add_argument(
         "--kn5", default=None, help="nombre del KN5 (por defecto <car>.kn5)"
     )
     parser.add_argument("--plan-only", action="store_true")
-    parser.add_argument("--save-blend", action="store_true")
     args = parser.parse_args(argv)
 
     out = ensure_safe_output_path(args.out)
@@ -324,37 +256,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  aviso: {issue}")
     if args.plan_only:
         return 0
-    if not args.blender:
-        print("ERROR: no se encuentra Blender (use --blender o --plan-only)")
-        return 2
     kn5_name = args.kn5 or f"{Path(args.vehicle_dir).name}.kn5"
     try:
-        proc = run_blender(args.blender, plan_path, out, kn5_name, args.save_blend)
-    except RuntimeError as exc:
+        kn5_path, result = build_kn5(plan, out, kn5_name)
+    except (RuntimeError, ValueError) as exc:
         print(f"ERROR: {exc}")
         return 1
-    ensure_safe_output_path(out / kn5_name)
-    (out / "blender_stdout.txt").write_text(proc.stdout + proc.stderr, encoding="utf-8")
-    if proc.returncode != 0:
-        print(
-            f"ERROR: Blender terminó con código {proc.returncode}; ver build_log.json"
-        )
-        return 1
-    kn5 = read_kn5(out / kn5_name)
-    result = verify_kn5(kn5, plan)
-    target = ensure_safe_output_path(out / "verification.json")
-    target.write_text(
-        json.dumps(
-            {"ok": result.ok, "errors": result.errors, "checks": result.checks},
-            indent=2,
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
-    print(
-        f"KN5: {out / kn5_name}  nodos {len(kn5.nodes)}  "
-        f"materiales {len(kn5.materials)}"
-    )
+    kn5 = read_kn5(kn5_path)
+    print(f"KN5: {kn5_path}  nodos {len(kn5.nodes)}  materiales {len(kn5.materials)}")
     print(
         f"Verificación: {'OK' if result.ok else 'FALLOS'} "
         f"({len(result.errors)} errores)"

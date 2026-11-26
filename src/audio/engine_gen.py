@@ -1,13 +1,13 @@
-"""SPIKE: banco de coche por ``spec`` SIN FMOD a partir de un banco de motor ya construido.
+"""Banco de sonido de un coche a partir de su ``spec``, generado en Python.
 
-Toma un banco "molde" (cualquier banco de motor construido por ``src.audio.pipeline``),
+Toma un banco "molde" (el esqueleto versionado o cualquier banco de motor ya construido),
 ajusta el número de ranuras de cada papel (carga / retención), sus rpm, colocaciones y
 fundidos exactamente a los del ``spec`` y sustituye el audio (``bank_graph``), y renueva los
-GUID. Frente a ``slot_bank`` (rellena ranuras fijas con la muestra más cercana) este camino
-usa la rejilla de rpm del propio coche. Validado contra los bancos que FMOD construye para
-los mismos ``spec`` (comparación canónica de registros, sin GUID ni orden).
+GUID. Usa la rejilla de rpm del propio coche. Validado contra los bancos que construye la
+herramienta de sonido de AC para los mismos ``spec`` (comparación canónica de registros,
+sin GUID ni orden).
 
-Sigue haciendo falta el molde (el esqueleto de buses, efectos y eventos secundarios).
+El molde aporta el esqueleto de buses, efectos y eventos secundarios.
 """
 
 from __future__ import annotations
@@ -19,8 +19,8 @@ from typing import Any, Callable
 from . import bank_graph as bg
 from . import bank_patch as bp
 
-# tipos de registro cuyo primer GUID es una identidad aleatoria por construcción (FMOD los
-# regenera en cada build); MAP y los BUS de GBSS son constantes de la plantilla y se conservan
+# tipos de registro cuyo primer GUID es una identidad aleatoria por construcción (la
+# herramienta de sonido los regenera en cada build); MAP y los BUS de GBSS son constantes de la plantilla y se conservan
 _ID_TYPES = (
     b"EVTB",
     b"TLNB",
@@ -166,7 +166,7 @@ def skeleton() -> tuple[bytes, str, str]:
     """(banco, GUIDs.txt, id) del esqueleto versionado (``tools/audio/make_skeleton.py``).
 
     Banco de plantilla del SDK de AC sin audio de nadie (2 ranuras de silencio por papel):
-    el molde que permite generar bancos de coche sin FMOD ni bancos construidos antes.
+    el molde que permite generar bancos de coche sin ningún banco construido antes.
     """
     return (
         (DATA / "skeleton_engine.bank").read_bytes(),
@@ -179,6 +179,6 @@ def generate_from_skeleton(
     spec: dict[str, Any],
     audio: Callable[[str], tuple[int, bytes]] | None = None,
 ) -> tuple[bytes, str]:
-    """Banco y GUIDs.txt del coche ``spec['car']`` sin FMOD (molde = esqueleto versionado)."""
+    """Banco y GUIDs.txt del coche ``spec['car']`` (molde = esqueleto versionado)."""
     raw, guids, sid = skeleton()
     return generate(raw, guids, sid, spec, audio)

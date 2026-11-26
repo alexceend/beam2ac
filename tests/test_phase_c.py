@@ -286,13 +286,11 @@ class TestAssemblerSkips(unittest.TestCase):
                 "seat_ibiza_acfr",
                 Path(d),
                 Path(d) / "out",
-                blender=None,
+                with_kn5=False,
                 physics_base=Path(m["package_dir"]),
             )
             for k in ("lights", "hands", "cameras"):
-                self.assertEqual(
-                    report["skipped"][k], "sin KN5 (Blender no disponible)"
-                )
+                self.assertEqual(report["skipped"][k], "sin KN5 (no solicitado)")
             car = Path(report["car_dir"])
             self.assertFalse((car / "data/dash_cam.ini").exists())
             self.assertFalse((car / "animations").exists())

@@ -34,10 +34,10 @@ jobs:
         run: |
           cp LICENSE dist/beam2ac/LICENSE
           if [ "${{ matrix.ui }}" = "true" ]; then
-            printf 'beam2ac\r\n\r\n1. Descomprime toda la carpeta (no hace falta instalar nada).\r\n2. Abre beam2ac.exe.\r\n3. En Ajustes indica las rutas de Blender y Assetto Corsa (no se incluyen).\r\nRequiere Edge WebView2 Runtime (incluido en Windows 11 y Windows 10 actualizado).\r\n' > dist/beam2ac/LEEME.txt
+            printf 'beam2ac\r\n\r\n1. Descomprime toda la carpeta (no hace falta instalar nada).\r\n2. Abre beam2ac.exe.\r\n3. En Ajustes indica las rutas de Assetto Corsa y BeamNG (no se incluyen).\r\nRequiere Edge WebView2 Runtime (incluido en Windows 11 y Windows 10 actualizado).\r\n' > dist/beam2ac/LEEME.txt
             (cd dist && 7z a -tzip ../beam2ac-${{ matrix.name }}.zip beam2ac)
           else
-            printf 'beam2ac\n\n1. tar xzf beam2ac-%s.tar.gz && ./beam2ac/beam2ac\n2. Se abre el navegador en http://127.0.0.1:8766/\n3. En Ajustes indica las rutas de Blender y Assetto Corsa (no se incluyen).\nDatos en ~/beam2ac y ~/.config/beam2ac.\n' "${{ matrix.name }}" > dist/beam2ac/LEEME.txt
+            printf 'beam2ac\n\n1. tar xzf beam2ac-%s.tar.gz && ./beam2ac/beam2ac\n2. Se abre el navegador en http://127.0.0.1:8766/\n3. En Ajustes indica las rutas de Assetto Corsa y BeamNG (no se incluyen).\nDatos en ~/beam2ac y ~/.config/beam2ac.\n' "${{ matrix.name }}" > dist/beam2ac/LEEME.txt
             tar czf beam2ac-${{ matrix.name }}.tar.gz -C dist beam2ac
           fi
       - name: Arranque (Linux)

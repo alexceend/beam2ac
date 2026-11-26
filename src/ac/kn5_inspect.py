@@ -1,7 +1,7 @@
-"""Lector de KN5 (v5/v6) para verificar modelos sin Blender.
+"""Lector de KN5 (v5/v6) para verificar modelos.
 
-Formato tomado de ``tools/kn5-obj-converter-main/convert.py`` (lectura) y del
-escritor del addon ``assetto_corsa_tools`` (escritura); comprobado con el KN5 de
+Formato tomado de ``tools/kn5-obj-converter-main/convert.py`` (lectura) y de
+los KN5 de referencia (escritura); comprobado con el KN5 de
 la muestra de AC.
 
 Matrices: 16 floats por fila con la traslación en la fila 4 (convención de

@@ -1,6 +1,6 @@
 # PyInstaller: .venv-ui\Scripts\python.exe -m PyInstaller packaging/beam2ac.spec --noconfirm
-# Datos de solo lectura (código fuente incluido: huellas de etapas y el script de Blender lo necesitan).
-# NO se empaqueta docs/references (SDK de FMOD): restricción de redistribución.
+# Datos de solo lectura (código fuente incluido: las huellas de etapas y el esqueleto de banco de sonido lo necesitan).
+# NO se empaqueta docs/references: restricción de redistribución.
 import sys
 from pathlib import Path
 

@@ -1,14 +1,10 @@
 """Regresión de mallas sobre la muestra real (solo lectura).
 
-La construcción completa con Blender es opcional: se activa con la variable de
-entorno ``BEAM2AC_BLENDER_TESTS=1`` y requiere ``blender`` en el PATH. Escribe
-solo en una carpeta temporal.
+La construcción completa del KN5 (Python puro) escribe solo en una carpeta temporal.
 """
 
 import hashlib
 import math
-import os
-import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -16,10 +12,9 @@ from pathlib import Path
 from src.ac.kn5_inspect import read_kn5
 from src.extract.nodes import collect_nodes
 from src.jbeam import PartIndex, load_pc, resolve
-from src.mesh.build import plan_for_vehicle, run_blender, verify_kn5
+from src.mesh.build import build_kn5, plan_for_vehicle
 from src.mesh.dae import bounds
 from src.mesh.flexbody import collect_flexbodies, rotation_xyz
-from src.mesh.plan import write_plan
 from src.safe_paths import PROJECT_ROOT
 
 VEHICLE = PROJECT_ROOT / "sample_beamng" / "vehicles" / "seat_ibiza_acfr"
@@ -121,23 +116,12 @@ class TestSampleMeshPlan(unittest.TestCase):
         self.assertEqual(_fingerprint(), self.before)
 
 
-@unittest.skipUnless(
-    os.environ.get("BEAM2AC_BLENDER_TESTS") == "1" and shutil.which("blender"),
-    "construcción con Blender desactivada (BEAM2AC_BLENDER_TESTS=1 para activarla)",
-)
-class TestBlenderBuild(unittest.TestCase):
+class TestKn5Build(unittest.TestCase):
     def test_full_build(self):
         plan = plan_for_vehicle(VEHICLE, PC)
         with tempfile.TemporaryDirectory() as tmp:
-            out = Path(tmp)
-            plan_path = write_plan(plan, out / "scene_plan.json")
-            proc = run_blender(
-                shutil.which("blender"), plan_path, out, "car.kn5", False
-            )
-            self.assertEqual(
-                proc.returncode, 0, proc.stdout[-2000:] + proc.stderr[-2000:]
-            )
-            result = verify_kn5(read_kn5(out / "car.kn5"), plan)
+            kn5, result = build_kn5(plan, Path(tmp), "car.kn5")
+            self.assertTrue(kn5.is_file())
             self.assertTrue(result.ok, result.errors)
 
 

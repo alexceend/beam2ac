@@ -1,14 +1,12 @@
 """Fase B2: exportación aislada (``src/project/export.py``) y etapa ``model``.
 
-Sin Blender por defecto: el flujo real del Ibiza se exporta con ``with_model=False``
-(el KN5 falta y el veredicto debe ser «bloqueado»). La exportación con Blender se
-activa con ``BEAM2AC_BLENDER_TESTS=1``.
+El flujo real del Ibiza se exporta con ``with_model=False`` (el KN5 falta y el veredicto debe
+ser «bloqueado») y con el modelo 3D (KN5 en Python puro, sin programas externos).
 """
 
 from __future__ import annotations
 
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -271,10 +269,6 @@ class TestIbizaExport(unittest.TestCase):
         )
         self.assertEqual(res.verdict, E.VERDICT_BLOCKED)  # LUT y KN5 siguen faltando
 
-    @unittest.skipUnless(
-        os.environ.get("BEAM2AC_BLENDER_TESTS") == "1",
-        "construcción con Blender desactivada (BEAM2AC_BLENDER_TESTS=1 para activarla)",
-    )
     def test_export_with_model(self) -> None:
         p = create_project(self.tmp / "ibz", SourceSpec("dir", str(IBIZA), "35b84.pc"))
         res = E.export_project(p, log=quiet)

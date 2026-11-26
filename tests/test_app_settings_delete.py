@@ -97,30 +97,25 @@ class TestProjects(unittest.TestCase):
 class TestSettings(unittest.TestCase):
     def test_save_load_apply_roundtrip(self) -> None:
         keep = {
-            k: os.environ.get(k)
-            for k in ("BEAM2AC_AC_ROOT", "BEAM2AC_BLENDER", "BEAM2AC_FMOD_STUDIO")
+            k: os.environ.get(k) for k in ("BEAM2AC_AC_ROOT", "BEAM2AC_BEAMNG_MODS")
         }
         with tempfile.TemporaryDirectory() as t:
             f = Path(t) / "s.json"
             data = settings.save(
                 {
-                    "fmod_path": '"C:/F/FMOD Studio 1.08.12"',
+                    "beamng_mods_dir": '"C:/M/mods"',
                     "driver_mass": "75",
                     "ac_root": "",
                 },
                 f,
             )
             self.assertEqual(
-                data, {"fmod_path": "C:/F/FMOD Studio 1.08.12", "driver_mass": 75.0}
+                data, {"beamng_mods_dir": "C:/M/mods", "driver_mass": 75.0}
             )
             self.assertEqual(settings.load(f), data)
-            self.assertEqual(
-                os.environ["BEAM2AC_FMOD_STUDIO"], "C:/F/FMOD Studio 1.08.12"
-            )
+            self.assertEqual(os.environ["BEAM2AC_BEAMNG_MODS"], "C:/M/mods")
             settings.save({}, f)  # quitar el ajuste lo quita del entorno
-            self.assertNotEqual(
-                os.environ.get("BEAM2AC_FMOD_STUDIO"), "C:/F/FMOD Studio 1.08.12"
-            )
+            self.assertNotEqual(os.environ.get("BEAM2AC_BEAMNG_MODS"), "C:/M/mods")
             with self.assertRaises(WorkspaceError):
                 settings.save({"driver_mass": "mucho"}, f)
         for k, v in keep.items():

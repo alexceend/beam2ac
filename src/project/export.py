@@ -28,7 +28,7 @@ Opciones explícitas (nunca por defecto; fase C1):
   (``animations/steer.ksanim``) como v18bu (``src/project/local_driver.py``). Leen un
   archivo de Kunos de la instalación local (solo lectura): el paquete queda marcado
   ``distributable: false``.
-* ``audio_bank`` [+ ``audio_source_id``]: banco FMOD precompilado validado por GUID
+* ``audio_bank`` [+ ``audio_source_id``]: banco de sonido precompilado validado por GUID
   (``src/ac/audio.py``) y ``data/sounds.ini`` con la posición de motor del perfil.
 
 Puertas de validación (fase C5): ``<proyecto>/validation_gates.json`` declara grupos de
@@ -85,7 +85,9 @@ EXPORT_CODE = (
     "src/ac/audio.py",
     "src/audio/pipeline.py",
     "src/audio/plan.py",
-    "src/audio/fmod_build.py",
+    "src/audio/engine_gen.py",
+    "src/audio/bank_graph.py",
+    "src/audio/bank_patch.py",
     "src/audio/wavinfo.py",
     "src/project/local_driver.py",
 )
@@ -1399,21 +1401,17 @@ def collect(
         )
     )
     skin = re.sub(r"[^a-z0-9_]+", "_", str(paint).lower()).strip("_") or "default"
-    # portada de la lista de coches de AC: la imagen del usuario o un render con texturas
+    # portada de la lista de coches de AC: la imagen del usuario o una imagen automática con texturas
     cover = car_details.cover_bytes(project)
     cover_src = "imagen subida por el usuario"
     mdir = stage_dirs.get("model")
     if cover is None and mdir is not None and (mdir / "model.kn5").is_file():
-        from .cover import CoverError, render_cover
-        from .model import blender_path
+        from .cover import render_cover
 
         try:
-            exe = blender_path()
-            if not exe:
-                raise CoverError("Blender no disponible")
             cover, cover_src = (
-                render_cover(mdir / "model.kn5", exe),
-                "render automático con texturas",
+                render_cover(mdir / "model.kn5"),
+                "vista automática con el color medio de las texturas",
             )
         except Exception as exc:  # la portada es opcional: nunca bloquea la exportación
             issues.append(
@@ -1714,7 +1712,7 @@ def validate_package(
                 )
     # recursos opcionales ausentes (el coche carga sin ellos)
     for rel, why in (
-        ("sfx", "sin sonido (no hay banco FMOD)"),
+        ("sfx", "sin sonido (no hay banco de sonido)"),
         ("driver_base_pos.knh", "piloto en la pose por defecto (sin pose)"),
         ("animations", "sin animaciones (manos, volante)"),
         ("ui/badge.png", "sin logotipo de marca en la interfaz"),

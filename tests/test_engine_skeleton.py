@@ -134,8 +134,8 @@ def _probe():
     try:
         from tools.audio import fmod_probe
 
-        return fmod_probe if (fmod_probe.AC / "fmodstudio64.dll").is_file() else None
-    except Exception:  # noqa: BLE001 - sin AC o sin DLL
+        return fmod_probe if fmod_probe.available() else None
+    except Exception:  # noqa: BLE001 - sin instalación de AC
         return None
 
 

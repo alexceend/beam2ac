@@ -45,7 +45,7 @@ class AcSession:
     registry: shm.Registry = field(default_factory=shm.WinRegistry)
     custom_ai: bool = True
     launch: bool = True  # False: AC ya lanzado por el usuario (o doble sintético)
-    # claves de CSP (dwrite.dll, módulo de interfaz) que evitan el menú de salida de AC; F0 intento
+    # claves de CSP (módulo de interfaz de CSP) que evitan el menú de salida de AC; F0 intento
     # 5: con ellas in_menu = 0 y Car0.v0 se actualiza sin pulsar «Drive»
     race_extra: dict | None = field(default_factory=lambda: dict(START_IMMEDIATELY))
     proc: object = None

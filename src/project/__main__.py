@@ -9,7 +9,7 @@
     python -m src.project inspect output/projects/<nombre>/exports/<NNN>
 
 ``run`` reutiliza los resultados cuyas entradas no han cambiado y nunca sobrescribe.
-``run --with-model`` añade la etapa ``model`` (KN5 con Blender). ``export`` ejecuta
+``run --with-model`` añade la etapa ``model`` (KN5 en Python puro). ``export`` ejecuta
 las etapas (con el modelo) y escribe un intento NUEVO en ``exports/<NNN>/`` con el
 paquete, su manifiesto y su informe; no instala nada. ``inspect`` comprueba un intento
 (hashes y veredicto) sin modificarlo.
@@ -62,13 +62,13 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("project", type=Path)
     r.add_argument("--stage", action="append", help="solo esta etapa (y sus previas)")
     r.add_argument(
-        "--with-model", action="store_true", help="incluye la etapa model (Blender)"
+        "--with-model", action="store_true", help="incluye la etapa model (KN5)"
     )
     e = sub.add_parser("export", help="paquete de AC en exports/<NNN>/ (no instala)")
     e.add_argument("project", type=Path)
     e.add_argument("--car-id", help="carpeta del coche (por defecto beam2ac_<id>)")
     e.add_argument(
-        "--no-model", action="store_true", help="sin Blender (el KN5 faltará)"
+        "--no-model", action="store_true", help="sin modelo 3D (el KN5 faltará)"
     )
     e.add_argument(
         "--local-driver",
@@ -119,8 +119,8 @@ def main(argv: list[str] | None = None) -> int:
     e.add_argument(
         "--audio-build",
         action="store_true",
-        help="genera el banco FMOD desde los WAV del origen (FMOD Studio 1.08.12; sin él, solo "
-        "prepara el proyecto). Ignorado si se pasa --audio-bank",
+        help="genera el banco de sonido del motor desde los WAV del origen. "
+        "Ignorado si se pasa --audio-bank",
     )
     e.add_argument(
         "--audio-source-id",

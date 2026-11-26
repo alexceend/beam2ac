@@ -1,6 +1,6 @@
 """Texturas difusas para un KN5 ya exportado, a partir de los materiales de BeamNG.
 
-El KN5 que exporta el addon de Blender no lleva texturas: sus materiales ``ksPerPixel``
+El KN5 que construye ``src.mesh.pure_kn5`` no lleva texturas: sus materiales ``ksPerPixel``
 no tienen ranura ``txDiffuse`` y AC los pinta negros
 (docs/research/informe_prueba_manual_2026-10-24.md).
 Este módulo reescribe SOLO los bloques de texturas y materiales; los bytes de los nodos
@@ -41,7 +41,7 @@ from src.jbeam import lax_json
 from src.safe_paths import ensure_safe_output_path
 
 KN5_MAGIC = b"sc6969"
-DUP_SUFFIX = re.compile(r"\.\d{3}$")  # duplicados de Blender: "nombre.001"
+DUP_SUFFIX = re.compile(r"\.\d{3}$")  # duplicados de nombre: "nombre.001"
 
 
 class Kn5FormatError(ValueError):
@@ -335,22 +335,20 @@ def load_materials(path: Path) -> dict:
 def material_key(
     name: str, bm: dict, dae_materials: Iterable[str] | None = None
 ) -> str | None:
-    """Material de BeamNG de un nombre del KN5: sin el sufijo de duplicado de Blender
-    (``.001``) y, si no existe tal cual, el ÚNICO nombre de BeamNG que Blender recorta a
-    ese nombre (63 bytes, ``src.mesh.plan.blender_name``; nombres largos del 200409).
+    """Material de BeamNG de un nombre del KN5: sin el sufijo de duplicado
+    (``.001``) y, si no existe tal cual, el ÚNICO nombre de BeamNG que se recorta a
+    ese nombre (63 bytes, ``src.mesh.plan.trim_name``; nombres largos del 200409).
 
     El recorte puede juntar un material con sus variantes de luz (``…_on``, ``…_off``):
     ``dae_materials`` (``src.mesh.dae.material_names``) limita los candidatos a los que
-    usa el DAE, que es de donde Blender toma el nombre. Ambiguo ⇒ ``None`` (error)."""
-    from src.mesh.plan import blender_name
+    usa el DAE, que es de donde sale el nombre. Ambiguo ⇒ ``None`` (error)."""
+    from src.mesh.plan import trim_name
 
     base = DUP_SUFFIX.sub("", name)
     if base in bm:
         return base
     allowed = set(dae_materials) if dae_materials is not None else None
-    hits = [
-        k for k in bm if blender_name(k) == base and (allowed is None or k in allowed)
-    ]
+    hits = [k for k in bm if trim_name(k) == base and (allowed is None or k in allowed)]
     return hits[0] if len(hits) == 1 else None
 
 
