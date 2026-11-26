@@ -81,6 +81,39 @@ class TestFunctions(unittest.TestCase):
         )
 
 
+class TestUserAndEdgeCases(unittest.TestCase):
+    def test_running_is_a_tail_light(self):
+        self.assertEqual(
+            light_functions(_Fake({"m": {"simpleFunction": {"running": 0.5}}})),
+            {"m": "TAIL"},
+        )
+
+    def test_unknown_signal_skips_only_that_material(self):
+        glow = {
+            "bad": {"simpleFunction": {"fog": 1}},
+            "ok": {"simpleFunction": {"brake": 1}},
+        }
+        skipped: list[str] = []
+        self.assertEqual(light_functions(_Fake(glow), skipped), {"ok": "BRAKE"})
+        self.assertEqual(len(skipped), 1)
+        with self.assertRaises(
+            LightsError
+        ):  # sin ``skipped`` se sigue negando (comportamiento antiguo)
+            light_functions(_Fake(glow))
+
+    def test_user_overrides_add_replace_and_remove(self):
+        glow = {
+            "a": {"simpleFunction": {"brake": 1}},
+            "b": {"simpleFunction": {"lowbeam": 1}},
+        }
+        out = light_functions(
+            _Fake(glow), [], {"a": None, "b": "SIGNAL_L", "c": "REVERSE"}
+        )
+        self.assertEqual(out, {"b": "SIGNAL_L", "c": "REVERSE"})
+        with self.assertRaises(LightsError):
+            light_functions(_Fake(glow), [], {"a": "NOPE"})
+
+
 class TestRename(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
@@ -113,6 +146,32 @@ class TestRename(unittest.TestCase):
         self.assertEqual(
             {li.function for li in lights}, {"BRAKE", "SIGNAL_L", "REVERSE"}
         )
+
+    def test_material_on_two_meshes_gets_indexed_names(self):
+        meshes = [
+            box_mesh("body", (0, 0, 0), (1, 1, 1), material=0),
+            box_mesh("body", (0, 0.5, -2), (0.4, 0.6, -1.9), material=1),
+            box_mesh("body", (1, 0.5, -2), (1.4, 0.6, -1.9), material=1),
+        ]
+        write_simple_kn5(
+            self.dir / "two.kn5", meshes, [(m, "ksPerPixel") for m in MATS[:2]]
+        )
+        new, lights = rename_light_meshes(
+            (self.dir / "two.kn5").read_bytes(), {MATS[1]: "BRAKE"}, BM, (-1.0, 1.0)
+        )
+        self.assertEqual(
+            sorted(li.mesh_name for li in lights),
+            ["B2AC_BRAKE_2_0", "B2AC_BRAKE_2_1"],
+        )
+        li = _ini(render_lights_ini(lights))
+        self.assertEqual(
+            {li["BRAKE_0"]["NAME"], li["BRAKE_1"]["NAME"]},
+            {"B2AC_BRAKE_2_0", "B2AC_BRAKE_2_1"},
+        )
+
+    def test_hand_assigned_light_without_on_variant_gets_default_colour(self):
+        _, lights = rename_light_meshes(self.data, {MATS[1]: "BRAKE"}, {}, (-1.0, 1.0))
+        self.assertEqual(lights[0].colour, (1.0, 0.05, 0.03))
 
     def test_missing_mesh_refused(self):
         with self.assertRaises(LightsError):

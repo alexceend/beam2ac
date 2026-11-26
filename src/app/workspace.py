@@ -846,6 +846,12 @@ class Workspace:
         driver_aids, tyre_compounds = _parse_extras(extras)
         flags = _parse_flags(extras) | _parse_shifter(extras) | _parse_backfire(extras)
         model_opts = _parse_model_options(extras)
+        if (
+            model_opts is not None
+        ):  # la elección de luces se guarda aparte («Luces»): no se pierde
+            from src.project.model import model_options_of
+
+            model_opts["lights"] = model_options_of(project)["lights"]
         # G2.28: con errores bloqueantes conocidos no se exporta desde la interfaz
         # (el CLI `python -m src.project export` sigue dando el intento «bloqueado»)
         blocking = self.precheck(pid).get("errors") or []
@@ -1305,11 +1311,75 @@ class Workspace:
                 "part_animations": body.get("part_animations"),
             }
         )
+        new["lights"] = cur["lights"]
         self._idle(pid, "guardar las animaciones")
         ensure_safe_output_path(project.root / MODEL_OPTIONS_FILE).write_text(
             json.dumps(new, indent=1, ensure_ascii=False) + chr(10), encoding="utf-8"
         )
         return new
+
+    _LIGHT_NAME = re.compile(
+        r"light|lamp|bulb|reflector|lens|glass|indicator|fixture|led", re.I
+    )
+
+    def lights_info(self, pid: str) -> dict[str, Any]:
+        """Luces: lo que detecta el conversor (``glowMap``), lo que eligió el usuario y los materiales del
+        modelo con malla (primero los que parecen luces). Solo lectura."""
+        from src.ac.kn5_materials import split_kn5
+        from src.ac.lights import LIGHT_FUNCTIONS, LightsError, light_functions
+        from src.project.model import model_options_of
+
+        kn5, _ = self._wheel_source(pid)
+        mats = [m.name for m in split_kn5(kn5.read_bytes()).materials]
+        skipped: list[str] = []
+        try:
+            auto = light_functions(self.review(pid).preview.resolved, skipped)
+            error = None
+        except LightsError as exc:
+            auto, error = {}, str(exc)
+        saved = model_options_of(self._project(pid))["lights"]
+        rows = [
+            {
+                "material": m,
+                "detected": auto.get(m),
+                "saved": saved.get(m),
+                "has_saved": m in saved,
+                "candidate": m in auto or bool(self._LIGHT_NAME.search(m)),
+            }
+            for m in mats
+        ]
+        rows.sort(
+            key=lambda r: (not (r["detected"] or r["has_saved"]), not r["candidate"])
+        )
+        prof = _read_json(self._model_stage(pid) / "model.json").get("profile") or {}
+        return {
+            "project": pid,
+            "has_profile": bool(prof.get("path")),
+            "functions": list(LIGHT_FUNCTIONS),
+            "materials": rows,
+            "skipped": skipped,
+            "error": error,
+        }
+
+    def lights_save(self, pid: str, body: dict[str, Any]) -> dict[str, Any]:
+        """Guarda ``lights`` (``{material: función | null}``) en ``model_options.json``: cambia la clave de la
+        etapa del modelo, la próxima exportación lo reconstruye con esas luces."""
+        from src.project.model import MODEL_OPTIONS_FILE, clean_lights, model_options_of
+
+        raw = body.get("lights")
+        if not isinstance(raw, dict):
+            raise WorkspaceError("lights: se esperaba un objeto {material: función}")
+        lights = clean_lights(raw)
+        if len(lights) != len(raw):
+            raise WorkspaceError("lights: función de luz no válida")
+        project = self._project(pid)
+        self._idle(pid, "guardar las luces")
+        cur = model_options_of(project)
+        cur["lights"] = lights
+        ensure_safe_output_path(project.root / MODEL_OPTIONS_FILE).write_text(
+            json.dumps(cur, indent=1, ensure_ascii=False) + chr(10), encoding="utf-8"
+        )
+        return {"lights": lights}
 
     def steering_info(self, pid: str) -> dict[str, Any]:
         """Materiales del KN5 (los más cercanos a los ojos primero), la elección guardada y lo que detecta
@@ -1919,8 +1989,6 @@ class Workspace:
         el exportador, la posición relativa al volante del Ibiza y, si el IK no alcanza este aro, la más cercana
         que sí (±15 cm en y/z); si ninguna vale se devuelven las por defecto y el error sale en la vista previa.
         """
-        from src.project import anim_preview as AP
-
         if c["hips_edit"] or not profile.get("generic"):
             return tuple(c["hips_edit"] or c["hips_default"])
         h0 = c["hips_default"]
@@ -1931,22 +1999,57 @@ class Workspace:
             json.dumps(profile, sort_keys=True, default=str),
         )
         memo = self.__dict__.setdefault("_hips_memo", {})
-        if memo_key in memo:
-            return memo[memo_key]
+        if memo_key not in memo:
+            memo[memo_key] = self.nearest_reachable_hips(c, profile, root, h0) or tuple(
+                h0
+            )
+        return memo[memo_key]
+
+    def nearest_reachable_hips(
+        self, c: dict[str, Any], profile: dict[str, Any], root: Path, h0
+    ) -> tuple[float, float, float] | None:
+        """Caderas más cercanas a ``h0`` (±15 cm en y/z) con las que las dos manos alcanzan el aro
+        (``reachable``) en todo el ciclo; ``None`` si ninguna vale."""
+        from src.project import anim_preview as AP
+
+        from src.ac import driver_seat
+
+        roof_at = driver_seat.roof_function(c["model_dir"] / "model.kn5")
+
+        def clear(
+            p,
+        ) -> bool:  # la cabeza queda bajo el techo (misma regla que el exportador)
+            r = roof_at(p[0], p[2])
+            return r is None or (
+                r
+                - driver_seat.VALIDATED_ROOF_MINUS_HEAD
+                - driver_seat.HEAD_BONE_ABOVE_HIPS
+                - p[1]
+                >= 0
+            )
+
         steps = [i * 0.025 for i in range(-6, 7)]
         for dy, dz in sorted(
             ((a, b) for a in steps for b in steps),
             key=lambda ab: ab[0] ** 2 + ab[1] ** 2,
         ):
             h = (h0[0], round(h0[1] + dy, 4), round(h0[2] + dz, 4))
-            try:
-                AP.preview(c["model_dir"], c["model"], profile, root, h, 8)
-                memo[memo_key] = h
-                return h
-            except (RuntimeError, ValueError):
+            if not clear(h):
                 continue
-        memo[memo_key] = tuple(h0)
-        return memo[memo_key]
+            try:
+                # 8 fotogramas para descartar rápido; el ciclo completo (48) confirma
+                if all(
+                    AP.preview(c["model_dir"], c["model"], profile, root, h, n)[
+                        "reachable"
+                    ]
+                    for n in (8, 48)
+                ):
+                    return h
+            except (
+                RuntimeError
+            ):  # DriverPoseError/SteerAnimError: esta posición no vale
+                continue
+        return None
 
     @_cockpit_errors
     def anim(self, pid: str) -> dict[str, Any]:
@@ -2018,8 +2121,17 @@ class Workspace:
             hips = tuple(float(v) for v in hips)
         else:
             hips = self._anim_hips(c, profile, root)
+        fitted = None
+        if body.get("fit_hips"):
+            # «Ajustar caderas»: la posición alcanzable más cercana a las actuales (el usuario las ve moverse)
+            fitted = self.nearest_reachable_hips(c, profile, root, hips)
+            if fitted is None:
+                raise WorkspaceError(
+                    "ninguna posición de caderas a ±15 cm alcanza el volante con la cabeza bajo el techo: acerca o baja el volante"
+                )
+            hips = fitted
         try:
-            return AP.preview(
+            out = AP.preview(
                 c["model_dir"],
                 c["model"],
                 profile,
@@ -2027,6 +2139,8 @@ class Workspace:
                 hips,
                 int(body.get("frames") or 36),
             )
+            out["hips_fitted"] = list(fitted) if fitted else None
+            return out
         except RuntimeError as exc:  # DriverPoseError: caderas o aro inalcanzables
             raise WorkspaceError(
                 f"pose no alcanzable con estos valores: {exc}"
@@ -2068,6 +2182,27 @@ class Workspace:
 
         k = read_kn5(self._model_stage(pid) / "model.kn5")
         return _mesh_blob(k, lambda n: "DRIVER" not in n.name.upper())
+
+    def material_triangles(self, pid: str) -> bytes:
+        """Material de cada triángulo de ``steering_geometry`` (sin filtro; mismo orden), para elegir un material
+        haciendo clic en la vista 3D. ``u32 len(cabecera)`` + JSON ``{"names": [...]}`` (relleno a 4) +
+        ``u16[ntri]`` (índice en ``names``)."""
+        from src.ac.kn5_inspect import read_kn5
+        from src.ac.kn5_materials import split_kn5
+
+        kn5, _ = self._wheel_source(pid)
+        names = [m.name for m in split_kn5(kn5.read_bytes()).materials]
+        if len(names) > 65535:
+            raise WorkspaceError("demasiados materiales")
+        tri = array.array("H")
+        for n in read_kn5(kn5).nodes:
+            if n.type == 2:
+                tri.extend([n.material] * (len(n.indices) // 3))
+        if sys.byteorder == "big":
+            tri.byteswap()
+        head = json.dumps({"names": names}).encode()
+        head += b" " * (-len(head) % 4)
+        return struct.pack("<I", len(head)) + head + tri.tobytes()
 
     def steering_geometry(self, pid: str, material: str = "") -> bytes:
         """Como ``cockpit_geometry`` pero del KN5 con el que se elige el volante; con ``material``,

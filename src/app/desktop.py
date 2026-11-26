@@ -154,13 +154,21 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                     return self._json(200, ws.cockpit(q.get("project", "")))
                 if p == "/api/anim":
                     return self._json(200, ws.anim(q.get("project", "")))
-                if p in ("/api/cockpit_geometry", "/api/steering_geometry"):
+                if p in (
+                    "/api/cockpit_geometry",
+                    "/api/steering_geometry",
+                    "/api/material_triangles",
+                ):
                     blob = (
-                        ws.steering_geometry(
-                            q.get("project", ""), q.get("material", "")
+                        ws.material_triangles(q.get("project", ""))
+                        if p == "/api/material_triangles"
+                        else (
+                            ws.steering_geometry(
+                                q.get("project", ""), q.get("material", "")
+                            )
+                            if p == "/api/steering_geometry"
+                            else ws.cockpit_geometry(q.get("project", ""))
                         )
-                        if p == "/api/steering_geometry"
-                        else ws.cockpit_geometry(q.get("project", ""))
                     )
                     self.send_response(200)
                     self.send_header("Content-Type", "application/octet-stream")
@@ -179,6 +187,8 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                     return self._json(200, ws.model_parts(q.get("project", "")))
                 if p == "/api/model_options":
                     return self._json(200, ws.model_options_info(q.get("project", "")))
+                if p == "/api/lights":
+                    return self._json(200, ws.lights_info(q.get("project", "")))
                 if (
                     p == "/api/parts_geometry"
                 ):  # mallas del KN5 como piezas (editor de animaciones)
@@ -286,6 +296,10 @@ def make_desktop_handler(ws: Workspace, lock: threading.Lock):
                 if p == "/api/model_options":
                     return self._json(
                         200, ws.model_options_save(body.get("project", ""), body)
+                    )
+                if p == "/api/lights":
+                    return self._json(
+                        200, ws.lights_save(body.get("project", ""), body)
                     )
                 if p == "/api/details":
                     return self._json(

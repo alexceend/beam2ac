@@ -41,9 +41,10 @@
       <div id="setup-warn" class="notice warning" role="alert" hidden></div>
       <div class="panel" id="author-notes">
         <h2>Notas del autor</h2>
-        <p class="small">Siento que es importante este comentario antes de explicar el proyecto, así que lo pongo arriba :)</p>
-        <p class="small">Hola, soy Alex. No sé si debería considerarme AUTOR del proyecto ya que, en gran medida, esto ha sido posible gracias a la ayuda de herramientas de IA. Mi labor ha sido sobre todo de diseño y de ingeniería inversa para obtener la forma que tiene cada motor (BeamNG y Kunos) de entender las físicas, y así poder relacionarlas y transformarlas. Mis conocimientos de física y mecánica son básicos, por lo que la labor de TRANSFORMACIÓN de físicas y archivos no debería atribuirse a mi autoría. Sin embargo, en el proyecto no he estado solo: agradezco enormemente la ayuda de amigos con conocimientos de mecánica y a Salva por haberme ayudado a detectar fallos y elementos a refinar.</p>
-        <p class="small">Dicho esto, si tenéis interés en más proyectos míos podéis visitar el repositorio de este proyecto, y si alguien quiere apoyarlos os dejo el enlace a mi Ko-fi. ¡Muchas gracias por leer este tostón!</p>
+        <p class="small">Siento que es importante este comentario antes de explicar el proyecto así que lo pongo arrriba en el readme :)</p>
+        <p class="small">Hola, soy alex, no sé si debería considerarme AUTOR del proyecto ya que, en gran medida, esto ha sido posible gracias a la ayuda de herramientas de IA. Mi labor en este proyecto ha sido mayoritariamente de diseño y de ingeniería inversa para poder obtener la forma que tiene cada motor (BeamNG y Kunos) de representar las físicas para así relacionarlas y transformarlas con beam2ac. Mis conocimientos en física y mecánica son básicos, por lo que la labor de TRANSFORMACIÓN de físicas y archivos no debería atribuirse a mi autoría.</p>
+        <p class="small">Sin embargo en el proyecto no he estado solo. Agradezco enormemente la ayuda de amigos con conocimientos en mecánica y a Salva por haberme ayudado a detectar fallos y elementos a refinar.</p>
+        <p class="small">Dicho esto, si teneis interés en más proyectos míos podeis visitar mi GitHub y si alguien quiere apoyarlos os dejo el link a mi Ko-Fi. Muchas gracias por leer este tostón!</p>
         <div class="actions">
           <a class="linkbtn repo" href="https://github.com/alexceend/beam2ac" target="_blank" rel="noopener noreferrer"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>Ver el repositorio en GitHub</a>
           <a class="linkbtn kofi" href="https://ko-fi.com/alexceend" target="_blank" rel="noopener noreferrer"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 7h14v6a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V7z"/><path fill="none" stroke="currentColor" stroke-width="2" d="M17 8.5h1.5a2.75 2.75 0 0 1 0 5.5H17"/><path fill="#ff5e5b" d="M10 15.6s-3.2-1.9-3.2-3.8a1.7 1.7 0 0 1 3.2-.8 1.7 1.7 0 0 1 3.2.8c0 1.9-3.2 3.8-3.2 3.8z"/></svg>Apóyame en Ko-fi</a>
@@ -59,15 +60,6 @@
         </ul>
         <p class="muted small">«Exportable» no significa probado: hay que conducirlo en Assetto Corsa para validarlo.</p>
       </div>
-      <div class="panel" id="usage-notes">
-        <h2>Notas de uso</h2>
-        <p class="muted small">Qué tener en cuenta al diseñar el coche en Automation.</p>
-        <ul class="small">
-          <li>Eje rígido delantero: puede fallar, ya que Assetto Corsa no lo implementa.</li>
-          <li>Diferencial bloqueable: puede fallar, ya que Assetto Corsa no lo implementa.</li>
-          <li>Ruedas de competición: pueden fallar.</li>
-        </ul>
-      </div>
       <div class="panel">
         <h2>Convertir un coche</h2>
         <p class="muted small">Carpeta de una exportación de Automation a BeamNG (la que contiene los <code>.pc</code>, o la raíz del mod).
@@ -78,6 +70,15 @@
           <button id="btn-pick-zip" class="secondary" type="button" hidden>Elegir zip…</button>
         </form>
         <div id="analysis"></div>
+      </div>
+      <div class="panel" id="usage-notes">
+        <h2>Notas de uso</h2>
+        <p class="muted small">Qué tener en cuenta al diseñar el coche en Automation.</p>
+        <ul class="small">
+          <li>Eje rígido delantero: puede fallar, ya que Assetto Corsa no lo implementa.</li>
+          <li>Diferencial bloqueable: puede fallar, ya que Assetto Corsa no lo implementa.</li>
+          <li>Ruedas de competición: pueden fallar.</li>
+        </ul>
       </div>
     </section>
     <section id="project" hidden>
@@ -108,6 +109,7 @@
 <dialog id="dlg-welcome" class="massdlg" aria-label="Bienvenido a beam2ac">
   <div class="dlg-head"><h2>Bienvenido a beam2ac</h2><button class="icon-btn" type="button" data-close aria-label="Cerrar" title="Cerrar">✕</button></div>
   <p>Antes de empezar, abre los Ajustes (el engranaje de arriba) y configura las rutas de Assetto Corsa, Steam y BeamNG.</p>
+  <p class="small" style="color:#f38ba8;font-weight:bold"><strong>Aviso:</strong> la aplicación está en sus primeras fases. Algunas conversiones pueden tener bugs o directamente fallar.</p>
   <p class="small"><strong>Ruta por defecto de las exportaciones:</strong> <code id="welcome-path"></code><br>
   <span class="muted">Cada exportación se guarda en &lt;proyectos&gt;/&lt;proyecto&gt;/exports/&lt;NNN&gt;/&lt;car_id&gt;. Puedes cambiar la carpeta de proyectos en Ajustes.</span></p>
   <label class="small"><input type="checkbox" id="welcome-never"> No volver a mostrar</label>

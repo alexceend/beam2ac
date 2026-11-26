@@ -40,6 +40,7 @@ FUNCTIONS = {
     "lowbeam": "HEADLIGHT",
     "highbeam": "HEADLIGHT",
     "lowhighbeam": "TAIL",
+    "running": "TAIL",  # luz de posición/diurna/matrícula: encendida con los faros
     "brake": "BRAKE",
     "reverse": "REVERSE",
     "signal_L": "SIGNAL_L",
@@ -79,8 +80,16 @@ class LightMesh:
     interior: bool
 
 
-def light_functions(resolved: ResolvedConfig) -> dict[str, str]:
-    """Material → función de AC, desde ``glowMap``. Se elige la señal de mayor peso."""
+def light_functions(
+    resolved: ResolvedConfig,
+    skipped: list[str] | None = None,
+    overrides: dict[str, str | None] | None = None,
+) -> dict[str, str]:
+    """Material → función de AC, desde ``glowMap``. Se elige la señal de mayor peso.
+
+    Una señal sin equivalente deja fuera ESE material (se anota en ``skipped``) en vez de
+    descartar todas las luces. ``overrides`` = elección del usuario: ``{material: función}`` añade o
+    sustituye la detección y ``None`` quita el material (no es una luz)."""
     out: dict[str, str] = {}
     for _, section in resolved.section_contributions("glowMap"):
         for material, spec in section.items():
@@ -89,7 +98,10 @@ def light_functions(resolved: ResolvedConfig) -> dict[str, str]:
             signals = spec["simpleFunction"]
             unknown = [s for s in signals if s not in FUNCTIONS]
             if unknown:
-                raise LightsError(f"{material}: señales sin equivalente {unknown}")
+                if skipped is None:
+                    raise LightsError(f"{material}: señales sin equivalente {unknown}")
+                skipped.append(f"{material}: señales sin equivalente {unknown}")
+                continue
             funcs = {FUNCTIONS[s] for s in signals}
             if len(funcs) != 1:
                 raise LightsError(f"{material}: varias funciones {sorted(funcs)}")
@@ -97,7 +109,27 @@ def light_functions(resolved: ResolvedConfig) -> dict[str, str]:
             if material in out and out[material] != func:
                 raise LightsError(f"{material}: glowMap contradictorio entre piezas")
             out[material] = func
+    for material, func in (overrides or {}).items():
+        if func is None:
+            out.pop(material, None)
+        elif func in LIGHT_FUNCTIONS:
+            out[material] = func
+        else:
+            raise LightsError(f"{material}: función de luz desconocida {func!r}")
     return out
+
+
+# funciones que el usuario puede asignar a mano a un material (ver ``light_functions``)
+LIGHT_FUNCTIONS = ("HEADLIGHT", "TAIL", "BRAKE", "REVERSE", "SIGNAL_L", "SIGNAL_R")
+# tono por defecto (0..1) de un material de luz sin variante ``_on`` (asignado a mano)
+DEFAULT_COLOUR = {
+    "HEADLIGHT": (1.0, 0.95, 0.85),
+    "TAIL": (1.0, 0.1, 0.05),
+    "BRAKE": (1.0, 0.05, 0.03),
+    "REVERSE": (1.0, 1.0, 1.0),
+    "SIGNAL_L": (1.0, 0.5, 0.0),
+    "SIGNAL_R": (1.0, 0.5, 0.0),
+}
 
 
 def kind_of(material: str) -> str:
@@ -109,10 +141,16 @@ def kind_of(material: str) -> str:
     return "glass"
 
 
-def on_colour(materials_json: dict, material: str) -> tuple[float, float, float]:
+def on_colour(
+    materials_json: dict, material: str, function: str | None = None
+) -> tuple[float, float, float]:
     st = (materials_json.get(material + "_on", {}).get("Stages") or [{}])[0]
     emis = st.get("emissiveFactor")
     if not isinstance(emis, list) or len(emis) < 3:
+        if function in DEFAULT_COLOUR and material + "_on" not in materials_json:
+            return DEFAULT_COLOUR[
+                function
+            ]  # luz asignada a mano: sin variante _on que dé el tono
         raise LightsError(f"{material}_on sin emissiveFactor")
     peak = max(emis[:3]) or 1.0
     return tuple(float(c) / peak for c in emis[:3])  # type: ignore[return-value]
@@ -125,8 +163,9 @@ def rename_light_meshes(
     interior_z: tuple[float, float],
 ) -> tuple[bytes, list[LightMesh]]:
     """Da un nombre único (``B2AC_<FUNCIÓN>_<n.º de material>``) a cada malla de luz
-    y añade ``ksEmissive`` a sus materiales. Falla si un material de luz no tiene
-    exactamente una malla o si el nombre ya existe."""
+    y añade ``ksEmissive`` a sus materiales. Si un material de luz está en varias mallas (p. ej. los
+    intermitentes de los dos retrovisores) cada una recibe un sufijo ``_<k>``. Falla si un material de luz
+    no tiene ninguna malla o si el nombre ya existe."""
     parts, root = load(data)
     mats = [m.name for m in parts.materials]
     existing = Counter(n.name for n, _ in walk(root))
@@ -137,28 +176,28 @@ def rename_light_meshes(
     lights: list[LightMesh] = []
     for material, function in sorted(functions.items()):
         nodes = by_mat.get(material, [])
-        if len(nodes) != 1:
-            raise LightsError(f"{material}: {len(nodes)} mallas (se esperaba 1)")
+        if not nodes:
+            raise LightsError(f"{material}: ninguna malla usa este material")
         num = re.match(r"material_(\d+)_", material)
-        new = f"B2AC_{function}_{num.group(1) if num else len(lights)}"
-        if existing[new]:
-            raise LightsError(f"el nombre {new} ya existe")
-        node = nodes[0]
-        pos = read_mesh(node).positions()
-        zs = [p[2] for p in pos]
-        cz = sum(zs) / len(zs)
-        node.name = new
-        lights.append(
-            LightMesh(
-                material,
-                function,
-                kind_of(material),
-                on_colour(materials_json, material),
-                new,
-                cz,
-                interior_z[0] < min(zs) and max(zs) < interior_z[1],
+        stem = f"B2AC_{function}_{num.group(1) if num else len(lights)}"
+        for k, node in enumerate(nodes):
+            new = stem if len(nodes) == 1 else f"{stem}_{k}"
+            if existing[new]:
+                raise LightsError(f"el nombre {new} ya existe")
+            pos = read_mesh(node).positions()
+            zs = [p[2] for p in pos]
+            node.name = new
+            lights.append(
+                LightMesh(
+                    material,
+                    function,
+                    kind_of(material),
+                    on_colour(materials_json, material, function),
+                    new,
+                    sum(zs) / len(zs),
+                    interior_z[0] < min(zs) and max(zs) < interior_z[1],
+                )
             )
-        )
     wanted = set(functions)
     new_mats = []
     for m in parts.materials:
@@ -303,9 +342,11 @@ def apply_lights(
     if not same_tree:
         raise LightsError("el KN5 cambió en algo más que los nombres de las mallas")
     wrong = [] if source is None else [old for old, _ in renamed if old != source]
-    if len(renamed) != expected or wrong:
+    # con perfil del vehículo cada material de luz debe ser una sola malla (``expected``)
+    want = len(lights) if source is None else expected
+    if len(renamed) != want or wrong:
         raise LightsError(
-            f"mallas de luz renombradas: {len(renamed)} (perfil: {expected}); nombres "
+            f"mallas de luz renombradas: {len(renamed)} (esperadas: {want}); nombres "
             f"de origen distintos de {source!r}: {sorted(set(wrong))}"
         )
     return LightsResult(

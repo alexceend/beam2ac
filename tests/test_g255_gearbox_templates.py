@@ -600,13 +600,21 @@ def test_endurecimiento_backfire_animaciones_y_rutas(tmp_path):
         root = tmp_path
 
     (tmp_path / M.MODEL_OPTIONS_FILE).write_text("[1, 2]")
-    assert M.model_options_of(P) == {"normal_maps": False, "part_animations": []}
+    assert M.model_options_of(P) == {
+        "normal_maps": False,
+        "part_animations": [],
+        "lights": {},
+    }
     (tmp_path / M.MODEL_OPTIONS_FILE).write_text("no es json")
     assert M.model_options_of(P)["normal_maps"] is False
     (tmp_path / M.MODEL_OPTIONS_FILE).write_text(
         json.dumps({"normal_maps": "false", "part_animations": "abc"})
     )
-    assert M.model_options_of(P) == {"normal_maps": False, "part_animations": []}
+    assert M.model_options_of(P) == {
+        "normal_maps": False,
+        "part_animations": [],
+        "lights": {},
+    }
 
     veh = tmp_path / "veh"
     veh.mkdir()

@@ -173,10 +173,130 @@ function mini3d(T, canvas) {
   };
   canvas.addEventListener("pointermove", (e) => { if (e.buttons & 1) { v.az -= e.movementX * 0.01; v.el = Math.max(-1.5, Math.min(1.5, v.el + e.movementY * 0.01)); draw(); } });
   canvas.addEventListener("wheel", (e) => { e.preventDefault(); v.d = Math.max(0.1, v.d * (e.deltaY > 0 ? 1.1 : 0.9)); draw(); }, { passive: false });
-  return { sc, draw, v, rd, frame(g) { g.computeBoundingSphere(); v.c.copy(g.boundingSphere.center); v.d = g.boundingSphere.radius * 3.2; } };
+  // clic (sin arrastrar) → ``api.onPick(faceIndex[])``: triángulos cruzados por el rayo, de cerca a lejos
+  const ray = new T.Raycaster(); let down = null;
+  canvas.addEventListener("pointerdown", (e) => { down = [e.clientX, e.clientY]; });
+  canvas.addEventListener("pointerup", (e) => {
+    if (!down || !api.pickMesh || !api.onPick) return;
+    const moved = Math.hypot(e.clientX - down[0], e.clientY - down[1]); down = null;
+    if (moved > 4) return;
+    const r = canvas.getBoundingClientRect();
+    ray.setFromCamera(new T.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), cam);
+    api.onPick(ray.intersectObject(api.pickMesh).map((h) => h.faceIndex));
+  });
+  const api = { sc, draw, v, rd, pickMesh: null, onPick: null, frame(g) { g.computeBoundingSphere(); v.c.copy(g.boundingSphere.center); v.d = g.boundingSphere.radius * 3.2; } };
+  return api;
+}
+// Elegir un material haciendo clic en la vista 3D: GET /api/material_triangles da el material de cada triángulo.
+// Los clics repetidos en el mismo punto recorren los materiales que cruza el rayo (de fuera hacia dentro).
+async function enableMaterialPick(T, view, mesh, pid, current, choose) {
+  const buf = await window.b2aGeo(`/api/material_triangles?project=${encodeURIComponent(pid)}`);
+  const hl = new Uint32Array(buf, 0, 1)[0];
+  const names = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 4, hl))).names;
+  const tri = new Uint16Array(buf, 4 + hl);
+  view.pickMesh = mesh;
+  view.onPick = (faces) => {
+    const seq = [];
+    for (const f of faces) { const n = names[tri[f]]; if (n && !seq.includes(n)) seq.push(n); }
+    if (!seq.length) return;
+    const i = seq.indexOf(current());
+    choose(seq[(i + 1) % seq.length]);
+  };
 }
 // Ventana flotante del volante: detección automática + elección manual del material del aro
 // (src/ac/steer_detect.py; se guarda en <proyecto>/steering_wheel.json y entra en la clave de la etapa del modelo).
+// Luces: lo que detecta el conversor (glowMap de BeamNG) y lo que asigna el usuario a mano a un material
+// del modelo (POST /api/lights → model_options.json; la próxima exportación reconstruye el modelo).
+const LIGHT_LABELS = { HEADLIGHT: "Faros delanteros", TAIL: "Luz trasera / de posición / matrícula", BRAKE: "Freno", REVERSE: "Marcha atrás (necesita CSP)", SIGNAL_L: "Intermitente izquierdo (necesita CSP)", SIGNAL_R: "Intermitente derecho (necesita CSP)" };
+async function lightsDialog() {
+  const pid = CURRENT;
+  const dlg = el("dialog", { class: "massdlg" });
+  const close = () => { dlg.close(); dlg.remove(); };
+  const msg = el("p", { class: "small" });
+  const say = (text, cls = "") => { msg.textContent = text; msg.className = "small " + cls; };
+  dlg.append(el("h3", {}, "Luces"), el("p", { class: "muted small" }, "Cargando…"));
+  document.body.append(dlg); dlg.showModal();
+  let info;
+  try { info = await api(`/api/lights?project=${encodeURIComponent(pid)}`); }
+  catch (e) { dlg.replaceChildren(el("h3", {}, "Luces"), el("div", { class: "notice err" }, e.message), el("div", { class: "actions" }, el("button", { class: "secondary", type: "button", onclick: close }, "Cerrar"))); return; }
+  // draft: material → función | null (null = «no es una luz»); solo lo que cambia el usuario sobre la detección
+  const draft = {};
+  for (const m of info.materials) if (m.has_saved) draft[m.material] = m.saved;
+  const detected = Object.fromEntries(info.materials.map((m) => [m.material, m.detected]));
+  const sel = el("select", { "aria-label": "Material" });
+  const opt = (m) => el("option", { value: m.material }, m.material + (m.detected ? ` · detectada: ${LIGHT_LABELS[m.detected]}` : ""));
+  sel.append(el("optgroup", { label: "Luces (detectadas o con nombre de luz)" }, info.materials.filter((m) => m.detected || m.has_saved || m.candidate).map(opt)),
+    el("optgroup", { label: "Resto de materiales" }, info.materials.filter((m) => !(m.detected || m.has_saved || m.candidate)).map(opt)));
+  const fn = el("select", { "aria-label": "Función" }, ...info.functions.map((f) => el("option", { value: f }, LIGHT_LABELS[f] || f)));
+  // función efectiva de un material: la elegida por el usuario o, si no, la detectada
+  const eff = (m) => (m in draft ? draft[m] : detected[m]) || null;
+  const list = el("div", { class: "lightlist" });
+  const renderList = () => {
+    const names = info.materials.map((m) => m.material).filter((m) => eff(m) || m in draft);
+    const rows = names.map((m) => {
+      const f = eff(m);
+      const pick = el("select", { "aria-label": "Función de " + m, onchange: (e) => { draft[m] = e.target.value; renderList(); } },
+        ...info.functions.map((x) => el("option", { value: x, selected: x === f }, LIGHT_LABELS[x] || x)));
+      return el("div", { class: "actions", style: "align-items:center" },
+        el("button", { type: "button", class: "secondary small", title: "Ver este material", onclick: () => { sel.value = m; showMat(); } }, "Ver"),
+        el("code", { class: "small", style: "flex:1;word-break:break-all" }, m + (m in draft ? "" : " (detectada)")),
+        f ? pick : el("span", { class: "muted small" }, "quitada"),
+        el("button", { type: "button", class: "secondary small", title: f ? "Quitar de la lista" : "Volver a la detección", onclick: () => {
+          if (!f) delete draft[m];              // quitada → vuelve a la detección
+          else if (detected[m]) draft[m] = null;  // detectada → marcar como «no es una luz»
+          else delete draft[m];                 // añadida por el usuario → fuera
+          renderList();
+        } }, f ? "✕ Quitar" : "Restaurar"));
+    });
+    list.replaceChildren(...(rows.length ? rows : [el("p", { class: "muted small" }, "Sin luces: añade al menos los faros y las luces traseras.")]));
+  };
+  const add = () => {
+    if (!sel.value) return;
+    draft[sel.value] = fn.value; renderList(); say(`Añadida: ${sel.value}. Pulsa «Guardar» para aplicarla.`, "ok");
+  };
+  sel.addEventListener("change", () => showMat());
+  const cvA = el("canvas", { class: "steerview", title: "Coche: el material elegido en rojo. Clic = elegir material (clics repetidos van a las capas de dentro)" }), cvB = el("canvas", { class: "steerview", title: "Solo el material elegido" });
+  let T, A, B, partA, partB, reqId = 0;
+  const showMat = async () => {
+    if (!A) return;
+    const id = ++reqId;
+    for (const o of [partA, partB]) if (o) { o.parent.remove(o); o.geometry.dispose(); }
+    partA = partB = null;
+    try {
+      const g = await fetchGeo(T, `/api/steering_geometry?project=${encodeURIComponent(pid)}&material=${encodeURIComponent(sel.value)}`);
+      if (id !== reqId) return;
+      partA = new T.Mesh(g, new T.MeshBasicMaterial({ color: 0xff0a28, side: T.DoubleSide, depthTest: false })); partA.renderOrder = 2; A.sc.add(partA);
+      partB = new T.Mesh(g.clone(), new T.MeshStandardMaterial({ color: 0xcdd6f4, side: T.DoubleSide })); B.sc.add(partB); B.frame(g);
+    } catch (e) { say(e.message, "warn"); }
+    A.draw(); B.draw();
+  };
+  const save = async () => {
+    try { await api("/api/lights", { project: pid, lights: draft }); say("Guardado: se aplica en la próxima exportación (el modelo se reconstruye).", "ok"); }
+    catch (e) { say(e.message, "warn"); }
+  };
+  dlg.replaceChildren(
+    el("h3", {}, "Luces"),
+    el("p", { class: "muted small" }, "El conversor lee qué materiales son luces del «glowMap» de BeamNG. Si no detecta alguna (o se equivoca), añádela o quítala en la lista. Para elegir un material haz clic sobre él en la vista 3D (clics repetidos en el mismo punto pasan a las piezas de debajo) o búscalo en el desplegable. Los faros y las luces traseras se encienden con las luces de AC; el freno con el pedal; marcha atrás e intermitentes necesitan Custom Shaders Patch. Sin probar en el juego: ajusta el brillo en Assetto Corsa."),
+    info.has_profile ? el("div", { class: "notice warning" }, "Este coche tiene perfil propio (luces validadas): tu elección se ignora al exportar.") : null,
+    info.error ? el("div", { class: "notice warning" }, "Detección: " + info.error) : null,
+    ...info.skipped.map((s) => el("div", { class: "notice warning small" }, "Ignorada: " + s)),
+    el("p", { class: "small" }, el("strong", {}, "Luces del coche:")), list,
+    el("p", { class: "small" }, el("strong", {}, "Añadir una luz:")),
+    el("div", { class: "actions" }, sel, fn, el("button", { type: "button", class: "secondary", onclick: add }, "＋ Añadir a la lista")),
+    el("div", { class: "steerviews" }, cvA, cvB),
+    el("p", { class: "muted small" }, "Izquierda: el coche con el material elegido en rojo. Derecha: solo ese material. Arrastra para girar, rueda para acercar."),
+    msg,
+    el("div", { class: "actions" }, el("button", { class: "primary", type: "button", onclick: save }, "Guardar"), el("button", { class: "secondary", type: "button", onclick: close }, "Cerrar")));
+  renderList();
+  try {
+    T = await loadThree(); A = mini3d(T, cvA); B = mini3d(T, cvB);
+    const g = await fetchGeo(T, `/api/steering_geometry?project=${encodeURIComponent(pid)}`);
+    const carMesh = new T.Mesh(g, new T.MeshStandardMaterial({ color: 0x8895a3, transparent: true, opacity: 0.3, side: T.DoubleSide, depthWrite: false }));
+    A.sc.add(carMesh); A.frame(g);
+    await enableMaterialPick(T, A, carMesh, pid, () => sel.value, (name) => { sel.value = name; showMat(); });
+    await showMat();
+  } catch (e) { say("Vista 3D no disponible: " + e.message, "warn"); }
+}
 async function steeringDialog() {
   const pid = CURRENT;
   const dlg = el("dialog", { class: "massdlg" });
@@ -237,7 +357,7 @@ async function steeringDialog() {
     el("p", { class: "small" }, "Detección automática ahora: ", el("strong", {}, info.auto || "no encuentra volante"), info.auto_error ? ` (${info.auto_error})` : ""),
     el("div", { class: "actions" }, el("button", { class: "primary", type: "button", onclick: detect }, "Detectar automáticamente"), sel),
     views,
-    el("p", { class: "muted small" }, "Izquierda: el coche con el material elegido en rojo. Derecha: solo ese material. Arrastra para girar, rueda para acercar."),
+    el("p", { class: "muted small" }, "Izquierda: el coche con el material elegido en rojo. Derecha: solo ese material. Arrastra para girar, rueda para acercar. Haz clic sobre una pieza para elegir su material (clics repetidos en el mismo punto pasan a las piezas de debajo)."),
     msg,
     el("div", { class: "actions" },
       el("button", { class: "secondary", type: "button", onclick: save }, "Guardar"),
@@ -249,6 +369,7 @@ async function steeringDialog() {
     const g = await fetchGeo(T, `/api/steering_geometry?project=${encodeURIComponent(pid)}`);
     carMesh = new T.Mesh(g, new T.MeshStandardMaterial({ color: 0x8895a3, transparent: true, opacity: 0.3, side: T.DoubleSide, depthWrite: false }));
     A.sc.add(carMesh); A.frame(g);
+    await enableMaterialPick(T, A, carMesh, pid, () => sel.value, (name) => { if ([...sel.options].some((o) => o.value === name)) { sel.value = name; showMat(); } });
     await showMat();
     if (msg.dataset.anim === "1") say("");
   } catch (e) { say("Vista 3D no disponible: " + e.message, "warn"); }
@@ -920,6 +1041,9 @@ function extrasBlock() {
         el("label", { class: "opt", style: "margin:0" }, el("input", { type: "checkbox", id: "no-wheel", onchange: (e) => { $("steer-btn").disabled = e.target.checked; } }), " El coche no tiene volante"),
         el("button", { id: "steer-btn", class: "secondary", type: "button", onclick: () => steeringDialog() }, "Seleccionar volante"),
         el("span", { class: "muted small" }, "El conversor busca solo el volante en el modelo 3D. Si se equivoca (por ejemplo, coge otra pieza redonda), pulsa aquí y elige tú cuál es el aro. El coche siempre lleva volante y piloto."))),
+    el("section", { class: "xsec" }, el("h4", {}, "Luces"),
+      hint("El conversor detecta las luces del coche (faros, freno, matrícula, intermitentes) y las hace funcionar en el juego. Si no detecta alguna o se equivoca, asígnala tú."),
+      el("div", { class: "actions" }, el("button", { type: "button", class: "secondary", onclick: () => lightsDialog() }, "Asignar luces…"))),
     el("section", { class: "xsec" }, el("h4", {}, "Neumáticos de Assetto Corsa"),
       hint("Marca los tipos de neumático del juego original que quieres tener además del convertido (que se llamará «Exported»). Se leen de tu instalación de AC y hacen que el coche solo sirva para tu equipo."),
       box),

@@ -26,11 +26,18 @@ Correspondencia BeamNG → AC (solo color difuso; sin PBR, mapas normales ni opa
        Sin pintura resuelta (``paint_rgb=None``) el material se deja SIN textura
        (``kind="pintura_sin_resolver"``): no se inventa un color.
     3. resto → color sólido = ``diffuseColor``.
+    4. ``opacityMap`` (decales: logos, letras, insignias; el mapa es una máscara de un canal) →
+       textura RGBA (color del paso 1-3 con la máscara como alfa; luminancia, NO el canal alfa del DDS) y
+       ``alphaBlendMode`` 1. Solo si el material NO lleva ``opacityMapUseUV`` (segundo juego de UV: el
+       sello de la pintura, que no se interpreta). Una máscara que no se puede leer deja el material
+       como antes y lo anota en ``note``.
     Componente de 0..1 → byte ``round(c·255)``, sin conversión de gamma (no verificada).
 """
 
 from __future__ import annotations
 
+import hashlib
+import io
 import re
 import struct
 from dataclasses import dataclass, field, replace
@@ -165,6 +172,92 @@ def solid_dds(rgb: tuple[int, int, int], size: int = 4, alpha: int = 255) -> byt
     caps = struct.pack("<5I", 0x1000, 0, 0, 0, 0)
     pixel = bytes([rgb[2], rgb[1], rgb[0], alpha])  # BGRA
     return b"DDS " + header + pixfmt + caps + pixel * (size * size)
+
+
+DECAL_MAX_SIDE = 2048  # lado máximo de la textura RGBA de un decal (DXT5 con mipmaps)
+
+
+def _dxt5_mips(img) -> bytes:
+    """DDS DXT5 con cadena completa de mipmaps (sin ellos el texto pequeño centellea). Pillow comprime cada
+    nivel; la cabecera del nivel 0 se completa con el número de mipmaps."""
+    from PIL import Image
+
+    levels: list[bytes] = []
+    head = b""
+    w, h = img.size
+    while True:
+        cur = img if (w, h) == img.size else img.resize((w, h), Image.LANCZOS)
+        buf = io.BytesIO()
+        cur.save(buf, "DDS", pixel_format="DXT5")
+        raw = buf.getvalue()
+        head = head or raw[:128]
+        levels.append(raw[128:])
+        if w == 1 and h == 1:
+            break
+        w, h = max(1, w // 2), max(1, h // 2)
+    hd = bytearray(head)
+    hd[8:12] = struct.pack(
+        "<I", struct.unpack_from("<I", hd, 8)[0] | 0x20000
+    )  # DDSD_MIPMAPCOUNT
+    hd[28:32] = struct.pack("<I", len(levels))
+    hd[108:112] = struct.pack(
+        "<I", struct.unpack_from("<I", hd, 108)[0] | 0x400008
+    )  # COMPLEX|MIPMAP
+    return bytes(hd) + b"".join(levels)
+
+
+def _decal_source(
+    name: str,
+    base: str,
+    st: dict,
+    rgb: tuple[int, int, int],
+    vehicle_dir: Path,
+) -> tuple[DiffuseSource | None, str]:
+    """Textura RGBA de un decal (``opacityMap`` como máscara). Devuelve ``(fuente, "")`` o ``(None, motivo)``
+    si hay que dejar el material como estaba (máscara o difuso ilegibles)."""
+    try:
+        from PIL import Image
+    except ImportError:  # pragma: no cover - Pillow figura en requirements.txt
+        return None, "decal sin máscara de opacidad: falta Pillow"
+    mfile = str(st["opacityMap"]).replace(chr(92), "/").split("/")[-1]
+    mpath = vehicle_dir / mfile
+    if not mpath.is_file():
+        return None, f"opacityMap {mfile} ausente: material opaco"
+    try:
+        mask = Image.open(mpath).convert("L")
+        dfile = ""
+        colour_img = None
+        if "diffuseMap" in st:
+            dfile = str(st["diffuseMap"]).replace(chr(92), "/").split("/")[-1]
+            dpath = vehicle_dir / dfile
+            if dpath.is_file():
+                colour_img = Image.open(dpath).convert("RGB")
+            else:
+                dfile = ""  # textura virtual o ausente: color plano
+        size = colour_img.size if colour_img else mask.size
+        if max(size) > DECAL_MAX_SIDE:
+            k = DECAL_MAX_SIDE / max(size)
+            size = (max(1, round(size[0] * k)), max(1, round(size[1] * k)))
+        if mask.size != size:
+            mask = mask.resize(size, Image.LANCZOS)
+        if colour_img is None:
+            colour_img = Image.new("RGB", size, rgb)
+        elif colour_img.size != size:
+            colour_img = colour_img.resize(size, Image.LANCZOS)
+        rgba = colour_img.copy()
+        rgba.putalpha(mask)
+        data = _dxt5_mips(rgba)
+    except (OSError, ValueError, SyntaxError) as exc:
+        return (
+            None,
+            f"opacityMap {mfile} ilegible ({type(exc).__name__}): material opaco",
+        )
+    key = f"{mfile}|{dfile}|{rgb}|{size}"
+    tex = "beam2ac_dec_%s.dds" % hashlib.sha1(key.encode()).hexdigest()[:12]
+    note = f"decal: máscara {mfile}" + (
+        f" sobre {dfile}" if dfile else f" con color {rgb}"
+    )
+    return DiffuseSource(name, base, "decal", tex, data, note, 1, 0), ""
 
 
 def to_byte(c: float) -> int:
@@ -380,8 +473,15 @@ def diffuse_sources(
     translucent_glass: bool = False,
     specular: bool = True,
     normal_maps: bool = False,
+    lens_functions: dict[str, str] | None = None,
+    decals: bool = True,
 ) -> list[DiffuseSource]:
     """Fuente de color difuso de cada material del KN5.
+
+    ``lens_functions`` (material de luz → función, de ``lights.light_functions``; solo coches sin perfil
+    propio): un vidrio de luz (``fixtureglass``) translúcido en BeamNG se deja translúcido (``alphaBlendMode``
+    1, alfa de ``diffuseColor``) si OTRO material de luz (bombilla, reflector) con la misma función lleva
+    el brillo; si no, sigue opaco (su emisión no se atenúa). Sin probar en AC.
 
     Falla si algún material no tiene equivalente en BeamNG. ``paint_rgb`` solo se usa
     en los materiales ``instanceDiffuse``; con ``None`` esos quedan sin textura.
@@ -392,6 +492,7 @@ def diffuse_sources(
         opaque_materials
     )  # p. ej. vidrios de luz del glowMap: su emisión no debe atenuarse con el alfa
     out: list[DiffuseSource] = []
+    decal_failed: dict[str, str] = {}
     for name in kn5_material_names:
         base = material_key(name, bm, dae_materials)
         if base is None:
@@ -407,6 +508,18 @@ def diffuse_sources(
         translucent = (
             translucent_glass and bool(bm[base].get("translucent")) and not is_lens
         )
+        if (
+            lens_functions
+            and "fixtureglass" in base.lower()
+            and bm[base].get("translucent")
+            and base in lens_functions
+        ):
+            carrier = {
+                f
+                for m, f in lens_functions.items()
+                if "fixtureglass" not in m.lower() and f == lens_functions[base]
+            }
+            translucent = bool(carrier)
         blend = 1 if translucent else 0
         # alphaTest NO se traslada: el exportador de Automation lo pone en true en casi todos los materiales
         # (alphaRef 84/255) aunque sean opacos, y con la alfa del DDS (a veces brillo) abriría agujeros
@@ -419,6 +532,20 @@ def diffuse_sources(
         alpha8 = to_byte(a_src) if translucent else 255
         if str(st.get("diffuseMap", "")) in NEUTRAL_COMMON_TEXTURES:
             st = {k: v for k, v in st.items() if k != "diffuseMap"}
+        if decals and st.get("opacityMap") and not st.get("opacityMapUseUV"):
+            if st.get("instanceDiffuse") and paint_rgb is not None:
+                drgb = tuple(to_byte(p * c) for p, c in zip(paint_rgb, colour))
+            else:
+                drgb = tuple(to_byte(c) for c in colour)
+            if st.get("instanceDiffuse") and paint_rgb is None:
+                src, why = None, ""  # sin pintura: sigue el camino de siempre
+            else:
+                src, why = _decal_source(name, base, st, drgb, vehicle_dir)  # type: ignore[arg-type]
+            if src is not None:
+                out.append(src)
+                continue
+            if why:
+                decal_failed[name] = why
         if "diffuseMap" in st:
             fname = str(st["diffuseMap"]).replace(chr(92), "/").split("/")[-1]
             path = vehicle_dir / fname
@@ -488,6 +615,9 @@ def diffuse_sources(
             tex = tex[:-4] + "_a%02x.dds" % alpha8
         dds = solid_dds(rgb, alpha=alpha8)  # type: ignore[arg-type]
         out.append(DiffuseSource(name, base, kind, tex, dds, "", blend, alpha_tested))
+    for i, d in enumerate(out):
+        if d.material in decal_failed:
+            out[i] = replace(d, note=(d.note + " " + decal_failed[d.material]).strip())
     if specular:
         for i, d in enumerate(out):
             if d.texture_name is None:

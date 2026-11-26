@@ -69,18 +69,167 @@ PAIRS: list[tuple[str, str]] = [
         '"Exportable" does not mean tested: you have to drive it in Assetto Corsa to validate it.',
     ),
     (
-        "Siento que es importante este comentario antes de explicar el proyecto, así que lo pongo arriba :)",
-        "I feel this comment is important before explaining the project, so I am putting it up top :)",
+        "Siento que es importante este comentario antes de explicar el proyecto así que lo pongo arrriba en el readme :)",
+        "I feel this comment is important before explaining the project so I am putting it up top in the readme :)",
     ),
     (
-        "Hola, soy Alex. No sé si debería considerarme AUTOR del proyecto ya que, en gran medida, esto ha sido posible gracias a la ayuda de herramientas de IA. Mi labor ha sido sobre todo de diseño y de ingeniería inversa para obtener la forma que tiene cada motor (BeamNG y Kunos) de entender las físicas, y así poder relacionarlas y transformarlas. Mis conocimientos de física y mecánica son básicos, por lo que la labor de TRANSFORMACIÓN de físicas y archivos no debería atribuirse a mi autoría. Sin embargo, en el proyecto no he estado solo: agradezco enormemente la ayuda de amigos con conocimientos de mecánica y a Salva por haberme ayudado a detectar fallos y elementos a refinar.",
-        "Hi, I'm Alex. I'm not sure I should consider myself the AUTHOR of the project since, to a large extent, this has been possible thanks to AI tools. My work has mostly been design and reverse engineering, to find out how each engine (BeamNG and Kunos) models the physics so I could relate and transform them. My knowledge of physics and mechanics is basic, so the work of TRANSFORMING physics and files should not be credited to me. Even so, I haven't been alone in this: I am enormously grateful to friends with mechanical knowledge and to Salva for helping me spot faults and things to refine.",
+        "Hola, soy alex, no sé si debería considerarme AUTOR del proyecto ya que, en gran medida, esto ha sido posible gracias a la ayuda de herramientas de IA. Mi labor en este proyecto ha sido mayoritariamente de diseño y de ingeniería inversa para poder obtener la forma que tiene cada motor (BeamNG y Kunos) de representar las físicas para así relacionarlas y transformarlas con beam2ac. Mis conocimientos en física y mecánica son básicos, por lo que la labor de TRANSFORMACIÓN de físicas y archivos no debería atribuirse a mi autoría.",
+        "Hi, I'm alex, I don't know if I should consider myself the AUTHOR of the project since, to a large extent, this has been possible thanks to the help of AI tools. My work on this project has mostly been design and reverse engineering to work out how each engine (BeamNG and Kunos) represents physics, so as to relate and transform them with beam2ac. My knowledge of physics and mechanics is basic, so the TRANSFORMATION of physics and files should not be credited to me.",
     ),
     (
-        "Dicho esto, si tenéis interés en más proyectos míos podéis visitar el repositorio de este proyecto, y si alguien quiere apoyarlos os dejo el enlace a mi Ko-fi. ¡Muchas gracias por leer este tostón!",
-        "That said, if you are interested in more of my projects you can visit this project's repository, and if anyone wants to support them, here is my Ko-fi link. Thanks a lot for reading this long ramble!",
+        "Sin embargo en el proyecto no he estado solo. Agradezco enormemente la ayuda de amigos con conocimientos en mecánica y a Salva por haberme ayudado a detectar fallos y elementos a refinar.",
+        "However, I was not alone in this project. I am hugely grateful for the help of friends with knowledge of mechanics and to Salva for helping me spot bugs and things to refine.",
+    ),
+    (
+        "Dicho esto, si teneis interés en más proyectos míos podeis visitar mi GitHub y si alguien quiere apoyarlos os dejo el link a mi Ko-Fi. Muchas gracias por leer este tostón!",
+        "That said, if you are interested in more of my projects you can visit my GitHub, and if anyone wants to support them, here is the link to my Ko-Fi. Thanks a lot for reading this wall of text!",
+    ),
+    ("Aviso:", "Notice:"),
+    (
+        "la aplicación está en sus primeras fases. Algunas conversiones pueden tener bugs o directamente fallar.",
+        "the application is in its early stages. Some conversions may have bugs or simply fail.",
     ),
     ("Ver el repositorio en GitHub", "View the repository on GitHub"),
+    (
+        'Luces',
+        'Lights',
+    ),
+    (
+        'Luces del coche:',
+        'Car lights:',
+    ),
+    (
+        'Añadir una luz:',
+        'Add a light:',
+    ),
+    (
+        '＋ Añadir a la lista',
+        '＋ Add to list',
+    ),
+    (
+        'Ver',
+        'View',
+    ),
+    (
+        '✕ Quitar',
+        '✕ Remove',
+    ),
+    (
+        'Restaurar',
+        'Restore',
+    ),
+    (
+        'quitada',
+        'removed',
+    ),
+    (
+        ' (detectada)',
+        ' (detected)',
+    ),
+    (
+        'Ver este material',
+        'View this material',
+    ),
+    (
+        'Quitar de la lista',
+        'Remove from list',
+    ),
+    (
+        'Volver a la detección',
+        'Back to detection',
+    ),
+    (
+        'Sin luces: añade al menos los faros y las luces traseras.',
+        'No lights: add at least the headlights and tail lights.',
+    ),
+    (
+        'El conversor lee qué materiales son luces del «glowMap» de BeamNG. Si no detecta alguna (o se equivoca), añádela o quítala en la lista. Para elegir un material haz clic sobre él en la vista 3D (clics repetidos en el mismo punto pasan a las piezas de debajo) o búscalo en el desplegable. Los faros y las luces traseras se encienden con las luces de AC; el freno con el pedal; marcha atrás e intermitentes necesitan Custom Shaders Patch. Sin probar en el juego: ajusta el brillo en Assetto Corsa.',
+        "The converter reads which materials are lights from BeamNG's glowMap. If it misses one (or gets one wrong), add or remove it in the list. To pick a material click it in the 3D view (repeated clicks on the same spot go to the parts underneath) or find it in the dropdown. Headlights and tail lights come on with AC's lights; the brake with the pedal; reverse and indicators need Custom Shaders Patch. Untested in the game: adjust the brightness in Assetto Corsa.",
+    ),
+    (
+        'Izquierda: el coche con el material elegido en rojo. Derecha: solo ese material. Arrastra para girar, rueda para acercar. Haz clic sobre una pieza para elegir su material (clics repetidos en el mismo punto pasan a las piezas de debajo).',
+        'Left: the car with the chosen material in red. Right: only that material. Drag to rotate, wheel to zoom. Click a part to pick its material (repeated clicks on the same spot go to the parts underneath).',
+    ),
+    (
+        'Este coche tiene perfil propio (luces validadas): tu elección se ignora al exportar.',
+        'This car has its own profile (validated lights): your choice is ignored on export.',
+    ),
+    (
+        'Asignar luces…',
+        'Assign lights…',
+    ),
+    (
+        'El conversor detecta las luces del coche (faros, freno, matrícula, intermitentes) y las hace funcionar en el juego. Si no detecta alguna o se equivoca, asígnala tú.',
+        "The converter detects the car's lights (headlights, brake, plate, indicators) and makes them work in the game. If it misses one or gets it wrong, assign it yourself.",
+    ),
+    (
+        'Faros delanteros',
+        'Headlights',
+    ),
+    (
+        'Luz trasera / de posición / matrícula',
+        'Tail / position / plate light',
+    ),
+    (
+        'Freno',
+        'Brake',
+    ),
+    (
+        'Marcha atrás (necesita CSP)',
+        'Reverse (needs CSP)',
+    ),
+    (
+        'Intermitente izquierdo (necesita CSP)',
+        'Left indicator (needs CSP)',
+    ),
+    (
+        'Intermitente derecho (necesita CSP)',
+        'Right indicator (needs CSP)',
+    ),
+    (
+        'El conversor lee qué materiales son luces del «glowMap» de BeamNG. Si no detecta alguna (o se equivoca), elige aquí el material y su función. Los faros y las luces traseras se encienden con las luces de AC; el freno con el pedal; marcha atrás e intermitentes necesitan Custom Shaders Patch. Sin probar en el juego: ajusta el brillo en Assetto Corsa.',
+        "The converter reads which materials are lights from BeamNG's glowMap. If it misses one (or gets one wrong), pick the material and its function here. Headlights and tail lights come on with AC's lights; the brake with the pedal; reverse and indicators need Custom Shaders Patch. Untested in the game: adjust the brightness in Assetto Corsa.",
+    ),
+    (
+        'Luces ahora:',
+        'Lights now:',
+    ),
+    (
+        'Sin luces: asigna al menos los faros y las luces traseras.',
+        'No lights: assign at least the headlights and tail lights.',
+    ),
+    (
+        '— automática (la del glowMap, si la hay) —',
+        '— automatic (the glowMap one, if any) —',
+    ),
+    (
+        'No es una luz',
+        'Not a light',
+    ),
+    (
+        'Quitar mi elección',
+        'Remove my choice',
+    ),
+    (
+        'Guardado: se aplica en la próxima exportación (el modelo se reconstruye).',
+        'Saved: applied on the next export (the model is rebuilt).',
+    ),
+    (
+        'Ajustar caderas al alcance',
+        'Fit hips to reach',
+    ),
+    (
+        'Caderas ajustadas a la posición alcanzable más cercana.',
+        'Hips fitted to the nearest reachable position.',
+    ),
+    (
+        'Vista de órbita: arrastra el gizmo azul (caderas) y las bolas rosa/celeste sobre el aro (donde empieza el agarre de cada mano). En la vista del piloto no hay gizmos.',
+        "Orbit view: drag the blue gizmo (hips) and the pink/cyan balls on the rim (where each hand's grip starts). There are no gizmos in the driver view.",
+    ),
+    (
+        'La mano no alcanza el volante con estas caderas (se dibuja con el brazo estirado). Mueve las caderas con el gizmo azul o pulsa «Ajustar caderas al alcance»; si no, al exportar el conversor las moverá solo a la posición alcanzable más cercana (con aviso).',
+        'The hand cannot reach the wheel with these hips (drawn with the arm stretched). Move the hips with the blue gizmo or press «Fit hips to reach»; otherwise, on export the converter will move them to the nearest reachable position (with a warning).',
+    ),
     ("Apóyame en Ko-fi", "Support me on Ko-fi"),
     (
         "Qué tener en cuenta al diseñar el coche en Automation y qué queda manual. Las mismas notas, con los avisos de tu coche, van en",

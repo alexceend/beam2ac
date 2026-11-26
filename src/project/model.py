@@ -61,11 +61,28 @@ def wheel_override_of(project: Any) -> dict[str, Any] | None:
     return data if data.get("enabled", bool(data.get("rim_material"))) else None
 
 
+def clean_lights(raw: Any) -> dict[str, str | None]:
+    """Luces elegidas por el usuario: ``{material: función}`` (``HEADLIGHT``, ``TAIL``, ``BRAKE``,
+    ``REVERSE``, ``SIGNAL_L``, ``SIGNAL_R``) o ``None`` = «este material no es una luz». Lo no válido se descarta.
+    """
+    from src.ac.lights import LIGHT_FUNCTIONS
+
+    if not isinstance(raw, dict):
+        return {}
+    return {
+        k: v
+        for k, v in raw.items()
+        if isinstance(k, str)
+        and 0 < len(k) <= 200
+        and (v is None or v in LIGHT_FUNCTIONS)
+    }
+
+
 def model_options_of(project: Any) -> dict[str, Any]:
     """``<proyecto>/model_options.json``: ``normal_maps`` (bool) y ``part_animations`` (lista de
     ``{kind, node, pivot, axis, angle_deg}``, ver ``src/ac/part_anim.py``). Sin archivo o con un archivo
     mal formado: todo desactivado (nunca falla)."""
-    off: dict[str, Any] = {"normal_maps": False, "part_animations": []}
+    off: dict[str, Any] = {"normal_maps": False, "part_animations": [], "lights": {}}
     f = Path(project.root) / MODEL_OPTIONS_FILE
     if not f.is_file():
         return off
@@ -77,6 +94,7 @@ def model_options_of(project: Any) -> dict[str, Any]:
         return off
     anims = data.get("part_animations")
     return {
+        "lights": clean_lights(data.get("lights")),
         "normal_maps": data.get("normal_maps") is True,
         "part_animations": (
             [a for a in anims if isinstance(a, dict)] if isinstance(anims, list) else []
@@ -329,9 +347,12 @@ def build_model(
                         f"{sorted(upper)[:6]}"
                     )
                 try:
-                    light_mats = set(light_functions(resolved))
+                    lens_funcs = light_functions(
+                        resolved, [], None if profile else (options or {}).get("lights")
+                    )
+                    light_mats = set(lens_funcs)
                 except LightsError:
-                    light_mats = set()
+                    lens_funcs, light_mats = {}, set()
                 sources = diffuse_sources(
                     names,
                     mj,
@@ -339,6 +360,8 @@ def build_model(
                     paint_rgb,
                     dae_materials,
                     opaque_materials=light_mats,
+                    lens_functions=None if profile else lens_funcs,
+                    decals=not profile,
                     normal_maps=bool((options or {}).get("normal_maps")),
                 )
                 dst = ensure_safe_output_path(out / "_stages" / f"textured_{MODEL_KN5}")
@@ -424,7 +447,12 @@ def build_model(
             # sin perfil del vehículo: luces desde el glowMap con un perfil GENERADO (sin atenuar testigos
             # interiores ni comprobar el nombre de las mallas). Experimental, sin probar en AC.
             try:
-                funcs = light_functions(resolved)
+                skipped: list[str] = []
+                funcs = light_functions(
+                    resolved, skipped, (options or {}).get("lights")
+                )
+                for why in skipped:
+                    warn(f"luz sin generar (glowMap): {why}")
             except LightsError as exc:
                 funcs = {}
                 glowmap_failed = True
@@ -440,7 +468,9 @@ def build_model(
             try:
                 lights_res = apply_lights(
                     current.read_bytes(),
-                    light_functions(resolved),
+                    light_functions(
+                        resolved, [], None if profile else (options or {}).get("lights")
+                    ),
                     load_materials(mj),
                     lights_profile,
                 )
@@ -462,7 +492,10 @@ def build_model(
         else:
             report["lights"] = None
             if not generic_lights and lights_profile is None and not glowmap_failed:
-                warn("sin luces (sin perfil del vehículo o sin materials.json)")
+                warn(
+                    "sin luces: el glowMap no marca ninguna (o falta materials.json); "
+                    "asígnalas a mano en «Luces» del exportador"
+                )
         final = ensure_safe_output_path(out / MODEL_KN5)
         shutil.copyfile(current, final)
         report["kn5_sha256"] = _sha(final)
