@@ -44,11 +44,6 @@
 >
 > [![Ko-fi](https://img.shields.io/badge/Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/alexceend)
 
-> [!NOTE]
-> **Sin Blender ni FMOD.** Esta rama (`main`) no depende de Blender, de su complemento KN5 ni de FMOD Studio: el KN5 y el banco
-> de sonido se generan en Python puro. La versión anterior, que sí los usaba, se conserva en la rama
-> [`blender-and-fmod-dependencies`](https://github.com/alexceend/beam2ac/tree/blender-and-fmod-dependencies).
-
 ## Características
 
 ### Del coche de Automation al de Assetto Corsa
