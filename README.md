@@ -28,6 +28,12 @@
   <a href="https://github.com/alexceend/beam2ac/issues">Issues</a>
 </p>
 
+<p align="center">
+  <a href="https://youtu.be/nTqn1SImYw0"><img src="https://img.youtube.com/vi/nTqn1SImYw0/maxresdefault.jpg" alt="Vídeo demo de beam2ac (YouTube)" width="640"></a>
+  <br>
+  <sub>▶ Vídeo demo (YouTube)</sub>
+</p>
+
 > [!IMPORTANT]
 > **No se incluye ningún archivo de los juegos.** Necesitas tus propias copias de Automation, BeamNG.drive y Assetto Corsa;
 > el programa solo lee los archivos que ya tienes. Ver [Uso legal](#uso-legal).
