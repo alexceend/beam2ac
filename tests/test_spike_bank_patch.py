@@ -33,6 +33,8 @@ def _kunos_bank() -> Path | None:
         from src.steam_paths import find_game
 
         root = find_game("assettocorsa")
+        if root is None:
+            return None
     except Exception:  # noqa: BLE001 - sin instalación
         return None
     p = (
