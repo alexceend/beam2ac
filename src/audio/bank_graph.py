@@ -282,9 +282,9 @@ class EngineBank:
         m = (struct.unpack_from("<H", d, self.PROP_ARR)[0] - 1) // 2
         return [bytes(d[28 + 16 * k : 44 + 16 * k]) for k in range(m)]
 
-    def _kind(self, ctrl_id: bytes) -> str:
+    def _kind(self, ctrl_id: bytes, curv: dict[bytes, bp.Chunk]) -> str:
         """``in`` (0→1) o ``out`` (1→0) según el primer punto de su ``CURV``."""
-        y0 = struct.unpack_from("<f", self._curv()[ctrl_id].data, 40)[0]
+        y0 = struct.unpack_from("<f", curv[ctrl_id].data, 40)[0]
         return "out" if y0 >= 0.5 else "in"
 
     def set_fades(self, slot: Slot, want_in: bool, want_out: bool) -> None:
@@ -297,10 +297,10 @@ class EngineBank:
         )  # solo fundidos de sonidos (no curvas de otros usos)
         for w in self._wait_lists():
             for cid in self._wait_ctrls(w):
-                donors.setdefault(self._kind(cid), cid)
+                donors.setdefault(self._kind(cid, curv), cid)
         for w in slot.waits:
             waib = bytes(self.wait_parts(w)[0].data[:16])
-            have = {self._kind(i): i for i in self._wait_ctrls(w)}
+            have = {self._kind(i, curv): i for i in self._wait_ctrls(w)}
             keep: dict[str, bytes] = {}
             for kind, want in (("in", want_in), ("out", want_out)):
                 if want and kind in have:
@@ -412,7 +412,7 @@ class EngineBank:
             for cid in self._wait_ctrls(w):
                 cv = curv[cid]
                 d = bytearray(cv.data)
-                pts = p["fade_out"] if self._kind(cid) == "out" else p["fade_in"]
+                pts = p["fade_out"] if self._kind(cid, curv) == "out" else p["fade_in"]
                 struct.pack_into("<f", d, 36, pts[0])
                 struct.pack_into("<f", d, 52, pts[1])
                 cv.data = bytes(d)

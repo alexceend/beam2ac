@@ -38,8 +38,10 @@ from __future__ import annotations
 
 import hashlib
 import io
+import os
 import re
 import struct
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Iterable
@@ -186,20 +188,24 @@ def _dxt5_mips(img) -> bytes:
     nivel; la cabecera del nivel 0 se completa con el número de mipmaps."""
     from PIL import Image
 
-    levels: list[bytes] = []
-    head = b""
-    w, h = img.size
-    while True:
-        cur = img if (w, h) == img.size else img.resize((w, h), Image.LANCZOS)
+    sizes = [img.size]
+    while sizes[-1] != (1, 1):
+        w, h = sizes[-1]
+        sizes.append((max(1, w // 2), max(1, h // 2)))
+
+    def level(size: tuple[int, int]) -> bytes:
+        cur = img if size == img.size else img.resize(size, Image.LANCZOS)
         buf = io.BytesIO()
         cur.save(buf, "DDS", pixel_format="DXT5")
-        raw = buf.getvalue()
-        head = head or raw[:128]
-        levels.append(raw[128:])
-        if w == 1 and h == 1:
-            break
-        w, h = max(1, w // 2), max(1, h // 2)
-    hd = bytearray(head)
+        return buf.getvalue()
+
+    img.load()
+    # cada nivel se reduce desde la imagen completa (mismo coste todos) y Pillow suelta
+    # el GIL: en paralelo, con el mismo resultado
+    with ThreadPoolExecutor(min(8, os.cpu_count() or 1)) as pool:
+        raws = list(pool.map(level, sizes))
+    levels = [raw[128:] for raw in raws]
+    hd = bytearray(raws[0][:128])
     hd[8:12] = struct.pack(
         "<I", struct.unpack_from("<I", hd, 8)[0] | 0x20000
     )  # DDSD_MIPMAPCOUNT

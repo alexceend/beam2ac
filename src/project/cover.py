@@ -61,7 +61,8 @@ def to_jpeg(data: bytes) -> bytes:
 
 
 def _unit(v: tuple[float, float, float]) -> tuple[float, float, float]:
-    n = math.sqrt(sum(c * c for c in v)) or 1.0
+    x, y, z = v
+    n = math.sqrt(sum((x * x, y * y, z * z))) or 1.0
     return (v[0] / n, v[1] / n, v[2] / n)
 
 
@@ -150,7 +151,15 @@ def _render(kn5: Path) -> bytes:
         if not node.flags.get("visible", 1) or node.flags.get("renderable") is False:
             continue
         pts = model.mesh_world_vertices(node)
-        proj = [(_dot(p, right), _dot(p, up), _dot(p, d)) for p in pts]
+        (r0, r1, r2), (u0, u1, u2), (d0, d1, d2) = right, up, d
+        proj = [
+            (
+                x * r0 + y * r1 + z * r2,
+                x * u0 + y * u1 + z * u2,
+                x * d0 + y * d1 + z * d2,
+            )
+            for x, y, z in pts
+        ]
         base = (
             colors[node.material]
             if node.material is not None and node.material < len(colors)

@@ -340,7 +340,9 @@ def read_wav_mono16(path: Path) -> tuple[int, bytes]:
         vals = [v >> 16 for v in struct.unpack(f"<{n}i", data)]
     elif tag == 3 and bits in (32, 64):
         f = struct.unpack(f"<{n}{'f' if bits == 32 else 'd'}", data)
-        vals = [max(-32768, min(32767, int(v * 32767.0))) for v in f]
+        vals = [int(v * 32767.0) for v in f]
+        if vals and (max(vals) > 32767 or min(vals) < -32768):  # recortar es raro
+            vals = [max(-32768, min(32767, v)) for v in vals]
     else:
         raise ValueError(f"{path}: formato WAV {tag}/{bits} bits no admitido")
     if ch > 1:
