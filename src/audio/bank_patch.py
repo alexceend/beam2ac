@@ -321,6 +321,8 @@ def read_wav_mono16(path: Path) -> tuple[int, bytes]:
         raise ValueError(f"{path}: WAV con {bits} bits y {ch} canales no admitido")
     n = len(data) // width
     data = data[: n * width]
+    if tag == 1 and bits == 16 and ch == 1:
+        return rate, data  # ya es PCM16 mono little-endian
     if tag == 1 and bits == 8:
         vals = [(b - 128) * 256 for b in data]
     elif tag == 1 and bits == 16:
@@ -390,7 +392,8 @@ def set_audio(s: Fsb5Sample, pcm: bytes) -> None:
     """
     s.samples = len(pcm) // 2
     s.data = pcm + bytes(32 + _pad(len(pcm), 32))
-    peak = max((abs(v) for v in array.array("h", pcm)), default=0) / 32767.0
+    a = array.array("h", pcm)
+    peak = (max(max(a), -min(a)) if a else 0) / 32767.0
     s.extras = [
         (t, struct.pack("<f", peak) if t == 13 and len(d) == 4 else d)
         for t, d in s.extras

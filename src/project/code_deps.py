@@ -58,7 +58,15 @@ def _modules_in(node: ast.AST, path: Path, root: Path) -> list[str]:
 def direct_imports(path: Path, root: Path = PROJECT_ROOT) -> set[Path]:
     """Archivos de ``src`` que importa ``path`` en cualquier punto (también diferido),
     con el ``__init__.py`` de cada paquete intermedio."""
-    return imports_in(ast.parse(path.read_text(encoding="utf-8")), path, root)
+    st = path.stat()
+    return set(_direct_cached(path, root, st.st_mtime_ns, st.st_size))
+
+
+@lru_cache(maxsize=None)
+def _direct_cached(path: Path, root: Path, mtime_ns: int, size: int) -> frozenset:
+    # las etapas comparten casi todos los módulos: un solo ast.parse por archivo
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    return frozenset(imports_in(tree, path, root))
 
 
 def imports_in(tree: ast.AST, path: Path, root: Path = PROJECT_ROOT) -> set[Path]:
