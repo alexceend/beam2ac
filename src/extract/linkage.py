@@ -52,6 +52,7 @@ from __future__ import annotations
 
 import itertools
 import math
+from array import array
 from dataclasses import dataclass, field
 from operator import mul
 from typing import Any, Iterable
@@ -257,11 +258,12 @@ def _jacobi_eigen(a: list[list[float]]) -> list[float]:
     bit a bit)."""
     n = len(a)
     m = [row[:] for row in a]
-    seen: dict[tuple[float, ...], int] = {}
+    seen: dict[bytes, int] = {}
     diags: list[list[float]] = []
     for it in range(_JACOBI_ITERATIONS):
         flat = tuple(itertools.chain.from_iterable(m))
-        start = seen.setdefault(flat, it)
+        # clave en bytes: -0.0 y 0.0 son estados distintos
+        start = seen.setdefault(array("d", flat).tobytes(), it)
         if start != it:
             end = start + (_JACOBI_ITERATIONS - start) % (it - start)
             return sorted(diags[end])
