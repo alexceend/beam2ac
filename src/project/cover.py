@@ -199,9 +199,7 @@ def _render(kn5: Path) -> bytes:
     )
     cx, cy = (max(xs) + min(xs)) / 2, (max(ys) + min(ys)) / 2
 
-    def to_px(p):
-        return (w / 2 + (p[0] - cx) * scale, h / 2 - (p[1] - cy) * scale)
-
+    mx, my = w / 2, h / 2
     img = Image.new("RGB", (w, h), (24, 27, 33))
     draw = ImageDraw.Draw(img)
     for y in range(h):  # degradado vertical sencillo
@@ -209,7 +207,14 @@ def _render(kn5: Path) -> bytes:
         draw.line([(0, y), (w, y)], fill=(v, v + 3, v + 9))
     tris.sort(key=lambda t: t[0])  # de lejos a cerca
     for _, a, b, c, col in tris:
-        draw.polygon([to_px(a), to_px(b), to_px(c)], fill=col)
+        draw.polygon(
+            [
+                (mx + (a[0] - cx) * scale, my - (a[1] - cy) * scale),
+                (mx + (b[0] - cx) * scale, my - (b[1] - cy) * scale),
+                (mx + (c[0] - cx) * scale, my - (c[1] - cy) * scale),
+            ],
+            fill=col,
+        )
     img = img.resize(SIZE, Image.LANCZOS)
     out = io.BytesIO()
     img.save(out, "JPEG", quality=90)

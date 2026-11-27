@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import struct
 from array import array
+from operator import mul
 from pathlib import Path
 from typing import Any
 
@@ -66,7 +67,7 @@ def wav_info(path: Path | str) -> dict[str, Any]:
         scale = {"f": 1.0, "h": 32768.0, "i": 2147483648.0}[kind]
         peak = max(max(a), -min(a)) / scale
         out["peak"] = round(peak, 6)
-        out["rms"] = round((sum(x * x for x in a) / len(a)) ** 0.5 / scale, 6)
+        out["rms"] = round((sum(map(mul, a, a)) / len(a)) ** 0.5 / scale, 6)
         if peak != peak or peak == 0:
             out["problems"].append("silencio o NaN")
         elif peak > 1.0:

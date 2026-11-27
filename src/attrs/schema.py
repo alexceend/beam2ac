@@ -309,6 +309,10 @@ def _check_meta(value: Any, meta: Any, where: str) -> None:
 
 
 def _coerce(tp: Any, value: Any, where: str) -> Any:
+    if tp is str:  # el caso más frecuente: sin mirar tipos genéricos
+        if not isinstance(value, str):
+            raise SchemaError(f"{where}: se esperaba una cadena")
+        return value
     origin = typing.get_origin(tp)
     if tp is Any:
         return value
@@ -340,10 +344,6 @@ def _coerce(tp: Any, value: Any, where: str) -> Any:
         if isinstance(value, bool) or not isinstance(value, int):
             raise SchemaError(f"{where}: se esperaba un entero")
         return value
-    if tp is str:
-        if not isinstance(value, str):
-            raise SchemaError(f"{where}: se esperaba una cadena")
-        return value
     return value
 
 
@@ -353,11 +353,16 @@ def _hints(cls: type) -> dict:
     return typing.get_type_hints(cls)
 
 
+@functools.lru_cache(maxsize=None)
+def _fields(cls: type) -> dict:
+    return {fd.name: fd for fd in dataclasses.fields(cls)}
+
+
 def _from_plain(cls: type, data: Any, where: str) -> Any:
     if not isinstance(data, dict):
         raise SchemaError(f"{where}: se esperaba un objeto para {cls.__name__}")
     hints = _hints(cls)
-    fields = {fd.name: fd for fd in dataclasses.fields(cls)}
+    fields = _fields(cls)
     unknown = set(data) - set(fields) - {"schema"}
     if unknown:
         raise SchemaError(f"{where}: campos desconocidos {sorted(unknown)}")

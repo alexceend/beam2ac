@@ -55,6 +55,18 @@ def _modules_in(node: ast.AST, path: Path, root: Path) -> list[str]:
     return []
 
 
+def _statements(tree: ast.AST):
+    """``ast.walk`` sin bajar a las expresiones (un ``import`` es una sentencia)."""
+    todo = [tree]
+    while todo:
+        node = todo.pop()
+        yield node
+        for name in ("body", "orelse", "finalbody", "handlers", "cases"):
+            block = getattr(node, name, None)
+            if isinstance(block, list):
+                todo += block
+
+
 def direct_imports(path: Path, root: Path = PROJECT_ROOT) -> set[Path]:
     """Archivos de ``src`` que importa ``path`` en cualquier punto (también diferido),
     con el ``__init__.py`` de cada paquete intermedio."""
@@ -73,7 +85,7 @@ def imports_in(tree: ast.AST, path: Path, root: Path = PROJECT_ROOT) -> set[Path
     """Como :func:`direct_imports`, sobre un nodo AST de ``path`` (p. ej. una
     función); ``path`` resuelve las importaciones relativas."""
     out: set[Path] = set()
-    for node in ast.walk(tree):
+    for node in _statements(tree):
         for mod in _modules_in(node, path, root):
             if mod != "src" and not mod.startswith("src."):
                 continue

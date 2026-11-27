@@ -168,6 +168,11 @@ def _source(vehicle: Path | str, pc: str | None):
     return load_vehicle_dir(Path(vehicle), pc)
 
 
+def load_source(vehicle: Path | str, pc: str | None = None):
+    """Origen cargado, para pasarlo como ``src`` a varias consultas seguidas."""
+    return _source(vehicle, pc)
+
+
 def measurement_match(
     kind: str,
     vehicle_dir: Path,
@@ -242,6 +247,7 @@ def needs(
     pc: str | None = None,
     blockers: list[dict] | None = None,
     root: Path | None = None,
+    src: Any = None,
 ) -> list[dict[str, Any]]:
     """Bancos que el análisis de un vehículo pide y aún no tienen medida.
 
@@ -249,7 +255,7 @@ def needs(
     se informa solo qué tipos NO tienen medida. Cada elemento: ``{kind, reason,
     minutes, work}``."""
     out = []
-    src = _source(vehicle_dir, pc)  # una sola lectura del origen
+    src = src or _source(vehicle_dir, pc)  # una sola lectura del origen
     targets = [str(b.get("target", "")) for b in (blockers or [])]
     for kind, (_, _, minutes) in KINDS.items():
         if measurement(kind, vehicle_dir, pc, root, src) is not None:
@@ -295,10 +301,13 @@ def session_done(kind: str, work: Path, vid: str, s: str) -> bool:
     )
 
 
-def status(kind: str, vehicle_dir: Path, pc: str | None = None) -> dict[str, Any]:
+def status(
+    kind: str, vehicle_dir: Path, pc: str | None = None, src: Any = None
+) -> dict[str, Any]:
     """Estado recuperable del trabajo: qué sesiones están hechas."""
     vd = Path(vehicle_dir)
-    src = _source(vd, pc)  # una sola lectura del origen (carpeta o zip, sin extraer)
+    # una sola lectura del origen (carpeta o zip, sin extraer)
+    src = src or _source(vd, pc)
     vid = vehicle_id(vd)
     work = work_dir(kind, vd, pc, src)
     hit = measurement_match(kind, vd, pc, None, src)

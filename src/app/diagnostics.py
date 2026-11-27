@@ -229,16 +229,17 @@ def _bench(kind: str, vd: Any, pc: str | None, blockers: list[dict]) -> dict[str
     from src.bench import service
 
     try:
+        src = service.load_source(vd, pc)  # leer el origen una sola vez
         measures = []
         for k in service.KINDS:
-            if k == "aero" and not service.uses_triangle_aero(vd, pc):
+            if k == "aero" and not service.uses_triangle_aero(vd, pc, src):
                 continue
-            st = service.status(k, vd, pc)
+            st = service.status(k, vd, pc, src)
             measures.append(
                 {x: st[x] for x in ("kind", "reuse", "measurement", "stale")}
             )
         return {
-            "needs": service.needs(vd, pc, blockers),
+            "needs": service.needs(vd, pc, blockers, src=src),
             "measures": measures,
             "error": "",
         }
