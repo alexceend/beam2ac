@@ -36,9 +36,11 @@ ajuste.
 from __future__ import annotations
 
 import math
+import os
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 from operator import mul
-from typing import Iterable, Sequence
+from typing import Iterable, Iterator, Sequence
 
 from src.ac.tyre_sctm import SctmParams, solve
 
@@ -105,12 +107,11 @@ def model(p: SctmParams, pt: Point) -> tuple[float, float]:
     return fy, fx
 
 
-def _prepare(pts: Sequence[Point]) -> list[tuple]:
+def _prepare(pts: Sequence[Point]) -> Iterator[tuple]:
     """Parte de :func:`_residuals` que solo depende de las muestras (se calcula una
     vez por ajuste). ``active`` = ``solve`` no devuelve (0, 0) de entrada."""
     sin, cos, sqrt = math.sin, math.cos, math.sqrt
-    out = []
-    for pt in pts:
+    for pt in pts:  # generador: sin lista previa, los errores salen muestra a muestra
         kind, load = pt.kind, pt.fz
         sa, sr_in, camber = pt.slip_angle, pt.slip_ratio, pt.camber
         active = load > 0.0 and not (sa == 0.0 and sr_in == 0.0 and camber == 0.0)
@@ -122,24 +123,21 @@ def _prepare(pts: Sequence[Point]) -> list[tuple]:
             v43 = sr_in / v42
             speed = pt.speed
             root = sqrt((speed * sin(sa)) ** 2 + (cos(sa) * (speed * sr_in)) ** 2)
-        out.append(
-            (
-                kind == "lat" or kind == "comb",
-                kind == "lon" or kind == "comb",
-                load,
-                sa,
-                sr_in,
-                camber,
-                active,
-                sin_camber,
-                v42,
-                v43,
-                root,
-                pt.fy,
-                pt.fx,
-            )
+        yield (
+            kind == "lat" or kind == "comb",
+            kind == "lon" or kind == "comb",
+            load,
+            sa,
+            sr_in,
+            camber,
+            active,
+            sin_camber,
+            v42,
+            v43,
+            root,
+            pt.fy,
+            pt.fx,
         )
-    return out
 
 
 def _residuals(
@@ -294,9 +292,9 @@ def levenberg_marquardt(
                 where.extend(range(at, at + size))
             at += size
         rows[skip] = (kept, where)
-    prepared = _prepare(pts)
-    subsets = {k: _prepare(v[0]) for k, v in rows.items()}
-    r = _residuals(build(theta), pts, prepared)
+    r = _residuals(build(theta), pts)  # la primera, sin preparar (mismos errores)
+    prepared = list(_prepare(pts))
+    subsets = {k: list(_prepare(v[0])) for k, v in rows.items()}
     cost = sum(map(mul, r, r))
     lam = 1e-3
     it = 0
@@ -518,17 +516,51 @@ def points_from_dataset(data: dict, free_reference: bool = False) -> list[Point]
     return out
 
 
-def fit_dataset(data: dict, fz0: float, free_reference: bool = False) -> FitResult:
-    """:func:`fit` memorizado por la huella de las muestras, de ``fz0`` y de la
-    referencia de κ (determinista)."""
+# solo lo activan los puntos de entrada de la aplicación: con ``spawn`` cada proceso
+# vuelve a importar el módulo principal, y un script sin guarda ``__main__`` se repetiría
+PARALLEL = False
+
+
+def _dataset_key(data: dict, fz0: float, free_reference: bool) -> str:
     import hashlib
     import json
 
-    key = hashlib.sha256(
+    return hashlib.sha256(
         json.dumps(
             [data, fz0, free_reference], sort_keys=True, separators=(",", ":")
         ).encode()
     ).hexdigest()
+
+
+def _fit_job(job: tuple[dict, float, bool]) -> FitResult:
+    data, fz0, free_reference = job
+    return fit(points_from_dataset(data, free_reference), fz0)
+
+
+def prefit(jobs: Sequence[tuple[dict, float, bool]]) -> None:
+    """Calcula en procesos paralelos (uno por eje) los ajustes ``(data, fz0,
+    free_reference)`` que falten y los deja en la memoria de :func:`fit_dataset`.
+    Mismo código y mismo resultado; ante cualquier fallo no hace nada y
+    ``fit_dataset`` los calcula aquí (con el mismo error, si lo hay)."""
+    if not PARALLEL:
+        return
+    try:
+        missing = {_dataset_key(*job): job for job in jobs}
+        missing = {k: v for k, v in missing.items() if k not in _CACHE}
+        workers = min(len(missing), os.cpu_count() or 1)
+        if workers < 2:
+            return
+        with ProcessPoolExecutor(workers) as pool:
+            for key, result in zip(missing, pool.map(_fit_job, missing.values())):
+                _CACHE[key] = result
+    except Exception:  # noqa: BLE001 - solo es un adelanto: se calcula en secuencia
+        return
+
+
+def fit_dataset(data: dict, fz0: float, free_reference: bool = False) -> FitResult:
+    """:func:`fit` memorizado por la huella de las muestras, de ``fz0`` y de la
+    referencia de κ (determinista)."""
+    key = _dataset_key(data, fz0, free_reference)
     if key not in _CACHE:
         _CACHE[key] = fit(points_from_dataset(data, free_reference), fz0)
     return _CACHE[key]

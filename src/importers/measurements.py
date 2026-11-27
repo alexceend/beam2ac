@@ -175,6 +175,24 @@ def load_record(path: Path) -> dict[str, Any]:
     return data
 
 
+_HEADER_KEYS = ("kind", "source_fingerprint", "scoped_fingerprint", "label")
+_HEADERS: dict[tuple[str, int, int], dict[str, Any]] = {}
+
+
+def record_header(path: Path) -> dict[str, Any]:
+    """Las claves de :func:`load_record` que identifican un registro (solo lectura),
+    memorizadas mientras el archivo no cambie: se consultan todos en cada búsqueda y
+    las muestras que contienen son grandes. Un registro inválido falla igual."""
+    st = Path(path).stat()
+    key = (str(path), st.st_mtime_ns, st.st_size)
+    head = _HEADERS.get(key)
+    if head is None:
+        rec = load_record(path)
+        head = {k: rec[k] for k in _HEADER_KEYS if k in rec}
+        _HEADERS[key] = head
+    return head
+
+
 def find(
     source: Any, kind: str, root: Path | None = None
 ) -> tuple[Path, dict[str, Any]] | None:
@@ -187,12 +205,12 @@ def find(
     hits = []
     fp, scoped = source_fingerprint(source), {}
     for path in files:
-        rec = load_record(path)
-        if rec["kind"] != kind:
+        head = record_header(path)
+        if head["kind"] != kind:
             continue
-        how = match_kind(rec, source, fp, scoped)
+        how = match_kind(head, source, fp, scoped)
         if how:
-            hits.append((how, path, rec))
+            hits.append((how, path, load_record(path)))
     # una medida EXACTA del propio origen gana a las compatibles de otro
     exact = [h for h in hits if h[0] == "exacta"]
     hits = exact or hits

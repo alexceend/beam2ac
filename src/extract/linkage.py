@@ -161,18 +161,20 @@ class Knuckle:
         """``|moved(p, k) − chasis| − longitud`` de cada barra. Es :meth:`moved`
         con la rotación de :func:`rotate` calculada una vez por pose (mismas
         operaciones; ``tests/test_linkage_eigen.py``)."""
-        rv = (p[0], p[1], p[2])
-        th = _norm(rv)
-        turn = not th < 1e-15
-        if turn:
-            k0, k1, k2 = rv[0] / th, rv[1] / th, rv[2] / th
-            c, s = math.cos(th), math.sin(th)
-        c0 = self.points[self.centre]
+        turn = None  # la rotación se calcula al llegar a la primera barra
         points = self.points
         out: list[float] = []
         for (chassis, name), l0 in zip(self.links, self.lengths):
+            c0 = points[self.centre]
             v = points[name]
             x, y, z = v[0] - c0[0], v[1] - c0[1], v[2] - c0[2]
+            if turn is None:
+                rv = (p[0], p[1], p[2])
+                th = _norm(rv)
+                turn = not th < 1e-15
+                if turn:
+                    k0, k1, k2 = rv[0] / th, rv[1] / th, rv[2] / th
+                    c, s = math.cos(th), math.sin(th)
             if turn:
                 kv = k0 * x + k1 * y + k2 * z
                 x, y, z = (

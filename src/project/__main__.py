@@ -261,4 +261,7 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
+    from src.ac import tyre_fit
+
+    tyre_fit.PARALLEL = True  # este módulo tiene guarda: seguro con ``spawn``
     sys.exit(main())

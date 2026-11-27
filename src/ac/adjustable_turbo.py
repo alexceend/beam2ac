@@ -99,7 +99,8 @@ def _max_err(pressure: list[list[float]], ramps: list[Ramp]) -> float:
     """Error relativo máximo del par de AC, ``(1 + Σ boost) / presión − 1``, sobre el mapa."""
     rpms = tuple(r for r, _ in pressure)
     mags = [m for m, _, _ in ramps]
-    rows = zip(*[_column(rpms, ref, g) for _, ref, g in ramps])
+    cols = [_column(rpms, ref, g) for _, ref, g in ramps]
+    rows = zip(*cols) if cols else [()] * len(rpms)
     return max(
         [abs((1 + sum(map(mul, mags, f))) / p - 1) for f, (_, p) in zip(rows, pressure)]
     )

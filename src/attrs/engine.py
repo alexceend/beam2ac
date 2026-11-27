@@ -698,7 +698,49 @@ class ResolutionEngine:
         return out
 
     def resolve_all(self, targets: list[str]) -> list[Resolution]:
+        self._prefit_tyres(targets)
         return [self.resolve(t) for t in targets]
+
+    def _prefit_tyres(self, targets: list[str]) -> None:
+        """Adelanta en paralelo los ajustes SCTM que van a pedir las reglas. No
+        resuelve ni decide nada: si no acierta o falla, la resolución los calcula."""
+        from src.ac import tyre_fit
+
+        if not tyre_fit.PARALLEL:
+            return
+        try:
+            wanted = set(targets)
+            rules = self.catalog.rules.values()
+            old = {r.supersedes for r in rules if r.supersedes}
+            jobs: dict[tuple, tuple] = {}
+            for rule in rules:
+                if (
+                    rule.target not in wanted
+                    or rule.transform is None
+                    or rule.transform.id != "ac_sctm_fit"
+                    or rule.key in old
+                    or rule.status in ("rejected", "superseded")
+                    or not in_scope(rule.scope, self.ctx)[0]
+                ):
+                    continue
+                conditions = [*rule.conditions, *rule.applies_when]
+                if any(
+                    c.fact in self.catalog.attributes
+                    or eval_condition(c, self.ctx)[0] is not True
+                    for c in conditions
+                ):
+                    continue
+                samples = self.ctx.fact(rule.inputs["samples"])
+                load = self.ctx.fact(rule.inputs["fz0"])
+                if samples is None or load is None or "estimated_sctm" in samples.value:
+                    continue
+                fz0 = transforms._convert(load.value, load.unit, "N", "fz0")
+                ref = rule.transform.params.get("kappa_reference")
+                free = ref == "free_rolling_at_alpha"
+                jobs[(id(samples.value), fz0, free)] = (samples.value, fz0, free)
+            tyre_fit.prefit(list(jobs.values()))
+        except Exception:  # noqa: BLE001 - un adelanto nunca cambia la resolución
+            return
 
 
 def _trace_value(value: Any, unit: str) -> Any:

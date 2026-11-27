@@ -215,7 +215,7 @@ def stale_measurements(
     vid, fp, scoped = vehicle_id(vehicle_dir), M.source_fingerprint(src), {}
     out = []
     for path in M.measurement_files(root):
-        rec = M.load_record(path)
+        rec = M.record_header(path)
         label = rec.get("label")
         label = str(label.get("vehicle_id") if isinstance(label, dict) else label)
         if (

@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import json
 import os
+import pickle
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -34,6 +35,10 @@ from src.safe_paths import ensure_safe_output_path
 from . import schema as S
 
 REPO_CATALOG = Path(__file__).resolve().parents[2] / "catalog"
+
+
+# último resultado de ``Catalog.load`` por carpetas: (firma, copia serializada)
+_LOADED: dict[tuple, tuple[tuple, bytes]] = {}
 
 
 class StoreError(ValueError):
@@ -72,11 +77,23 @@ class Catalog:
     @classmethod
     def load(cls, root: str | Path, *extra_roots: str | Path) -> Catalog:
         """Carga ``root`` y, encima, las carpetas extra (p. ej. las decisiones de un
-        proyecto)."""
+        proyecto).
+
+        Mientras ningún archivo cambie (:func:`signature`) se reconstruye desde una
+        copia serializada: cada llamada recibe objetos nuevos que puede modificar."""
+        roots = (Path(root), *map(Path, extra_roots))
+        key = (cls, *((str(r), str(r.absolute())) for r in roots))
+        stamp = signature(*roots)  # antes de leer: un cambio durante la carga se nota
+        hit = _LOADED.get(key)
+        if hit is not None and hit[0] == stamp:
+            return pickle.loads(hit[1])
         cat = cls(Path(root))
-        for r in (Path(root), *map(Path, extra_roots)):
+        for r in roots:
             cat._load_dir(r)
         cat.check()
+        if len(_LOADED) >= 4:
+            _LOADED.clear()
+        _LOADED[key] = (stamp, pickle.dumps(cat, pickle.HIGHEST_PROTOCOL))
         return cat
 
     def _load_dir(self, root: Path) -> None:
