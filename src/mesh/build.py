@@ -23,7 +23,7 @@ from src.coords import beamng_to_ac
 from src.jbeam import PartIndex, load_pc, resolve
 from src.safe_paths import ensure_safe_output_path
 
-from .dae import bounds, read_dae
+from .dae import read_dae
 from .plan import ScenePlan, build_plan, write_plan
 
 POSITION_TOLERANCE = 0.01  # m (criterio de la fase 6)
@@ -128,7 +128,8 @@ def verify_kn5(kn5: Kn5File, plan: ScenePlan) -> Verification:
             v.errors.append(f"objeto '{obj.name}' ausente del KN5")
             continue
         pts = [p for m in meshes for p in kn5.mesh_world_vertices(m)]
-        lo, hi = bounds(pts)
+        columns = [[p[i] for p in pts] for i in range(3)]
+        lo, hi = tuple(map(min, columns)), tuple(map(max, columns))
         # G2.18: el KN5 solo lleva los vértices con cara (los sueltos del DAE no se
         # exportan): se compara con esa caja si el plan la tiene
         box = obj.bbox_faces_beamng or obj.bbox_beamng
