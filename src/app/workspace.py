@@ -1457,11 +1457,13 @@ class Workspace:
         return {"saved": name}
 
     # ------------------------------------------------------------------ bancos
-    def _bench_state(self, service: Any, kind: str, vd: Path, pc: str | None):
+    def _bench_state(
+        self, service: Any, kind: str, vd: Path, pc: str | None, src: Any = None
+    ):
         """``service.status`` + estado visible: pendiente | ejecutándose | cancelado |
         incompleto | completado | fallido (último trabajo de ESTE servidor para el mismo
         directorio de trabajo, mientras no haya medida)."""
-        st = service.status(kind, vd, pc)
+        st = service.status(kind, vd, pc, src)
         last = next(
             (
                 j
@@ -1494,10 +1496,13 @@ class Workspace:
             raise WorkspaceError(
                 f"elige una configuración de la carpeta: {', '.join(configs)}"
             )
+        src = service.load_source(vd, pc)  # leer el origen (un zip) una sola vez
         return {
             "vehicle": vehicle,
             "pc": pc,
-            "benches": [self._bench_state(service, k, vd, pc) for k in service.KINDS],
+            "benches": [
+                self._bench_state(service, k, vd, pc, src) for k in service.KINDS
+            ],
             "beamng_running": service.tyre_runner.beamng_running(),
             # tarea de banco en curso de ESTE servidor (recuperable tras recargar la página)
             "job": next(
