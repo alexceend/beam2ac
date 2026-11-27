@@ -129,7 +129,11 @@ def _fit_amplitudes(
     mínimo del error máximo. Devuelve tantas rampas como ``shapes`` o ``None`` si alguna amplitud no sale positiva.
     """
     n = len(shapes)
-    basis = [[_ramp(r, *sh) / p for sh in shapes] for r, p in pressure]
+    cols = [
+        [(min(r / ref, 1.0) ** g if r > 0 else 0.0) / p for r, p in pressure]
+        for ref, g in shapes
+    ]
+    basis = list(zip(*cols))
     y = [(p - 1) / p for _, p in pressure]
     w = [1.0] * len(y)
     m: list[float] | None = None
@@ -160,6 +164,8 @@ def _refine(
 ) -> tuple[list[Ramp], float]:
     """Búsqueda local de (ref, gamma) de cada rampa; los MAX_BOOST se recalculan en cada paso."""
     step = [125.0, 0.5]
+    # formas ya probadas: ``err`` solo baja, así que repetirlas no puede mejorarlo
+    seen: set[tuple] = set()
     while step[0] >= 5:
         improved = False
         for j in range(len(ramps)):
@@ -172,6 +178,9 @@ def _refine(
                     )
                     if shapes[j][0] < 300 or shapes[j][1] < 0.3:
                         continue
+                    if tuple(shapes) in seen:
+                        continue
+                    seen.add(tuple(shapes))
                     cand = _fit_amplitudes(pressure, shapes, irls=5)
                     if cand:
                         e = _max_err(pressure, cand)

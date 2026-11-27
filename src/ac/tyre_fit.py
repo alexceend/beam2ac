@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
+from operator import mul
 from typing import Iterable, Sequence
 
 from src.ac.tyre_sctm import SctmParams, solve
@@ -105,13 +106,90 @@ def model(p: SctmParams, pt: Point) -> tuple[float, float]:
 
 
 def _residuals(p: SctmParams, pts: Sequence[Point]) -> list[float]:
+    """``(F_modelo − F_medida)/Fz`` de cada muestra (``lat`` → Fy, ``lon`` → Fx,
+    ``comb`` → ambas).
+
+    Es :func:`src.ac.tyre_sctm.solve` (con ``u`` = 1 y ``pressure_ratio`` = 0)
+    desenrollado: el ajuste lo evalúa decenas de millones de veces, así que lo que solo
+    depende de ``p`` se calcula una vez y cada muestra calcula solo la fuerza que usa.
+    Mismo orden de operaciones (resultado idéntico bit a bit;
+    ``tests/test_tyre_fit_residuals.py``). Cambiar ``solve`` obliga a cambiar esto."""
+    sin, cos, tan, sqrt = math.sin, math.cos, math.tan, math.sqrt
+    fz0, cg, ssens = p.fz0, p.camber_gain, p.speed_sensitivity
+    asy, fs, cx_mult = p.falloff_level, p.falloff_speed, p.cx_mult
+    cfac = p.combined_factor
+    circle = cfac <= 0.0 or cfac == 2.0
+    ms0, ms1 = p.max_slip0, p.max_slip1
+    brake = p.brake_dx_mult
+    c0, c1 = p.dcamber
+    ls_expy, ls_expx = p.ls_expy, p.ls_expx
+    ls_y = p.ls_mult(p.dy_ref, ls_expy)
+    dx_ref = p.dx_ref if p.dx_ref != 0.0 else p.dy_ref * 1.2
+    ls_x = p.ls_mult(dx_ref, ls_expx)
+
     out: list[float] = []
+    add = out.append
     for pt in pts:
-        fy, fx = model(p, pt)
-        if pt.kind in ("lat", "comb"):
-            out.append((fy - pt.fy) / pt.fz)
-        if pt.kind in ("lon", "comb"):
-            out.append((fx - pt.fx) / pt.fz)
+        kind, load = pt.kind, pt.fz
+        want_y = kind == "lat" or kind == "comb"
+        want_x = kind == "lon" or kind == "comb"
+        sa, sr_in, camber = pt.slip_angle, pt.slip_ratio, pt.camber
+        slip = 0.0
+        if load > 0.0 and not (sa == 0.0 and sr_in == 0.0 and camber == 0.0):
+            v8 = sin(camber) * cg + sa
+            sr = sr_in if sr_in > -0.99998999 else -0.9999949
+            v42 = sr + 1.0
+            v43 = sr_in / v42
+            v44 = tan(v8) / v42
+            if circle:
+                slip = sqrt(v44 * v44 + v43 * v43)
+            else:
+                slip = (abs(v44) ** cfac + abs(v43) ** cfac) ** (1.0 / cfac)
+        fy = fx = 0.0
+        if slip != 0.0:
+            speed = pt.speed
+            v37 = (
+                sqrt((speed * sin(sa)) ** 2 + (cos(sa) * (speed * sr_in)) ** 2) * ssens
+                + 1.0
+            )
+            ms = (load - fz0) / fz0 * (ms1 - ms0) + ms0
+            peak = 3.0 / ((1.0 / ms) * 3.0 * 78.125 * 2.0 * 0.0064)
+            if want_y:
+                v20 = (load**ls_expy) * ls_y / load
+                v23 = abs(camber)
+                if (camber < 0.0 or v8 < 0.0) and (camber > 0.0 or v8 > 0.0):
+                    v23 = -v23
+                v24 = -v23
+                v28 = v24 * c0 - v24 * v24 * c1
+                if v28 <= -1.0:
+                    v28 = -0.9
+                v38 = (v20 + (v20 / (v28 + 1.0) - v20) * 1.0) / v37
+                if peak < slip:
+                    shape = (1.0 / ((slip - peak) * fs + 1.0)) * (1.0 - asy) + asy
+                else:
+                    x = slip / peak
+                    shape = (1.0 - x) * (1.0 - x) * (3.0 / peak * slip) + (
+                        3.0 - x * 2.0
+                    ) * (x * x)
+                fy = shape * v38 * (v44 / slip) * load
+            if want_x:
+                v21 = (load**ls_expx) * ls_x / load
+                if sr_in < 0.0:
+                    v21 *= brake
+                v39 = v21 / v37
+                px = peak / cx_mult
+                if px < slip:
+                    shape = (1.0 / ((slip - px) * fs + 1.0)) * (1.0 - asy) + asy
+                else:
+                    x = slip / px
+                    shape = (1.0 - x) * (1.0 - x) * (3.0 / px * slip) + (
+                        3.0 - x * 2.0
+                    ) * (x * x)
+                fx = (v43 / slip) * (shape * v39) * load
+        if want_y:
+            add((fy - pt.fy) / load)
+        if want_x:
+            add((fx - pt.fx) / load)
     return out
 
 
@@ -150,7 +228,7 @@ def levenberg_marquardt(
 
     theta = clamp([getattr(base, k) for k in keys])
     r = _residuals(build(theta), pts)
-    cost = sum(x * x for x in r)
+    cost = sum(map(mul, r, r))
     lam = 1e-3
     it = 0
     for it in range(1, max_iter + 1):
@@ -165,11 +243,11 @@ def levenberg_marquardt(
             rm = _residuals(build(tm), pts)
             cols.append([(a - b) / d for a, b in zip(rp, rm)])
         n = len(theta)
-        jtj = [
-            [sum(ci * cj for ci, cj in zip(cols[i], cols[j])) for j in range(n)]
-            for i in range(n)
-        ]
-        jtr = [sum(ci * ri for ci, ri in zip(cols[i], r)) for i in range(n)]
+        jtj = [[0.0] * n for _ in range(n)]
+        for i in range(n):
+            for j in range(i, n):  # simétrica: ci·cj == cj·ci bit a bit
+                jtj[i][j] = jtj[j][i] = sum(map(mul, cols[i], cols[j]))
+        jtr = [sum(map(mul, cols[i], r)) for i in range(n)]
         improved = False
         for _ in range(12):
             a = [row[:] for row in jtj]
@@ -182,7 +260,7 @@ def levenberg_marquardt(
                 continue
             cand = clamp([t + s for t, s in zip(theta, step)])
             rc = _residuals(build(cand), pts)
-            cc = sum(x * x for x in rc)
+            cc = sum(map(mul, rc, rc))
             if cc < cost:
                 rel = (cost - cc) / max(cost, 1e-30)
                 theta, r, cost = cand, rc, cc
