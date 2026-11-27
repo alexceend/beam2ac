@@ -27,6 +27,8 @@ acelerador); ``DISPLAY_MAX_BOOST`` = boost total (no verificado cómo lo usa la 
 from __future__ import annotations
 
 import math
+from functools import lru_cache, reduce
+from operator import add, mul
 from typing import Any
 
 from src.ac.tyre_compounds import parse_ini, render_ini
@@ -95,10 +97,19 @@ def _ramp(rpm: float, ref: float, gamma: float) -> float:
 
 def _max_err(pressure: list[list[float]], ramps: list[Ramp]) -> float:
     """Error relativo máximo del par de AC, ``(1 + Σ boost) / presión − 1``, sobre el mapa."""
+    rpms = tuple(r for r, _ in pressure)
+    mags = [m for m, _, _ in ramps]
+    rows = zip(*[_column(rpms, ref, g) for _, ref, g in ramps])
     return max(
-        abs((1 + sum(m * _ramp(r, ref, g) for m, ref, g in ramps)) / p - 1)
-        for r, p in pressure
+        [abs((1 + sum(map(mul, mags, f))) / p - 1) for f, (_, p) in zip(rows, pressure)]
     )
+
+
+@lru_cache(maxsize=4096)
+def _column(rpms: tuple[float, ...], ref: float, gamma: float) -> tuple[float, ...]:
+    """:func:`_ramp` de una forma en todas las rpm del mapa (cada forma se prueba
+    muchas veces)."""
+    return tuple(_ramp(r, ref, gamma) for r in rpms)
 
 
 def _solve(a: list[list[float]], b: list[float]) -> list[float] | None:
@@ -129,8 +140,9 @@ def _fit_amplitudes(
     mínimo del error máximo. Devuelve tantas rampas como ``shapes`` o ``None`` si alguna amplitud no sale positiva.
     """
     n = len(shapes)
+    rpms = tuple(r for r, _ in pressure)
     cols = [
-        [(min(r / ref, 1.0) ** g if r > 0 else 0.0) / p for r, p in pressure]
+        [v / p for v, (_, p) in zip(_column(rpms, ref, g), pressure)]
         for ref, g in shapes
     ]
     basis = list(zip(*cols))
@@ -138,19 +150,17 @@ def _fit_amplitudes(
     w = [1.0] * len(y)
     m: list[float] | None = None
     for _ in range(irls + 1):
-        a = [[0.0] * n for _ in range(n)]
-        b = [0.0] * n
-        for f, yi, wi in zip(basis, y, w):
-            for u in range(n):
-                b[u] += wi * f[u] * yi
-                for v in range(n):
-                    a[u][v] += wi * f[u] * f[v]
+        a = []
+        b = []
+        for u in range(n):
+            wf = list(map(mul, w, cols[u]))
+            # suma en orden y sin compensar (``sum`` sí compensa y cambiaría bits)
+            b.append(reduce(add, map(mul, wf, y), 0.0))
+            a.append([reduce(add, map(mul, wf, col), 0.0) for col in cols])
         m = _solve(a, b)
         if m is None or min(m) <= 1e-4:
             return None
-        errs = [
-            abs(sum(mj * fj for mj, fj in zip(m, f)) - yi) for f, yi in zip(basis, y)
-        ]
+        errs = [abs(sum(map(mul, m, f)) - yi) for f, yi in zip(basis, y)]
         top = max(errs) or 1.0
         w = [wi * (1 + 3 * e / top) for wi, e in zip(w, errs)]
         mean = sum(w) / len(w)

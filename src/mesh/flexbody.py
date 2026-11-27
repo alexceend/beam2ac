@@ -140,6 +140,10 @@ def flexbody_matrix(fb: Flexbody, unit_meter: float) -> Matrix4:
 
 
 def apply(m: Matrix4, p: Vec3) -> Vec3:
-    return tuple(  # type: ignore[return-value]
-        m[i][0] * p[0] + m[i][1] * p[1] + m[i][2] * p[2] + m[i][3] for i in range(3)
+    x, y, z = p[0], p[1], p[2]
+    a, b, c = m[0], m[1], m[2]
+    return (
+        a[0] * x + a[1] * y + a[2] * z + a[3],
+        b[0] * x + b[1] * y + b[2] * z + b[3],
+        c[0] * x + c[1] * y + c[2] * z + c[3],
     )

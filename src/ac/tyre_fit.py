@@ -105,7 +105,46 @@ def model(p: SctmParams, pt: Point) -> tuple[float, float]:
     return fy, fx
 
 
-def _residuals(p: SctmParams, pts: Sequence[Point]) -> list[float]:
+def _prepare(pts: Sequence[Point]) -> list[tuple]:
+    """Parte de :func:`_residuals` que solo depende de las muestras (se calcula una
+    vez por ajuste). ``active`` = ``solve`` no devuelve (0, 0) de entrada."""
+    sin, cos, sqrt = math.sin, math.cos, math.sqrt
+    out = []
+    for pt in pts:
+        kind, load = pt.kind, pt.fz
+        sa, sr_in, camber = pt.slip_angle, pt.slip_ratio, pt.camber
+        active = load > 0.0 and not (sa == 0.0 and sr_in == 0.0 and camber == 0.0)
+        sin_camber = v42 = v43 = root = 0.0
+        if active:
+            sin_camber = sin(camber)
+            sr = sr_in if sr_in > -0.99998999 else -0.9999949
+            v42 = sr + 1.0
+            v43 = sr_in / v42
+            speed = pt.speed
+            root = sqrt((speed * sin(sa)) ** 2 + (cos(sa) * (speed * sr_in)) ** 2)
+        out.append(
+            (
+                kind == "lat" or kind == "comb",
+                kind == "lon" or kind == "comb",
+                load,
+                sa,
+                sr_in,
+                camber,
+                active,
+                sin_camber,
+                v42,
+                v43,
+                root,
+                pt.fy,
+                pt.fx,
+            )
+        )
+    return out
+
+
+def _residuals(
+    p: SctmParams, pts: Sequence[Point], prepared: list[tuple] | None = None
+) -> list[float]:
     """``(F_modelo − F_medida)/Fz`` de cada muestra (``lat`` → Fy, ``lon`` → Fx,
     ``comb`` → ambas).
 
@@ -114,7 +153,7 @@ def _residuals(p: SctmParams, pts: Sequence[Point]) -> list[float]:
     depende de ``p`` se calcula una vez y cada muestra calcula solo la fuerza que usa.
     Mismo orden de operaciones (resultado idéntico bit a bit;
     ``tests/test_tyre_fit_residuals.py``). Cambiar ``solve`` obliga a cambiar esto."""
-    sin, cos, tan, sqrt = math.sin, math.cos, math.tan, math.sqrt
+    tan, sqrt = math.tan, math.sqrt
     fz0, cg, ssens = p.fz0, p.camber_gain, p.speed_sensitivity
     asy, fs, cx_mult = p.falloff_level, p.falloff_speed, p.cx_mult
     cfac = p.combined_factor
@@ -129,17 +168,24 @@ def _residuals(p: SctmParams, pts: Sequence[Point]) -> list[float]:
 
     out: list[float] = []
     add = out.append
-    for pt in pts:
-        kind, load = pt.kind, pt.fz
-        want_y = kind == "lat" or kind == "comb"
-        want_x = kind == "lon" or kind == "comb"
-        sa, sr_in, camber = pt.slip_angle, pt.slip_ratio, pt.camber
+    for (
+        want_y,
+        want_x,
+        load,
+        sa,
+        sr_in,
+        camber,
+        active,
+        sin_camber,
+        v42,
+        v43,
+        root,
+        measured_fy,
+        measured_fx,
+    ) in (_prepare(pts) if prepared is None else prepared):
         slip = 0.0
-        if load > 0.0 and not (sa == 0.0 and sr_in == 0.0 and camber == 0.0):
-            v8 = sin(camber) * cg + sa
-            sr = sr_in if sr_in > -0.99998999 else -0.9999949
-            v42 = sr + 1.0
-            v43 = sr_in / v42
+        if active:
+            v8 = sin_camber * cg + sa
             v44 = tan(v8) / v42
             if circle:
                 slip = sqrt(v44 * v44 + v43 * v43)
@@ -147,11 +193,7 @@ def _residuals(p: SctmParams, pts: Sequence[Point]) -> list[float]:
                 slip = (abs(v44) ** cfac + abs(v43) ** cfac) ** (1.0 / cfac)
         fy = fx = 0.0
         if slip != 0.0:
-            speed = pt.speed
-            v37 = (
-                sqrt((speed * sin(sa)) ** 2 + (cos(sa) * (speed * sr_in)) ** 2) * ssens
-                + 1.0
-            )
+            v37 = root * ssens + 1.0
             ms = (load - fz0) / fz0 * (ms1 - ms0) + ms0
             peak = 3.0 / ((1.0 / ms) * 3.0 * 78.125 * 2.0 * 0.0064)
             if want_y:
@@ -187,9 +229,9 @@ def _residuals(p: SctmParams, pts: Sequence[Point]) -> list[float]:
                     ) * (x * x)
                 fx = (v43 / slip) * (shape * v39) * load
         if want_y:
-            add((fy - pt.fy) / load)
+            add((fy - measured_fy) / load)
         if want_x:
-            add((fx - pt.fx) / load)
+            add((fx - measured_fx) / load)
     return out
 
 
@@ -252,7 +294,9 @@ def levenberg_marquardt(
                 where.extend(range(at, at + size))
             at += size
         rows[skip] = (kept, where)
-    r = _residuals(build(theta), pts)
+    prepared = _prepare(pts)
+    subsets = {k: _prepare(v[0]) for k, v in rows.items()}
+    r = _residuals(build(theta), pts, prepared)
     cost = sum(map(mul, r, r))
     lam = 1e-3
     it = 0
@@ -266,8 +310,9 @@ def levenberg_marquardt(
             d = tp[j] - tm[j]
             skip = _UNAFFECTED.get(keys[j]) if "dx_ref" in keys else None
             sub_pts, where = rows[skip] if skip else (pts, None)
-            rp = _residuals(build(tp), sub_pts)
-            rm = _residuals(build(tm), sub_pts)
+            ready = subsets[skip] if skip else prepared
+            rp = _residuals(build(tp), sub_pts, ready)
+            rm = _residuals(build(tm), sub_pts, ready)
             col = [(a - b) / d for a, b in zip(rp, rm)]
             if where is not None:  # el resto de la columna es exactamente 0
                 full = [0.0] * len(r)
@@ -292,7 +337,7 @@ def levenberg_marquardt(
                 lam *= 10
                 continue
             cand = clamp([t + s for t, s in zip(theta, step)])
-            rc = _residuals(build(cand), pts)
+            rc = _residuals(build(cand), pts, prepared)
             cc = sum(map(mul, rc, rc))
             if cc < cost:
                 rel = (cost - cc) / max(cost, 1e-30)

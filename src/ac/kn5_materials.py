@@ -554,7 +554,9 @@ def diffuse_sources(
                 # solo dependen de los dos mapas y del color: comprimir una vez
                 dkey = (str(st["opacityMap"]), str(st.get("diffuseMap")), drgb)
                 if dkey not in decal_memo:
-                    decal_memo[dkey] = _decal_source(name, base, st, drgb, vehicle_dir)  # type: ignore[arg-type]
+                    decal_memo[dkey] = _decal_source(
+                        name, base, st, drgb, vehicle_dir  # type: ignore[arg-type]
+                    )
                 src, why = decal_memo[dkey]
                 if src is not None:
                     src = replace(src, material=name, beamng_material=base)

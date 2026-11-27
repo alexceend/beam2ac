@@ -165,8 +165,9 @@ def read_dae(path: str | Path | ZipMember) -> DaeFile:
 def bounds(points: list[Vec3]) -> tuple[Vec3, Vec3]:
     if not points:
         raise DaeError("sin puntos")
-    lo = tuple(min(p[i] for p in points) for i in range(3))
-    hi = tuple(max(p[i] for p in points) for i in range(3))
+    columns = [[p[i] for p in points] for i in range(3)]  # listas: más rápido
+    lo = tuple(map(min, columns))
+    hi = tuple(map(max, columns))
     return lo, hi  # type: ignore[return-value]
 
 

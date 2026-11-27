@@ -193,8 +193,9 @@ def _read_node(r: _Reader, nodes: list[Kn5Node], parent: int, keep: bool) -> Non
         if keep:
             node.vertices = list(struct.iter_unpack(f"<3f{stride - 12}x", data))
         finite = math.isfinite
+        # tres float32 no desbordan un double y NaN/inf se propagan en la suma
         node.nonfinite_normals += sum(
-            not (finite(x) and finite(y) and finite(z))
+            not finite(x + y + z)
             for x, y, z in struct.iter_unpack(f"<12x3f{stride - 24}x", data)
         )
         icount = r.i32()

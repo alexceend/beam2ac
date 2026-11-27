@@ -158,10 +158,37 @@ class Knuckle:
         return _add(_add(c0, rotate((p[0], p[1], p[2]), rel)), (p[3], p[4], p[5]))
 
     def link_errors(self, p: list[float]) -> list[float]:
-        return [
-            _norm(_sub(self.moved(p, k), c)) - l0
-            for (c, k), l0 in zip(self.links, self.lengths)
-        ]
+        """``|moved(p, k) − chasis| − longitud`` de cada barra. Es :meth:`moved`
+        con la rotación de :func:`rotate` calculada una vez por pose (mismas
+        operaciones; ``tests/test_linkage_eigen.py``)."""
+        rv = (p[0], p[1], p[2])
+        th = _norm(rv)
+        turn = not th < 1e-15
+        if turn:
+            k0, k1, k2 = rv[0] / th, rv[1] / th, rv[2] / th
+            c, s = math.cos(th), math.sin(th)
+        c0 = self.points[self.centre]
+        points = self.points
+        out: list[float] = []
+        for (chassis, name), l0 in zip(self.links, self.lengths):
+            v = points[name]
+            x, y, z = v[0] - c0[0], v[1] - c0[1], v[2] - c0[2]
+            if turn:
+                kv = k0 * x + k1 * y + k2 * z
+                x, y, z = (
+                    x * c + (k1 * z - k2 * y) * s + k0 * kv * (1 - c),
+                    y * c + (k2 * x - k0 * z) * s + k1 * kv * (1 - c),
+                    z * c + (k0 * y - k1 * x) * s + k2 * kv * (1 - c),
+                )
+            out.append(
+                math.sqrt(
+                    (c0[0] + x + p[3] - chassis[0]) ** 2
+                    + (c0[1] + y + p[4] - chassis[1]) ** 2
+                    + (c0[2] + z + p[5] - chassis[2]) ** 2
+                )
+                - l0
+            )
+        return out
 
     def rail_errors(self, p: list[float]) -> list[float]:
         """Distancia (vector, m) del nodo deslizante a la recta de su raíl: componentes

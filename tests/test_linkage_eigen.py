@@ -35,3 +35,22 @@ def test_cycle_shortcut_matches_full_iteration():
             j = [[rnd.choice((0.0, 1.0, -1.0)) for _ in range(rank)] for _ in j]
         a = [[sum(x * y for x, y in zip(u, v)) for v in j] for u in j]
         assert repr(L._jacobi_eigen(a)) == repr(_full(a))
+
+
+def test_link_errors_match_moved():
+    rnd = random.Random(1)
+
+    def point():
+        return tuple(rnd.uniform(-2, 2) for _ in range(3))
+
+    for trial in range(500):
+        points = {n: point() for n in ("c", "a", "b")}
+        k = L.Knuckle(points, "c", ("a", "b"), [(point(), n) for n in ("a", "b", "c")])
+        pose = [rnd.uniform(-1, 1) for _ in range(6)]
+        if trial % 5 == 0:
+            pose[:3] = [0.0, -0.0, 0.0]
+        want = [
+            L._norm(L._sub(k.moved(pose, n), c)) - l0
+            for (c, n), l0 in zip(k.links, k.lengths)
+        ]
+        assert repr(k.link_errors(pose)) == repr(want)
