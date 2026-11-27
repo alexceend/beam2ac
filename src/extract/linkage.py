@@ -119,8 +119,10 @@ def rotate(rv: Vec, v: Vec) -> Vec:
         k[2] * v[0] - k[0] * v[2],
         k[0] * v[1] - k[1] * v[0],
     )
-    return tuple(  # type: ignore[return-value]
-        v[i] * c + cross[i] * s + k[i] * kv * (1 - c) for i in range(3)
+    return (
+        v[0] * c + cross[0] * s + k[0] * kv * (1 - c),
+        v[1] * c + cross[1] * s + k[1] * kv * (1 - c),
+        v[2] * c + cross[2] * s + k[2] * kv * (1 - c),
     )
 
 

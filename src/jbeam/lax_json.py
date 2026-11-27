@@ -53,7 +53,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 # Tipos de tolerancia registrados.
 COMMENT = "comment"
@@ -70,6 +70,7 @@ CONTENT_AFTER_ROOT = "content_after_root"
 IMPLICIT_ROOT_OBJECT = "implicit_root_object"
 
 _PLAIN = re.compile(r'[^"\\\n]+')
+_SPACE = re.compile(r"[ \t\r\n]+")
 _STOP = '"\\\n'
 _LITERALS: dict[str, Any] = {"true": True, "false": False, "null": None}
 _ESCAPES = {
@@ -118,8 +119,7 @@ class LaxDocument:
         return sum(1 for item in self.leniencies if item.kind == kind)
 
 
-@dataclass(frozen=True)
-class _Token:
+class _Token(NamedTuple):  # decenas de miles por archivo: más barato que dataclass
     kind: str  # "punct" | "string" | "number" | "literal"
     value: Any
     line: int
@@ -164,7 +164,7 @@ class _Lexer:
         while self.pos < n:
             ch = text[self.pos]
             if ch in " \t\r\n":
-                self._advance()
+                self._advance(_SPACE.match(text, self.pos).end() - self.pos)
                 continue
             line, col = self.line, self.col
             if ch == "/" and text.startswith("//", self.pos):
@@ -182,7 +182,8 @@ class _Lexer:
                 continue
             if ch in "[]{}:,":
                 out.append(_Token("punct", ch, line, col, ch))
-                self._advance()
+                self.pos += 1
+                self.col += 1
                 continue
             if ch == '"':
                 out.append(self._string(line, col))

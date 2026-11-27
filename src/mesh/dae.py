@@ -106,18 +106,16 @@ def read_dae(path: str | Path | ZipMember) -> DaeFile:
                     for c in el:
                         if _local(c.tag) == "p" and c.text:
                             idx = c.text.split()
-                            face_vertices.update(int(i) for i in idx[voff[0] :: stride])
+                            face_vertices.update(map(int, idx[voff[0] :: stride]))
             if tag == "source":
                 arr = next((c for c in el if _local(c.tag) == "float_array"), None)
                 if arr is not None and arr.text:
                     sources[el.attrib.get("id")] = arr.text
-                    bad = sum(
-                        1
-                        for tok in arr.text.split()
-                        if "nan" in tok.lower() or "inf" in tok.lower()
-                    )
-                    if bad:
-                        nonfinite[el.attrib.get("id")] = bad
+                    low = arr.text.lower()
+                    if "nan" in low or "inf" in low:  # casi nunca: evita contar
+                        nonfinite[el.attrib.get("id")] = sum(
+                            1 for tok in low.split() if "nan" in tok or "inf" in tok
+                        )
             elif tag == "vertices":
                 for inp in el:
                     if (
@@ -129,7 +127,7 @@ def read_dae(path: str | Path | ZipMember) -> DaeFile:
             raise DaeError(f"{path.name}: geometría {gid!r} sin posiciones")
         if position_source in nonfinite:
             raise DaeError(f"{path.name}: {gid}: posiciones con NaN/inf")
-        values = [float(v) for v in sources[position_source].split()]
+        values = list(map(float, sources[position_source].split()))
         if len(values) % 3:
             raise DaeError(f"{path.name}: {gid}: posiciones no múltiplo de 3")
         pts = [tuple(values[i : i + 3]) for i in range(0, len(values), 3)]

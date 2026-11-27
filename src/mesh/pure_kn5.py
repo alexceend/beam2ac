@@ -112,7 +112,11 @@ def _num(tok: str) -> float:
 
 
 def _floats(text: str | None, stride: int) -> list[tuple[float, ...]]:
-    vals = [_num(v) for v in (text or "").split()]
+    toks = (text or "").split()
+    try:
+        vals = list(map(float, toks))
+    except ValueError:
+        vals = [_num(v) for v in toks]
     if len(vals) % stride:
         raise PureKn5Error(f"fuente con {len(vals)} valores, stride {stride}")
     return [tuple(vals[i : i + stride]) for i in range(0, len(vals), stride)]
@@ -171,7 +175,7 @@ def _read_geometry(geom: ET.Element) -> MeshSource:
             counts = [int(v) for v in (vc.text or "").split()]
         polys: list[list[int]] = []
         for p in p_el:
-            idx = [int(v) for v in (p.text or "").split()]
+            idx = list(map(int, (p.text or "").split()))
             if _local(el.tag) == "polygons":
                 polys.append(idx)  # un <p> = un polígono
             elif counts is None:  # triangles: todo el <p> son triángulos
@@ -185,16 +189,18 @@ def _read_geometry(geom: ET.Element) -> MeshSource:
                     pos += n * stride
         corners: list[tuple[int, int, int]] = []
         tris = 0
+        ov, on, ot = off["VERTEX"], off["NORMAL"], off["TEXCOORD"]
         for poly in polys:
             n = len(poly) // stride
             if n < 3:
                 continue
             ring = [
-                tuple(
-                    poly[k * stride + off[s]] if off[s] >= 0 else -1
-                    for s in ("VERTEX", "NORMAL", "TEXCOORD")
+                (
+                    poly[b + ov],
+                    poly[b + on] if on >= 0 else -1,
+                    poly[b + ot] if ot >= 0 else -1,
                 )
-                for k in range(n)
+                for b in range(0, n * stride, stride)
             ]
             for i in range(1, n - 1):  # abanico (v0, vi, vi+1); triángulo: tal cual
                 corners += [ring[0], ring[i], ring[i + 1]]  # type: ignore[list-item]
@@ -285,7 +291,8 @@ def _to_ac(v: Vec3) -> Vec3:
 
 
 def _unit(v: Vec3) -> Vec3 | None:
-    n = math.sqrt(sum(c * c for c in v))
+    x, y, z = v
+    n = math.sqrt(sum((x * x, y * y, z * z)))
     if not math.isfinite(n) or n == 0:
         return None
     return (v[0] / n, v[1] / n, v[2] / n)
@@ -307,17 +314,14 @@ def build_object_meshes(
     warnings: list[str],
 ) -> list[BuiltMesh]:
     """Mallas KN5 (una por material) de un objeto del plan, en ejes AC y mundo."""
-    pos = [
-        _to_ac(
-            tuple(  # type: ignore[arg-type]
-                matrix[r][0] * p[0]
-                + matrix[r][1] * p[1]
-                + matrix[r][2] * p[2]
-                + matrix[r][3]
-                for r in range(3)
-            )
+    (a, b, c, d), (e, f, g, h), (i, j, k, m) = (r[:4] for r in matrix[:3])
+    pos = [  # matriz · p en BeamNG y después AC = (Bx, Bz, −By)
+        (
+            a * x + b * y + c * z + d,
+            i * x + j * y + k * z + m,
+            -(e * x + f * y + g * z + h),
         )
-        for p in src.positions
+        for x, y, z in src.positions
     ]
     if any(not math.isfinite(c) for p in pos for c in p):
         raise PureKn5Error(f"{name}: posiciones no finitas")
@@ -326,9 +330,15 @@ def build_object_meshes(
     nrm: list[Vec3 | None] = []
     if src.normals is not None:
         nm = _normal_matrix([r[:3] for r in matrix[:3]])
-        for n in src.normals:
-            t = tuple(sum(nm[r][c] * n[c] for c in range(3)) for r in range(3))
-            u = _unit(t)  # type: ignore[arg-type]
+        # sum() y no a+b+c: desde Python 3.12 suma floats con compensación
+        r0, r1, r2 = nm
+        for x, y, z in src.normals:
+            t = (
+                sum((r0[0] * x, r0[1] * y, r0[2] * z)),
+                sum((r1[0] * x, r1[1] * y, r1[2] * z)),
+                sum((r2[0] * x, r2[1] * y, r2[2] * z)),
+            )
+            u = _unit(t)
             nrm.append(_to_ac(u) if u else None)
     uvs = src.uvs
     if uvs is not None and not src.uv_finite:
