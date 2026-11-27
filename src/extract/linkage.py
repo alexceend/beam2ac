@@ -53,6 +53,7 @@ from __future__ import annotations
 import itertools
 import math
 from dataclasses import dataclass, field
+from operator import mul
 from typing import Any, Iterable
 
 from src.coords import beamng_to_ac
@@ -244,23 +245,42 @@ def wheel_angles(k: Knuckle, p: list[float]) -> tuple[float, float]:
     return math.degrees(math.atan2(a[1], a[0])), math.degrees(math.atan2(-a[2], a[0]))
 
 
+_JACOBI_ITERATIONS = 200
+
+
 def _jacobi_eigen(a: list[list[float]]) -> list[float]:
+    """Autovalores (ordenados) de una matriz simétrica: 200 rotaciones de Jacobi.
+
+    El umbral de salida casi nunca se alcanza (queda ruido de redondeo), pero la
+    iteración suele caer en un ciclo exacto: como cada estado determina el siguiente,
+    al repetirse uno el estado final se deduce sin seguir iterando (mismo resultado
+    bit a bit)."""
     n = len(a)
     m = [row[:] for row in a]
-    for _ in range(200):
-        off, p, q = max(
-            (abs(m[i][j]), i, j) for i in range(n) for j in range(n) if i != j
-        )
+    seen: dict[tuple[float, ...], int] = {}
+    diags: list[list[float]] = []
+    for it in range(_JACOBI_ITERATIONS):
+        flat = tuple(itertools.chain.from_iterable(m))
+        start = seen.setdefault(flat, it)
+        if start != it:
+            end = start + (_JACOBI_ITERATIONS - start) % (it - start)
+            return sorted(diags[end])
+        diags.append(list(flat[:: n + 1]))
+        mags = list(map(abs, flat))
+        mags[:: n + 1] = [-1.0] * n  # sin la diagonal
+        off = max(mags)
         if off < 1e-30:
             break
+        # a igualdad de módulo, el último en orden de filas
+        p, q = divmod(len(mags) - 1 - mags[::-1].index(off), n)
         th = 0.5 * math.atan2(2 * m[p][q], m[q][q] - m[p][p])
         c, s = math.cos(th), math.sin(th)
-        for r in range(n):
-            mrp, mrq = m[r][p], m[r][q]
-            m[r][p], m[r][q] = c * mrp - s * mrq, s * mrp + c * mrq
-        for r in range(n):
-            mpr, mqr = m[p][r], m[q][r]
-            m[p][r], m[q][r] = c * mpr - s * mqr, s * mpr + c * mqr
+        for row in m:
+            x, y = row[p], row[q]
+            row[p], row[q] = c * x - s * y, s * x + c * y
+        rp, rq = m[p], m[q]
+        m[p] = [c * x - s * y for x, y in zip(rp, rq)]
+        m[q] = [s * x + c * y for x, y in zip(rp, rq)]
     return sorted(m[i][i] for i in range(n))
 
 
@@ -275,10 +295,10 @@ def constraint_eigen(k: Knuckle, p: list[float] | None = None) -> list[float]:
         q[j] += 1e-7
         scale = 1 / 0.3 if j < 3 else 1.0
         jac.append([(a - b) / 1e-7 * scale for a, b in zip(k.constraint_errors(q), r0)])
-    jtj = [
-        [sum(jac[i][m] * jac[j][m] for m in range(len(r0))) for j in range(6)]
-        for i in range(6)
-    ]
+    jtj = [[0.0] * 6 for _ in range(6)]
+    for i in range(6):
+        for j in range(i, 6):  # simétrica bit a bit
+            jtj[i][j] = jtj[j][i] = sum(map(mul, jac[i], jac[j]))
     return _jacobi_eigen(jtj)
 
 
