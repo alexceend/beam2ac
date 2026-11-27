@@ -1,6 +1,7 @@
 """Ajuste en procesos paralelos y memorias del catálogo: mismos resultados."""
 
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -29,6 +30,7 @@ def _datasets(limit):
     return out
 
 
+@pytest.mark.skipif(sys.platform != "win32", reason="el paralelismo es solo Windows")
 def test_prefit_matches_sequential(monkeypatch):
     jobs = _datasets(2)
     if len(jobs) < 2:

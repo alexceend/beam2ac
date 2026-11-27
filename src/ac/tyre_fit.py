@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import math
 import os
+import sys
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 from operator import mul
@@ -542,7 +543,9 @@ def prefit(jobs: Sequence[tuple[dict, float, bool]]) -> None:
     free_reference)`` que falten y los deja en la memoria de :func:`fit_dataset`.
     Mismo código y mismo resultado; ante cualquier fallo no hace nada y
     ``fit_dataset`` los calcula aquí (con el mismo error, si lo hay)."""
-    if not PARALLEL:
+    # solo Windows (``spawn``, probado): en Linux el defecto es ``fork`` y bifurcar el
+    # servidor con hilos puede colgar un hijo
+    if not PARALLEL or sys.platform != "win32":
         return
     try:
         missing = {_dataset_key(*job): job for job in jobs}
