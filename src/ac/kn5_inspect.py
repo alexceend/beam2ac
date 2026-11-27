@@ -59,7 +59,19 @@ class Kn5File:
 
     def mesh_world_vertices(self, node: Kn5Node) -> list[Vec3]:
         parent = self.nodes[node.parent].world if node.parent >= 0 else IDENTITY
-        return [transform_point(v, parent) for v in node.vertices]
+        a, b, c, d = parent  # transform_point desenrollado (cientos de miles de puntos)
+        a0, a1, a2 = a[0], a[1], a[2]
+        b0, b1, b2 = b[0], b[1], b[2]
+        c0, c1, c2 = c[0], c[1], c[2]
+        d0, d1, d2 = d[0], d[1], d[2]
+        return [
+            (
+                x * a0 + y * b0 + z * c0 + d0,
+                x * a1 + y * b1 + z * c1 + d1,
+                x * a2 + y * b2 + z * c2 + d2,
+            )
+            for x, y, z in node.vertices
+        ]
 
 
 def mat_mul(a: Mat, b: Mat) -> Mat:
@@ -70,8 +82,12 @@ def mat_mul(a: Mat, b: Mat) -> Mat:
 
 
 def transform_point(p: Vec3, m: Mat) -> Vec3:
-    return tuple(  # type: ignore[return-value]
-        p[0] * m[0][j] + p[1] * m[1][j] + p[2] * m[2][j] + m[3][j] for j in range(3)
+    x, y, z = p[0], p[1], p[2]
+    a, b, c, d = m
+    return (
+        x * a[0] + y * b[0] + z * c[0] + d[0],
+        x * a[1] + y * b[1] + z * c[1] + d[1],
+        x * a[2] + y * b[2] + z * c[2] + d[2],
     )
 
 
@@ -175,13 +191,12 @@ def _read_node(r: _Reader, nodes: list[Kn5Node], parent: int, keep: bool) -> Non
         vcount = r.i32()
         data = r.raw(vcount * stride)
         if keep:
-            node.vertices = [
-                struct.unpack_from("<3f", data, i * stride) for i in range(vcount)
-            ]
-        for i in range(vcount):
-            normal = struct.unpack_from("<3f", data, i * stride + 12)
-            if not all(math.isfinite(c) for c in normal):
-                node.nonfinite_normals += 1
+            node.vertices = list(struct.iter_unpack(f"<3f{stride - 12}x", data))
+        finite = math.isfinite
+        node.nonfinite_normals += sum(
+            not (finite(x) and finite(y) and finite(z))
+            for x, y, z in struct.iter_unpack(f"<12x3f{stride - 24}x", data)
+        )
         icount = r.i32()
         idata = r.raw(icount * 2)
         if keep:

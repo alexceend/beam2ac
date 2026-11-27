@@ -135,29 +135,33 @@ def split_kn5(data: bytes) -> Kn5Parts:
 
 
 def build_kn5(parts: Kn5Parts) -> bytes:
-    out = KN5_MAGIC + struct.pack("<I", parts.version) + parts.extra
-    out += struct.pack("<i", len(parts.textures))
+    # lista + join: con ``bytes +=`` cada textura copiaba todo lo anterior (cuadrático)
+    out = [KN5_MAGIC, struct.pack("<I", parts.version), parts.extra]
+    out.append(struct.pack("<i", len(parts.textures)))
     for t in parts.textures:
         out += (
-            struct.pack("<i", t.active)
-            + _s(t.name)
-            + struct.pack("<i", len(t.data))
-            + t.data
+            struct.pack("<i", t.active),
+            _s(t.name),
+            struct.pack("<i", len(t.data)),
+            t.data,
         )
-    out += struct.pack("<i", len(parts.materials))
+    out.append(struct.pack("<i", len(parts.materials)))
     for m in parts.materials:
         out += (
-            _s(m.name) + _s(m.shader) + bytes([m.blend & 0xFF, m.alpha_tested & 0xFF])
+            _s(m.name),
+            _s(m.shader),
+            bytes([m.blend & 0xFF, m.alpha_tested & 0xFF]),
         )
         if parts.version > 4:
-            out += struct.pack("<i", m.depth or 0)
-        out += struct.pack("<i", len(m.props))
+            out.append(struct.pack("<i", m.depth or 0))
+        out.append(struct.pack("<i", len(m.props)))
         for pname, vals in m.props:
-            out += _s(pname) + struct.pack("<10f", *vals)
-        out += struct.pack("<i", len(m.slots))
+            out += (_s(pname), struct.pack("<10f", *vals))
+        out.append(struct.pack("<i", len(m.slots)))
         for sampler, slot, tex in m.slots:
-            out += _s(sampler) + struct.pack("<i", slot) + _s(tex)
-    return out + parts.nodes
+            out += (_s(sampler), struct.pack("<i", slot), _s(tex))
+    out.append(parts.nodes)
+    return b"".join(out)
 
 
 def solid_dds(rgb: tuple[int, int, int], size: int = 4, alpha: int = 255) -> bytes:
@@ -493,6 +497,7 @@ def diffuse_sources(
     )  # p. ej. vidrios de luz del glowMap: su emisión no debe atenuarse con el alfa
     out: list[DiffuseSource] = []
     decal_failed: dict[str, str] = {}
+    decal_memo: dict[tuple, tuple[DiffuseSource | None, str]] = {}
     for name in kn5_material_names:
         base = material_key(name, bm, dae_materials)
         if base is None:
@@ -540,7 +545,13 @@ def diffuse_sources(
             if st.get("instanceDiffuse") and paint_rgb is None:
                 src, why = None, ""  # sin pintura: sigue el camino de siempre
             else:
-                src, why = _decal_source(name, base, st, drgb, vehicle_dir)  # type: ignore[arg-type]
+                # solo dependen de los dos mapas y del color: comprimir una vez
+                dkey = (str(st["opacityMap"]), str(st.get("diffuseMap")), drgb)
+                if dkey not in decal_memo:
+                    decal_memo[dkey] = _decal_source(name, base, st, drgb, vehicle_dir)  # type: ignore[arg-type]
+                src, why = decal_memo[dkey]
+                if src is not None:
+                    src = replace(src, material=name, beamng_material=base)
             if src is not None:
                 out.append(src)
                 continue

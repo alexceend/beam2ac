@@ -51,9 +51,8 @@ def _mesh_blob(k: Any, keep: Callable[[Any], bool]) -> bytes:
         if n.type != 2 or not keep(n):
             continue
         base = len(pos) // 3
-        for p in k.mesh_world_vertices(n):
-            pos.extend(p)
-        idx.extend(base + i for i in n.indices)
+        pos.extend(itertools.chain.from_iterable(k.mesh_world_vertices(n)))
+        idx.extend([base + i for i in n.indices])
     # array('f'/'I') empaqueta en C sin desplegar millones de argumentos (little-endian en x86/ARM)
     fl, ui = array.array("f", pos), array.array("I", idx)
     if sys.byteorder == "big":

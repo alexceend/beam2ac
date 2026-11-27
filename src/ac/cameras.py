@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import statistics
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
@@ -67,7 +68,18 @@ def _ancestry(k, n) -> list[str]:
 
 
 def body_triangles(kn5_path: Path, x0: float) -> tuple[float, list[Tri]]:
-    """(z más adelantada con |x| < 0,3, triángulos cuyo rango x contiene x0)."""
+    """(z más adelantada con |x| < 0,3, triángulos cuyo rango x contiene x0).
+
+    Memorizado por (ruta, fecha, tamaño, x0); la lista es de solo lectura."""
+    p = Path(kn5_path).resolve()
+    st = p.stat()
+    return _body_triangles(str(p), st.st_mtime_ns, st.st_size, x0)
+
+
+@lru_cache(maxsize=8)
+def _body_triangles(
+    kn5_path: str, mtime_ns: int, size: int, x0: float
+) -> tuple[float, list[Tri]]:
     k = read_kn5(kn5_path)
     tris: list[Tri] = []
     front = -9.0
