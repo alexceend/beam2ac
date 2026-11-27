@@ -24,6 +24,7 @@ import struct
 import sys
 import uuid
 from dataclasses import dataclass, field
+from itertools import compress, count
 from pathlib import Path
 
 # --------------------------------------------------------------------------- RIFF
@@ -504,6 +505,24 @@ def find_all(buf: bytes, needle: bytes) -> list[int]:
     return out
 
 
+def _find_each(buf: bytes, needles) -> dict[bytes, list[int]]:
+    """``{aguja: find_all(buf, aguja)}`` para agujas de 16 bytes en una sola pasada:
+    se miran las palabras de 8 bytes en los 8 desplazamientos posibles."""
+    found: dict[bytes, list[int]] = {n: [] for n in needles}
+    heads = {memoryview(n[:8]).cast("Q")[0] for n in found}
+    view = memoryview(buf)
+    for off in range(8):
+        words = view[off : off + max(0, len(buf) - off) // 8 * 8].cast("Q")
+        for i in compress(count(), map(heads.__contains__, words)):
+            pos = off + 8 * i
+            hits = found.get(bytes(view[pos : pos + 16]))
+            if hits is not None:
+                hits.append(pos)
+    for hits in found.values():
+        hits.sort()
+    return found
+
+
 def reguid(bank_bytes: bytes, mapping: dict[str, str]) -> tuple[bytes, dict[str, int]]:
     """Sustituye cada aparición de los GUID (``bytes_le``) por el GUID nuevo.
 
@@ -515,8 +534,9 @@ def reguid(bank_bytes: bytes, mapping: dict[str, str]) -> tuple[bytes, dict[str,
     out = bytearray(bank_bytes)
     counts: dict[str, int] = {}
     olds = {uuid.UUID(o).bytes_le: uuid.UUID(n).bytes_le for o, n in mapping.items()}
+    found = _find_each(bank_bytes, olds)
     for old, new in olds.items():
-        hits = find_all(bank_bytes, old)
+        hits = found[old]
         counts[str(uuid.UUID(bytes_le=old))] = len(hits)
         for h in hits:
             out[h : h + 16] = new

@@ -1332,7 +1332,7 @@ class Workspace:
         mats = [m.name for m in split_kn5(kn5.read_bytes()).materials]
         skipped: list[str] = []
         try:
-            auto = light_functions(self.review(pid).preview.resolved, skipped)
+            auto = light_functions(self._resolved(pid), skipped)
             error = None
         except LightsError as exc:
             auto, error = {}, str(exc)
@@ -1671,13 +1671,9 @@ class Workspace:
         trace = d / "stages" / "resolved_ini" / str(key) / "trace.json"
         if not key or not trace.is_file():
             return {"available": False, "why": "ejecuta las etapas primero"}
-        from src.attrs import schema as S
-        from src.attrs.store import Catalog
         from src.project.export import _blocker_severity, sctm_targets
 
-        project = self._project(pid)
-        cat = Catalog.load(project.catalog_path, project.root)
-        attrs = {k: S._to_plain(a) for k, a in cat.attributes.items()}
+        attrs = self._catalog_attributes(self._project(pid))
         t = _read_json(trace)
         rows = []
         sctm = sctm_targets(t["keys"])
@@ -1696,6 +1692,21 @@ class Workspace:
             "warnings": [r for r in rows if r["severity"] == "warning"],
             "by_epistemic": _count(k["epistemic"] for k in t["keys"]),
         }
+
+    def _catalog_attributes(self, project) -> dict[str, Any]:
+        """Atributos del catálogo en forma simple (solo lectura), memorizados mientras
+        no cambie ningún archivo: se piden cada vez que se abre un proyecto."""
+        from src.attrs import schema as S
+        from src.attrs.store import Catalog, signature
+
+        key = signature(project.catalog_path, project.root)
+        memo = self.__dict__.setdefault("_attrs_memo", {})
+        hit = memo.get(project.root)
+        if hit is None or hit[0] != key:
+            cat = Catalog.load(project.catalog_path, project.root)
+            attrs = {k: S._to_plain(a) for k, a in cat.attributes.items()}
+            hit = memo[project.root] = (key, attrs)
+        return hit[1]
 
     # ----------------------------------------------------------------- escena 3D
     def scene(self, pid: str, attempt: str) -> dict[str, Any]:
@@ -2246,28 +2257,40 @@ class Workspace:
         return {"version": rec["version"], "items": rec["items"]}
 
     # -------------------------------------------------------- editor de atributos
+    @staticmethod
+    def _vehicle_source(project):
+        from src.pipeline.physics_preview import load_vehicle_dir, load_vehicle_zip
+
+        s = project.source
+        if s.kind == "dir":
+            return load_vehicle_dir(Path(s.path), s.pc)
+        return load_vehicle_zip(
+            Path(s.path), Path(s.common_zip) if s.common_zip else None, s.pc
+        )
+
+    def _resolved(self, pid: str):
+        """Configuración resuelta (``None`` si no resuelve), sin calcular la física:
+        reutiliza la revisión si ya está abierta."""
+        from src.jbeam import resolve
+
+        if pid in self._reviews:
+            return self._reviews[pid].preview.resolved
+        src = self._vehicle_source(self._project(pid))
+        try:
+            return resolve(src.index, src.pc)
+        except Exception:  # como la vista previa: la etapa fallida deja None
+            return None
+
     def review(self, pid: str):
         """``ReviewService`` del proyecto (se construye una vez; tarda segundos)."""
         if pid in self._reviews:
             return self._reviews[pid]
         from src.app.service import ReviewService
-        from src.pipeline.physics_preview import (
-            load_vehicle_dir,
-            load_vehicle_zip,
-            preview_physics,
-        )
+        from src.pipeline.physics_preview import preview_physics
 
         project = self._project(pid)
-        s = project.source
-        src = (
-            load_vehicle_dir(Path(s.path), s.pc)
-            if s.kind == "dir"
-            else load_vehicle_zip(
-                Path(s.path), Path(s.common_zip) if s.common_zip else None, s.pc
-            )
-        )
         svc = ReviewService(
-            preview_physics(src, project.driver_mass_kg),
+            preview_physics(self._vehicle_source(project), project.driver_mass_kg),
             project.root,
             driver_mass_kg=project.driver_mass_kg,
         )

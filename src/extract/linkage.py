@@ -50,6 +50,7 @@ hacia dentro; convergencia positiva = parte delantera hacia dentro.
 
 from __future__ import annotations
 
+import functools
 import itertools
 import math
 from array import array
@@ -250,14 +251,22 @@ _JACOBI_ITERATIONS = 200
 
 
 def _jacobi_eigen(a: list[list[float]]) -> list[float]:
+    """Autovalores de ``a`` (ver :func:`_jacobi_cached`). Muchos enlaces candidatos
+    dan la misma matriz: se memoriza por sus bytes."""
+    key = array("d", itertools.chain.from_iterable(a)).tobytes()
+    return list(_jacobi_cached(len(a), key))
+
+
+@functools.lru_cache(maxsize=8192)
+def _jacobi_cached(n: int, key: bytes) -> tuple[float, ...]:
     """Autovalores (ordenados) de una matriz simétrica: 200 rotaciones de Jacobi.
 
     El umbral de salida casi nunca se alcanza (queda ruido de redondeo), pero la
     iteración suele caer en un ciclo exacto: como cada estado determina el siguiente,
     al repetirse uno el estado final se deduce sin seguir iterando (mismo resultado
     bit a bit)."""
-    n = len(a)
-    m = [row[:] for row in a]
+    values = array("d", key).tolist()
+    m = [values[i * n : (i + 1) * n] for i in range(n)]
     seen: dict[bytes, int] = {}
     diags: list[list[float]] = []
     for it in range(_JACOBI_ITERATIONS):
@@ -266,7 +275,7 @@ def _jacobi_eigen(a: list[list[float]]) -> list[float]:
         start = seen.setdefault(array("d", flat).tobytes(), it)
         if start != it:
             end = start + (_JACOBI_ITERATIONS - start) % (it - start)
-            return sorted(diags[end])
+            return tuple(sorted(diags[end]))
         diags.append(list(flat[:: n + 1]))
         mags = list(map(abs, flat))
         mags[:: n + 1] = [-1.0] * n  # sin la diagonal
@@ -283,7 +292,7 @@ def _jacobi_eigen(a: list[list[float]]) -> list[float]:
         rp, rq = m[p], m[q]
         m[p] = [c * x - s * y for x, y in zip(rp, rq)]
         m[q] = [s * x + c * y for x, y in zip(rp, rq)]
-    return sorted(m[i][i] for i in range(n))
+    return tuple(sorted(m[i][i] for i in range(n)))
 
 
 def constraint_eigen(k: Knuckle, p: list[float] | None = None) -> list[float]:

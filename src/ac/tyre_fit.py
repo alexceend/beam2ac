@@ -193,6 +193,18 @@ def _residuals(p: SctmParams, pts: Sequence[Point]) -> list[float]:
     return out
 
 
+# parámetros que no cambian ninguna fuerza de un tipo de muestra puro; solo vale si
+# ``dx_ref`` se ajusta (nunca es 0): con ``dx_ref`` = 0, ``dy_ref`` también mueve Fx
+_UNAFFECTED = {
+    "dy_ref": "lon",
+    "ls_expy": "lon",
+    "dx_ref": "lat",
+    "ls_expx": "lat",
+    "cx_mult": "lat",
+    "brake_dx_mod": "lat",
+}
+
+
 def _solve_linear(a: list[list[float]], b: list[float]) -> list[float]:
     n = len(b)
     m = [row[:] + [b[i]] for i, row in enumerate(a)]
@@ -227,6 +239,19 @@ def levenberg_marquardt(
         return [min(max(t, a), b) for t, a, b in zip(theta, lo, hi)]
 
     theta = clamp([getattr(base, k) for k in keys])
+    # por tipo puro: (muestras restantes, posición de sus residuos en el vector)
+    rows: dict[str, tuple[list[Point], list[int]]] = {}
+    for skip in ("lat", "lon"):
+        kept: list[Point] = []
+        where: list[int] = []
+        at = 0
+        for pt in pts:
+            size = 2 if pt.kind == "comb" else int(pt.kind in ("lat", "lon"))
+            if pt.kind != skip:
+                kept.append(pt)
+                where.extend(range(at, at + size))
+            at += size
+        rows[skip] = (kept, where)
     r = _residuals(build(theta), pts)
     cost = sum(map(mul, r, r))
     lam = 1e-3
@@ -239,9 +264,17 @@ def levenberg_marquardt(
             tp[j] = min(theta[j] + h, hi[j])
             tm[j] = max(theta[j] - h, lo[j])
             d = tp[j] - tm[j]
-            rp = _residuals(build(tp), pts)
-            rm = _residuals(build(tm), pts)
-            cols.append([(a - b) / d for a, b in zip(rp, rm)])
+            skip = _UNAFFECTED.get(keys[j]) if "dx_ref" in keys else None
+            sub_pts, where = rows[skip] if skip else (pts, None)
+            rp = _residuals(build(tp), sub_pts)
+            rm = _residuals(build(tm), sub_pts)
+            col = [(a - b) / d for a, b in zip(rp, rm)]
+            if where is not None:  # el resto de la columna es exactamente 0
+                full = [0.0] * len(r)
+                for i, v in zip(where, col):
+                    full[i] = v
+                col = full
+            cols.append(col)
         n = len(theta)
         jtj = [[0.0] * n for _ in range(n)]
         for i in range(n):

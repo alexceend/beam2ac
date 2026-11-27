@@ -23,6 +23,7 @@ una decisión = añadir otra con ``supersedes``. Solo se escribe dentro de la ca
 from __future__ import annotations
 
 import json
+import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -37,6 +38,24 @@ REPO_CATALOG = Path(__file__).resolve().parents[2] / "catalog"
 
 class StoreError(ValueError):
     """Catálogo incoherente o escritura no permitida."""
+
+
+def signature(*roots: str | Path) -> tuple:
+    """Nombre, fecha y tamaño de todo lo que :meth:`Catalog.load` lee de ``roots``:
+    cambia si cambia el catálogo (sin abrir ningún archivo)."""
+    out: list[tuple] = []
+    for root in map(Path, roots):
+        out.append((str(root),))
+        for sub in (".", "attributes", "rules", "validations", "decisions", "targets"):
+            try:
+                with os.scandir(root / sub) as entries:
+                    for e in entries:
+                        if e.name.lower().endswith((".json", ".jsonl")):
+                            st = e.stat()
+                            out.append((sub, e.name, st.st_mtime_ns, st.st_size))
+            except OSError:
+                out.append((sub, None))
+    return tuple(sorted(out, key=repr))
 
 
 @dataclass
