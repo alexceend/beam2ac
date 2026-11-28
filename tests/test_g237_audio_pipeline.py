@@ -128,6 +128,25 @@ class TestPlan(unittest.TestCase):
             self.assertEqual(pipeline.ladder(p["status"])["state"], "sin_fuente")
 
 
+class TestNormalize(unittest.TestCase):
+    @staticmethod
+    def _pcm(*v):
+        return (44100, struct.pack(f"<{len(v)}h", *v))
+
+    def test_one_gain_per_car_up_to_target(self):
+        out, db = pipeline.normalize({"a": self._pcm(1000, -2000), "b": self._pcm(100)})
+        a = struct.unpack("<2h", out["a"][1])
+        self.assertEqual(a[1], -round(pipeline.TARGET_PEAK * 32767))
+        self.assertAlmostEqual(struct.unpack("<h", out["b"][1])[0] / -a[1], 0.05, 3)
+        self.assertGreater(db, 15)
+
+    def test_loud_silent_and_cap(self):
+        loud = {"a": self._pcm(32767, -32768)}
+        self.assertEqual(pipeline.normalize(loud), (loud, 0.0))
+        self.assertEqual(pipeline.normalize({"a": self._pcm(0)})[1], 0.0)
+        self.assertAlmostEqual(pipeline.normalize({"a": self._pcm(1)})[1], 30.0)
+
+
 class TestPipelineGeneration(unittest.TestCase):
     """El banco se genera en Python (``src.audio.engine_gen``), sin programas externos."""
 
@@ -140,6 +159,11 @@ class TestPipelineGeneration(unittest.TestCase):
             self.assertIn("banco generado", r["note"])
             self.assertTrue((Path(r["prebuilt"]) / "beam2ac_t.bank").is_file())
             self.assertFalse(r["stages"]["escuchado"])
+            meta = json.loads(
+                (Path(r["prebuilt"]) / pipeline.BUILD_META).read_text("utf-8")
+            )
+            self.assertGreater(r["gain_db"], 0)
+            self.assertEqual(meta["gain_db"], r["gain_db"])
 
     def test_no_build_only_keeps_the_plan(self):
         with tempfile.TemporaryDirectory() as d:

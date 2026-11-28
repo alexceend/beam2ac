@@ -8,8 +8,10 @@ uno manual siguen el MISMO camino de exportación. El banco se genera en Python
 
 from __future__ import annotations
 
+import array
 import hashlib
 import json
+import math
 import shutil
 from pathlib import Path
 from typing import Any
@@ -19,6 +21,35 @@ from src.extract.audio_sources import scan_audio
 from src.safe_paths import new_output_dir
 
 BUILD_META = "audio_build.json"
+
+# Los WAV de cada coche llegan a niveles muy distintos (pico -25…0 dBFS); los más
+# flojos sonaban ~20 dB bajo los coches de Kunos. Ganancia = TARGET/pico, solo hacia
+# arriba y con tope. -6 dBFS: con -3 el evento interior saturaba al renderizar.
+TARGET_PEAK = 10 ** (-6 / 20)
+MAX_GAIN = 10 ** (30 / 20)  # +30 dB: no amplificar sin límite un WAV casi mudo
+
+
+def normalize(
+    wavs: dict[str, tuple[int, bytes]],
+) -> tuple[dict[str, tuple[int, bytes]], float]:
+    """(WAV amplificados, ganancia en dB). UNA ganancia para todo el coche: la
+    diferencia entre carga y retención y los fundidos entre rpm se conservan."""
+    peak = max(
+        (abs(v) for _, pcm in wavs.values() for v in array.array("h", pcm)), default=0
+    )
+    gain = min(max(TARGET_PEAK * 32767 / peak, 1.0), MAX_GAIN) if peak else 1.0
+    if gain == 1.0:
+        return wavs, 0.0
+    out = {
+        f: (
+            rate,
+            array.array(
+                "h", [round(v * gain) for v in array.array("h", pcm)]
+            ).tobytes(),
+        )
+        for f, (rate, pcm) in wavs.items()
+    }
+    return out, 20 * math.log10(gain)
 
 
 class _Reused(Exception):
@@ -97,15 +128,16 @@ def extract_zip_audio(zip_path: Path | str, dest: Path) -> Path:
     return dest
 
 
-def _build(spec: dict[str, Any], out: Path, car_id: str) -> Path:
+def _build(spec: dict[str, Any], out: Path, car_id: str) -> tuple[Path, float]:
     """Banco de coche (``engine_gen`` sobre el esqueleto versionado) en ``out/prebuilt``."""
     from src.ac.audio import AudioInputError, load_prebuilt
     from src.audio import bank_graph, engine_gen
     from src.audio.bank_patch import read_wav_mono16
 
-    raw, guids = engine_gen.generate_from_skeleton(
-        spec, lambda f: read_wav_mono16(Path(f))
+    wavs, gain_db = normalize(
+        {f: read_wav_mono16(Path(f)) for f in spec["audio_files"]}
     )
+    raw, guids = engine_gen.generate_from_skeleton(spec, wavs.__getitem__)
     problems = bank_graph.check_consistency(raw)
     if problems:
         raise ValueError(f"banco generado incoherente: {problems[:3]}")
@@ -131,12 +163,13 @@ def _build(spec: dict[str, Any], out: Path, car_id: str) -> Path:
                 ),
                 "bank_sha256": hashlib.sha256(raw).hexdigest(),
                 "reuse_key": None,
+                "gain_db": round(gain_db, 2),
             },
             indent=1,
         ),
         encoding="utf-8",
     )
-    return dst
+    return dst, gain_db
 
 
 def run(
@@ -168,9 +201,13 @@ def run(
         out = new_output_dir(out)
         try:
             if build:
-                report["prebuilt"] = str(_build(plan["spec"], out, car_id))
+                prebuilt, gain_db = _build(plan["spec"], out, car_id)
+                report["prebuilt"] = str(prebuilt)
+                report["gain_db"] = round(gain_db, 2)
                 project = bank = True
-                report["note"] = "banco generado (src.audio.engine_gen)"
+                report["note"] = (
+                    f"banco generado (src.audio.engine_gen), volumen {gain_db:+.1f} dB"
+                )
             else:
                 (out / "spec.json").write_text(
                     json.dumps(plan["spec"], indent=1), encoding="utf-8"

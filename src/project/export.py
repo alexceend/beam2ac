@@ -1370,7 +1370,14 @@ def collect(
         if audio_run:
             ctx["audio"]["generacion"] = {
                 k: audio_run.get(k)
-                for k in ("out", "error", "note", "plan_status", "series_used")
+                for k in (
+                    "out",
+                    "error",
+                    "note",
+                    "plan_status",
+                    "series_used",
+                    "gain_db",
+                )
             }
         if scan["present"] and not audio_installed:
             issues.append(
